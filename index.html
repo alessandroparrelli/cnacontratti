@@ -1699,8 +1699,9 @@ function filterContracts(){
   
   let visibili=0;
   let totali=rows.length;
+  let debugInfo=[];
   
-  rows.forEach(row=>{
+  rows.forEach((row,idx)=>{
     const nome=(row.dataset.nome||'').toLowerCase();
     const email=(row.dataset.email||'').toLowerCase();
     const tipoRow=row.dataset.tipo||'';
@@ -1715,7 +1716,25 @@ function filterContracts(){
     const visible=(matchSearch&&matchTipo&&matchAnno&&matchProp);
     row.style.display=visible?'flex':'none';
     if(visible)visibili++;
+    
+    // Debug: primi 3 contratti
+    if(idx<3 && proprietario){
+      debugInfo.push(`#${idx+1}: "${propRow}" === "${proprietario}" = ${propRow===proprietario}`);
+    }
   });
+  
+  // Mostra debug box
+  if(proprietario){
+    let debugBox=document.getElementById('debug-filter');
+    if(!debugBox){
+      debugBox=document.createElement('div');
+      debugBox.id='debug-filter';
+      debugBox.style.cssText='position:fixed;top:10px;right:10px;background:#ff0;color:#000;padding:15px;border:3px solid #f00;border-radius:8px;z-index:99999;max-width:400px;font-size:12px;font-family:monospace;white-space:pre-wrap';
+      document.body.appendChild(debugBox);
+    }
+    debugBox.innerHTML=`🔍 DEBUG FILTRO\n\nSelezionato: "${proprietario}"\nLen: ${proprietario.length}\n\nTrovati: ${visibili}/${totali}\n\n${debugInfo.join('\n')}\n\nClick qui per chiudere`;
+    debugBox.onclick=()=>debugBox.remove();
+  }
 }
 
 
