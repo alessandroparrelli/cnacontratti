@@ -655,7 +655,19 @@ body{font-family:'Inter',sans-serif;background:var(--gray);color:var(--txt);line
   <div class="modal-body" style="max-height:70vh;overflow-y:auto">
     
     <div class="changelog-entry" style="border-left-color:#28a745;background:#e8f5e9">
-      <h3>v9.6 - 27 Aprile 2026 🆕</h3>
+      <h3>v9.7 - 27 Aprile 2026 🆕</h3>
+      <ul>
+        <li><strong>🖊️ Firma BLU:</strong> colore firma cambiato da nero (#1a2332) a blu CNA (#005CA9)</li>
+        <li><strong>📏 Firme PDF Più Grandi:</strong> dimensioni aumentate da 320x50px a 360x60px (+12.5% larghezza, +20% altezza)</li>
+        <li><strong>🎯 Firme Centrate:</strong> tutte le 5 firme sono ora perfettamente centrate nei box del PDF</li>
+        <li><strong>✏️ Spessore Ridotto:</strong> lineWidth da 5px a 3px per firma più elegante e leggibile</li>
+        <li><strong>🔍 Debug Filtro:</strong> aggiunto console.log per verificare il funzionamento del filtro proprietario</li>
+        <li><strong>📍 Posizioni Ottimizzate:</strong> tutte le coordinate X centrate (280, 280, 205, 220, 240)</li>
+      </ul>
+    </div>
+
+    <div class="changelog-entry">
+      <h3>v9.6 - 27 Aprile 2026</h3>
       <ul>
         <li><strong>🐛 FIX Pulsanti Mobile:</strong> layout orizzontale forzato anche su mobile (era verticale per errore CSS)</li>
         <li><strong>🐛 FIX Filtro Proprietario:</strong> aggiunto data-proprietario mancante nella dashboard contratti</li>
@@ -1351,11 +1363,11 @@ async function previewContractPDF(token){
 
 // Signature positions: [page_index, x, y, width, height]
 const SIG_POS={
-  dichiarante:[0,310,180,320,50],   // Page 1: Prima firma (ex operatore, ora cliente)
-  consenso:[0,310,64,320,50],       // Page 1: "Firma di chi esprime il consenso"
-  privacy:[1,235,15,320,50],        // Page 2: "FIRMA" privacy
-  inps:[2,250,80,320,50],           // Page 3: "FIRMA" delega INPS
-  sepa:[3,270,148,320,50]           // Page 4: "Firma" SEPA
+  dichiarante:[0,280,175,360,60],   // Page 1: Prima firma - centrato orizzontalmente, più grande
+  consenso:[0,280,59,360,60],       // Page 1: "Firma di chi esprime il consenso" - centrato, più grande
+  privacy:[1,205,10,360,60],        // Page 2: "FIRMA" privacy - centrato, più grande
+  inps:[2,220,75,360,60],           // Page 3: "FIRMA" delega INPS - centrato, più grande
+  sepa:[3,240,143,360,60]           // Page 4: "Firma" SEPA - centrato, più grande
 };
 async function embedSigs(doc,pages,data){
   const es=async(b64,pos)=>{if(!b64||!b64.startsWith('data:'))return;try{const i=await doc.embedPng(b64);pages[pos[0]].drawImage(i,{x:pos[1],y:pos[2],width:pos[3],height:pos[4]});}catch(e){console.warn('Sig embed:',e);}};
@@ -1594,6 +1606,8 @@ function filterContracts(){
   const proprietario=document.getElementById('filter-proprietario').value;
   const rows=document.querySelectorAll('.contract-item');
   
+  console.log('Filtro proprietario selezionato:',proprietario);
+  
   rows.forEach(row=>{
     const nome=(row.dataset.nome||'').toLowerCase();
     const email=(row.dataset.email||'').toLowerCase();
@@ -1605,6 +1619,10 @@ function filterContracts(){
     const matchTipo=!tipo||(tipoRow===tipo);
     const matchAnno=!anno||(annoRow===anno);
     const matchProp=!proprietario||(propRow===proprietario);
+    
+    if(proprietario){
+      console.log('Contratto:',nome,'- Proprietario:',propRow,'- Match:',matchProp);
+    }
     
     row.style.display=(matchSearch&&matchTipo&&matchAnno&&matchProp)?'flex':'none';
   });
@@ -1820,7 +1838,7 @@ function initSignaturePad(id){
   let d=false,lx=0,ly=0;
   const gp=e=>{const r=c.getBoundingClientRect();const t=e.touches?e.touches[0]:e;return{x:t.clientX-r.left,y:t.clientY-r.top};};
   const start=e=>{e.preventDefault();d=true;const p=gp(e);lx=p.x;ly=p.y;};
-  const draw=e=>{if(!d)return;e.preventDefault();const p=gp(e);ctx.beginPath();ctx.moveTo(lx,ly);ctx.lineTo(p.x,p.y);ctx.strokeStyle='#1a2332';ctx.lineWidth=5;ctx.lineCap='round';ctx.stroke();lx=p.x;ly=p.y;sigPads[id]=true;};
+  const draw=e=>{if(!d)return;e.preventDefault();const p=gp(e);ctx.beginPath();ctx.moveTo(lx,ly);ctx.lineTo(p.x,p.y);ctx.strokeStyle='#005CA9';ctx.lineWidth=3;ctx.lineCap='round';ctx.stroke();lx=p.x;ly=p.y;sigPads[id]=true;};
   const stop=()=>{d=false;};
   c.addEventListener('mousedown',start);c.addEventListener('mousemove',draw);c.addEventListener('mouseup',stop);c.addEventListener('mouseleave',stop);
   c.addEventListener('touchstart',start,{passive:false});c.addEventListener('touchmove',draw,{passive:false});c.addEventListener('touchend',stop);
