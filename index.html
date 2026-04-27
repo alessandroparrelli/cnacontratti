@@ -586,11 +586,11 @@ body{font-family:'Inter',sans-serif;background:var(--gray);color:var(--txt);line
           <input type="text" id="search-contracts" placeholder="🔍 Cerca cliente..." style="padding:6px 12px;border:1px solid var(--brd);border-radius:6px;font-size:13px;min-width:200px" oninput="filterContracts()">
           <select id="filter-tipo" onchange="filterContracts()" style="padding:6px 12px;border:1px solid var(--brd);border-radius:6px;font-size:13px">
             <option value="">Tutti i tipi</option>
-            <option value="adesione_2025" selected>Tesseramento</option>
+            <option value="adesione_2025">Tesseramento</option>
           </select>
           <select id="filter-anno" onchange="filterContracts()" style="padding:6px 12px;border:1px solid var(--brd);border-radius:6px;font-size:13px">
             <option value="">Tutti gli anni</option>
-            <option value="2026" selected>2026</option>
+            <option value="2026">2026</option>
             <option value="2025">2025</option>
             <option value="2024">2024</option>
           </select>
@@ -1697,11 +1697,7 @@ function filterContracts(){
   const proprietario=document.getElementById('filter-proprietario').value.trim().normalize('NFC');
   const rows=document.querySelectorAll('.contract-item');
   
-  let visibili=0;
-  let totali=rows.length;
-  let debugInfo=[];
-  
-  rows.forEach((row,idx)=>{
+  rows.forEach(row=>{
     const nome=(row.dataset.nome||'').toLowerCase();
     const email=(row.dataset.email||'').toLowerCase();
     const tipoRow=row.dataset.tipo||'';
@@ -1713,28 +1709,8 @@ function filterContracts(){
     const matchAnno=!anno||(annoRow===anno);
     const matchProp=!proprietario||(propRow===proprietario);
     
-    const visible=(matchSearch&&matchTipo&&matchAnno&&matchProp);
-    row.style.display=visible?'flex':'none';
-    if(visible)visibili++;
-    
-    // Debug: primi 3 contratti
-    if(idx<3 && proprietario){
-      debugInfo.push(`#${idx+1}: "${propRow}" === "${proprietario}" = ${propRow===proprietario}`);
-    }
+    row.style.display=(matchSearch&&matchTipo&&matchAnno&&matchProp)?'flex':'none';
   });
-  
-  // Mostra debug box
-  if(proprietario){
-    let debugBox=document.getElementById('debug-filter');
-    if(!debugBox){
-      debugBox=document.createElement('div');
-      debugBox.id='debug-filter';
-      debugBox.style.cssText='position:fixed;top:10px;right:10px;background:#ff0;color:#000;padding:15px;border:3px solid #f00;border-radius:8px;z-index:99999;max-width:400px;font-size:12px;font-family:monospace;white-space:pre-wrap';
-      document.body.appendChild(debugBox);
-    }
-    debugBox.innerHTML=`🔍 DEBUG FILTRO\n\nSelezionato: "${proprietario}"\nLen: ${proprietario.length}\n\nTrovati: ${visibili}/${totali}\n\n${debugInfo.join('\n')}\n\nClick qui per chiudere`;
-    debugBox.onclick=()=>debugBox.remove();
-  }
 }
 
 
