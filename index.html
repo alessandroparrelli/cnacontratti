@@ -707,7 +707,17 @@ body{font-family:'Inter',sans-serif;background:var(--gray);color:var(--txt);line
   <div class="modal-body" style="max-height:70vh;overflow-y:auto">
     
     <div class="changelog-entry" style="border-left-color:#28a745;background:#e8f5e9">
-      <h3>v10.1 - 27 Aprile 2026 🆕</h3>
+      <h3>v10.2 - 27 Aprile 2026 🆕</h3>
+      <ul>
+        <li><strong>🐛 FIX FILTRO PROPRIETARIO:</strong> corretto bug filtro dropdown proprietario che non filtrava i contratti</li>
+        <li><strong>✂️ Trim Stringhe:</strong> aggiunto .trim() sia al valore selezionato che al data-proprietario</li>
+        <li><strong>✅ Confronto Robusto:</strong> normalizzazione stringhe per match preciso</li>
+        <li><strong>🧹 Rimosso Debug:</strong> puliti i console.log di debug non necessari</li>
+      </ul>
+    </div>
+
+    <div class="changelog-entry">
+      <h3>v10.1 - 27 Aprile 2026</h3>
       <ul>
         <li><strong>🎨 ICONE MINIMALI SVG:</strong> tutte le emoji sostituite con icone line-art moderne</li>
         <li><strong>⚫ Stile Minimal:</strong> icone grigio scuro (#1a2332) stile line, stroke 2px</li>
@@ -1683,35 +1693,23 @@ function filterContracts(){
   const search=document.getElementById('search-contracts').value.toLowerCase();
   const tipo=document.getElementById('filter-tipo').value;
   const anno=document.getElementById('filter-anno').value;
-  const proprietario=document.getElementById('filter-proprietario').value;
+  const proprietario=document.getElementById('filter-proprietario').value.trim();
   const rows=document.querySelectorAll('.contract-item');
-  
-  console.log('=== FILTRO PROPRIETARIO ===');
-  console.log('Valore selezionato:', `"${proprietario}"`);
-  console.log('Lunghezza:', proprietario.length);
   
   rows.forEach(row=>{
     const nome=(row.dataset.nome||'').toLowerCase();
     const email=(row.dataset.email||'').toLowerCase();
     const tipoRow=row.dataset.tipo||'';
     const annoRow=row.dataset.anno||'';
-    const propRow=row.dataset.proprietario||'';
+    const propRow=(row.dataset.proprietario||'').trim();
     
     const matchSearch=!search||(nome.includes(search)||email.includes(search));
     const matchTipo=!tipo||(tipoRow===tipo);
     const matchAnno=!anno||(annoRow===anno);
     const matchProp=!proprietario||(propRow===proprietario);
     
-    if(proprietario){
-      console.log('Contratto:',nome.substring(0,30));
-      console.log('  data-proprietario:', `"${propRow}"`,'(len:',propRow.length,')');
-      console.log('  Match:', matchProp, '(', propRow,'===',proprietario,')');
-    }
-    
     row.style.display=(matchSearch&&matchTipo&&matchAnno&&matchProp)?'flex':'none';
   });
-  
-  console.log('=== FINE FILTRO ===');
 }
 
 
