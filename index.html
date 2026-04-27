@@ -9,6 +9,12 @@
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
 
+/* SVG Icons - Minimal Line Style */
+.icon{width:20px;height:20px;stroke:#1a2332;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;fill:none;flex-shrink:0}
+.icon-lg{width:24px;height:24px}
+.icon-xl{width:28px;height:28px}
+[data-theme="dark"] .icon{stroke:#e6edf3}
+
 /* Light theme (default) */
 :root{
   --cna:#005CA9;
@@ -207,8 +213,16 @@ body{font-family:'Inter',sans-serif;background:var(--gray);color:var(--txt);line
   box-shadow:0 6px 16px rgba(0,0,0,0.2);
 }
 .btn-icon-only .icon{
-  font-size:26px;
-  line-height:1;
+  stroke:currentColor;
+}
+.btn-icon-only.btn-icon-primary .icon{
+  stroke:#fff;
+}
+.btn-icon-only.btn-icon-warning .icon{
+  stroke:#333;
+}
+.btn-icon-only.btn-icon-success .icon{
+  stroke:#fff;
 }
 
 .btn-icon-primary{
@@ -342,8 +356,9 @@ body{font-family:'Inter',sans-serif;background:var(--gray);color:var(--txt);line
     padding:12px;
     min-width:50px;
   }
-  .btn-icon-only .icon{
-    font-size:22px;
+  .btn-icon-only .icon-xl{
+    width:24px;
+    height:24px;
   }
   
   /* Footer mobile */
@@ -464,15 +479,24 @@ body{font-family:'Inter',sans-serif;background:var(--gray);color:var(--txt);line
 </div>
 
 <nav class="tabs-bar" id="tabs-nav" style="display:none"><div class="tabs-inner">
-  <button class="tab-btn" onclick="switchTab(0)" data-tab="0">📝 Nuovo Modulo</button>
-  <button class="tab-btn" onclick="switchTab(1)" data-tab="1">📋 Privacy, INPS e SEPA</button>
-  <button class="tab-btn active" onclick="switchTab(2)" data-tab="2">📊 Contratti Salvati</button>
+  <button class="tab-btn" onclick="switchTab(0)" data-tab="0">
+    <svg class="icon" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
+    Nuovo Modulo
+  </button>
+  <button class="tab-btn" onclick="switchTab(1)" data-tab="1">
+    <svg class="icon" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+    Privacy, INPS e SEPA
+  </button>
+  <button class="tab-btn active" onclick="switchTab(2)" data-tab="2">
+    <svg class="icon" viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"></path></svg>
+    Contratti Salvati
+  </button>
 </div></nav>
 
 <main class="main-content">
 <!-- TAB 0 -->
 <div class="tab-page" id="tab-0">
-  <div class="form-card"><div class="form-card-header"><span>&#x1F464;</span><h3>Dati Personali</h3></div><div class="form-card-body">
+  <div class="form-card"><div class="form-card-header"><svg class="icon" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg><h3>Dati Personali</h3></div><div class="form-card-body">
     <div class="form-row c2"><div class="form-group"><label>Cognome</label><input type="text" id="cognome" required></div><div class="form-group"><label>Nome</label><input type="text" id="nome" required></div></div>
     <div class="form-row cf"><div class="form-group"><label>Codice Fiscale</label><input type="text" id="cf" maxlength="16" style="text-transform:uppercase;letter-spacing:1px;font-family:monospace" required></div><div class="form-group"><label>Data di nascita</label><input type="date" id="data_nascita" required></div></div>
     <div class="form-row c211"><div class="form-group"><label>Nato/a a</label><input type="text" id="nato_a" required></div><div class="form-group"><label>Prov.</label><input type="text" id="prov_nascita" maxlength="2" style="text-transform:uppercase" required></div><div class="form-group"><label>Stato</label><input type="text" id="stato_nascita" value="Italia" required></div></div>
@@ -484,7 +508,7 @@ body{font-family:'Inter',sans-serif;background:var(--gray);color:var(--txt);line
       <input type="text" id="raccolto_da" class="form-input" readonly style="background:#f0f0f0;cursor:not-allowed">
     </div></div>
   </div></div>
-  <div class="form-card"><div class="form-card-header"><span>&#x1F3E2;</span><h3>Dati Aziendali</h3></div><div class="form-card-body">
+  <div class="form-card"><div class="form-card-header"><svg class="icon" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg><h3>Dati Aziendali</h3></div><div class="form-card-body">
     <div class="form-row c21"><div class="form-group"><label>Ragione Sociale</label><input type="text" id="ragione_sociale" required></div><div class="form-group"><label>Partita IVA</label><input type="text" id="piva" maxlength="11" style="letter-spacing:1px;font-family:monospace" required></div></div>
     <div class="form-group" style="margin-bottom:14px"><label>Tipologia</label><div class="checkbox-row"><div class="checkbox-item"><input type="checkbox" id="tipo_a"><label for="tipo_a">Artigiano</label></div><div class="checkbox-item"><input type="checkbox" id="tipo_c"><label for="tipo_c">Commerciante</label></div><div class="checkbox-item"><input type="checkbox" id="tipo_p"><label for="tipo_p">Piccola Impresa</label></div><div class="checkbox-item"><input type="checkbox" id="tipo_v"><label for="tipo_v">Varie</label></div></div></div>
     <div class="form-row c2"><div class="form-group"><label>Attivita (ATECO)</label><select id="ateco" required><option value="">Seleziona attività...</option></select></div><div class="form-group"><label>PEC</label><input type="email" id="pec" required></div></div>
@@ -492,7 +516,7 @@ body{font-family:'Inter',sans-serif;background:var(--gray);color:var(--txt);line
     <div class="form-row c3"><div class="form-group"><label>CAP</label><input type="text" id="cap_att" maxlength="5" required></div><div class="form-group"><label>Prov.</label><input type="text" id="prov_att" maxlength="2" style="text-transform:uppercase" required></div><div class="form-group"><label>Codice INAIL</label><input type="text" id="cod_inail"></div></div>
     <div class="form-row c2"><div class="form-group"><label>Cod. INAIL PAT</label><input type="text" id="cod_inail_pat"></div><div class="form-group"><label>Documento identita</label><input type="text" id="documento_id"></div></div>
   </div></div>
-  <div class="form-card"><div class="form-card-header"><span>&#x1F4B0;</span><h3>Iscrizione e Quote</h3></div><div class="form-card-body">
+  <div class="form-card"><div class="form-card-header"><svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line><path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8"></path><line x1="12" y1="18" x2="12" y2="22"></line><line x1="12" y1="2" x2="12" y2="6"></line></svg><h3>Iscrizione e Quote</h3></div><div class="form-card-body">
     <div class="form-row c2"><div class="form-group"><label>Motivo iscrizione</label><select id="motivo_iscrizione" class="form-input" required>
             <option value="">Seleziona motivo...</option>
             <option value="Altro">Altro</option><option value="Credito">Credito</option><option value="Rete commerciale">Rete commerciale</option><option value="Seminari formativi">Seminari formativi</option><option value="Servizi">Servizi</option><option value="Sindacale/Rappresentanza">Sindacale/Rappresentanza</option><option value="Start-up">Start-up</option>
@@ -508,7 +532,7 @@ body{font-family:'Inter',sans-serif;background:var(--gray);color:var(--txt);line
     <div class="form-group" style="margin-bottom:14px"><label>Modalita pagamento</label><div class="checkbox-row"><div class="checkbox-item"><input type="checkbox" id="mod_rid" checked><label for="mod_rid">RID</label></div><div class="checkbox-item"><input type="checkbox" id="mod_riba"><label for="mod_riba">RIBA</label></div><div class="checkbox-item"><input type="checkbox" id="mod_rd"><label for="mod_rd">R.D.</label></div><div class="checkbox-item"><input type="checkbox" id="mod_sepa"><label for="mod_sepa">Bonifico Sepa</label></div><div class="checkbox-item"><input type="checkbox" id="mod_altro"><label for="mod_altro">Altro</label></div></div></div>
     <div class="form-row c2"><div class="form-group"><label>IBAN Ditta</label><input type="text" id="iban_ditta" maxlength="27" style="text-transform:uppercase;letter-spacing:1px;font-family:monospace" required></div><div class="form-group"><label>IBAN CNA</label><input type="text" value="IT 39 T 02008 05165 000400682678" readonly style="background:#f0f0f0;color:#666"></div></div>
   </div></div>
-  <div class="form-card"><div class="form-card-header"><span>&#x270D;&#xFE0F;</span><h3>Dichiarazione e Firma</h3></div><div class="form-card-body">
+  <div class="form-card"><div class="form-card-header"><svg class="icon" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg><h3>Dichiarazione e Firma</h3></div><div class="form-card-body">
     <div class="form-row"><div class="form-group"><label>Data</label><input type="date" id="data_dichiarazione" required></div></div>
   </div></div>
 </div>
@@ -517,7 +541,7 @@ body{font-family:'Inter',sans-serif;background:var(--gray);color:var(--txt);line
 <!-- TAB 1: PRIVACY + INPS + SEPA UNIFICATO -->
 <div class="tab-page" id="tab-1">
   <!-- PRIVACY -->
-  <div class="form-card"><div class="form-card-header"><span>🔒</span><h3>Privacy e Consensi</h3></div><div class="form-card-body">
+  <div class="form-card"><div class="form-card-header"><svg class="icon" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg><h3>Privacy e Consensi</h3></div><div class="form-card-body">
     <div class="form-row c2"><div class="form-group"><label>Cognome</label><input class="mirror-cognome" readonly style="background:#f0f0f0"></div><div class="form-group"><label>Nome</label><input class="mirror-nome" readonly style="background:#f0f0f0"></div></div>
     <div class="form-group" style="margin-bottom:20px"><label>C.F.</label><input class="mirror-cf" readonly style="background:#f0f0f0;text-transform:uppercase;font-family:monospace"></div>
     <div class="consent-block"><p><strong>a)</strong> Trattamento dati per finalita statutarie e associative.</p><div class="consent-toggle"><label><input type="radio" name="consent_a" value="consente" checked> CONSENTE</label><label><input type="radio" name="consent_a" value="non_consente"> NON CONSENTE</label></div></div>
@@ -529,7 +553,7 @@ body{font-family:'Inter',sans-serif;background:var(--gray);color:var(--txt);line
   </div></div>
   
   <!-- INPS -->
-  <div class="form-card"><div class="form-card-header"><span>🏛️</span><h3>Delega INPS</h3></div><div class="form-card-body">
+  <div class="form-card"><div class="form-card-header"><svg class="icon" viewBox="0 0 24 24"><path d="M3 21h18"></path><path d="M5 21V7l8-4v18"></path><path d="M19 21V11l-6-4"></path><path d="M9 9v.01"></path><path d="M9 12v.01"></path><path d="M9 15v.01"></path><path d="M9 18v.01"></path></svg><h3>Delega INPS</h3></div><div class="form-card-body">
     <div class="form-row c2"><div class="form-group"><label>Cognome</label><input class="mirror-cognome" readonly style="background:#f0f0f0"></div><div class="form-group"><label>Nome</label><input class="mirror-nome" readonly style="background:#f0f0f0"></div></div>
     <div class="form-row cf"><div class="form-group"><label>C.F.</label><input class="mirror-cf" readonly style="background:#f0f0f0;text-transform:uppercase"></div><div class="form-group"><label>Nato/a il</label><input class="mirror-data-nascita" readonly style="background:#f0f0f0"></div></div>
     <div class="form-row c2"><div class="form-group"><label>In qualita di</label><input type="text" id="qualita_inps"></div><div class="form-group"><label>Data delega</label><input type="date" id="data_inps" required></div></div>
@@ -537,7 +561,7 @@ body{font-family:'Inter',sans-serif;background:var(--gray);color:var(--txt);line
   </div></div>
   
   <!-- SEPA -->
-  <div class="form-card"><div class="form-card-header"><span>🏦</span><h3>Mandato SEPA</h3></div><div class="form-card-body">
+  <div class="form-card"><div class="form-card-header"><svg class="icon" viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg><h3>Mandato SEPA</h3></div><div class="form-card-body">
     <div class="form-row c2"><div class="form-group"><label>ID Creditore</label><input value="IT15001000008015133088" readonly style="background:#f0f0f0;font-family:monospace"></div><div class="form-group"><label>ID Mandato</label><input type="text" id="id_mandato"></div></div>
     <div class="form-group" style="margin-bottom:14px"><label>Nome debitore</label><input class="mirror-ragione-sociale" readonly style="background:#f0f0f0"></div>
     <div class="form-group" style="margin-bottom:14px"><label>Partita IVA</label><input class="mirror-piva" readonly style="background:#f0f0f0;font-family:monospace"></div>
@@ -589,16 +613,16 @@ body{font-family:'Inter',sans-serif;background:var(--gray);color:var(--txt);line
   <span id="status-indicator" class="status-badge empty">Non compilato</span>
   <div style="display:flex;gap:8px;flex:1;align-items:stretch">
     <button class="btn-icon-only" onclick="previewPDF()" title="Anteprima PDF">
-      <span class="icon">👁️</span>
+      <svg class="icon icon-xl" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
     </button>
     <button class="btn-icon-only btn-icon-primary" onclick="saveToSupabase()" title="Salva bozza">
-      <span class="icon">💾</span>
+      <svg class="icon icon-xl" viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
     </button>
     <button class="btn-icon-only btn-icon-warning" onclick="saveAndSend()" title="Salva e invia email">
-      <span class="icon">📧</span>
+      <svg class="icon icon-xl" viewBox="0 0 24 24"><path d="M22 2L11 13"></path><path d="M22 2l-7 20-4-9-9-4 20-7z"></path></svg>
     </button>
     <button class="btn-icon-only btn-icon-success" onclick="generatePDF()" title="Scarica PDF compilato">
-      <span class="icon">📄</span>
+      <svg class="icon icon-xl" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
     </button>
   </div>
 </div></div>
@@ -683,7 +707,21 @@ body{font-family:'Inter',sans-serif;background:var(--gray);color:var(--txt);line
   <div class="modal-body" style="max-height:70vh;overflow-y:auto">
     
     <div class="changelog-entry" style="border-left-color:#28a745;background:#e8f5e9">
-      <h3>v10.0 - 27 Aprile 2026 🆕</h3>
+      <h3>v10.1 - 27 Aprile 2026 🆕</h3>
+      <ul>
+        <li><strong>🎨 ICONE MINIMALI SVG:</strong> tutte le emoji sostituite con icone line-art moderne</li>
+        <li><strong>⚫ Stile Minimal:</strong> icone grigio scuro (#1a2332) stile line, stroke 2px</li>
+        <li><strong>📐 Design Coerente:</strong> stesso stile iconografico in tutta l'app</li>
+        <li><strong>✨ Icone SVG:</strong> scalabili, nitide su tutti gli schermi</li>
+        <li><strong>🎯 Tab con Icone:</strong> documento, lucchetto, grafico activity</li>
+        <li><strong>🔘 Pulsanti con Icone:</strong> occhio, salva, invia, PDF</li>
+        <li><strong>📋 Form Cards con Icone:</strong> persona, edificio, dollaro, firma, lucchetto, banca</li>
+        <li><strong>🌙 Dark Mode:</strong> icone cambiano colore automaticamente (#e6edf3 in dark)</li>
+      </ul>
+    </div>
+
+    <div class="changelog-entry">
+      <h3>v10.0 - 27 Aprile 2026</h3>
       <ul>
         <li><strong>🎨 TAB UNIFICATO:</strong> Privacy + INPS + SEPA ora in un unico tab "📋 Privacy, INPS e SEPA"</li>
         <li><strong>📊 3 TAB TOTALI:</strong> da 5 tab a 3 tab (Nuovo Modulo, Privacy/INPS/SEPA, Contratti)</li>
@@ -1198,7 +1236,7 @@ function showSigningUI(ct,token){
 
       <!-- PRIVACY / CONSENSI -->
       <div class="form-card" style="margin-bottom:20px;border:2px solid var(--cna)">
-        <div class="form-card-header"><span>&#x1F512;</span><h3>Informativa Privacy - Consensi obbligatori</h3></div>
+        <div class="form-card-header"><svg class="icon" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg><h3>Informativa Privacy - Consensi obbligatori</h3></div>
         <div class="form-card-body" style="padding:16px">
           <p style="font-size:12px;color:var(--txt2);line-height:1.7;margin-bottom:16px">
             Ai sensi del Regolamento UE 2016/679 (GDPR), art. 13 e 14, il Titolare del trattamento e CNA - Confederazione Nazionale dell'Artigianato e della Piccola e Media Impresa, P.zza Mariano Armellini 9A, 00162 Roma. RPD: rpd@cna.it. I dati sono raccolti per dare corso all'adesione, gestire gli associati, fornire servizi di consulenza e assistenza. Base giuridica: consenso dell'interessato, obbligo contrattuale, obbligo legale, legittimo interesse. Conservazione: max 10 anni dalla revoca. Diritti: accesso, rettifica, cancellazione, limitazione, opposizione, revoca consenso, reclamo all'Autorita di controllo.
@@ -1243,7 +1281,7 @@ function showSigningUI(ct,token){
 
       <!-- DOCUMENTO DI IDENTITA -->
       <div class="form-card" style="margin-bottom:20px;border:2px solid var(--cna)">
-        <div class="form-card-header"><span>&#x1F4F7;</span><h3>Documento di Identita (obbligatorio)</h3></div>
+        <div class="form-card-header"><svg class="icon" viewBox="0 0 24 24"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg><h3>Documento di Identita (obbligatorio)</h3></div>
         <div class="form-card-body" style="padding:16px">
           <p style="font-size:12px;color:var(--txt2);margin-bottom:14px">Carica fronte e retro del documento di identita in corso di validita (CI, Passaporto, Patente).</p>
           <div style="display:flex;gap:10px;margin-bottom:14px;flex-wrap:wrap">
