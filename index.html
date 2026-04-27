@@ -1696,6 +1696,9 @@ function filterContracts(){
   const proprietario=document.getElementById('filter-proprietario').value.trim();
   const rows=document.querySelectorAll('.contract-item');
   
+  let visibili=0;
+  let totali=rows.length;
+  
   rows.forEach(row=>{
     const nome=(row.dataset.nome||'').toLowerCase();
     const email=(row.dataset.email||'').toLowerCase();
@@ -1708,8 +1711,15 @@ function filterContracts(){
     const matchAnno=!anno||(annoRow===anno);
     const matchProp=!proprietario||(propRow===proprietario);
     
-    row.style.display=(matchSearch&&matchTipo&&matchAnno&&matchProp)?'flex':'none';
+    const visible=(matchSearch&&matchTipo&&matchAnno&&matchProp);
+    row.style.display=visible?'flex':'none';
+    if(visible)visibili++;
   });
+  
+  // Alert per debug
+  if(proprietario){
+    alert(`Filtro: "${proprietario}"\nTrovati: ${visibili}/${totali} contratti\n\nSe vedi 0 contratti, c'è un problema con i nomi.`);
+  }
 }
 
 
