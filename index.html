@@ -594,6 +594,11 @@ body{font-family:'Inter',sans-serif;background:var(--gray);color:var(--txt);line
             <option value="2025">2025</option>
             <option value="2024">2024</option>
           </select>
+          <select id="filter-caricato" onchange="filterContracts()" style="padding:6px 12px;border:1px solid var(--brd);border-radius:6px;font-size:13px">
+            <option value="">Tutti</option>
+            <option value="1">✅ Caricati</option>
+            <option value="0">⏳ Da caricare</option>
+          </select>
           <select id="filter-proprietario" onchange="filterContracts()" style="padding:6px 12px;border:1px solid var(--brd);border-radius:6px;font-size:13px">
             <option value="">Tutti i proprietari</option>
           </select>
@@ -709,11 +714,12 @@ body{font-family:'Inter',sans-serif;background:var(--gray);color:var(--txt);line
     <div class="changelog-entry" style="border-left-color:#28a745;background:#e8f5e9">
       <h3>v10.3 - 27 Aprile 2026 🆕</h3>
       <ul>
-        <li><strong>✅ BADGE VERIFICA:</strong> stella blu con spunta bianca per contratti firmati E caricati</li>
-        <li><strong>🎨 Design Elegante:</strong> SVG 20x20px accanto al nome cliente</li>
-        <li><strong>🔵 Colore Blu:</strong> #3b82f6 (blu moderno) con spunta bianca</li>
+        <li><strong>✅ BADGE VERIFICA:</strong> stella blu arrotondata con spunta bianca (forma identica all'immagine)</li>
+        <li><strong>🔵 Design Perfetto:</strong> bordi arrotondati, forma organica, SVG 20x20px accanto al nome</li>
         <li><strong>⭐ Condizione:</strong> appare solo se stato=firmato AND caricato_gestionale=true</li>
-        <li><strong>🎯 Posizione:</strong> inline con il nome, gap 6px per spaziatura perfetta</li>
+        <li><strong>🔍 FILTRO CARICATI:</strong> nuovo dropdown per filtrare "Tutti / ✅ Caricati / ⏳ Da caricare"</li>
+        <li><strong>📊 Filtro Completo:</strong> cerca, tipo, anno, caricati/da caricare, proprietario</li>
+        <li><strong>💾 Data Attribute:</strong> aggiunto data-caricato="0/1" per filtro funzionante</li>
       </ul>
     </div>
 
@@ -1705,6 +1711,7 @@ function filterContracts(){
   const search=document.getElementById('search-contracts').value.toLowerCase();
   const tipo=document.getElementById('filter-tipo').value;
   const anno=document.getElementById('filter-anno').value;
+  const caricato=document.getElementById('filter-caricato').value;
   const proprietario=document.getElementById('filter-proprietario').value.trim().normalize('NFC');
   const rows=document.querySelectorAll('.contract-item');
   
@@ -1713,14 +1720,16 @@ function filterContracts(){
     const email=(row.dataset.email||'').toLowerCase();
     const tipoRow=row.dataset.tipo||'';
     const annoRow=row.dataset.anno||'';
+    const caricatoRow=row.dataset.caricato||'0';
     const propRow=(row.dataset.proprietario||'').trim().normalize('NFC');
     
     const matchSearch=!search||(nome.includes(search)||email.includes(search));
     const matchTipo=!tipo||(tipoRow===tipo);
     const matchAnno=!anno||(annoRow===anno);
+    const matchCaricato=!caricato||(caricatoRow===caricato);
     const matchProp=!proprietario||(propRow===proprietario);
     
-    row.style.display=(matchSearch&&matchTipo&&matchAnno&&matchProp)?'flex':'none';
+    row.style.display=(matchSearch&&matchTipo&&matchAnno&&matchCaricato&&matchProp)?'flex':'none';
   });
 }
 
@@ -1755,12 +1764,12 @@ async function loadContracts(){
       const gestText=gest?'\u2713 Caricato':'\u25CF Da caricare';
       const canEdit=(st==='bozza'||st==='inviato'); // Can edit if not yet signed
       const isVerified=(st==='firmato'&&gest); // Verified = firmato + caricato gestionale
-      return `<div class="contract-item" data-id="${x.id}" data-nome="${(x.cognome||'')+' '+(x.nome||'')+' '+( x.ragione_sociale||'')}" data-email="${x.email||''}" data-tipo="${x.tipo_contratto||'adesione_2025'}" data-anno="${anno}" data-proprietario="${createdByName}">
+      return `<div class="contract-item" data-id="${x.id}" data-nome="${(x.cognome||'')+' '+(x.nome||'')+' '+( x.ragione_sociale||'')}" data-email="${x.email||''}" data-tipo="${x.tipo_contratto||'adesione_2025'}" data-anno="${anno}" data-proprietario="${createdByName}" data-caricato="${gest?'1':'0'}">
         <input type="checkbox" class="contract-cb" value="${x.id}" onchange="updateExportBtn()" style="width:16px;height:16px;accent-color:var(--cna);flex-shrink:0">
         <div class="contract-info">
           <h4 style="display:flex;align-items:center;gap:6px">
             ${x.cognome||''} ${x.nome||''} - ${x.ragione_sociale||'N/D'}
-            ${isVerified?`<svg width="20" height="20" viewBox="0 0 24 24" style="flex-shrink:0"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" fill="#3b82f6" stroke="none"/><path d="M9 12l2 2 4-4" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>`:''}
+            ${isVerified?`<svg width="20" height="20" viewBox="0 0 48 48" style="flex-shrink:0"><path d="M24 4.5c-1.2 0-2.3.7-2.8 1.8L18 13.5l-7.5 1.2c-1.2.2-2.2 1-2.6 2.1-.4 1.1-.1 2.3.7 3.1l5.4 5.3-1.3 7.5c-.2 1.2.3 2.4 1.3 3.1 1 .7 2.3.8 3.4.3L24 32.7l6.6 3.5c1.1.6 2.4.4 3.4-.3 1-.7 1.5-1.9 1.3-3.1l-1.3-7.5 5.4-5.3c.8-.8 1.1-2 .7-3.1-.4-1.1-1.4-1.9-2.6-2.1l-7.5-1.2-3.2-7.2c-.5-1.1-1.6-1.8-2.8-1.8z" fill="#3b82f6"/><path d="M20 24l3 3 6-6" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>`:''}
           </h4>
           <p>${x.email||''} \u00B7 ${d} \u00B7 <span class="status-badge ${bc}">${bt}</span> \u00B7 <span style="font-size:10px;color:var(--txt2)">Proprietario: ${createdByName}</span></p>
         </div>
