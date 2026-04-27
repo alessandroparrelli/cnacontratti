@@ -314,7 +314,7 @@ body{font-family:'Inter',sans-serif;background:var(--gray);color:var(--txt);line
   .footer-actions{padding:12px 16px}
   .footer-inner{flex-direction:column;gap:10px}
   .footer-inner>div:first-child{text-align:center;width:100%}
-  .footer-inner>div:last-child{display:flex;flex-direction:column;gap:8px;width:100%}
+  .footer-inner>div:last-child{display:flex;gap:6px;width:100%;flex-direction:row !important}
   
   /* Contract list mobile */
   #contracts-list{margin:0 -16px;padding:0 16px}
@@ -655,7 +655,18 @@ body{font-family:'Inter',sans-serif;background:var(--gray);color:var(--txt);line
   <div class="modal-body" style="max-height:70vh;overflow-y:auto">
     
     <div class="changelog-entry" style="border-left-color:#28a745;background:#e8f5e9">
-      <h3>v9.5 - 27 Aprile 2026 🆕</h3>
+      <h3>v9.6 - 27 Aprile 2026 🆕</h3>
+      <ul>
+        <li><strong>🐛 FIX Pulsanti Mobile:</strong> layout orizzontale forzato anche su mobile (era verticale per errore CSS)</li>
+        <li><strong>🐛 FIX Filtro Proprietario:</strong> aggiunto data-proprietario mancante nella dashboard contratti</li>
+        <li><strong>✅ Filtro Funzionante:</strong> ora il filtro per proprietario funziona correttamente</li>
+        <li><strong>📱 Mobile Orizzontale:</strong> gap ridotto a 6px, pulsanti sempre in fila</li>
+        <li><strong>🎯 Layout Stabile:</strong> !important su flex-direction:row per evitare override</li>
+      </ul>
+    </div>
+
+    <div class="changelog-entry">
+      <h3>v9.5 - 27 Aprile 2026</h3>
       <ul>
         <li><strong>↔️ Pulsanti Footer Orizzontali:</strong> layout cambiato da verticale a orizzontale</li>
         <li><strong>📏 Riempimento Larghezza:</strong> i 4 pulsanti riempiono tutta la larghezza disponibile</li>
@@ -1629,7 +1640,7 @@ async function loadContracts(){
       const gestClass=gest?'background:#d4edda;color:#155724':'background:#fff3cd;color:#856404';
       const gestText=gest?'\u2713 Caricato':'\u25CF Da caricare';
       const canEdit=(st==='bozza'||st==='inviato'); // Can edit if not yet signed
-      return `<div class="contract-item" data-id="${x.id}" data-nome="${(x.cognome||'')+' '+(x.nome||'')+' '+( x.ragione_sociale||'')}" data-email="${x.email||''}" data-tipo="${x.tipo_contratto||'adesione_2025'}" data-anno="${anno}">
+      return `<div class="contract-item" data-id="${x.id}" data-nome="${(x.cognome||'')+' '+(x.nome||'')+' '+( x.ragione_sociale||'')}" data-email="${x.email||''}" data-tipo="${x.tipo_contratto||'adesione_2025'}" data-anno="${anno}" data-proprietario="${createdByName}">
         <input type="checkbox" class="contract-cb" value="${x.id}" onchange="updateExportBtn()" style="width:16px;height:16px;accent-color:var(--cna);flex-shrink:0">
         <div class="contract-info">
           <h4>${x.cognome||''} ${x.nome||''} - ${x.ragione_sociale||'N/D'}</h4>
