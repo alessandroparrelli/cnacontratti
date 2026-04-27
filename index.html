@@ -1698,6 +1698,7 @@ function filterContracts(){
   
   let visibili=0;
   let totali=rows.length;
+  let nomiTrovati=new Set();
   
   rows.forEach(row=>{
     const nome=(row.dataset.nome||'').toLowerCase();
@@ -1705,6 +1706,9 @@ function filterContracts(){
     const tipoRow=row.dataset.tipo||'';
     const annoRow=row.dataset.anno||'';
     const propRow=(row.dataset.proprietario||'').trim();
+    
+    // Raccogli tutti i nomi proprietari per il debug
+    if(propRow)nomiTrovati.add(propRow);
     
     const matchSearch=!search||(nome.includes(search)||email.includes(search));
     const matchTipo=!tipo||(tipoRow===tipo);
@@ -1716,9 +1720,12 @@ function filterContracts(){
     if(visible)visibili++;
   });
   
-  // Alert per debug
-  if(proprietario){
-    alert(`Filtro: "${proprietario}"\nTrovati: ${visibili}/${totali} contratti\n\nSe vedi 0 contratti, c'è un problema con i nomi.`);
+  // Alert dettagliato per debug
+  if(proprietario && visibili===0){
+    const listaProprietari=Array.from(nomiTrovati).join('\n- ');
+    alert(`❌ PROBLEMA TROVATO!\n\nFiltro selezionato:\n"${proprietario}"\n\nNomi nei contratti:\n- ${listaProprietari}\n\nI nomi NON corrispondono!\nVedi le differenze?`);
+  }else if(proprietario){
+    alert(`✅ OK! Trovati ${visibili}/${totali} contratti per "${proprietario}"`);
   }
 }
 
