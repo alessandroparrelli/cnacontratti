@@ -707,7 +707,18 @@ body{font-family:'Inter',sans-serif;background:var(--gray);color:var(--txt);line
   <div class="modal-body" style="max-height:70vh;overflow-y:auto">
     
     <div class="changelog-entry" style="border-left-color:#28a745;background:#e8f5e9">
-      <h3>v10.2 - 27 Aprile 2026 🆕</h3>
+      <h3>v10.3 - 27 Aprile 2026 🆕</h3>
+      <ul>
+        <li><strong>✅ BADGE VERIFICA:</strong> stella blu con spunta bianca per contratti firmati E caricati</li>
+        <li><strong>🎨 Design Elegante:</strong> SVG 20x20px accanto al nome cliente</li>
+        <li><strong>🔵 Colore Blu:</strong> #3b82f6 (blu moderno) con spunta bianca</li>
+        <li><strong>⭐ Condizione:</strong> appare solo se stato=firmato AND caricato_gestionale=true</li>
+        <li><strong>🎯 Posizione:</strong> inline con il nome, gap 6px per spaziatura perfetta</li>
+      </ul>
+    </div>
+
+    <div class="changelog-entry">
+      <h3>v10.2 - 27 Aprile 2026</h3>
       <ul>
         <li><strong>🐛 FIX FILTRO PROPRIETARIO:</strong> corretto bug dropdown che non filtrava i contratti</li>
         <li><strong>🔧 FIX HTML Encoding:</strong> usato createElement() invece di template string per evitare encoding HTML</li>
@@ -1743,10 +1754,14 @@ async function loadContracts(){
       const gestClass=gest?'background:#d4edda;color:#155724':'background:#fff3cd;color:#856404';
       const gestText=gest?'\u2713 Caricato':'\u25CF Da caricare';
       const canEdit=(st==='bozza'||st==='inviato'); // Can edit if not yet signed
+      const isVerified=(st==='firmato'&&gest); // Verified = firmato + caricato gestionale
       return `<div class="contract-item" data-id="${x.id}" data-nome="${(x.cognome||'')+' '+(x.nome||'')+' '+( x.ragione_sociale||'')}" data-email="${x.email||''}" data-tipo="${x.tipo_contratto||'adesione_2025'}" data-anno="${anno}" data-proprietario="${createdByName}">
         <input type="checkbox" class="contract-cb" value="${x.id}" onchange="updateExportBtn()" style="width:16px;height:16px;accent-color:var(--cna);flex-shrink:0">
         <div class="contract-info">
-          <h4>${x.cognome||''} ${x.nome||''} - ${x.ragione_sociale||'N/D'}</h4>
+          <h4 style="display:flex;align-items:center;gap:6px">
+            ${x.cognome||''} ${x.nome||''} - ${x.ragione_sociale||'N/D'}
+            ${isVerified?`<svg width="20" height="20" viewBox="0 0 24 24" style="flex-shrink:0"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" fill="#3b82f6" stroke="none"/><path d="M9 12l2 2 4-4" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>`:''}
+          </h4>
           <p>${x.email||''} \u00B7 ${d} \u00B7 <span class="status-badge ${bc}">${bt}</span> \u00B7 <span style="font-size:10px;color:var(--txt2)">Proprietario: ${createdByName}</span></p>
         </div>
         <div class="contract-actions">
