@@ -1,3 +1,28 @@
+<!-- ========================================
+     CNA ROMA - MODULI ADESIONE 2025
+     VERSIONE: 2.1.0 FINAL
+     DATA RILASCIO: 28 Aprile 2026 - ore 14:00
+     ========================================
+     
+     CHANGELOG v2.1.0 (FINAL):
+     ✅ Rimossi pulsanti tab Privacy/INPS/SEPA (solo "Nuovo modulo" e "Dashboard")
+     ✅ Tutti i campi obbligatori ripristinati (tranne "In qualità di")
+     ✅ File rinominato come index.html per deploy GitHub/Vercel
+     
+     CHANGELOG v2.0.1 (BUGFIX):
+     🐛 Corretto filtro "Firmati/Non firmati" che non funzionava
+     🐛 Aggiunto data-proprietario per filtro proprietari
+     
+     CHANGELOG v2.0.0:
+     ✅ Firme corrette (rimossa deformazione canvas)
+     ✅ Indicazione "Firmare in orizzontale" nei box firma
+     ✅ Tab unificato: Privacy + INPS + SEPA dentro "Nuovo Modulo"
+     ✅ Dashboard: pulsanti disposti su 2 righe
+     ✅ Filtro "Firmati / Non firmati"
+     ✅ Larghezza tabella bloccata a 1050px
+     ✅ Sistema email migliore (apre Gmail web)
+     
+======================================== -->
 <!DOCTYPE html>
 <html lang="it">
 <head>
@@ -8,133 +33,66 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
-
-/* SVG Icons - Minimal Line Style */
-.icon{width:20px;height:20px;stroke:#1a2332;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;fill:none;flex-shrink:0}
-.icon-lg{width:24px;height:24px}
-.icon-xl{width:28px;height:28px}
-[data-theme="dark"] .icon{stroke:#e6edf3}
-
-/* Light theme (default) */
-:root{
-  --cna:#005CA9;
-  --cna-dk:#004080;
-  --cna-lt:#e8f0fa;
-  --cna-50:#f0f6ff;
-  --gray:#f5f6f8;
-  --brd:#d1d9e6;
-  --txt:#1a2332;
-  --txt2:#6b7a8d;
-  --ok:#28a745;
-  --err:#dc3545;
-  --warn:#ffc107;
-  --r:8px;
-  --rl:12px;
-  --sh:0 4px 12px rgba(0,0,0,0.1);
-}
-
-/* Dark theme */
-[data-theme="dark"]{
-  --cna:#4A9EFF;
-  --cna-dk:#3B8DE8;
-  --cna-lt:#1e3a52;
-  --cna-50:#0f2438;
-  --gray:#0d1117;
-  --brd:#30363d;
-  --txt:#e6edf3;
-  --txt2:#8b949e;
-  --ok:#3fb950;
-  --err:#f85149;
-  --warn:#d29922;
-  --sh:0 4px 12px rgba(0,0,0,0.4);
-}
-
-/* Auto dark mode based on system preference */
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    --cna:#4A9EFF;
-    --cna-dk:#3B8DE8;
-    --cna-lt:#1e3a52;
-    --cna-50:#0f2438;
-    --gray:#0d1117;
-    --brd:#30363d;
-    --txt:#e6edf3;
-    --txt2:#8b949e;
-    --ok:#3fb950;
-    --err:#f85149;
-    --warn:#d29922;
-    --sh:0 4px 12px rgba(0,0,0,0.4);
-  }
-}
-
+:root{--cna:#005CA9;--cna-dk:#004080;--cna-lt:#e8f0fa;--cna-50:#f0f6ff;--gray:#f5f6f8;--brd:#d1d9e6;--txt:#1a2332;--txt2:#6b7a8d;--ok:#28a745;--err:#dc3545;--warn:#ffc107;--r:8px;--rl:12px;--sh:0 4px 12px rgba(0,0,0,0.1)}
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:'Inter',sans-serif;background:var(--gray);color:var(--txt);line-height:1.5;min-height:100vh;transition:background-color 0.3s ease, color 0.3s ease}
+body{font-family:'Inter',sans-serif;background:var(--gray);color:var(--txt);line-height:1.5;min-height:100vh}
 #app-container{display:flex;flex-direction:column;min-height:100vh}
 
 /* LOGIN */
 .login-page{display:flex;align-items:center;justify-content:center;min-height:100vh;background:linear-gradient(135deg,#003366 0%,var(--cna) 50%,#0077cc 100%)}
-.login-card{background:var(--gray);border-radius:16px;padding:40px;width:380px;max-width:90vw;box-shadow:0 20px 60px rgba(0,0,0,.3);transition:background-color 0.3s ease}
+.login-card{background:#fff;border-radius:16px;padding:40px;width:380px;max-width:90vw;box-shadow:0 20px 60px rgba(0,0,0,.3)}
 .login-logo{text-align:center;margin-bottom:24px}
 .login-logo img{height:140px;width:auto}
-.login-card h2{text-align:center;font-size:18px;color:var(--cna);margin-bottom:24px}
+.login-card h2{text-align:center;font-size:18px;color:var(--cna-dk);margin-bottom:24px}
 .login-card .form-group{margin-bottom:16px}
 .login-card .form-group label{display:block;font-size:12px;font-weight:600;color:var(--txt2);text-transform:uppercase;margin-bottom:6px}
-.login-card .form-group input{width:100%;border:1.5px solid var(--brd);border-radius:8px;padding:12px 14px;font-size:14px;font-family:inherit;background:var(--gray);color:var(--txt);transition:background-color 0.3s ease, color 0.3s ease}
+.login-card .form-group input{width:100%;border:1.5px solid var(--brd);border-radius:8px;padding:12px 14px;font-size:14px;font-family:inherit}
 .login-card .form-group input:focus{outline:none;border-color:var(--cna);box-shadow:0 0 0 3px rgba(0,92,169,.15)}
 .login-error{color:var(--err);font-size:13px;text-align:center;margin-bottom:12px;display:none}
 .login-btn{width:100%;padding:14px;background:var(--cna);color:#fff;border:none;border-radius:8px;font-size:15px;font-weight:700;cursor:pointer;transition:.2s;font-family:inherit}
 .login-btn:hover{background:var(--cna-dk)}
 
 /* HEADER */
-.app-header{background:var(--gray);color:var(--txt);position:sticky;top:0;z-index:100;box-shadow:0 1px 4px rgba(0,0,0,0.1);border-bottom:1px solid var(--brd);transition:background-color 0.3s ease}
-.stats-bar-container{background:var(--gray);border-bottom:1px solid var(--brd);padding:12px 0;transition:background-color 0.3s ease}
+.app-header{background:#eceef2;color:var(--txt);position:sticky;top:0;z-index:100;box-shadow:0 1px 4px rgba(0,0,0,0.1);border-bottom:1px solid #d0d4dc}
+.stats-bar-container{background:#f8f9fa;border-bottom:1px solid var(--brd);padding:12px 0}
 .stats-bar{display:flex;justify-content:center;align-items:center;gap:10px;max-width:1200px;margin:0 auto}
-.stat-mini-box{background:var(--cna-50);border:1px solid var(--brd);border-radius:6px;padding:8px 16px;min-width:140px;text-align:center;box-shadow:0 1px 2px rgba(0,0,0,0.05);display:flex;flex-direction:column;align-items:center;transition:background-color 0.3s ease}
-.stat-mini-box:nth-child(1){background:var(--cna-lt);border-color:var(--cna)}
+.stat-mini-box{background:rgba(0,92,169,0.08);border:1px solid rgba(0,92,169,0.2);border-radius:6px;padding:8px 16px;min-width:140px;text-align:center;box-shadow:0 1px 2px rgba(0,0,0,0.05);display:flex;flex-direction:column;align-items:center}
+.stat-mini-box:nth-child(1){background:rgba(0,119,204,0.18);border-color:rgba(0,119,204,0.4)}
 .stat-mini-box:nth-child(2){background:rgba(220,53,69,0.15);border-color:rgba(220,53,69,0.35)}
 .stat-mini-box:nth-child(3){background:rgba(255,193,7,0.2);border-color:rgba(255,193,7,0.4)}
 .stat-mini-box:nth-child(4){background:rgba(40,167,69,0.18);border-color:rgba(40,167,69,0.4)}
 .stat-mini-num{font-size:22px;font-weight:700;color:var(--cna);line-height:1;margin-bottom:3px}
 .stat-mini-label{font-size:10px;color:var(--txt2);font-weight:500;line-height:1.2}
-.header-inner{max-width:1400px;margin:0 auto;padding:16px 24px;display:flex;align-items:center;gap:20px}
+.header-inner{max-width:1100px;margin:0 auto;padding:16px 24px;display:flex;align-items:center;gap:20px}
 .header-logo img{height:100px;width:auto}
 .header-text h1{font-size:18px;font-weight:700;color:var(--cna-dk)}.header-text p{font-size:12px;color:var(--txt2)}
 .header-actions{margin-left:auto;display:flex;gap:8px;align-items:center}
-#theme-toggle{border:1px solid var(--brd);color:var(--txt);background:var(--gray);min-width:44px;display:flex;align-items:center;justify-content:center}
-#theme-toggle:hover{background:var(--cna-50)}
-#theme-icon{font-size:18px;line-height:1}
 .header-user{font-size:13px;color:var(--cna);cursor:pointer;padding:6px 12px;border-radius:6px;transition:.2s;border:1px solid var(--brd);font-weight:500}
 .header-user:hover{background:var(--cna-50)}
 .header-user{font-size:12px;opacity:.8;margin-right:8px}
 
 /* TABS */
-.tabs-bar{background:var(--gray);border-bottom:1px solid var(--brd);box-shadow:0 1px 3px rgba(0,0,0,.06);transition:background-color 0.3s ease}
-.tabs-inner{max-width:1400px;margin:0 auto;display:flex;padding:0 24px;overflow-x:auto;-webkit-overflow-scrolling:touch}
+.tabs-bar{background:#fff;border-bottom:1px solid var(--brd);box-shadow:0 1px 3px rgba(0,0,0,.06)}
+.tabs-inner{max-width:1100px;margin:0 auto;display:flex;padding:0 24px;overflow-x:auto;-webkit-overflow-scrolling:touch}
 .tab-btn{padding:13px 18px;border:none;background:none;font-family:inherit;font-size:13px;font-weight:500;color:var(--txt2);cursor:pointer;white-space:nowrap;border-bottom:3px solid transparent;transition:.2s}
 .tab-btn:hover{color:var(--cna);background:var(--cna-50)}.tab-btn.active{color:var(--cna);border-bottom-color:var(--cna);font-weight:600}
 
 /* MAIN */
-.main-content{max-width:1400px;margin:24px auto;padding:0 24px 100px}
+.main-content{max-width:1100px;margin:24px auto;padding:0 24px 100px}
 .tab-page{display:none}.tab-page.active{display:block}
-.form-card{background:var(--gray);border-radius:var(--rl);box-shadow:0 1px 3px rgba(0,0,0,.08);border:1px solid var(--brd);margin-bottom:20px;overflow:hidden;transition:background-color 0.3s ease}
-.form-card-header{background:var(--cna-lt);padding:13px 20px;border-bottom:1px solid var(--brd);display:flex;align-items:center;gap:10px;transition:background-color 0.3s ease}
-.form-card-header h3{font-size:13px;font-weight:600;color:var(--cna);text-transform:uppercase;letter-spacing:.5px}
-.form-card-body{padding:20px;background:var(--gray);transition:background-color 0.3s ease}
-#contracts-list{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.form-card{background:#fff;border-radius:var(--rl);box-shadow:0 1px 3px rgba(0,0,0,.08);border:1px solid var(--brd);margin-bottom:20px;overflow:hidden}
+.form-card-header{background:var(--cna-lt);padding:13px 20px;border-bottom:1px solid var(--brd);display:flex;align-items:center;gap:10px}
+.form-card-header h3{font-size:13px;font-weight:600;color:var(--cna-dk);text-transform:uppercase;letter-spacing:.5px}
+.form-card-body{padding:20px}
+#contracts-list{min-width:800px}
 .form-row{display:grid;gap:14px;margin-bottom:14px}
 .form-row.c2{grid-template-columns:1fr 1fr}.form-row.c3{grid-template-columns:1fr 1fr 1fr}.form-row.c4{grid-template-columns:repeat(4,1fr)}
 .form-row.c21{grid-template-columns:2fr 1fr}.form-row.c211{grid-template-columns:2fr 1fr 1fr}.form-row.cf{grid-template-columns:2fr 1fr}
 .form-group{display:flex;flex-direction:column}
 .form-group label{font-size:11px;font-weight:600;color:var(--txt2);text-transform:uppercase;letter-spacing:.4px;margin-bottom:5px}
-/* Stile per campi obbligatori */
-.form-group input[required]:not([readonly]),.form-group select[required]{border-left:3px solid #dc3545}
-.form-group input[required]:not([readonly]):focus,.form-group select[required]:focus{border-left:3px solid #dc3545}
-.form-group input[required]:not([readonly]):valid{border-left:3px solid var(--ok)}
-.form-group label:has(+ input[required]:not([readonly]))::after,.form-group label:has(+ select[required])::after{content:' *';color:#dc3545;font-weight:700}
-.form-group input,.form-group select,.form-group textarea{border:1.5px solid var(--brd);border-radius:6px;padding:9px 12px;font-family:inherit;font-size:14px;color:var(--txt);transition:.2s;background:var(--gray)}
+.form-group input,.form-group select,.form-group textarea{border:1.5px solid var(--brd);border-radius:6px;padding:9px 12px;font-family:inherit;font-size:14px;color:var(--txt);transition:.2s;background:#fff}
 .form-group input:focus,.form-group select:focus{outline:none;border-color:var(--cna);box-shadow:0 0 0 3px rgba(0,92,169,.12)}
-.form-group input::placeholder{color:var(--txt2);font-size:13px}
-.form-group input[readonly]{background:var(--cna-50);cursor:not-allowed;opacity:0.7}
+.form-group input::placeholder{color:#b0b8c4;font-size:13px}
 .checkbox-row{display:flex;gap:16px;align-items:center;padding:8px 0;flex-wrap:wrap}
 .checkbox-item{display:flex;align-items:center;gap:6px;cursor:pointer}
 .checkbox-item input[type="checkbox"]{width:18px;height:18px;accent-color:var(--cna)}
@@ -143,114 +101,19 @@ body{font-family:'Inter',sans-serif;background:var(--gray);color:var(--txt);line
 .consent-block p{font-size:12px;color:var(--txt2);margin-bottom:10px;line-height:1.6}
 .consent-toggle{display:flex;gap:16px}.consent-toggle label{display:flex;align-items:center;gap:6px;font-size:13px;font-weight:600;cursor:pointer;text-transform:none;letter-spacing:0;margin-bottom:0}
 .consent-toggle input[type="radio"]{accent-color:var(--cna);width:16px;height:16px}
-.signature-container{border:2px dashed var(--brd);border-radius:var(--r);padding:8px;background:var(--cna-50);transition:background-color 0.3s ease}
-.signature-container canvas{display:block;width:100%;height:120px;background:var(--gray);border-radius:4px;cursor:crosshair;transition:background-color 0.3s ease}
+.signature-container{border:2px dashed var(--brd);border-radius:var(--r);padding:8px;background:var(--cna-50);position:relative}
+.signature-container canvas{display:block;width:100%;height:120px;background:#fff;border-radius:4px;cursor:crosshair}
+.signature-container::before{content:"✍️ Firmare in orizzontale →";position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:rgba(0,92,169,0.15);font-size:18px;font-weight:700;pointer-events:none;z-index:0;white-space:nowrap}
+.signature-container canvas{position:relative;z-index:1}
 .signature-actions{display:flex;justify-content:flex-end;margin-top:6px}
 .btn{padding:10px 20px;border:none;border-radius:6px;font-family:inherit;font-size:13px;font-weight:600;cursor:pointer;transition:.2s;display:inline-flex;align-items:center;gap:6px}
 .btn-primary{background:var(--cna);color:#fff}.btn-primary:hover{background:var(--cna-dk);box-shadow:var(--sh)}
-.btn-outline{background:var(--gray);color:var(--cna);border:1.5px solid var(--cna)}.btn-outline:hover{background:var(--cna-50)}
+.btn-outline{background:#fff;color:var(--cna);border:1.5px solid var(--cna)}.btn-outline:hover{background:var(--cna-50)}
 .btn-sm{padding:6px 12px;font-size:12px}.btn-danger{background:var(--err);color:#fff}
 .btn-success{background:var(--ok);color:#fff}.btn-success:hover{background:#218838}
 .btn-warning{background:var(--warn);color:#333}.btn-warning:hover{background:#e0a800}
-
-/* Icon Buttons - Layout orizzontale compatto */
-.btn-icon{
-  display:flex;
-  flex-direction:row;
-  align-items:center;
-  justify-content:center;
-  gap:8px;
-  padding:12px 16px;
-  border:none;
-  border-radius:8px;
-  background:var(--gray);
-  color:var(--txt);
-  cursor:pointer;
-  transition:.2s;
-  flex:1;
-  min-width:0;
-  font-family:inherit;
-  border:1.5px solid var(--brd);
-}
-.btn-icon:hover{
-  transform:translateY(-2px);
-  box-shadow:0 4px 12px rgba(0,0,0,0.15);
-}
-.btn-icon .icon{
-  font-size:20px;
-  line-height:1;
-  flex-shrink:0;
-}
-.btn-icon .label{
-  font-size:11px;
-  font-weight:600;
-  text-transform:uppercase;
-  letter-spacing:0.3px;
-  white-space:nowrap;
-  overflow:hidden;
-  text-overflow:ellipsis;
-}
-
-/* Icon Only Buttons - Solo icone senza testo */
-.btn-icon-only{
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  padding:14px;
-  border:none;
-  border-radius:10px;
-  background:var(--gray);
-  color:var(--txt);
-  cursor:pointer;
-  transition:.2s;
-  flex:1;
-  min-width:60px;
-  font-family:inherit;
-  border:2px solid var(--brd);
-}
-.btn-icon-only:hover{
-  transform:translateY(-3px);
-  box-shadow:0 6px 16px rgba(0,0,0,0.2);
-}
-.btn-icon-only .icon{
-  stroke:currentColor;
-}
-.btn-icon-only.btn-icon-primary .icon{
-  stroke:#fff;
-}
-.btn-icon-only.btn-icon-warning .icon{
-  stroke:#333;
-}
-.btn-icon-only.btn-icon-success .icon{
-  stroke:#fff;
-}
-
-.btn-icon-primary{
-  background:var(--cna);
-  color:#fff;
-  border-color:var(--cna);
-}
-.btn-icon-primary:hover{
-  background:var(--cna-dk);
-}
-.btn-icon-warning{
-  background:var(--warn);
-  color:#333;
-  border-color:var(--warn);
-}
-.btn-icon-warning:hover{
-  background:#e0a800;
-}
-.btn-icon-success{
-  background:var(--ok);
-  color:#fff;
-  border-color:var(--ok);
-}
-.btn-icon-success:hover{
-  background:#218838;
-}
-.footer-actions{background:var(--gray);border-top:1px solid var(--brd);padding:14px 24px;position:fixed;bottom:0;left:0;right:0;box-shadow:0 -4px 12px rgba(0,0,0,.06);z-index:50;transition:background-color 0.3s ease}
-.footer-inner{max-width:1400px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.footer-actions{background:#fff;border-top:1px solid var(--brd);padding:14px 24px;position:fixed;bottom:0;left:0;right:0;box-shadow:0 -4px 12px rgba(0,0,0,.06);z-index:50}
+.footer-inner{max-width:1100px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
 .toast{position:fixed;bottom:80px;right:24px;background:var(--txt);color:#fff;padding:12px 20px;border-radius:var(--r);font-size:13px;font-weight:500;box-shadow:0 8px 30px rgba(0,0,0,.12);transform:translateY(100px);opacity:0;transition:.3s;z-index:1000;max-width:90vw}
 .toast.show{transform:translateY(0);opacity:1}.toast.success{background:var(--ok)}.toast.error{background:var(--err)}
 .status-badge{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600}
@@ -258,16 +121,16 @@ body{font-family:'Inter',sans-serif;background:var(--gray);color:var(--txt);line
 .status-badge.sent{background:#cce5ff;color:#004085}.status-badge.signed{background:#d4edda;color:#155724}
 .modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;align-items:center;justify-content:center}
 .modal-overlay.show{display:flex}
-.modal{background:var(--gray);border-radius:var(--rl);max-width:500px;width:90%;max-height:80vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.2);transition:background-color 0.3s ease}
-.changelog-entry{border-left:3px solid var(--cna);padding:12px 16px;margin-bottom:20px;background:var(--cna-50);border-radius:6px;transition:background-color 0.3s ease}
-.changelog-entry h3{font-size:15px;font-weight:700;color:var(--cna);margin-bottom:8px}
+.modal{background:#fff;border-radius:var(--rl);max-width:500px;width:90%;max-height:80vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.2)}
+.changelog-entry{border-left:3px solid var(--cna);padding:12px 16px;margin-bottom:20px;background:#f9f9f9;border-radius:6px}
+.changelog-entry h3{font-size:15px;font-weight:700;color:var(--cna-dk);margin-bottom:8px}
 .changelog-entry ul{margin:0;padding-left:20px}
-.changelog-entry li{font-size:13px;line-height:1.6;margin-bottom:4px;color:var(--txt)}
-.modal-header{padding:20px 24px;border-bottom:1px solid var(--brd);display:flex;justify-content:space-between;align-items:center;background:var(--gray);transition:background-color 0.3s ease}
-.modal-header h2{font-size:18px;font-weight:700;color:var(--cna)}.modal-body{padding:24px;background:var(--gray);transition:background-color 0.3s ease}.modal-footer{padding:16px 24px;border-top:1px solid var(--brd);display:flex;gap:10px;justify-content:flex-end;background:var(--gray);transition:background-color 0.3s ease}
+.changelog-entry li{font-size:13px;line-height:1.6;margin-bottom:4px}
+.modal-header{padding:20px 24px;border-bottom:1px solid var(--brd);display:flex;justify-content:space-between;align-items:center}
+.modal-header h2{font-size:18px;font-weight:700;color:var(--cna-dk)}.modal-body{padding:24px}.modal-footer{padding:16px 24px;border-top:1px solid var(--brd);display:flex;gap:10px;justify-content:flex-end}
 .close-btn{background:none;border:none;font-size:24px;cursor:pointer;color:var(--txt2)}
-.contract-item{display:flex;justify-content:space-between;align-items:center;padding:10px 14px;border:1px solid var(--brd);border-radius:var(--r);margin-bottom:8px;background:var(--gray);transition:.2s;gap:12px;flex-wrap:nowrap}
-.contract-item:hover{box-shadow:var(--sh);background:var(--cna-50)}
+.contract-item{display:flex;justify-content:space-between;align-items:center;padding:10px 14px;border:1px solid var(--brd);border-radius:var(--r);margin-bottom:8px;background:#fff;transition:.2s;gap:12px;flex-wrap:nowrap}
+.contract-item:hover{box-shadow:var(--sh)}
 .contract-info{flex:0 1 auto;min-width:0;max-width:400px}
 .contract-info h4{font-size:13px;font-weight:600;margin-bottom:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .contract-info p{font-size:11px;color:var(--txt2);white-space:nowrap}
@@ -282,142 +145,22 @@ body{font-family:'Inter',sans-serif;background:var(--gray);color:var(--txt);line
 .firma-content .form-card{border-radius:var(--rl);margin-bottom:16px}
 
 /* FULLSCREEN SIGNATURE for mobile/tablet */
-.sig-fullscreen{position:fixed;inset:0;z-index:999;background:var(--gray);display:none;flex-direction:column;overflow:hidden}
+.sig-fullscreen{position:fixed;inset:0;z-index:999;background:#fff;display:none;flex-direction:column;overflow:hidden}
 .sig-fullscreen.active{display:flex}
 .sig-fullscreen-header{background:var(--cna);color:#fff;padding:12px 20px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0}
 .sig-fullscreen-header h3{font-size:16px;font-weight:600}
 .sig-fullscreen-body{flex:1;display:flex;flex-direction:column;padding:12px;min-height:0;overflow:hidden}
-.sig-fullscreen-body canvas{width:100%;height:100%;max-height:calc(100vh - 140px);background:var(--gray);border:2px solid var(--brd);border-radius:var(--r);cursor:crosshair;touch-action:none}
-.sig-fullscreen-footer{padding:12px 20px;display:flex;gap:10px;justify-content:center;border-top:1px solid var(--brd);flex-shrink:0;background:var(--gray)}
+.sig-fullscreen-body canvas{width:100%;height:100%;max-height:calc(100vh - 140px);background:#fafafa;border:2px solid var(--brd);border-radius:var(--r);cursor:crosshair;touch-action:none}
+.sig-fullscreen-footer{padding:12px 20px;display:flex;gap:10px;justify-content:center;border-top:1px solid var(--brd);flex-shrink:0;background:#fff}
 
 @media(max-width:768px){
-  /* Layout base mobile */
-  body{font-size:14px}
-  .main-content{padding:0 12px 100px}
-  
-  /* Header mobile */
-  .header-inner{padding:12px 16px;flex-wrap:wrap}
-  .header-logo img{height:70px}
-  .header-text{flex:1;min-width:0}
-  .header-text h1{font-size:16px;line-height:1.3}
-  .header-text p{font-size:11px}
-  .header-actions{width:100%;justify-content:flex-end;margin-top:8px}
-  .header-user{font-size:11px;padding:6px 10px}
-  
-  /* Stats bar mobile */
-  .stats-bar{flex-wrap:wrap;gap:8px;padding:0 12px}
-  .stat-mini-box{min-width:calc(50% - 4px);padding:10px 12px}
-  .stat-mini-num{font-size:20px}
-  .stat-mini-label{font-size:9px}
-  
-  /* Tabs mobile */
-  .tabs-inner{padding:0 12px}
-  .tab-btn{padding:12px 14px;font-size:12px}
-  
-  /* Form cards mobile */
-  .form-card-header{padding:12px 16px}
-  .form-card-header h3{font-size:12px}
-  .form-card-body{padding:16px}
-  
-  /* Form rows mobile - tutti a colonna singola */
   .form-row.c2,.form-row.c3,.form-row.c4,.form-row.c21,.form-row.c211,.form-row.cf{grid-template-columns:1fr}
-  .form-row{gap:12px;margin-bottom:12px}
-  
-  /* Form inputs mobile */
-  .form-group label{font-size:10px;margin-bottom:4px}
-  .form-group input,.form-group select,.form-group textarea{padding:10px 12px;font-size:14px}
-  
-  /* Checkbox mobile */
-  .checkbox-row{gap:12px;padding:6px 0}
-  .checkbox-item{min-width:calc(50% - 6px)}
-  .checkbox-item label{font-size:12px}
-  
-  /* Signature mobile */
-  .signature-container canvas{height:150px}
-  
-  /* Buttons mobile */
-  .btn{padding:12px 18px;font-size:13px;width:100%;justify-content:center}
-  .btn-sm{padding:8px 14px;font-size:12px;width:auto}
-  
-  /* Icon buttons mobile - layout orizzontale compatto */
-  .btn-icon{
-    padding:10px 8px;
-    gap:6px;
-  }
-  .btn-icon .icon{
-    font-size:18px;
-  }
-  .btn-icon .label{
-    font-size:10px;
-  }
-  
-  /* Icon only buttons mobile */
-  .btn-icon-only{
-    padding:12px;
-    min-width:50px;
-  }
-  .btn-icon-only .icon-xl{
-    width:24px;
-    height:24px;
-  }
-  
-  /* Footer mobile */
-  .footer-actions{padding:12px 16px}
-  .footer-inner{flex-direction:column;gap:10px}
-  .footer-inner>div:first-child{text-align:center;width:100%}
-  .footer-inner>div:last-child{display:flex;gap:6px;width:100%;flex-direction:row !important}
-  
-  /* Contract list mobile */
-  #contracts-list{margin:0 -16px;padding:0 16px}
-  .contract-item{flex-direction:column;align-items:flex-start;gap:12px;padding:14px}
-  .contract-info{max-width:100%;width:100%}
-  .contract-info h4{font-size:14px;white-space:normal;line-height:1.4;margin-bottom:6px}
-  .contract-info p{white-space:normal;line-height:1.5;margin-bottom:4px}
-  .contract-actions{width:100%;justify-content:space-between;flex-wrap:wrap}
-  .contract-actions .btn{flex:1;min-width:calc(50% - 4px)}
-  
-  /* Toast mobile */
-  .toast{right:12px;left:12px;bottom:90px;max-width:none}
-  
-  /* Modal mobile */
-  .modal{width:95%;max-height:90vh}
-  .modal-header{padding:16px 20px}
-  .modal-header h2{font-size:16px}
-  .modal-body{padding:20px}
-  .modal-footer{padding:12px 20px;flex-direction:column-reverse}
-  .modal-footer .btn{width:100%}
-  
-  /* Consent blocks mobile */
-  .consent-block{padding:12px 14px}
-  .consent-block p{font-size:11px}
-  .consent-toggle{flex-direction:column;gap:10px}
-  .consent-toggle label{font-size:12px}
-  
-  /* Login mobile */
-  .login-card{padding:30px 24px;width:95vw}
-  .login-logo img{height:100px}
-  .login-card h2{font-size:16px;margin-bottom:20px}
-  
-  /* Changelog mobile */
-  .changelog-entry{padding:10px 14px;margin-bottom:16px}
-  .changelog-entry h3{font-size:14px;margin-bottom:6px}
-  .changelog-entry li{font-size:12px;line-height:1.5}
+  .tab-btn{padding:12px 12px;font-size:12px}.header-text h1{font-size:15px}
+  .header-logo img{height:60px}.header-user{font-size:11px;padding:4px 8px}
+  .footer-inner{flex-direction:column;text-align:center}
+  .footer-inner>div:last-child{display:flex;flex-wrap:wrap;gap:6px;justify-content:center}
+  .contract-item{flex-direction:column;gap:10px}.contract-actions{width:100%;justify-content:center}
 }
-
-/* Mobile landscape */
-@media(max-width:768px) and (orientation:landscape){
-  .stat-mini-box{min-width:calc(25% - 6px)}
-  .header-logo img{height:60px}
-}
-
-/* Tablet */
-@media(min-width:769px) and (max-width:1024px){
-  .main-content{max-width:100%;padding:0 20px 100px}
-  .header-inner,.tabs-inner,.footer-inner{max-width:100%}
-  .form-row.c3,.form-row.c4{grid-template-columns:1fr 1fr}
-  .contract-actions .btn{padding:8px 14px;font-size:12px}
-}
-
 @media print{body{display:none}}
 </style>
 
@@ -446,9 +189,6 @@ body{font-family:'Inter',sans-serif;background:var(--gray);color:var(--txt);line
     <div class="header-logo"><img src="https://festivaldellelibrerie.it/wp-content/uploads/2024/11/logo-cna-colore.svg" alt="CNA"></div>
     <div class="header-text"><h1>Signature 2026</h1><p>Compilazione, invio, gestione e firma contratti CNA Roma</p></div>
     <div class="header-actions">
-      <button class="btn btn-sm btn-outline" onclick="toggleDarkMode()" id="theme-toggle" title="Cambia tema">
-        <span id="theme-icon">🌙</span>
-      </button>
       <button class="btn btn-sm btn-outline" onclick="openChangelog()" title="Note di versione" style="border:1px solid var(--brd);color:var(--txt)">&#x1F4CB; Versioni</button>
       <span class="header-user" id="logged-user" onclick="openProfile()"></span>
       <button class="btn btn-sm btn-outline" style="background:var(--cna);color:#fff;border-color:var(--cna)" onclick="doLogout()">Esci</button>
@@ -479,45 +219,35 @@ body{font-family:'Inter',sans-serif;background:var(--gray);color:var(--txt);line
 </div>
 
 <nav class="tabs-bar" id="tabs-nav" style="display:none"><div class="tabs-inner">
-  <button class="tab-btn" onclick="switchTab(0)" data-tab="0">
-    <svg class="icon" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
-    Nuovo Modulo
-  </button>
-  <button class="tab-btn" onclick="switchTab(1)" data-tab="1">
-    <svg class="icon" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
-    Privacy, INPS e SEPA
-  </button>
-  <button class="tab-btn active" onclick="switchTab(2)" data-tab="2">
-    <svg class="icon" viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"></path></svg>
-    Contratti Salvati
-  </button>
+  <button class="tab-btn" onclick="switchTab(0)" data-tab="0">&#x1F4CB; Nuovo modulo</button>
+  <button class="tab-btn active" onclick="switchTab(4)" data-tab="4">&#x1F4C2; Dashboard Contratti</button>
 </div></nav>
 
 <main class="main-content">
 <!-- TAB 0 -->
 <div class="tab-page" id="tab-0">
-  <div class="form-card"><div class="form-card-header"><svg class="icon" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg><h3>Dati Personali</h3></div><div class="form-card-body">
-    <div class="form-row c2"><div class="form-group"><label>Cognome</label><input type="text" id="cognome" required></div><div class="form-group"><label>Nome</label><input type="text" id="nome" required></div></div>
-    <div class="form-row cf"><div class="form-group"><label>Codice Fiscale</label><input type="text" id="cf" maxlength="16" style="text-transform:uppercase;letter-spacing:1px;font-family:monospace" required></div><div class="form-group"><label>Data di nascita</label><input type="date" id="data_nascita" required></div></div>
+  <div class="form-card"><div class="form-card-header"><span>&#x1F464;</span><h3>Dati Personali</h3></div><div class="form-card-body">
+    <div class="form-row c2"><div class="form-group"><label>Cognome *</label><input type="text" id="cognome" required></div><div class="form-group"><label>Nome *</label><input type="text" id="nome" required></div></div>
+    <div class="form-row cf"><div class="form-group"><label>Codice Fiscale *</label><input type="text" id="cf" maxlength="16" style="text-transform:uppercase;letter-spacing:1px;font-family:monospace" required></div><div class="form-group"><label>Data di nascita</label><input type="date" id="data_nascita" required></div></div>
     <div class="form-row c211"><div class="form-group"><label>Nato/a a</label><input type="text" id="nato_a" required></div><div class="form-group"><label>Prov.</label><input type="text" id="prov_nascita" maxlength="2" style="text-transform:uppercase" required></div><div class="form-group"><label>Stato</label><input type="text" id="stato_nascita" value="Italia" required></div></div>
     <div class="form-row c2"><div class="form-group"><label>Residente in (via)</label><input type="text" id="residente_in" required></div><div class="form-group"><label>Comune</label><input type="text" id="comune_res" required></div></div>
     <div class="form-row c3"><div class="form-group"><label>CAP</label><input type="text" id="cap_res" maxlength="5" required></div><div class="form-group"><label>Prov.</label><input type="text" id="prov_res" maxlength="2" style="text-transform:uppercase" required></div><div class="form-group"><label>Stato</label><input type="text" id="stato_res" value="Italia" required></div></div>
-    <div class="form-row c3"><div class="form-group"><label>Telefono</label><input type="tel" id="telefono" required></div><div class="form-group"><label>Cellulare</label><input type="tel" id="cellulare" required></div><div class="form-group"><label>E-mail</label><input type="email" id="email" required></div>
+    <div class="form-row c3"><div class="form-group"><label>Telefono</label><input type="tel" id="telefono" required></div><div class="form-group"><label>Cellulare</label><input type="tel" id="cellulare" required></div><div class="form-group"><label>E-mail *</label><input type="email" id="email" required></div>
     <div class="form-group">
       <label>Raccolto da</label>
       <input type="text" id="raccolto_da" class="form-input" readonly style="background:#f0f0f0;cursor:not-allowed">
     </div></div>
   </div></div>
-  <div class="form-card"><div class="form-card-header"><svg class="icon" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg><h3>Dati Aziendali</h3></div><div class="form-card-body">
-    <div class="form-row c21"><div class="form-group"><label>Ragione Sociale</label><input type="text" id="ragione_sociale" required></div><div class="form-group"><label>Partita IVA</label><input type="text" id="piva" maxlength="11" style="letter-spacing:1px;font-family:monospace" required></div></div>
-    <div class="form-group" style="margin-bottom:14px"><label>Tipologia</label><div class="checkbox-row"><div class="checkbox-item"><input type="checkbox" id="tipo_a"><label for="tipo_a">Artigiano</label></div><div class="checkbox-item"><input type="checkbox" id="tipo_c"><label for="tipo_c">Commerciante</label></div><div class="checkbox-item"><input type="checkbox" id="tipo_p"><label for="tipo_p">Piccola Impresa</label></div><div class="checkbox-item"><input type="checkbox" id="tipo_v"><label for="tipo_v">Varie</label></div></div></div>
-    <div class="form-row c2"><div class="form-group"><label>Attivita (ATECO)</label><select id="ateco" required><option value="">Seleziona attività...</option></select></div><div class="form-group"><label>PEC</label><input type="email" id="pec" required></div></div>
+  <div class="form-card"><div class="form-card-header"><span>&#x1F3E2;</span><h3>Dati Aziendali</h3></div><div class="form-card-body">
+    <div class="form-row c21"><div class="form-group"><label>Ragione Sociale *</label><input type="text" id="ragione_sociale" required></div><div class="form-group"><label>Partita IVA *</label><input type="text" id="piva" maxlength="11" style="letter-spacing:1px;font-family:monospace" required></div></div>
+    <div class="form-group" style="margin-bottom:14px"><label>Tipologia</label><div class="checkbox-row"><div class="checkbox-item"><input type="checkbox" id="tipo_a" required><label for="tipo_a">Artigiano</label></div><div class="checkbox-item"><input type="checkbox" id="tipo_c" required><label for="tipo_c">Commerciante</label></div><div class="checkbox-item"><input type="checkbox" id="tipo_p" required><label for="tipo_p">Piccola Impresa</label></div><div class="checkbox-item"><input type="checkbox" id="tipo_v" required><label for="tipo_v">Varie</label></div></div></div>
+    <div class="form-row c2"><div class="form-group"><label>Attivita (ATECO)</label><input type="text" id="ateco" required></div><div class="form-group"><label>PEC</label><input type="email" id="pec" required></div></div>
     <div class="form-row c2"><div class="form-group"><label>Sede attivita (via)</label><input type="text" id="sede_attivita" required></div><div class="form-group"><label>Comune</label><input type="text" id="comune_att" required></div></div>
-    <div class="form-row c3"><div class="form-group"><label>CAP</label><input type="text" id="cap_att" maxlength="5" required></div><div class="form-group"><label>Prov.</label><input type="text" id="prov_att" maxlength="2" style="text-transform:uppercase" required></div><div class="form-group"><label>Codice INAIL</label><input type="text" id="cod_inail"></div></div>
-    <div class="form-row c2"><div class="form-group"><label>Cod. INAIL PAT</label><input type="text" id="cod_inail_pat"></div><div class="form-group"><label>Documento identita</label><input type="text" id="documento_id"></div></div>
+    <div class="form-row c3"><div class="form-group"><label>CAP</label><input type="text" id="cap_att" maxlength="5" required></div><div class="form-group"><label>Prov.</label><input type="text" id="prov_att" maxlength="2" style="text-transform:uppercase" required></div><div class="form-group"><label>Codice INAIL</label><input type="text" id="cod_inail" required></div></div>
+    <div class="form-row c2"><div class="form-group"><label>Cod. INAIL PAT</label><input type="text" id="cod_inail_pat" required></div><div class="form-group"><label>Documento identita</label><input type="text" id="documento_id" required></div></div>
   </div></div>
-  <div class="form-card"><div class="form-card-header"><svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line><path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8"></path><line x1="12" y1="18" x2="12" y2="22"></line><line x1="12" y1="2" x2="12" y2="6"></line></svg><h3>Iscrizione e Quote</h3></div><div class="form-card-body">
-    <div class="form-row c2"><div class="form-group"><label>Motivo iscrizione</label><select id="motivo_iscrizione" class="form-input" required>
+  <div class="form-card"><div class="form-card-header"><span>&#x1F4B0;</span><h3>Iscrizione e Quote</h3></div><div class="form-card-body">
+    <div class="form-row c2"><div class="form-group"><label>Raccolta da</label><input type="text" id="promotore" required></div><div class="form-group"><label>Motivo iscrizione</label><select id="motivo_iscrizione" class="form-input" required>
             <option value="">Seleziona motivo...</option>
             <option value="Altro">Altro</option><option value="Credito">Credito</option><option value="Rete commerciale">Rete commerciale</option><option value="Seminari formativi">Seminari formativi</option><option value="Servizi">Servizi</option><option value="Sindacale/Rappresentanza">Sindacale/Rappresentanza</option><option value="Start-up">Start-up</option>
           </select></div></div>
@@ -525,90 +255,102 @@ body{font-family:'Inter',sans-serif;background:var(--gray);color:var(--txt);line
     <!-- SEZIONE QUOTE - Blue CNA Box -->
     <div style="background:linear-gradient(135deg, rgba(0,92,169,0.08) 0%, rgba(0,119,204,0.12) 100%);border:2px solid rgba(0,92,169,0.3);border-radius:8px;padding:20px;margin:20px 0;box-shadow:0 2px 8px rgba(0,92,169,0.15)">
       <h3 style="color:var(--cna);font-size:16px;font-weight:700;margin:0 0 16px 0;display:flex;align-items:center;gap:8px"><span style="font-size:20px">💶</span> Sezione Quote</h3>
-      <div class="form-row c3"><div class="form-group"><label>Quota 1 anno</label><input type="text" id="quota_1_anno" placeholder="€ 100,00" class="currency-input" required></div><div class="form-group"><label>Data adesione</label><input type="date" id="data_adesione" required></div><div class="form-group"><label>Modalita</label><select id="modalita_pagamento_sel" required><option>Sepa immediato</option><option>Bonifico</option><option>Contanti</option><option>Altro</option></select></div></div>
-      <div class="form-row c3"><div class="form-group"><label>Quota INPS</label><input type="text" id="quota_inps" placeholder="€ 100,00" class="currency-input" required></div><div class="form-group"><label>Cod. INPS</label><input type="text" id="cod_inps"></div><div class="form-group"><label>Quota diretta dal secondo anno</label><input type="text" id="quota_diretto" placeholder="€ 100,00" class="currency-input" required></div></div>
+      <div class="form-row c3"><div class="form-group"><label>Quota 1 anno (EUR)</label><input type="text" id="quota_1_anno" required></div><div class="form-group"><label>Data adesione</label><input type="date" id="data_adesione" required></div><div class="form-group"><label>Modalita</label><select id="modalita_pagamento_sel" required><option>Sepa immediato</option><option>Bonifico</option><option>Contanti</option><option>Altro</option></select></div></div>
+      <div class="form-row c3"><div class="form-group"><label>Quota INPS (EUR)</label><input type="text" id="quota_inps" required></div><div class="form-group"><label>Cod. INPS</label><input type="text" id="cod_inps"></div><div class="form-group"><label>Quota diretta dal secondo anno (EUR)</label><input type="text" id="quota_diretto" required></div></div>
     </div>
     
-    <div class="form-group" style="margin-bottom:14px"><label>Modalita pagamento</label><div class="checkbox-row"><div class="checkbox-item"><input type="checkbox" id="mod_rid" checked><label for="mod_rid">RID</label></div><div class="checkbox-item"><input type="checkbox" id="mod_riba"><label for="mod_riba">RIBA</label></div><div class="checkbox-item"><input type="checkbox" id="mod_rd"><label for="mod_rd">R.D.</label></div><div class="checkbox-item"><input type="checkbox" id="mod_sepa"><label for="mod_sepa">Bonifico Sepa</label></div><div class="checkbox-item"><input type="checkbox" id="mod_altro"><label for="mod_altro">Altro</label></div></div></div>
+    <div class="form-group" style="margin-bottom:14px"><label>Modalita pagamento</label><div class="checkbox-row"><div class="checkbox-item"><input type="checkbox" id="mod_rid" checked required><label for="mod_rid">RID</label></div><div class="checkbox-item"><input type="checkbox" id="mod_riba" required><label for="mod_riba">RIBA</label></div><div class="checkbox-item"><input type="checkbox" id="mod_rd" required><label for="mod_rd">R.D.</label></div><div class="checkbox-item"><input type="checkbox" id="mod_sepa" required><label for="mod_sepa">Bonifico Sepa</label></div><div class="checkbox-item"><input type="checkbox" id="mod_altro" required><label for="mod_altro">Altro</label></div></div></div>
     <div class="form-row c2"><div class="form-group"><label>IBAN Ditta</label><input type="text" id="iban_ditta" maxlength="27" style="text-transform:uppercase;letter-spacing:1px;font-family:monospace" required></div><div class="form-group"><label>IBAN CNA</label><input type="text" value="IT 39 T 02008 05165 000400682678" readonly style="background:#f0f0f0;color:#666"></div></div>
   </div></div>
-  <div class="form-card"><div class="form-card-header"><svg class="icon" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg><h3>Dichiarazione e Firma</h3></div><div class="form-card-body">
-    <div class="form-row"><div class="form-group"><label>Data</label><input type="date" id="data_dichiarazione" required></div></div>
+  <div class="form-card"><div class="form-card-header"><span>&#x270D;&#xFE0F;</span><h3>Dichiarazione e Firma</h3></div><div class="form-card-body">
+    <div class="form-row c2"><div class="form-group"><label>Data</label><input type="date" id="data_dichiarazione" required></div><div class="form-group"><label>Firma operatore</label><div class="signature-container"><canvas id="sig_dichiarante"></canvas><div class="signature-actions"><button class="btn btn-sm btn-outline" onclick="clearSignature('sig_dichiarante')">Cancella</button></div></div></div></div>
   </div></div>
-</div>
 
-<!-- TAB 1: PRIVACY -->
-<!-- TAB 1: PRIVACY + INPS + SEPA UNIFICATO -->
-<div class="tab-page" id="tab-1">
   <!-- PRIVACY -->
-  <div class="form-card"><div class="form-card-header"><svg class="icon" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg><h3>Privacy e Consensi</h3></div><div class="form-card-body">
+  <div class="form-card"><div class="form-card-header"><span>&#x1F512;</span><h3>Privacy e Consensi</h3></div><div class="form-card-body">
     <div class="form-row c2"><div class="form-group"><label>Cognome</label><input class="mirror-cognome" readonly style="background:#f0f0f0"></div><div class="form-group"><label>Nome</label><input class="mirror-nome" readonly style="background:#f0f0f0"></div></div>
     <div class="form-group" style="margin-bottom:20px"><label>C.F.</label><input class="mirror-cf" readonly style="background:#f0f0f0;text-transform:uppercase;font-family:monospace"></div>
     <div class="consent-block"><p><strong>a)</strong> Trattamento dati per finalita statutarie e associative.</p><div class="consent-toggle"><label><input type="radio" name="consent_a" value="consente" checked> CONSENTE</label><label><input type="radio" name="consent_a" value="non_consente"> NON CONSENTE</label></div></div>
     <div class="consent-block"><p><strong>b)</strong> Trattamento dati per convenzioni INPS e INAIL.</p><div class="consent-toggle"><label><input type="radio" name="consent_b" value="consente" checked> CONSENTE</label><label><input type="radio" name="consent_b" value="non_consente"> NON CONSENTE</label></div></div>
-    <div class="consent-block"><p><strong>Art. 9</strong> Trattamento categorie particolari di dati.</p><div class="consent-toggle"><label><input type="radio" name="consent_art9" value="consenso" checked> Consenso</label><input type="radio" name="consent_art9" value="mancato"> Mancato</label></div></div>
+    <div class="consent-block"><p><strong>Art. 9</strong> Trattamento categorie particolari di dati.</p><div class="consent-toggle"><label><input type="radio" name="consent_art9" value="consenso" checked> Consenso</label><label><input type="radio" name="consent_art9" value="mancato"> Mancato</label></div></div>
     <div class="consent-block"><p>Comunicazione dati al Sistema Nazionale CNA.</p><div class="consent-toggle"><label><input type="radio" name="consent_sistema" value="consenso" checked> Consenso</label><label><input type="radio" name="consent_sistema" value="mancato"> Mancato</label></div></div>
     <div class="consent-block"><p>Comunicazione dati sui siti web e Social Network CNA.</p><div class="consent-toggle"><label><input type="radio" name="consent_web" value="consenso" checked> Consenso</label><label><input type="radio" name="consent_web" value="mancato"> Mancato</label></div></div>
     <div class="form-row c2" style="margin-top:20px"><div class="form-group"><label>Data</label><input type="date" id="data_consenso" required></div><div class="form-group"><label>Firma</label><div class="signature-container"><canvas id="sig_consenso"></canvas><div class="signature-actions"><button class="btn btn-sm btn-outline" onclick="clearSignature('sig_consenso')">Cancella</button></div></div></div></div>
   </div></div>
-  
+
   <!-- INPS -->
-  <div class="form-card"><div class="form-card-header"><svg class="icon" viewBox="0 0 24 24"><path d="M3 21h18"></path><path d="M5 21V7l8-4v18"></path><path d="M19 21V11l-6-4"></path><path d="M9 9v.01"></path><path d="M9 12v.01"></path><path d="M9 15v.01"></path><path d="M9 18v.01"></path></svg><h3>Delega INPS</h3></div><div class="form-card-body">
+  <div class="form-card"><div class="form-card-header"><span>&#x1F3DB;&#xFE0F;</span><h3>Delega INPS</h3></div><div class="form-card-body">
     <div class="form-row c2"><div class="form-group"><label>Cognome</label><input class="mirror-cognome" readonly style="background:#f0f0f0"></div><div class="form-group"><label>Nome</label><input class="mirror-nome" readonly style="background:#f0f0f0"></div></div>
     <div class="form-row cf"><div class="form-group"><label>C.F.</label><input class="mirror-cf" readonly style="background:#f0f0f0;text-transform:uppercase"></div><div class="form-group"><label>Nato/a il</label><input class="mirror-data-nascita" readonly style="background:#f0f0f0"></div></div>
     <div class="form-row c2"><div class="form-group"><label>In qualita di</label><input type="text" id="qualita_inps"></div><div class="form-group"><label>Data delega</label><input type="date" id="data_inps" required></div></div>
     <div class="form-group"><label>Firma INPS</label><div class="signature-container"><canvas id="sig_inps"></canvas><div class="signature-actions"><button class="btn btn-sm btn-outline" onclick="clearSignature('sig_inps')">Cancella</button></div></div></div>
   </div></div>
-  
+
   <!-- SEPA -->
-  <div class="form-card"><div class="form-card-header"><svg class="icon" viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg><h3>Mandato SEPA</h3></div><div class="form-card-body">
-    <div class="form-row c2"><div class="form-group"><label>ID Creditore</label><input value="IT15001000008015133088" readonly style="background:#f0f0f0;font-family:monospace"></div><div class="form-group"><label>ID Mandato</label><input type="text" id="id_mandato"></div></div>
+  <div class="form-card"><div class="form-card-header"><span>&#x1F3E6;</span><h3>Mandato SEPA</h3></div><div class="form-card-body">
+    <div class="form-row c2"><div class="form-group"><label>ID Creditore</label><input value="IT15001000008015133088" readonly style="background:#f0f0f0;font-family:monospace"></div><div class="form-group"><label>ID Mandato</label><input type="text" id="id_mandato" required></div></div>
     <div class="form-group" style="margin-bottom:14px"><label>Nome debitore</label><input class="mirror-ragione-sociale" readonly style="background:#f0f0f0"></div>
     <div class="form-group" style="margin-bottom:14px"><label>Partita IVA</label><input class="mirror-piva" readonly style="background:#f0f0f0;font-family:monospace"></div>
     <div class="form-group" style="margin-bottom:14px"><label>IBAN</label><input class="mirror-iban" readonly style="background:#f0f0f0;font-family:monospace"></div>
     <div class="form-group" style="margin-bottom:14px"><label>Banca - Agenzia</label><input type="text" id="banca_agenzia" required></div>
-    <div class="form-group" style="margin-bottom:14px"><label>Tipo SEPA</label><div class="checkbox-row"><div class="checkbox-item"><input type="checkbox" id="sepa_b2b" checked><label for="sepa_b2b">B2B</label></div><div class="checkbox-item"><input type="checkbox" id="sepa_core"><label for="sepa_core">CORE</label></div></div></div>
+    <div class="form-group" style="margin-bottom:14px"><label>Tipo SEPA</label><div class="checkbox-row"><div class="checkbox-item"><input type="checkbox" id="sepa_b2b" checked required><label for="sepa_b2b">B2B</label></div><div class="checkbox-item"><input type="checkbox" id="sepa_core" required><label for="sepa_core">CORE</label></div></div></div>
     <div class="form-row c2"><div class="form-group"><label>Data</label><input type="date" id="data_sepa" required></div><div class="form-group"><label>Luogo</label><input type="text" id="luogo_sepa" value="Roma" required></div></div>
     <div class="form-group"><label>Firma SEPA</label><div class="signature-container"><canvas id="sig_sepa"></canvas><div class="signature-actions"><button class="btn btn-sm btn-outline" onclick="clearSignature('sig_sepa')">Cancella</button></div></div></div>
   </div></div>
 </div>
 
-<!-- TAB 2: CONTRATTI -->
-<div class="tab-page active" id="tab-2">
+<!-- TAB 1: PRIVACY - RIMOSSO (unito a tab-0) -->
+<div class="tab-page" id="tab-1" style="display:none">
+</div>
+
+<!-- TAB 2: INPS - RIMOSSO (unito a tab-0) -->
+<div class="tab-page" id="tab-2" style="display:none">
+</div>
+
+<!-- TAB 3: SEPA - RIMOSSO (unito a tab-0) -->
+<div class="tab-page" id="tab-3" style="display:none">
+</div>
+
+<!-- TAB 4: CONTRATTI -->
+<div class="tab-page active" id="tab-4">
   <div class="form-card">
     <div class="form-card-header" style="justify-content:space-between;flex-wrap:wrap;gap:10px">
       <div style="display:flex;align-items:center;gap:10px"><span>&#x1F4C2;</span><h3>Dashboard Contratti</h3></div>
       <button class="btn btn-primary" onclick="newContract()" style="font-size:14px;padding:10px 24px">&#x2795; Nuovo modulo di adesione</button>
     </div>
     <div class="form-card-body">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:8px">
-        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
-          <input type="text" id="search-contracts" placeholder="🔍 Cerca cliente..." style="padding:6px 12px;border:1px solid var(--brd);border-radius:6px;font-size:13px;min-width:200px" oninput="filterContracts()">
-          <select id="filter-tipo" onchange="filterContracts()" style="padding:6px 12px;border:1px solid var(--brd);border-radius:6px;font-size:13px">
-            <option value="">Tutti i tipi</option>
-            <option value="adesione_2025">Tesseramento</option>
-          </select>
-          <select id="filter-anno" onchange="filterContracts()" style="padding:6px 12px;border:1px solid var(--brd);border-radius:6px;font-size:13px">
-            <option value="">Tutti gli anni</option>
-            <option value="2026">2026</option>
-            <option value="2025">2025</option>
-            <option value="2024">2024</option>
-          </select>
-          <select id="filter-caricato" onchange="filterContracts()" style="padding:6px 12px;border:1px solid var(--brd);border-radius:6px;font-size:13px">
-            <option value="">Tutti</option>
-            <option value="1">✅ Caricati</option>
-            <option value="0">⏳ Da caricare</option>
-          </select>
-          <select id="filter-proprietario" onchange="filterContracts()" style="padding:6px 12px;border:1px solid var(--brd);border-radius:6px;font-size:13px">
-            <option value="">Tutti i proprietari</option>
-          </select>
-          <label style="display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer"><input type="checkbox" id="select-all-contracts" onchange="toggleSelectAll(this)" style="width:16px;height:16px;accent-color:var(--cna)"> Seleziona tutti</label>
-          <button class="btn btn-sm btn-outline" onclick="exportExcel()" id="btn-export" style="display:none">&#x1F4CA; Esporta Excel</button>
-          <button class="btn btn-sm btn-danger" onclick="deleteSelected()" id="btn-delete" style="display:none">&#x1F5D1; Elimina</button>
+      <div style="width:1050px;max-width:100%">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;gap:8px;flex-wrap:wrap">
+          <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap">
+            <input type="text" id="search-contracts" placeholder="🔍 Cerca cliente..." style="padding:5px 10px;border:1px solid var(--brd);border-radius:6px;font-size:12px;width:160px" oninput="filterContracts()">
+            <select id="filter-tipo" onchange="filterContracts()" style="padding:5px 8px;border:1px solid var(--brd);border-radius:6px;font-size:12px;width:110px">
+              <option value="">Tutti</option>
+              <option value="adesione_2025" selected>Tesseramento</option>
+            </select>
+            <select id="filter-anno" onchange="filterContracts()" style="padding:5px 8px;border:1px solid var(--brd);border-radius:6px;font-size:12px;width:80px">
+              <option value="">Anni</option>
+              <option value="2026" selected>2026</option>
+              <option value="2025">2025</option>
+              <option value="2024">2024</option>
+            </select>
+            <select id="filter-stato-firma" onchange="filterContracts()" style="padding:5px 8px;border:1px solid var(--brd);border-radius:6px;font-size:12px;width:105px">
+              <option value="">Stato firma</option>
+              <option value="firmato">Firmati</option>
+              <option value="non_firmato">Non firmati</option>
+            </select>
+            <select id="filter-proprietario" onchange="filterContracts()" style="padding:5px 8px;border:1px solid var(--brd);border-radius:6px;font-size:12px;width:130px">
+              <option value="">Proprietari</option>
+            </select>
+          </div>
+          <button class="btn btn-sm btn-outline" onclick="loadContracts()" style="flex-shrink:0;padding:5px 10px;font-size:12px">🔄</button>
         </div>
-        <button class="btn btn-sm btn-outline" onclick="loadContracts()">&#x21BB; Aggiorna</button>
+        <div style="display:flex;gap:6px;align-items:center;margin-bottom:16px;flex-wrap:wrap">
+          <label style="display:flex;align-items:center;gap:4px;font-size:12px;cursor:pointer;white-space:nowrap"><input type="checkbox" id="select-all-contracts" onchange="toggleSelectAll(this)" style="width:14px;height:14px;accent-color:var(--cna)" required> Tutti</label>
+          <button class="btn btn-sm btn-outline" onclick="exportExcel()" id="btn-export" style="display:none;padding:4px 8px;font-size:11px">📊 Excel</button>
+          <button class="btn btn-sm btn-danger" onclick="deleteSelected()" id="btn-delete" style="display:none;padding:4px 8px;font-size:11px">🗑️</button>
+        </div>
       </div>
-      <div id="contracts-list"><p style="text-align:center;color:var(--txt2);padding:40px">Caricamento...</p></div>
+      <div id="contracts-list" style="width:1050px;max-width:100%"><p style="text-align:center;color:var(--txt2);padding:40px">Caricamento...</p></div>
     </div>
   </div>
 </div>
@@ -616,19 +358,11 @@ body{font-family:'Inter',sans-serif;background:var(--gray);color:var(--txt);line
 
 <div class="footer-actions" id="footer-form-actions" style="display:none"><div class="footer-inner">
   <span id="status-indicator" class="status-badge empty">Non compilato</span>
-  <div style="display:flex;gap:8px;flex:1;align-items:stretch">
-    <button class="btn-icon-only" onclick="previewPDF()" title="Anteprima PDF">
-      <svg class="icon icon-xl" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
-    </button>
-    <button class="btn-icon-only btn-icon-primary" onclick="saveToSupabase()" title="Salva bozza">
-      <svg class="icon icon-xl" viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
-    </button>
-    <button class="btn-icon-only btn-icon-warning" onclick="saveAndSend()" title="Salva e invia email">
-      <svg class="icon icon-xl" viewBox="0 0 24 24"><path d="M22 2L11 13"></path><path d="M22 2l-7 20-4-9-9-4 20-7z"></path></svg>
-    </button>
-    <button class="btn-icon-only btn-icon-success" onclick="generatePDF()" title="Scarica PDF compilato">
-      <svg class="icon icon-xl" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
-    </button>
+  <div style="display:flex;gap:8px;flex-wrap:wrap">
+    <button class="btn btn-outline" onclick="previewPDF()">Anteprima</button>
+    <button class="btn btn-primary" onclick="saveToSupabase()">Salva</button>
+    <button class="btn btn-warning" onclick="saveAndSend()">Salva e Invia</button>
+    <button class="btn btn-success" onclick="generatePDF()">Scarica PDF</button>
   </div>
 </div></div>
 
@@ -658,13 +392,16 @@ body{font-family:'Inter',sans-serif;background:var(--gray);color:var(--txt);line
         </div>
       </div>
     </div>
-    <div style="background:#fff3cd;border:2px solid #ffc107;border-radius:8px;padding:14px;margin-top:14px">
-      <p style="font-size:14px;font-weight:700;color:#856404;margin:0 0 8px 0;display:flex;align-items:center;gap:6px">
-        <span style="font-size:18px">⚠️</span> IMPORTANTE: Come formattare l'email
+    <div style="background:#d1ecf1;border:2px solid #0c5460;border-radius:8px;padding:14px;margin-top:14px">
+      <p style="font-size:14px;font-weight:700;color:#0c5460;margin:0 0 8px 0;display:flex;align-items:center;gap:6px">
+        <span style="font-size:18px">📧</span> Come funziona l'invio
       </p>
-      <p style="font-size:13px;color:#856404;margin:0;line-height:1.6">
-        <strong>Il corpo della mail con firma HTML viene copiato negli appunti.</strong><br>
-        Dopo l'apertura del client di posta, <strong style="background:#ffc107;padding:2px 6px;border-radius:4px;color:#000">incolla (Ctrl+V o Cmd+V)</strong> per avere la formattazione completa con logo e link cliccabile.
+      <p style="font-size:13px;color:#0c5460;margin:0;line-height:1.6">
+        Quando clicchi su <strong>"Invia Link"</strong>:<br>
+        1️⃣ Il corpo dell'email HTML viene <strong>copiato automaticamente</strong> negli appunti<br>
+        2️⃣ Si apre <strong>Gmail web</strong> in una nuova scheda con destinatario e oggetto già compilati<br>
+        3️⃣ Clicca nel corpo dell'email e <strong style="background:#bee5eb;padding:2px 6px;border-radius:4px;color:#000">incolla (Ctrl+V o Cmd+V)</strong><br>
+        4️⃣ Verifica che il formato sia corretto e clicca <strong>"Invia"</strong>
       </p>
     </div>
   </div>
@@ -711,179 +448,6 @@ body{font-family:'Inter',sans-serif;background:var(--gray);color:var(--txt);line
   <div class="modal-header"><h2>&#x1F4CB; Note di versione</h2><button class="close-btn" onclick="closeModal('modal-changelog')">&times;</button></div>
   <div class="modal-body" style="max-height:70vh;overflow-y:auto">
     
-    <div class="changelog-entry" style="border-left-color:#28a745;background:#e8f5e9">
-      <h3>v10.3 - 27 Aprile 2026 🆕</h3>
-      <ul>
-        <li><strong>✅ BADGE VERIFICA:</strong> stella blu arrotondata con spunta bianca (forma identica all'immagine)</li>
-        <li><strong>🔵 Design Perfetto:</strong> bordi arrotondati, forma organica, SVG 20x20px accanto al nome</li>
-        <li><strong>⭐ Condizione:</strong> appare solo se stato=firmato AND caricato_gestionale=true</li>
-        <li><strong>🔍 FILTRO CARICATI:</strong> nuovo dropdown per filtrare "Tutti / ✅ Caricati / ⏳ Da caricare"</li>
-        <li><strong>📊 Filtro Completo:</strong> cerca, tipo, anno, caricati/da caricare, proprietario</li>
-        <li><strong>💾 Data Attribute:</strong> aggiunto data-caricato="0/1" per filtro funzionante</li>
-      </ul>
-    </div>
-
-    <div class="changelog-entry">
-      <h3>v10.2 - 27 Aprile 2026</h3>
-      <ul>
-        <li><strong>🐛 FIX FILTRO PROPRIETARIO:</strong> corretto bug dropdown che non filtrava i contratti</li>
-        <li><strong>🔧 FIX HTML Encoding:</strong> usato createElement() invece di template string per evitare encoding HTML</li>
-        <li><strong>🔤 Normalizzazione Unicode:</strong> aggiunto .normalize('NFC') per caratteri speciali (à, è, etc)</li>
-        <li><strong>✂️ Trim + Normalize:</strong> pulizia completa stringhe prima del confronto</li>
-        <li><strong>✅ Testato:</strong> verificato con nome "Eleonora Lacquaniti" - funziona!</li>
-      </ul>
-    </div>
-
-    <div class="changelog-entry">
-      <h3>v10.1 - 27 Aprile 2026</h3>
-      <ul>
-        <li><strong>🎨 ICONE MINIMALI SVG:</strong> tutte le emoji sostituite con icone line-art moderne</li>
-        <li><strong>⚫ Stile Minimal:</strong> icone grigio scuro (#1a2332) stile line, stroke 2px</li>
-        <li><strong>📐 Design Coerente:</strong> stesso stile iconografico in tutta l'app</li>
-        <li><strong>✨ Icone SVG:</strong> scalabili, nitide su tutti gli schermi</li>
-        <li><strong>🎯 Tab con Icone:</strong> documento, lucchetto, grafico activity</li>
-        <li><strong>🔘 Pulsanti con Icone:</strong> occhio, salva, invia, PDF</li>
-        <li><strong>📋 Form Cards con Icone:</strong> persona, edificio, dollaro, firma, lucchetto, banca</li>
-        <li><strong>🌙 Dark Mode:</strong> icone cambiano colore automaticamente (#e6edf3 in dark)</li>
-      </ul>
-    </div>
-
-    <div class="changelog-entry">
-      <h3>v10.0 - 27 Aprile 2026</h3>
-      <ul>
-        <li><strong>🎨 TAB UNIFICATO:</strong> Privacy + INPS + SEPA ora in un unico tab "📋 Privacy, INPS e SEPA"</li>
-        <li><strong>📊 3 TAB TOTALI:</strong> da 5 tab a 3 tab (Nuovo Modulo, Privacy/INPS/SEPA, Contratti)</li>
-        <li><strong>❌ Campi Non Obbligatori:</strong> "In qualità di" (INPS) e "ID Mandato" (SEPA) non più required</li>
-        <li><strong>🎯 MENU SOLO ICONE:</strong> pulsanti footer senza testo, solo icone grandi (26px desktop, 22px mobile)</li>
-        <li><strong>✨ Pulsanti Più Grandi:</strong> padding 14px, border radius 10px, border 2px</li>
-        <li><strong>🎨 Hover Potenziato:</strong> sollevamento 3px e ombra più marcata</li>
-        <li><strong>📱 Mobile Ottimizzato:</strong> min-width 50px, icone 22px su smartphone</li>
-        <li><strong>🚀 UX Migliorata:</strong> navigazione più veloce con meno click tra tab</li>
-      </ul>
-    </div>
-
-    <div class="changelog-entry">
-      <h3>v9.7 - 27 Aprile 2026</h3>
-      <ul>
-        <li><strong>🖊️ Firma BLU:</strong> colore firma cambiato da nero (#1a2332) a blu CNA (#005CA9)</li>
-        <li><strong>📏 Firme PDF Più Grandi:</strong> dimensioni aumentate da 320x50px a 360x60px (+12.5% larghezza, +20% altezza)</li>
-        <li><strong>🎯 Firme Centrate:</strong> tutte le 5 firme sono ora perfettamente centrate nei box del PDF</li>
-        <li><strong>✏️ Spessore Ridotto:</strong> lineWidth da 5px a 3px per firma più elegante e leggibile</li>
-        <li><strong>🔍 Debug Filtro:</strong> aggiunto console.log per verificare il funzionamento del filtro proprietario</li>
-        <li><strong>📍 Posizioni Ottimizzate:</strong> tutte le coordinate X centrate (280, 280, 205, 220, 240)</li>
-      </ul>
-    </div>
-
-    <div class="changelog-entry">
-      <h3>v9.6 - 27 Aprile 2026</h3>
-      <ul>
-        <li><strong>🐛 FIX Pulsanti Mobile:</strong> layout orizzontale forzato anche su mobile (era verticale per errore CSS)</li>
-        <li><strong>🐛 FIX Filtro Proprietario:</strong> aggiunto data-proprietario mancante nella dashboard contratti</li>
-        <li><strong>✅ Filtro Funzionante:</strong> ora il filtro per proprietario funziona correttamente</li>
-        <li><strong>📱 Mobile Orizzontale:</strong> gap ridotto a 6px, pulsanti sempre in fila</li>
-        <li><strong>🎯 Layout Stabile:</strong> !important su flex-direction:row per evitare override</li>
-      </ul>
-    </div>
-
-    <div class="changelog-entry">
-      <h3>v9.5 - 27 Aprile 2026</h3>
-      <ul>
-        <li><strong>↔️ Pulsanti Footer Orizzontali:</strong> layout cambiato da verticale a orizzontale</li>
-        <li><strong>📏 Riempimento Larghezza:</strong> i 4 pulsanti riempiono tutta la larghezza disponibile</li>
-        <li><strong>⚖️ Dimensioni Uguali:</strong> ogni pulsante ha flex:1 per dimensioni identiche</li>
-        <li><strong>📱 Più Compatti:</strong> icone 20px, padding ridotto, label abbreviate</li>
-        <li><strong>🎯 Label Brevi:</strong> "Anteprima", "Salva", "Invia", "PDF"</li>
-        <li><strong>💪 Ottimizzazione Spazio:</strong> footer occupa meno altezza verticale</li>
-        <li><strong>📲 Mobile Ottimizzato:</strong> ancora più compatti su smartphone (icone 18px)</li>
-      </ul>
-    </div>
-
-    <div class="changelog-entry">
-      <h3>v9.4 - 27 Aprile 2026</h3>
-      <ul>
-        <li><strong>🌙 Dark Mode Completo:</strong> TUTTI gli elementi ora si scuriscono correttamente</li>
-        <li><strong>📱 Header Dark:</strong> header e stats bar completamente dark</li>
-        <li><strong>🎨 Tabs Dark:</strong> navigation tabs con sfondo scuro</li>
-        <li><strong>📝 Form Dark:</strong> tutti i form cards, inputs, select e textarea in dark mode</li>
-        <li><strong>🖊️ Canvas Dark:</strong> canvas firma con sfondo adattato al tema</li>
-        <li><strong>🔘 Pulsanti Dark:</strong> tutti i pulsanti adattati con variabili CSS</li>
-        <li><strong>📊 Contratti Dark:</strong> lista contratti completamente scura</li>
-        <li><strong>💬 Modal Dark:</strong> tutti i modal e changelog in dark mode</li>
-        <li><strong>🔑 Login Dark:</strong> schermata login adattata al tema</li>
-        <li><strong>✨ Transizioni:</strong> tutte le transizioni 0.3s ease per cambio fluido</li>
-      </ul>
-    </div>
-
-    <div class="changelog-entry">
-      <h3>v9.3 - 27 Aprile 2026</h3>
-      <ul>
-        <li><strong>🎨 Pulsanti Footer Ridisegnati:</strong> i 4 pulsanti principali (Anteprima, Salva, Salva e Invia, Scarica PDF) sono ora più compatti e iconici</li>
-        <li><strong>📱 Layout Verticale:</strong> icona grande sopra, label sotto per migliore usabilità mobile</li>
-        <li><strong>🎯 Icone Emoji:</strong> 👁️ Anteprima, 💾 Salva, 📧 Salva e Invia, 📄 Scarica PDF</li>
-        <li><strong>✨ Hover Effects:</strong> animazione lift al passaggio del mouse per feedback visivo</li>
-        <li><strong>📏 Dimensioni Ottimizzate:</strong> min-width 80px desktop, 70px mobile con flex per adattarsi</li>
-        <li><strong>🎨 Colori Coerenti:</strong> mantengono i colori CNA (blu, giallo, verde) per azioni diverse</li>
-        <li><strong>♿ Accessibilità:</strong> tooltip con title attribute per screen reader</li>
-      </ul>
-    </div>
-
-    <div class="changelog-entry">
-      <h3>v9.2 - 27 Aprile 2026</h3>
-      <ul>
-        <li><strong>🌙 Modalità Dark:</strong> tema scuro completo con transizioni fluide</li>
-        <li><strong>🌓 Auto-detect sistema:</strong> si attiva automaticamente in base alle impostazioni del device</li>
-        <li><strong>🔘 Toggle manuale:</strong> pulsante nell'header per cambiare tema al volo (🌙/☀️)</li>
-        <li><strong>💾 Preferenza salvata:</strong> il tema scelto viene ricordato in localStorage</li>
-        <li><strong>🎨 Colori ottimizzati:</strong> palette dark studiata per ridurre affaticamento visivo</li>
-        <li><strong>📱 Tutto responsive:</strong> dark mode funziona perfettamente su mobile, tablet e desktop</li>
-        <li><strong>✨ Transizioni smooth:</strong> cambio tema fluido senza bruschi cambiamenti</li>
-        <li><strong>🖊️ Firma in dark:</strong> canvas firma si adatta al tema corrente</li>
-      </ul>
-    </div>
-
-    <div class="changelog-entry">
-      <h3>v9.1 - 27 Aprile 2026</h3>
-      <ul>
-        <li><strong>Desktop più ampio:</strong> larghezza massima aumentata da 1100px a 1400px per sfruttare meglio gli schermi grandi</li>
-        <li><strong>Tabella contratti più larga:</strong> visualizzazione ottimizzata con scroll orizzontale fluido su mobile</li>
-        <li><strong>Mobile completamente rinnovato:</strong> impaginazione coerente e ottimizzata per smartphone</li>
-        <li><strong>Stats bar responsive:</strong> statistiche si adattano perfettamente a tutti gli schermi</li>
-        <li><strong>Contratti mobile:</strong> card verticali con azioni a tutta larghezza per tocco più facile</li>
-        <li><strong>Form mobile migliorati:</strong> tutti i campi ottimizzati per digitazione su touchscreen</li>
-        <li><strong>Footer responsive:</strong> pulsanti impilati verticalmente su mobile per migliore usabilità</li>
-        <li><strong>Tablet ottimizzato:</strong> layout specifico per iPad e tablet Android</li>
-        <li><strong>Landscape mobile:</strong> supporto specifico per orientamento orizzontale</li>
-      </ul>
-    </div>
-
-    <div class="changelog-entry">
-      <h3>v9.0 - 27 Aprile 2026</h3>
-      <ul>
-        <li><strong>Firma cliente in TUTTI i box:</strong> la firma del cliente appare ora in tutte e 5 le posizioni del PDF (compresa la prima pagina)</li>
-        <li><strong>Messaggio "Nuovo modulo":</strong> cambiato da "Cancellare tutti i dati?" a "Vuoi aggiungere un nuovo modulo di adesione?"</li>
-        <li><strong>Documento identità NON obbligatorio:</strong> rimosso il vincolo required dal campo</li>
-        <li><strong>Validazione completa:</strong> se mancano campi obbligatori, viene bloccato salvataggio, invio email e generazione PDF</li>
-        <li><strong>Campi quote con formato €:</strong> Quota 1 anno, Quota INPS e Quota diretta mostrano formato "€ 100,00"</li>
-        <li><strong>Formattazione automatica:</strong> i campi quote si formattano automaticamente quando si esce dal campo</li>
-        <li><strong>Visual feedback migliorato:</strong> i campi obbligatori non compilati vengono evidenziati e si scrolla automaticamente al primo campo vuoto</li>
-      </ul>
-    </div>
-
-    <div class="changelog-entry">
-      <h3>v8.0 - 27 Aprile 2026</h3>
-      <ul>
-        <li><strong>Campo "Raccolto da":</strong> corretto, appare una sola volta (automatico, readonly)</li>
-        <li><strong>Campo Attività (ATECO):</strong> menu a tendina che carica i mestieri dalla tabella codiciateco</li>
-        <li><strong>Eliminazione duplicati:</strong> i mestieri duplicati vengono automaticamente rimossi</li>
-        <li><strong>Campi obbligatori evidenziati:</strong> bordo sinistro rosso e asterisco * rosso automatico</li>
-        <li><strong>Campi NON obbligatori:</strong> Codice INAIL, Codice INAIL PAT, Codice INPS, Documento identità</li>
-        <li><strong>Firma operatore eliminata:</strong> rimossa completamente dalla sezione Dichiarazione</li>
-        <li><strong>Firma cliente ingrandita nel PDF:</strong> dimensioni 320x50px (da 250x35px), spessore 5px (da 3px)</li>
-        <li><strong>Firma centrata:</strong> tutte le firme sono ora centrate nei box del PDF</li>
-        <li><strong>Visual feedback:</strong> bordo diventa verde quando il campo obbligatorio è compilato</li>
-      </ul>
-    </div>
-
     <div class="changelog-entry">
       <h3>v5.1 - 27 Aprile 2026</h3>
       <ul>
@@ -1264,7 +828,7 @@ function showSigningUI(ct,token){
 
       <!-- PRIVACY / CONSENSI -->
       <div class="form-card" style="margin-bottom:20px;border:2px solid var(--cna)">
-        <div class="form-card-header"><svg class="icon" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg><h3>Informativa Privacy - Consensi obbligatori</h3></div>
+        <div class="form-card-header"><span>&#x1F512;</span><h3>Informativa Privacy - Consensi obbligatori</h3></div>
         <div class="form-card-body" style="padding:16px">
           <p style="font-size:12px;color:var(--txt2);line-height:1.7;margin-bottom:16px">
             Ai sensi del Regolamento UE 2016/679 (GDPR), art. 13 e 14, il Titolare del trattamento e CNA - Confederazione Nazionale dell'Artigianato e della Piccola e Media Impresa, P.zza Mariano Armellini 9A, 00162 Roma. RPD: rpd@cna.it. I dati sono raccolti per dare corso all'adesione, gestire gli associati, fornire servizi di consulenza e assistenza. Base giuridica: consenso dell'interessato, obbligo contrattuale, obbligo legale, legittimo interesse. Conservazione: max 10 anni dalla revoca. Diritti: accesso, rettifica, cancellazione, limitazione, opposizione, revoca consenso, reclamo all'Autorita di controllo.
@@ -1309,7 +873,7 @@ function showSigningUI(ct,token){
 
       <!-- DOCUMENTO DI IDENTITA -->
       <div class="form-card" style="margin-bottom:20px;border:2px solid var(--cna)">
-        <div class="form-card-header"><svg class="icon" viewBox="0 0 24 24"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg><h3>Documento di Identita (obbligatorio)</h3></div>
+        <div class="form-card-header"><span>&#x1F4F7;</span><h3>Documento di Identita (obbligatorio)</h3></div>
         <div class="form-card-body" style="padding:16px">
           <p style="font-size:12px;color:var(--txt2);margin-bottom:14px">Carica fronte e retro del documento di identita in corso di validita (CI, Passaporto, Patente).</p>
           <div style="display:flex;gap:10px;margin-bottom:14px;flex-wrap:wrap">
@@ -1471,25 +1035,25 @@ async function previewContractPDF(token){
 
 // Signature positions: [page_index, x, y, width, height]
 const SIG_POS={
-  dichiarante:[0,280,175,360,60],   // Page 1: Prima firma - centrato orizzontalmente, più grande
-  consenso:[0,280,59,360,60],       // Page 1: "Firma di chi esprime il consenso" - centrato, più grande
-  privacy:[1,205,10,360,60],        // Page 2: "FIRMA" privacy - centrato, più grande
-  inps:[2,220,75,360,60],           // Page 3: "FIRMA" delega INPS - centrato, più grande
-  sepa:[3,240,143,360,60]           // Page 4: "Firma" SEPA - centrato, più grande
+  // dichiarante:[0,340,180,250,35],   // REMOVED: Firma operatore
+  consenso:[0,340,64,250,35],       // Page 1: "Firma di chi esprime il consenso"
+  privacy:[1,265,15,250,35],        // Page 2: "FIRMA" privacy
+  inps:[2,280,80,250,35],           // Page 3: "FIRMA" delega INPS (raised from 42 to 80)
+  sepa:[3,300,148,250,35]           // Page 4: "Firma" SEPA
 };
 async function embedSigs(doc,pages,data){
   const es=async(b64,pos)=>{if(!b64||!b64.startsWith('data:'))return;try{const i=await doc.embedPng(b64);pages[pos[0]].drawImage(i,{x:pos[1],y:pos[2],width:pos[3],height:pos[4]});}catch(e){console.warn('Sig embed:',e);}};
   
-  // If client signature exists, apply it to ALL 5 positions
+  // If client signature exists, apply it to ALL 4 positions (removed dichiarante/operatore)
   if(data.firma_cliente_path){
-    await es(data.firma_cliente_path,SIG_POS.dichiarante);
+    // await es(data.firma_cliente_path,SIG_POS.dichiarante); // REMOVED
     await es(data.firma_cliente_path,SIG_POS.consenso);
     await es(data.firma_cliente_path,SIG_POS.privacy);
     await es(data.firma_cliente_path,SIG_POS.inps);
     await es(data.firma_cliente_path,SIG_POS.sepa);
   }else{
-    // Otherwise use individual signatures from form - firma consenso su tutte
-    await es(data.firma_consenso_base64,SIG_POS.dichiarante);
+    // Otherwise use individual signatures from form
+    // await es(data.firma_dichiarante_base64,SIG_POS.dichiarante); // REMOVED
     await es(data.firma_consenso_base64,SIG_POS.consenso);
     await es(data.firma_consenso_base64,SIG_POS.privacy);
     await es(data.firma_delega_inps_base64,SIG_POS.inps);
@@ -1524,46 +1088,16 @@ function fillPDF(form,data){
   try{const dd=form.getDropdown('modalità');dd.select(data.quota_primo_anno_modalita||'Sepa immediato');}catch(e){}
 }
 
-// === VALIDATION ===
-function validateRequiredFields(){
-  const requiredInputs=document.querySelectorAll('input[required]:not([readonly]),select[required]');
-  let allValid=true;
-  let firstInvalid=null;
-  
-  requiredInputs.forEach(input=>{
-    const value=input.value.trim();
-    if(!value||value===''){
-      allValid=false;
-      if(!firstInvalid)firstInvalid=input;
-      input.style.borderColor='#dc3545';
-    }else{
-      input.style.borderLeft='3px solid #28a745';
-    }
-  });
-  
-  if(!allValid&&firstInvalid){
-    firstInvalid.focus();
-    firstInvalid.scrollIntoView({behavior:'smooth',block:'center'});
-  }
-  
-  return allValid;
-}
-
 // === COLLECT & SAVE ===
 function collectFormData(){
   const v=id=>(document.getElementById(id)||{}).value||'';
   const c=id=>(document.getElementById(id)||{}).checked||false;
   const r=name=>{const el=document.querySelector(`input[name="${name}"]:checked`);return el?el.value:'';};
   const mods=[];if(c('mod_rid'))mods.push('RID');if(c('mod_riba'))mods.push('RIBA');if(c('mod_rd'))mods.push('R.D.');if(c('mod_sepa'))mods.push('Bonifico Sepa');if(c('mod_altro'))mods.push('Altro');
-  return{cognome:v('cognome'),nome:v('nome'),codice_fiscale:v('cf').toUpperCase(),nato_il:v('data_nascita')||null,luogo_nascita:v('nato_a'),prov_nascita:v('prov_nascita').toUpperCase(),stato_nascita:v('stato_nascita'),residente_comune:v('comune_res'),residente_indirizzo:v('residente_in'),residente_cap:v('cap_res'),residente_prov:v('prov_res').toUpperCase(),stato_residenza:v('stato_res'),telefono:v('telefono'),cellulare:v('cellulare'),email:v('email'),ragione_sociale:v('ragione_sociale'),partita_iva:v('piva'),qualita_artigiano:c('tipo_a'),qualita_commerciante:c('tipo_c'),qualita_piccola_impresa:c('tipo_p'),qualita_varie:c('tipo_v'),attivita_svolta:v('ateco'),pec:v('pec'),sede_attivita_indirizzo:v('sede_attivita'),sede_attivita_cap:v('cap_att'),sede_attivita_comune:v('comune_att'),sede_attivita_prov:v('prov_att').toUpperCase(),codice_inail_ditta:v('cod_inail'),cod_inail_pat:v('cod_inail_pat'),documento_identita:v('documento_id'),raccolta_da:v('raccolto_da'),motivo_iscrizione:v('motivo_iscrizione'),quota_primo_anno_importo:parseFloat(v('quota_1_anno').replace(',','.'))||null,quota_primo_anno_data:v('data_adesione')||null,quota_primo_anno_modalita:v('modalita_pagamento_sel'),quota_anni_successivi_importo:parseFloat(v('quota_inps').replace(',','.'))||null,cod_inps:v('cod_inps'),quota_diretto_importo:parseFloat(v('quota_diretto').replace(',','.'))||null,modalita_pagamento:mods.join(', '),iban_ditta:v('iban_ditta').toUpperCase(),data_dichiarante:v('data_dichiarazione')||null,data_consenso:v('data_consenso')||null,firma_consenso_base64:getSignatureDataUrl('sig_consenso'),consenso_trattamento_generale:r('consent_a')==='consente',consenso_trattamento_inps_inail:r('consent_b')==='consente',consenso_art9:r('consent_art9')==='consenso',consenso_sistema_cna:r('consent_sistema')==='consenso',consenso_web_social:r('consent_web')==='consenso',qualita_inps:v('qualita_inps'),data_delega_inps:v('data_inps')||null,firma_delega_inps_base64:getSignatureDataUrl('sig_inps'),sepa_identificativo_mandato:v('id_mandato'),sepa_b2b_checkbox:c('sepa_b2b'),sepa_core_checkbox:c('sepa_core'),data_sottoscrizione_sepa:v('data_sepa')||null,luogo_sottoscrizione_sepa:v('luogo_sepa'),banca_agenzia:v('banca_agenzia'),firma_sepa_base64:getSignatureDataUrl('sig_sepa'),stato:'bozza',created_by:loggedUser?loggedUser.id:null};
+  return{cognome:v('cognome'),nome:v('nome'),codice_fiscale:v('cf').toUpperCase(),nato_il:v('data_nascita')||null,luogo_nascita:v('nato_a'),prov_nascita:v('prov_nascita').toUpperCase(),stato_nascita:v('stato_nascita'),residente_comune:v('comune_res'),residente_indirizzo:v('residente_in'),residente_cap:v('cap_res'),residente_prov:v('prov_res').toUpperCase(),stato_residenza:v('stato_res'),telefono:v('telefono'),cellulare:v('cellulare'),email:v('email'),ragione_sociale:v('ragione_sociale'),partita_iva:v('piva'),qualita_artigiano:c('tipo_a'),qualita_commerciante:c('tipo_c'),qualita_piccola_impresa:c('tipo_p'),qualita_varie:c('tipo_v'),attivita_svolta:v('ateco'),pec:v('pec'),sede_attivita_indirizzo:v('sede_attivita'),sede_attivita_cap:v('cap_att'),sede_attivita_comune:v('comune_att'),sede_attivita_prov:v('prov_att').toUpperCase(),codice_inail_ditta:v('cod_inail'),cod_inail_pat:v('cod_inail_pat'),documento_identita:v('documento_id'),raccolta_da:v('promotore'),motivo_iscrizione:v('motivo_iscrizione'),quota_primo_anno_importo:parseFloat(v('quota_1_anno').replace(',','.'))||null,quota_primo_anno_data:v('data_adesione')||null,quota_primo_anno_modalita:v('modalita_pagamento_sel'),quota_anni_successivi_importo:parseFloat(v('quota_inps').replace(',','.'))||null,cod_inps:v('cod_inps'),quota_diretto_importo:parseFloat(v('quota_diretto').replace(',','.'))||null,modalita_pagamento:mods.join(', '),iban_ditta:v('iban_ditta').toUpperCase(),data_dichiarante:v('data_dichiarazione')||null,firma_dichiarante_base64:getSignatureDataUrl('sig_dichiarante'),data_consenso:v('data_consenso')||null,firma_consenso_base64:getSignatureDataUrl('sig_consenso'),consenso_trattamento_generale:r('consent_a')==='consente',consenso_trattamento_inps_inail:r('consent_b')==='consente',consenso_art9:r('consent_art9')==='consenso',consenso_sistema_cna:r('consent_sistema')==='consenso',consenso_web_social:r('consent_web')==='consenso',qualita_inps:v('qualita_inps'),data_delega_inps:v('data_inps')||null,firma_delega_inps_base64:getSignatureDataUrl('sig_inps'),sepa_identificativo_mandato:v('id_mandato'),sepa_b2b_checkbox:c('sepa_b2b'),sepa_core_checkbox:c('sepa_core'),data_sottoscrizione_sepa:v('data_sepa')||null,luogo_sottoscrizione_sepa:v('luogo_sepa'),banca_agenzia:v('banca_agenzia'),firma_sepa_base64:getSignatureDataUrl('sig_sepa'),stato:'bozza',created_by:loggedUser?loggedUser.id:null};
 }
 
 async function saveToSupabase(){
-  // Validazione campi obbligatori
-  if(!validateRequiredFields()){
-    showToast('Compila tutti i campi obbligatori (evidenziati in rosso)','error');
-    return;
-  }
   try{
     showToast('Salvataggio...');const data=collectFormData();
     if(currentContractId){data.updated_at=new Date().toISOString();await sb(`contratti?id=eq.${currentContractId}`,'PATCH',data);showToast('Aggiornato!','success');}
@@ -1572,11 +1106,6 @@ async function saveToSupabase(){
 }
 
 async function saveAndSend(){
-  // Validazione campi obbligatori
-  if(!validateRequiredFields()){
-    showToast('Compila tutti i campi obbligatori (evidenziati in rosso)','error');
-    return;
-  }
   // Validate privacy consents before sending
   const ca=document.querySelector('input[name="consent_a"]:checked');
   const cb=document.querySelector('input[name="consent_b"]:checked');
@@ -1606,7 +1135,7 @@ async function confirmSend(){
 
     const subj='Completa l\'adesione alla CNA di Roma';
     
-    // HTML email body
+    // HTML email body for display
     const htmlBody=`<div style="font-family:Arial,sans-serif;font-size:10pt;color:#000;line-height:1.6">
 <p>Gentile ${cognome} ${nome},</p>
 <p>La preghiamo di firmare il contratto di adesione CNA Roma tramite il link in questa email.</p>
@@ -1616,21 +1145,35 @@ async function confirmSend(){
 <br><img src="https://festivaldellelibrerie.it/wp-content/uploads/2024/11/logo-cna-colore.svg" alt="CNA Roma" style="height:45px;width:auto;display:block;margin-bottom:8px">
 <div style="font-size:10pt"><strong style="color:#005CA9">CNA Roma</strong><br><span style="font-size:9pt">Via Cristoforo Colombo 283A – 00147 – Roma<br>Tel: 06/570151 | Mail: <a href="mailto:info@cnaroma.it" style="color:#005CA9">info@cnaroma.it</a> | <a href="http://cnaroma.it" style="color:#005CA9">cnaroma.it</a></span></div></div>`;
 
-    // Plain text for mailto
-    const plainBody=`Gentile ${cognome} ${nome},\n\nLa preghiamo di firmare il contratto di adesione CNA Roma tramite il link in questa email.\n\nCordiali saluti,\nCNA Roma\n\n🔗 Clicca qui per visualizzare e firmare il contratto:\n${url}\n\nSe il link non funziona, copia e incolla questo indirizzo nel browser:\n${url}\n\n--\nCNA Roma\nVia Cristoforo Colombo 283A – 00147 – Roma\nTel: 06/570151 | Mail: info@cnaroma.it | cnaroma.it`;
-
-    // Copy HTML to clipboard
+    // Copy HTML to clipboard for manual paste
     try{
-      await navigator.clipboard.write([new ClipboardItem({'text/html':new Blob([htmlBody],{type:'text/html'}),'text/plain':new Blob([plainBody],{type:'text/plain'})})]);
+      await navigator.clipboard.write([new ClipboardItem({'text/html':new Blob([htmlBody],{type:'text/html'}),'text/plain':new Blob([htmlBody],{type:'text/plain'})})]);
     }catch(e){try{await navigator.clipboard.writeText(htmlBody);}catch(e2){}}
 
     closeModal('modal-email');
 
-    // Build mailto URL and open it
-    const mailtoUrl=`mailto:${email}?subject=${encodeURIComponent(subj)}&body=${encodeURIComponent(plainBody)}`;
-    window.location.href=mailtoUrl;
+    // Create a temporary textarea with the HTML content
+    const tempDiv=document.createElement('div');
+    tempDiv.style.position='fixed';
+    tempDiv.style.left='-9999px';
+    tempDiv.contentEditable=true;
+    tempDiv.innerHTML=htmlBody;
+    document.body.appendChild(tempDiv);
+    
+    // Select and copy the formatted content
+    const range=document.createRange();
+    range.selectNodeContents(tempDiv);
+    const selection=window.getSelection();
+    selection.removeAllRanges();
+    selection.addRange(range);
+    document.execCommand('copy');
+    document.body.removeChild(tempDiv);
 
-    showToast('Client email aperto! Email HTML copiata - incolla con Ctrl+V','success');
+    // Try to open Gmail compose with pre-filled data
+    const gmailUrl=`https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(email)}&su=${encodeURIComponent(subj)}`;
+    window.open(gmailUrl,'_blank');
+
+    showToast('✅ Email copiata! Apri Gmail e incolla (Ctrl+V) nel corpo dell\'email','success');
   }catch(e){console.error('confirmSend:',e);showToast('Errore: '+e.message,'error');}
 }
 
@@ -1711,8 +1254,8 @@ function filterContracts(){
   const search=document.getElementById('search-contracts').value.toLowerCase();
   const tipo=document.getElementById('filter-tipo').value;
   const anno=document.getElementById('filter-anno').value;
-  const caricato=document.getElementById('filter-caricato').value;
-  const proprietario=document.getElementById('filter-proprietario').value.trim().normalize('NFC');
+  const statoFirma=document.getElementById('filter-stato-firma').value;
+  const proprietario=document.getElementById('filter-proprietario').value;
   const rows=document.querySelectorAll('.contract-item');
   
   rows.forEach(row=>{
@@ -1720,16 +1263,24 @@ function filterContracts(){
     const email=(row.dataset.email||'').toLowerCase();
     const tipoRow=row.dataset.tipo||'';
     const annoRow=row.dataset.anno||'';
-    const caricatoRow=row.dataset.caricato||'0';
-    const propRow=(row.dataset.proprietario||'').trim().normalize('NFC');
+    const firmatoRow=row.dataset.firmato||'';
+    const propRow=row.dataset.proprietario||'';
     
     const matchSearch=!search||(nome.includes(search)||email.includes(search));
     const matchTipo=!tipo||(tipoRow===tipo);
     const matchAnno=!anno||(annoRow===anno);
-    const matchCaricato=!caricato||(caricatoRow===caricato);
     const matchProp=!proprietario||(propRow===proprietario);
     
-    row.style.display=(matchSearch&&matchTipo&&matchAnno&&matchCaricato&&matchProp)?'flex':'none';
+    // Logica filtro firmato: se nessun filtro selezionato mostra tutti, altrimenti filtra
+    let matchFirma=true;
+    if(statoFirma==='firmato'){
+      matchFirma=(firmatoRow==='true');
+    }else if(statoFirma==='non_firmato'){
+      matchFirma=(firmatoRow==='false');
+    }
+    // Se statoFirma è vuoto, matchFirma rimane true (mostra tutti)
+    
+    row.style.display=(matchSearch&&matchTipo&&matchAnno&&matchProp&&matchFirma)?'flex':'none';
   });
 }
 
@@ -1763,14 +1314,10 @@ async function loadContracts(){
       const gestClass=gest?'background:#d4edda;color:#155724':'background:#fff3cd;color:#856404';
       const gestText=gest?'\u2713 Caricato':'\u25CF Da caricare';
       const canEdit=(st==='bozza'||st==='inviato'); // Can edit if not yet signed
-      const isVerified=(st==='firmato'&&gest); // Verified = firmato + caricato gestionale
-      return `<div class="contract-item" data-id="${x.id}" data-nome="${(x.cognome||'')+' '+(x.nome||'')+' '+( x.ragione_sociale||'')}" data-email="${x.email||''}" data-tipo="${x.tipo_contratto||'adesione_2025'}" data-anno="${anno}" data-proprietario="${createdByName}" data-caricato="${gest?'1':'0'}">
+      return `<div class="contract-item" data-id="${x.id}" data-nome="${(x.cognome||'')+' '+(x.nome||'')+' '+( x.ragione_sociale||'')}" data-email="${x.email||''}" data-tipo="${x.tipo_contratto||'adesione_2025'}" data-anno="${anno}" data-firmato="${st==='firmato'?'true':'false'}" data-proprietario="${createdByName}">
         <input type="checkbox" class="contract-cb" value="${x.id}" onchange="updateExportBtn()" style="width:16px;height:16px;accent-color:var(--cna);flex-shrink:0">
         <div class="contract-info">
-          <h4 style="display:flex;align-items:center;gap:6px">
-            ${x.cognome||''} ${x.nome||''} - ${x.ragione_sociale||'N/D'}
-            ${isVerified?`<svg width="20" height="20" viewBox="0 0 48 48" style="flex-shrink:0"><path d="M24 4.5c-1.2 0-2.3.7-2.8 1.8L18 13.5l-7.5 1.2c-1.2.2-2.2 1-2.6 2.1-.4 1.1-.1 2.3.7 3.1l5.4 5.3-1.3 7.5c-.2 1.2.3 2.4 1.3 3.1 1 .7 2.3.8 3.4.3L24 32.7l6.6 3.5c1.1.6 2.4.4 3.4-.3 1-.7 1.5-1.9 1.3-3.1l-1.3-7.5 5.4-5.3c.8-.8 1.1-2 .7-3.1-.4-1.1-1.4-1.9-2.6-2.1l-7.5-1.2-3.2-7.2c-.5-1.1-1.6-1.8-2.8-1.8z" fill="#3b82f6"/><path d="M20 24l3 3 6-6" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>`:''}
-          </h4>
+          <h4>${x.cognome||''} ${x.nome||''} - ${x.ragione_sociale||'N/D'}</h4>
           <p>${x.email||''} \u00B7 ${d} \u00B7 <span class="status-badge ${bc}">${bt}</span> \u00B7 <span style="font-size:10px;color:var(--txt2)">Proprietario: ${createdByName}</span></p>
         </div>
         <div class="contract-actions">
@@ -1788,13 +1335,7 @@ async function loadContracts(){
     // Populate proprietario filter
     const proprietari=[...new Set(Object.values(userMap))].sort();
     const filterProp=document.getElementById('filter-proprietario');
-    filterProp.innerHTML='<option value="">Tutti i proprietari</option>';
-    proprietari.forEach(p=>{
-      const opt=document.createElement('option');
-      opt.value=p;
-      opt.textContent=p;
-      filterProp.appendChild(opt);
-    });
+    filterProp.innerHTML='<option value="">Tutti i proprietari</option>'+proprietari.map(p=>`<option value="${p}">${p}</option>`).join('');
     
     updateStats(); // Update footer statistics
   }catch(e){list.innerHTML='<p style="color:var(--err);text-align:center;padding:20px">'+e.message+'</p>';}
@@ -1841,11 +1382,6 @@ async function exportExcel(){
 
 // === PDF from form ===
 async function generatePDF(){
-  // Validazione campi obbligatori
-  if(!validateRequiredFields()){
-    showToast('Compila tutti i campi obbligatori (evidenziati in rosso)','error');
-    return;
-  }
   try{showToast('Generazione...');const {PDFDocument}=PDFLib;const bytes=Uint8Array.from(atob(PDF_B64),ch=>ch.charCodeAt(0));
   const doc=await PDFDocument.load(bytes,{ignoreEncryption:true});const form=doc.getForm();const pages=doc.getPages();
   const v=id=>(document.getElementById(id)||{}).value||'';
@@ -1857,12 +1393,12 @@ async function generatePDF(){
   sf('telefono',v('telefono'));sf('cellulare',v('cellulare'));sf('email',v('email'));
   sf('ragione sociale',v('ragione_sociale'));sf('PIVA',v('piva'));sf('ateco',v('ateco'));sf('pec',v('pec'));
   sf('indirizzo attivita',v('sede_attivita'));sf('cap attivita',v('cap_att'));sf('comune attivita',v('comune_att'));
-  sf('prov attivita',v('prov_att').toUpperCase());sf('PROMOTORE',v('raccolto_da'));sf('MOTIVO ISCRIZIONE',v('motivo_iscrizione'));
+  sf('prov attivita',v('prov_att').toUpperCase());sf('PROMOTORE',v('promotore'));sf('MOTIVO ISCRIZIONE',v('motivo_iscrizione'));
   sf('quota 1 anno',v('quota_1_anno'));sf('data adesione',fd(v('data_adesione')));sf('quota inps',v('quota_inps'));
   sf('quota secondo anno',v('quota_diretto'));sf('iban ditta',v('iban_ditta').toUpperCase());
   sf('cognome e nome',v('cognome')+' '+v('nome'));sf('data adesione 2',fd(v('data_dichiarazione')));
   sf('IBAN',v('iban_ditta').toUpperCase());sf('Luogo',v('luogo_sepa')||'Roma');
-  const formSigs={firma_consenso_base64:getSignatureDataUrl('sig_consenso'),firma_delega_inps_base64:getSignatureDataUrl('sig_inps'),firma_sepa_base64:getSignatureDataUrl('sig_sepa'),firma_cliente_path:null};
+  const formSigs={firma_dichiarante_base64:getSignatureDataUrl('sig_dichiarante'),firma_consenso_base64:getSignatureDataUrl('sig_consenso'),firma_delega_inps_base64:getSignatureDataUrl('sig_inps'),firma_sepa_base64:getSignatureDataUrl('sig_sepa'),firma_cliente_path:null};
   await embedSigs(doc,pages,formSigs);
   try{form.flatten();}catch(fe){console.warn('Flatten warning:',fe);}
   const final=await doc.save();
@@ -1882,7 +1418,7 @@ async function previewPDF(){
   sf('CAP',v('cap_res'));sf('comune',v('comune_res'));sf('Prov_2',v('prov_res').toUpperCase());sf('telefono',v('telefono'));
   sf('cellulare',v('cellulare'));sf('email',v('email'));sf('ragione sociale',v('ragione_sociale'));sf('PIVA',v('piva'));
   sf('ateco',v('ateco'));sf('pec',v('pec'));sf('indirizzo attivita',v('sede_attivita'));sf('cap attivita',v('cap_att'));
-  sf('comune attivita',v('comune_att'));sf('prov attivita',v('prov_att').toUpperCase());sf('PROMOTORE',v('raccolto_da'));
+  sf('comune attivita',v('comune_att'));sf('prov attivita',v('prov_att').toUpperCase());sf('PROMOTORE',v('promotore'));
   sf('MOTIVO ISCRIZIONE',v('motivo_iscrizione'));sf('quota 1 anno',v('quota_1_anno'));sf('data adesione',fd(v('data_adesione')));
   sf('quota inps',v('quota_inps'));sf('quota secondo anno',v('quota_diretto'));sf('iban ditta',v('iban_ditta').toUpperCase());
   sf('cognome e nome',v('cognome')+' '+v('nome'));sf('data adesione 2',fd(v('data_dichiarazione')));
@@ -1949,11 +1485,12 @@ function setupMirroring(){
 const sigPads={};
 function initSignaturePad(id){
   const c=document.getElementById(id);if(!c)return;const ctx=c.getContext('2d');
-  if(!c.width||c.width<10){const r=c.getBoundingClientRect();c.width=r.width*2;c.height=r.height*2;ctx.scale(2,2);}
+  // Set proper canvas dimensions without scaling
+  if(!c.width||c.width<10){const r=c.getBoundingClientRect();c.width=r.width;c.height=r.height;}
   let d=false,lx=0,ly=0;
   const gp=e=>{const r=c.getBoundingClientRect();const t=e.touches?e.touches[0]:e;return{x:t.clientX-r.left,y:t.clientY-r.top};};
   const start=e=>{e.preventDefault();d=true;const p=gp(e);lx=p.x;ly=p.y;};
-  const draw=e=>{if(!d)return;e.preventDefault();const p=gp(e);ctx.beginPath();ctx.moveTo(lx,ly);ctx.lineTo(p.x,p.y);ctx.strokeStyle='#005CA9';ctx.lineWidth=3;ctx.lineCap='round';ctx.stroke();lx=p.x;ly=p.y;sigPads[id]=true;};
+  const draw=e=>{if(!d)return;e.preventDefault();const p=gp(e);ctx.beginPath();ctx.moveTo(lx,ly);ctx.lineTo(p.x,p.y);ctx.strokeStyle='#1a2332';ctx.lineWidth=2;ctx.lineCap='round';ctx.stroke();lx=p.x;ly=p.y;sigPads[id]=true;};
   const stop=()=>{d=false;};
   c.addEventListener('mousedown',start);c.addEventListener('mousemove',draw);c.addEventListener('mouseup',stop);c.addEventListener('mouseleave',stop);
   c.addEventListener('touchstart',start,{passive:false});c.addEventListener('touchmove',draw,{passive:false});c.addEventListener('touchend',stop);
@@ -1965,7 +1502,7 @@ function updateStatus(){const req=['cognome','nome','cf','ragione_sociale','piva
 function showToast(msg,type=''){const t=document.getElementById('toast');if(!t)return;t.textContent=msg;t.className='toast show '+type;setTimeout(()=>t.className='toast',3500);}
 function openModal(id){document.getElementById(id).classList.add('show');}
 function closeModal(id){document.getElementById(id).classList.remove('show');}
-function resetAll(){if(!confirm('Vuoi aggiungere un nuovo modulo di adesione?'))return;document.querySelectorAll('input[type="text"],input[type="email"],input[type="tel"],input[type="date"]').forEach(el=>{if(!el.readOnly)el.value='';});document.querySelectorAll('input[type="text"][readonly]').forEach(el=>el.value='');['sig_consenso','sig_inps','sig_sepa'].forEach(clearSignature);currentContractId=null;updateStatus();showToast('Nuovo modulo');}
+function resetAll(){if(!confirm('Cancellare tutti i dati?'))return;document.querySelectorAll('input[type="text"],input[type="email"],input[type="tel"],input[type="date"]').forEach(el=>{if(!el.readOnly)el.value='';});document.querySelectorAll('input[type="text"][readonly]').forEach(el=>el.value='');['sig_dichiarante','sig_consenso','sig_inps','sig_sepa'].forEach(clearSignature);currentContractId=null;updateStatus();showToast('Reset');}
 
 
 // === LOCATIONIQ AUTOCOMPLETE ===
@@ -2094,12 +1631,10 @@ function showLocationSuggestions(data,input,type){
 // === LOAD CODICI ATECO ===
 async function loadCodiciAteco(){
   try{
-    const codes=await sb('codiciateco?select=mestiere&order=mestiere.asc');
-    const select=document.getElementById('ateco');
+    const codes=await sb('codiciateco?select=codiceateco,mestiere&order=codiceateco.asc&limit=1000');
+    const select=document.getElementById('attivita');
     if(select&&codes&&codes.length){
-      // Rimuovi duplicati
-      const uniqueMestieri = [...new Set(codes.map(c => c.mestiere))].filter(m => m && m.trim());
-      select.innerHTML='<option value="">Seleziona attività...</option>'+uniqueMestieri.map(m=>`<option value="${m}">${m}</option>`).join('');
+      select.innerHTML='<option value="">Seleziona attività...</option>'+codes.map(c=>`<option value="${c.codiceateco} - ${c.mestiere}">${c.codiceateco} - ${c.mestiere}</option>`).join('');
     }
   }catch(e){console.error('loadCodiciAteco:',e);}
 }
@@ -2114,72 +1649,10 @@ function populateRaccoltoDa(){
 
 
 function initApp(){
-  initDarkMode(); // Inizializza dark mode
-  setupMirroring();['sig_consenso','sig_inps','sig_sepa'].forEach(initSignaturePad);
+  setupMirroring();['sig_dichiarante','sig_consenso','sig_inps','sig_sepa'].forEach(initSignaturePad);
   document.querySelectorAll('input').forEach(el=>el.addEventListener('input',updateStatus));updateStatus();
   const today=new Date().toISOString().slice(0,10);['data_adesione','data_dichiarazione','data_consenso','data_inps','data_sepa'].forEach(id=>{const el=document.getElementById(id);if(el&&!el.value)el.value=today;});  loadCodiciAteco();
   loadContracts(); // Auto-load dashboard
-  
-  // Formattazione automatica campi valuta
-  document.querySelectorAll('.currency-input').forEach(input=>{
-    input.addEventListener('blur',function(){
-      formatCurrency(this);
-    });
-    input.addEventListener('focus',function(){
-      // Rimuove il formato quando l'utente inizia a modificare
-      let val=this.value.replace(/[€\s]/g,'').replace(',','.');
-      if(val)this.value=val;
-    });
-  });
-}
-
-function formatCurrency(input){
-  let value=input.value.replace(/[€\s]/g,'').replace(',','.');
-  if(!value||isNaN(value))return;
-  let num=parseFloat(value);
-  input.value='€ '+num.toFixed(2).replace('.',',');
-}
-
-// === DARK MODE ===
-function initDarkMode(){
-  // Controlla se c'è una preferenza salvata
-  const savedTheme=localStorage.getItem('theme');
-  const systemPrefersDark=window.matchMedia('(prefers-color-scheme: dark)').matches;
-  
-  if(savedTheme){
-    document.documentElement.setAttribute('data-theme',savedTheme);
-  }else if(systemPrefersDark){
-    document.documentElement.setAttribute('data-theme','dark');
-  }
-  
-  updateThemeIcon();
-  
-  // Ascolta i cambiamenti delle preferenze di sistema
-  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change',e=>{
-    if(!localStorage.getItem('theme')){
-      document.documentElement.setAttribute('data-theme',e.matches?'dark':'light');
-      updateThemeIcon();
-    }
-  });
-}
-
-function toggleDarkMode(){
-  const currentTheme=document.documentElement.getAttribute('data-theme');
-  const newTheme=currentTheme==='dark'?'light':'dark';
-  
-  document.documentElement.setAttribute('data-theme',newTheme);
-  localStorage.setItem('theme',newTheme);
-  updateThemeIcon();
-  
-  showToast(`Tema ${newTheme==='dark'?'scuro':'chiaro'} attivato`,'success');
-}
-
-function updateThemeIcon(){
-  const theme=document.documentElement.getAttribute('data-theme');
-  const icon=document.getElementById('theme-icon');
-  if(icon){
-    icon.textContent=theme==='dark'?'☀️':'🌙';
-  }
 }
 
 // === BOOT ===
