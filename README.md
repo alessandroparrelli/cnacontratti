@@ -1,33 +1,32 @@
-# CNA Roma - Moduli Adesione v9.1
+# CNA Roma - Sistema Gestione Contratti
 
-Sistema completo di gestione contratti e moduli di adesione per CNA Roma.
+## Versione 10.0 - 28 Aprile 2026
 
-## ✨ Versione 9.1 - Novità
-- ✅ Desktop più ampio (1400px) per schermi grandi
-- ✅ Tabella contratti ottimizzata
-- ✅ Mobile completamente rinnovato e coerente
-- ✅ Stats bar responsive perfette
-- ✅ Supporto tablet e landscape
+### 🚀 Novità v10.0
+- **4 TAB UNIFICATE IN UNA**: Tutte le sezioni (Adesione, Privacy, INPS, SEPA) ora in un'unica scheda
+- **Navigazione semplificata**: Solo 2 tab (Nuovo Modulo + Dashboard)
+- **Compilazione lineare**: Processo fluido senza cambio schede
+- **Codice ottimizzato**: Unione delle versioni migliori (v9_FINALE + index.html)
 
-## 🚀 Deploy rapido
+### 📋 Funzionalità
+- ✅ Gestione completa contratti di adesione CNA
+- ✅ Firma digitale con canvas touch-responsive
+- ✅ Generazione PDF con pdf-lib.js
+- ✅ Email workflow automatizzato
+- ✅ Database Supabase per persistenza dati
+- ✅ Dashboard con filtri e ricerca
+- ✅ Export Excel
+- ✅ Sistema di autenticazione SHA-256
 
-### Vercel (30 secondi)
-1. Vai su https://vercel.com/new
-2. Trascina questa cartella
-3. Deploy automatico!
+### 🛠️ Stack Tecnologico
+- HTML5 + CSS3 (Inter font)
+- Vanilla JavaScript
+- pdf-lib.js per generazione PDF
+- Supabase per database
+- GitHub + Vercel per deploy
 
-### Netlify
-1. Vai su https://app.netlify.com/drop
-2. Trascina questa cartella
-3. Deploy automatico!
+### 📦 Deploy
+Il sito è automaticamente deployato su Vercel ad ogni push su main.
 
-### GitHub Pages
-1. Crea repo su GitHub
-2. Carica questi file
-3. Settings → Pages → Deploy from main
-
-## 📱 Responsive Design
-✅ Mobile (320px - 768px)
-✅ Tablet (769px - 1024px)
-✅ Desktop (1025px+)
-✅ Landscape mobile
+### 👨‍💻 Autore
+Alessandro Parrelli - CNA Roma

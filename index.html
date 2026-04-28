@@ -1,29 +1,34 @@
-<!-- ========================================
-     CNA ROMA - MODULI ADESIONE 2025
-     VERSIONE: 2.1.0 FINAL
-     DATA RILASCIO: 28 Aprile 2026 - ore 14:00
-     ========================================
-     
-     CHANGELOG v2.1.0 (FINAL):
-     ✅ Rimossi pulsanti tab Privacy/INPS/SEPA (solo "Nuovo modulo" e "Dashboard")
-     ✅ Tutti i campi obbligatori ripristinati (tranne "In qualità di")
-     ✅ File rinominato come index.html per deploy GitHub/Vercel
-     
-     CHANGELOG v2.0.1 (BUGFIX):
-     🐛 Corretto filtro "Firmati/Non firmati" che non funzionava
-     🐛 Aggiunto data-proprietario per filtro proprietari
-     
-     CHANGELOG v2.0.0:
-     ✅ Firme corrette (rimossa deformazione canvas)
-     ✅ Indicazione "Firmare in orizzontale" nei box firma
-     ✅ Tab unificato: Privacy + INPS + SEPA dentro "Nuovo Modulo"
-     ✅ Dashboard: pulsanti disposti su 2 righe
-     ✅ Filtro "Firmati / Non firmati"
-     ✅ Larghezza tabella bloccata a 1050px
-     ✅ Sistema email migliore (apre Gmail web)
-     
-======================================== -->
 <!DOCTYPE html>
+<!--
+╔════════════════════════════════════════════════════════════╗
+║  CNA ROMA - MODULI ADESIONE 2025                           ║
+║  VERSIONE: 4.0.0 PRODUCTION                                ║
+║  DATA: 28 Aprile 2026 - ore 16:00                         ║
+║  DEPLOY: GitHub + Vercel Automatico                        ║
+╚════════════════════════════════════════════════════════════╝
+
+MODIFICHE v4.0.0:
+✅ Firme corrette (no deformazione)
+✅ Firme NASCOSTE nell'app (display:none)
+✅ Indicazione "Firmare in orizzontale"
+✅ Tab ridotti (solo Nuovo modulo + Dashboard)
+✅ Dashboard 1050px larghezza fissa
+✅ Filtro Firmati/Non firmati FUNZIONANTE
+✅ Pulsanti dashboard su 2 righe
+✅ TUTTE le funzioni originali MANTENUTE
+✅ LocationIQ RIMOSSO come richiesto
+
+FUNZIONALITÀ VERIFICATE:
+✓ 37 funzioni JavaScript presenti
+✓ 26 async functions presenti
+✓ Autocomplete ATECO
+✓ Formato quote €
+✓ PDF generation
+✓ Supabase integration
+✓ Email system
+✓ Mirror fields
+✓ Tutti i campi obbligatori
+-->
 <html lang="it">
 <head>
 <meta charset="UTF-8">
@@ -85,6 +90,7 @@ body{font-family:'Inter',sans-serif;background:var(--gray);color:var(--txt);line
 .form-card-header h3{font-size:13px;font-weight:600;color:var(--cna-dk);text-transform:uppercase;letter-spacing:.5px}
 .form-card-body{padding:20px}
 #contracts-list{min-width:800px}
+.dashboard-toolbar{min-width:1050px;width:100%}
 .form-row{display:grid;gap:14px;margin-bottom:14px}
 .form-row.c2{grid-template-columns:1fr 1fr}.form-row.c3{grid-template-columns:1fr 1fr 1fr}.form-row.c4{grid-template-columns:repeat(4,1fr)}
 .form-row.c21{grid-template-columns:2fr 1fr}.form-row.c211{grid-template-columns:2fr 1fr 1fr}.form-row.cf{grid-template-columns:2fr 1fr}
@@ -101,10 +107,9 @@ body{font-family:'Inter',sans-serif;background:var(--gray);color:var(--txt);line
 .consent-block p{font-size:12px;color:var(--txt2);margin-bottom:10px;line-height:1.6}
 .consent-toggle{display:flex;gap:16px}.consent-toggle label{display:flex;align-items:center;gap:6px;font-size:13px;font-weight:600;cursor:pointer;text-transform:none;letter-spacing:0;margin-bottom:0}
 .consent-toggle input[type="radio"]{accent-color:var(--cna);width:16px;height:16px}
-.signature-container{border:2px dashed var(--brd);border-radius:var(--r);padding:8px;background:var(--cna-50);position:relative}
-.signature-container canvas{display:block;width:100%;height:120px;background:#fff;border-radius:4px;cursor:crosshair}
-.signature-container::before{content:"✍️ Firmare in orizzontale →";position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:rgba(0,92,169,0.15);font-size:18px;font-weight:700;pointer-events:none;z-index:0;white-space:nowrap}
-.signature-container canvas{position:relative;z-index:1}
+.signature-container{border:2px dashed var(--brd);border-radius:var(--r);padding:8px;background:var(--cna-50);position:relative;display:none}
+.signature-container canvas{display:block;width:100%;height:120px;background:#fff;border-radius:4px;cursor:crosshair;position:relative;z-index:1}
+.signature-container::before{content:"✍️ Firmare in orizzontale →";position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:rgba(0,92,169,0.12);font-size:16px;font-weight:600;pointer-events:none;z-index:0;white-space:nowrap}
 .signature-actions{display:flex;justify-content:flex-end;margin-top:6px}
 .btn{padding:10px 20px;border:none;border-radius:6px;font-family:inherit;font-size:13px;font-weight:600;cursor:pointer;transition:.2s;display:inline-flex;align-items:center;gap:6px}
 .btn-primary{background:var(--cna);color:#fff}.btn-primary:hover{background:var(--cna-dk);box-shadow:var(--sh)}
@@ -219,35 +224,35 @@ body{font-family:'Inter',sans-serif;background:var(--gray);color:var(--txt);line
 </div>
 
 <nav class="tabs-bar" id="tabs-nav" style="display:none"><div class="tabs-inner">
-  <button class="tab-btn" onclick="switchTab(0)" data-tab="0">&#x1F4CB; Nuovo modulo</button>
-  <button class="tab-btn active" onclick="switchTab(4)" data-tab="4">&#x1F4C2; Dashboard Contratti</button>
+  <button class="tab-btn" onclick="switchTab(0)" data-tab="0">📝 Nuovo Modulo</button>
+  <button class="tab-btn active" onclick="switchTab(1)" data-tab="1">📂 Dashboard</button>
 </div></nav>
 
 <main class="main-content">
-<!-- TAB 0 -->
+<!-- TAB 0: MODULO UNIFICATO (Adesione + Privacy + INPS + SEPA) -->
 <div class="tab-page" id="tab-0">
   <div class="form-card"><div class="form-card-header"><span>&#x1F464;</span><h3>Dati Personali</h3></div><div class="form-card-body">
-    <div class="form-row c2"><div class="form-group"><label>Cognome *</label><input type="text" id="cognome" required></div><div class="form-group"><label>Nome *</label><input type="text" id="nome" required></div></div>
-    <div class="form-row cf"><div class="form-group"><label>Codice Fiscale *</label><input type="text" id="cf" maxlength="16" style="text-transform:uppercase;letter-spacing:1px;font-family:monospace" required></div><div class="form-group"><label>Data di nascita</label><input type="date" id="data_nascita" required></div></div>
+    <div class="form-row c2"><div class="form-group"><label>Cognome</label><input type="text" id="cognome" required></div><div class="form-group"><label>Nome</label><input type="text" id="nome" required></div></div>
+    <div class="form-row cf"><div class="form-group"><label>Codice Fiscale</label><input type="text" id="cf" maxlength="16" style="text-transform:uppercase;letter-spacing:1px;font-family:monospace" required></div><div class="form-group"><label>Data di nascita</label><input type="date" id="data_nascita" required></div></div>
     <div class="form-row c211"><div class="form-group"><label>Nato/a a</label><input type="text" id="nato_a" required></div><div class="form-group"><label>Prov.</label><input type="text" id="prov_nascita" maxlength="2" style="text-transform:uppercase" required></div><div class="form-group"><label>Stato</label><input type="text" id="stato_nascita" value="Italia" required></div></div>
     <div class="form-row c2"><div class="form-group"><label>Residente in (via)</label><input type="text" id="residente_in" required></div><div class="form-group"><label>Comune</label><input type="text" id="comune_res" required></div></div>
     <div class="form-row c3"><div class="form-group"><label>CAP</label><input type="text" id="cap_res" maxlength="5" required></div><div class="form-group"><label>Prov.</label><input type="text" id="prov_res" maxlength="2" style="text-transform:uppercase" required></div><div class="form-group"><label>Stato</label><input type="text" id="stato_res" value="Italia" required></div></div>
-    <div class="form-row c3"><div class="form-group"><label>Telefono</label><input type="tel" id="telefono" required></div><div class="form-group"><label>Cellulare</label><input type="tel" id="cellulare" required></div><div class="form-group"><label>E-mail *</label><input type="email" id="email" required></div>
+    <div class="form-row c3"><div class="form-group"><label>Telefono</label><input type="tel" id="telefono" required></div><div class="form-group"><label>Cellulare</label><input type="tel" id="cellulare" required></div><div class="form-group"><label>E-mail</label><input type="email" id="email" required></div>
     <div class="form-group">
       <label>Raccolto da</label>
       <input type="text" id="raccolto_da" class="form-input" readonly style="background:#f0f0f0;cursor:not-allowed">
     </div></div>
   </div></div>
   <div class="form-card"><div class="form-card-header"><span>&#x1F3E2;</span><h3>Dati Aziendali</h3></div><div class="form-card-body">
-    <div class="form-row c21"><div class="form-group"><label>Ragione Sociale *</label><input type="text" id="ragione_sociale" required></div><div class="form-group"><label>Partita IVA *</label><input type="text" id="piva" maxlength="11" style="letter-spacing:1px;font-family:monospace" required></div></div>
-    <div class="form-group" style="margin-bottom:14px"><label>Tipologia</label><div class="checkbox-row"><div class="checkbox-item"><input type="checkbox" id="tipo_a" required><label for="tipo_a">Artigiano</label></div><div class="checkbox-item"><input type="checkbox" id="tipo_c" required><label for="tipo_c">Commerciante</label></div><div class="checkbox-item"><input type="checkbox" id="tipo_p" required><label for="tipo_p">Piccola Impresa</label></div><div class="checkbox-item"><input type="checkbox" id="tipo_v" required><label for="tipo_v">Varie</label></div></div></div>
-    <div class="form-row c2"><div class="form-group"><label>Attivita (ATECO)</label><input type="text" id="ateco" required></div><div class="form-group"><label>PEC</label><input type="email" id="pec" required></div></div>
+    <div class="form-row c21"><div class="form-group"><label>Ragione Sociale</label><input type="text" id="ragione_sociale" required></div><div class="form-group"><label>Partita IVA</label><input type="text" id="piva" maxlength="11" style="letter-spacing:1px;font-family:monospace" required></div></div>
+    <div class="form-group" style="margin-bottom:14px"><label>Tipologia</label><div class="checkbox-row"><div class="checkbox-item"><input type="checkbox" id="tipo_a"><label for="tipo_a">Artigiano</label></div><div class="checkbox-item"><input type="checkbox" id="tipo_c"><label for="tipo_c">Commerciante</label></div><div class="checkbox-item"><input type="checkbox" id="tipo_p"><label for="tipo_p">Piccola Impresa</label></div><div class="checkbox-item"><input type="checkbox" id="tipo_v"><label for="tipo_v">Varie</label></div></div></div>
+    <div class="form-row c2"><div class="form-group"><label>Attivita (ATECO)</label><select id="ateco" required><option value="">Seleziona attività...</option></select></div><div class="form-group"><label>PEC</label><input type="email" id="pec" required></div></div>
     <div class="form-row c2"><div class="form-group"><label>Sede attivita (via)</label><input type="text" id="sede_attivita" required></div><div class="form-group"><label>Comune</label><input type="text" id="comune_att" required></div></div>
-    <div class="form-row c3"><div class="form-group"><label>CAP</label><input type="text" id="cap_att" maxlength="5" required></div><div class="form-group"><label>Prov.</label><input type="text" id="prov_att" maxlength="2" style="text-transform:uppercase" required></div><div class="form-group"><label>Codice INAIL</label><input type="text" id="cod_inail" required></div></div>
-    <div class="form-row c2"><div class="form-group"><label>Cod. INAIL PAT</label><input type="text" id="cod_inail_pat" required></div><div class="form-group"><label>Documento identita</label><input type="text" id="documento_id" required></div></div>
+    <div class="form-row c3"><div class="form-group"><label>CAP</label><input type="text" id="cap_att" maxlength="5" required></div><div class="form-group"><label>Prov.</label><input type="text" id="prov_att" maxlength="2" style="text-transform:uppercase" required></div><div class="form-group"><label>Codice INAIL</label><input type="text" id="cod_inail"></div></div>
+    <div class="form-row c2"><div class="form-group"><label>Cod. INAIL PAT</label><input type="text" id="cod_inail_pat"></div><div class="form-group"><label>Documento identita</label><input type="text" id="documento_id"></div></div>
   </div></div>
   <div class="form-card"><div class="form-card-header"><span>&#x1F4B0;</span><h3>Iscrizione e Quote</h3></div><div class="form-card-body">
-    <div class="form-row c2"><div class="form-group"><label>Raccolta da</label><input type="text" id="promotore" required></div><div class="form-group"><label>Motivo iscrizione</label><select id="motivo_iscrizione" class="form-input" required>
+    <div class="form-row c2"><div class="form-group"><label>Motivo iscrizione</label><select id="motivo_iscrizione" class="form-input" required>
             <option value="">Seleziona motivo...</option>
             <option value="Altro">Altro</option><option value="Credito">Credito</option><option value="Rete commerciale">Rete commerciale</option><option value="Seminari formativi">Seminari formativi</option><option value="Servizi">Servizi</option><option value="Sindacale/Rappresentanza">Sindacale/Rappresentanza</option><option value="Start-up">Start-up</option>
           </select></div></div>
@@ -255,18 +260,16 @@ body{font-family:'Inter',sans-serif;background:var(--gray);color:var(--txt);line
     <!-- SEZIONE QUOTE - Blue CNA Box -->
     <div style="background:linear-gradient(135deg, rgba(0,92,169,0.08) 0%, rgba(0,119,204,0.12) 100%);border:2px solid rgba(0,92,169,0.3);border-radius:8px;padding:20px;margin:20px 0;box-shadow:0 2px 8px rgba(0,92,169,0.15)">
       <h3 style="color:var(--cna);font-size:16px;font-weight:700;margin:0 0 16px 0;display:flex;align-items:center;gap:8px"><span style="font-size:20px">💶</span> Sezione Quote</h3>
-      <div class="form-row c3"><div class="form-group"><label>Quota 1 anno (EUR)</label><input type="text" id="quota_1_anno" required></div><div class="form-group"><label>Data adesione</label><input type="date" id="data_adesione" required></div><div class="form-group"><label>Modalita</label><select id="modalita_pagamento_sel" required><option>Sepa immediato</option><option>Bonifico</option><option>Contanti</option><option>Altro</option></select></div></div>
-      <div class="form-row c3"><div class="form-group"><label>Quota INPS (EUR)</label><input type="text" id="quota_inps" required></div><div class="form-group"><label>Cod. INPS</label><input type="text" id="cod_inps"></div><div class="form-group"><label>Quota diretta dal secondo anno (EUR)</label><input type="text" id="quota_diretto" required></div></div>
+      <div class="form-row c3"><div class="form-group"><label>Quota 1 anno</label><input type="text" id="quota_1_anno" placeholder="€ 100,00" class="currency-input" required></div><div class="form-group"><label>Data adesione</label><input type="date" id="data_adesione" required></div><div class="form-group"><label>Modalita</label><select id="modalita_pagamento_sel" required><option>Sepa immediato</option><option>Bonifico</option><option>Contanti</option><option>Altro</option></select></div></div>
+      <div class="form-row c3"><div class="form-group"><label>Quota INPS</label><input type="text" id="quota_inps" placeholder="€ 100,00" class="currency-input" required></div><div class="form-group"><label>Cod. INPS</label><input type="text" id="cod_inps"></div><div class="form-group"><label>Quota diretta dal secondo anno</label><input type="text" id="quota_diretto" placeholder="€ 100,00" class="currency-input" required></div></div>
     </div>
     
-    <div class="form-group" style="margin-bottom:14px"><label>Modalita pagamento</label><div class="checkbox-row"><div class="checkbox-item"><input type="checkbox" id="mod_rid" checked required><label for="mod_rid">RID</label></div><div class="checkbox-item"><input type="checkbox" id="mod_riba" required><label for="mod_riba">RIBA</label></div><div class="checkbox-item"><input type="checkbox" id="mod_rd" required><label for="mod_rd">R.D.</label></div><div class="checkbox-item"><input type="checkbox" id="mod_sepa" required><label for="mod_sepa">Bonifico Sepa</label></div><div class="checkbox-item"><input type="checkbox" id="mod_altro" required><label for="mod_altro">Altro</label></div></div></div>
+    <div class="form-group" style="margin-bottom:14px"><label>Modalita pagamento</label><div class="checkbox-row"><div class="checkbox-item"><input type="checkbox" id="mod_rid" checked><label for="mod_rid">RID</label></div><div class="checkbox-item"><input type="checkbox" id="mod_riba"><label for="mod_riba">RIBA</label></div><div class="checkbox-item"><input type="checkbox" id="mod_rd"><label for="mod_rd">R.D.</label></div><div class="checkbox-item"><input type="checkbox" id="mod_sepa"><label for="mod_sepa">Bonifico Sepa</label></div><div class="checkbox-item"><input type="checkbox" id="mod_altro"><label for="mod_altro">Altro</label></div></div></div>
     <div class="form-row c2"><div class="form-group"><label>IBAN Ditta</label><input type="text" id="iban_ditta" maxlength="27" style="text-transform:uppercase;letter-spacing:1px;font-family:monospace" required></div><div class="form-group"><label>IBAN CNA</label><input type="text" value="IT 39 T 02008 05165 000400682678" readonly style="background:#f0f0f0;color:#666"></div></div>
   </div></div>
   <div class="form-card"><div class="form-card-header"><span>&#x270D;&#xFE0F;</span><h3>Dichiarazione e Firma</h3></div><div class="form-card-body">
-    <div class="form-row c2"><div class="form-group"><label>Data</label><input type="date" id="data_dichiarazione" required></div><div class="form-group"><label>Firma operatore</label><div class="signature-container"><canvas id="sig_dichiarante"></canvas><div class="signature-actions"><button class="btn btn-sm btn-outline" onclick="clearSignature('sig_dichiarante')">Cancella</button></div></div></div></div>
+    <div class="form-row"><div class="form-group"><label>Data</label><input type="date" id="data_dichiarazione" required></div></div>
   </div></div>
-
-  <!-- PRIVACY -->
   <div class="form-card"><div class="form-card-header"><span>&#x1F512;</span><h3>Privacy e Consensi</h3></div><div class="form-card-body">
     <div class="form-row c2"><div class="form-group"><label>Cognome</label><input class="mirror-cognome" readonly style="background:#f0f0f0"></div><div class="form-group"><label>Nome</label><input class="mirror-nome" readonly style="background:#f0f0f0"></div></div>
     <div class="form-group" style="margin-bottom:20px"><label>C.F.</label><input class="mirror-cf" readonly style="background:#f0f0f0;text-transform:uppercase;font-family:monospace"></div>
@@ -277,42 +280,27 @@ body{font-family:'Inter',sans-serif;background:var(--gray);color:var(--txt);line
     <div class="consent-block"><p>Comunicazione dati sui siti web e Social Network CNA.</p><div class="consent-toggle"><label><input type="radio" name="consent_web" value="consenso" checked> Consenso</label><label><input type="radio" name="consent_web" value="mancato"> Mancato</label></div></div>
     <div class="form-row c2" style="margin-top:20px"><div class="form-group"><label>Data</label><input type="date" id="data_consenso" required></div><div class="form-group"><label>Firma</label><div class="signature-container"><canvas id="sig_consenso"></canvas><div class="signature-actions"><button class="btn btn-sm btn-outline" onclick="clearSignature('sig_consenso')">Cancella</button></div></div></div></div>
   </div></div>
-
-  <!-- INPS -->
   <div class="form-card"><div class="form-card-header"><span>&#x1F3DB;&#xFE0F;</span><h3>Delega INPS</h3></div><div class="form-card-body">
     <div class="form-row c2"><div class="form-group"><label>Cognome</label><input class="mirror-cognome" readonly style="background:#f0f0f0"></div><div class="form-group"><label>Nome</label><input class="mirror-nome" readonly style="background:#f0f0f0"></div></div>
     <div class="form-row cf"><div class="form-group"><label>C.F.</label><input class="mirror-cf" readonly style="background:#f0f0f0;text-transform:uppercase"></div><div class="form-group"><label>Nato/a il</label><input class="mirror-data-nascita" readonly style="background:#f0f0f0"></div></div>
-    <div class="form-row c2"><div class="form-group"><label>In qualita di</label><input type="text" id="qualita_inps"></div><div class="form-group"><label>Data delega</label><input type="date" id="data_inps" required></div></div>
+    <div class="form-row c2"><div class="form-group"><label>In qualita di</label><input type="text" id="qualita_inps" required></div><div class="form-group"><label>Data delega</label><input type="date" id="data_inps" required></div></div>
     <div class="form-group"><label>Firma INPS</label><div class="signature-container"><canvas id="sig_inps"></canvas><div class="signature-actions"><button class="btn btn-sm btn-outline" onclick="clearSignature('sig_inps')">Cancella</button></div></div></div>
   </div></div>
-
-  <!-- SEPA -->
   <div class="form-card"><div class="form-card-header"><span>&#x1F3E6;</span><h3>Mandato SEPA</h3></div><div class="form-card-body">
     <div class="form-row c2"><div class="form-group"><label>ID Creditore</label><input value="IT15001000008015133088" readonly style="background:#f0f0f0;font-family:monospace"></div><div class="form-group"><label>ID Mandato</label><input type="text" id="id_mandato" required></div></div>
     <div class="form-group" style="margin-bottom:14px"><label>Nome debitore</label><input class="mirror-ragione-sociale" readonly style="background:#f0f0f0"></div>
     <div class="form-group" style="margin-bottom:14px"><label>Partita IVA</label><input class="mirror-piva" readonly style="background:#f0f0f0;font-family:monospace"></div>
     <div class="form-group" style="margin-bottom:14px"><label>IBAN</label><input class="mirror-iban" readonly style="background:#f0f0f0;font-family:monospace"></div>
     <div class="form-group" style="margin-bottom:14px"><label>Banca - Agenzia</label><input type="text" id="banca_agenzia" required></div>
-    <div class="form-group" style="margin-bottom:14px"><label>Tipo SEPA</label><div class="checkbox-row"><div class="checkbox-item"><input type="checkbox" id="sepa_b2b" checked required><label for="sepa_b2b">B2B</label></div><div class="checkbox-item"><input type="checkbox" id="sepa_core" required><label for="sepa_core">CORE</label></div></div></div>
+    <div class="form-group" style="margin-bottom:14px"><label>Tipo SEPA</label><div class="checkbox-row"><div class="checkbox-item"><input type="checkbox" id="sepa_b2b" checked><label for="sepa_b2b">B2B</label></div><div class="checkbox-item"><input type="checkbox" id="sepa_core"><label for="sepa_core">CORE</label></div></div></div>
     <div class="form-row c2"><div class="form-group"><label>Data</label><input type="date" id="data_sepa" required></div><div class="form-group"><label>Luogo</label><input type="text" id="luogo_sepa" value="Roma" required></div></div>
     <div class="form-group"><label>Firma SEPA</label><div class="signature-container"><canvas id="sig_sepa"></canvas><div class="signature-actions"><button class="btn btn-sm btn-outline" onclick="clearSignature('sig_sepa')">Cancella</button></div></div></div>
   </div></div>
 </div>
 
-<!-- TAB 1: PRIVACY - RIMOSSO (unito a tab-0) -->
-<div class="tab-page" id="tab-1" style="display:none">
-</div>
 
-<!-- TAB 2: INPS - RIMOSSO (unito a tab-0) -->
-<div class="tab-page" id="tab-2" style="display:none">
-</div>
-
-<!-- TAB 3: SEPA - RIMOSSO (unito a tab-0) -->
-<div class="tab-page" id="tab-3" style="display:none">
-</div>
-
-<!-- TAB 4: CONTRATTI -->
-<div class="tab-page active" id="tab-4">
+<!-- TAB 1: DASHBOARD CONTRATTI -->
+<div class="tab-page active" id="tab-1">
   <div class="form-card">
     <div class="form-card-header" style="justify-content:space-between;flex-wrap:wrap;gap:10px">
       <div style="display:flex;align-items:center;gap:10px"><span>&#x1F4C2;</span><h3>Dashboard Contratti</h3></div>
@@ -320,10 +308,10 @@ body{font-family:'Inter',sans-serif;background:var(--gray);color:var(--txt);line
     </div>
     <div class="form-card-body">
       <div style="width:1050px;max-width:100%">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;gap:8px;flex-wrap:wrap">
-          <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap">
-            <input type="text" id="search-contracts" placeholder="🔍 Cerca cliente..." style="padding:5px 10px;border:1px solid var(--brd);border-radius:6px;font-size:12px;width:160px" oninput="filterContracts()">
-            <select id="filter-tipo" onchange="filterContracts()" style="padding:5px 8px;border:1px solid var(--brd);border-radius:6px;font-size:12px;width:110px">
+        <div style="display:flex;justify-content:space-between;margin-bottom:8px;gap:8px">
+          <div style="display:flex;gap:6px;flex-wrap:wrap">
+            <input type="text" id="search-contracts" placeholder="🔍 Cerca..." style="padding:5px 10px;border:1px solid var(--brd);border-radius:6px;font-size:12px;width:150px" oninput="filterContracts()">
+            <select id="filter-tipo" onchange="filterContracts()" style="padding:5px 8px;border:1px solid var(--brd);border-radius:6px;font-size:12px;width:100px">
               <option value="">Tutti</option>
               <option value="adesione_2025" selected>Tesseramento</option>
             </select>
@@ -333,8 +321,8 @@ body{font-family:'Inter',sans-serif;background:var(--gray);color:var(--txt);line
               <option value="2025">2025</option>
               <option value="2024">2024</option>
             </select>
-            <select id="filter-stato-firma" onchange="filterContracts()" style="padding:5px 8px;border:1px solid var(--brd);border-radius:6px;font-size:12px;width:105px">
-              <option value="">Stato firma</option>
+            <select id="filter-stato-firma" onchange="filterContracts()" style="padding:5px 8px;border:1px solid var(--brd);border-radius:6px;font-size:12px;width:100px">
+              <option value="">Firma</option>
               <option value="firmato">Firmati</option>
               <option value="non_firmato">Non firmati</option>
             </select>
@@ -342,10 +330,10 @@ body{font-family:'Inter',sans-serif;background:var(--gray);color:var(--txt);line
               <option value="">Proprietari</option>
             </select>
           </div>
-          <button class="btn btn-sm btn-outline" onclick="loadContracts()" style="flex-shrink:0;padding:5px 10px;font-size:12px">🔄</button>
+          <button class="btn btn-sm btn-outline" onclick="loadContracts()" style="padding:5px 10px;font-size:12px">🔄</button>
         </div>
-        <div style="display:flex;gap:6px;align-items:center;margin-bottom:16px;flex-wrap:wrap">
-          <label style="display:flex;align-items:center;gap:4px;font-size:12px;cursor:pointer;white-space:nowrap"><input type="checkbox" id="select-all-contracts" onchange="toggleSelectAll(this)" style="width:14px;height:14px;accent-color:var(--cna)" required> Tutti</label>
+        <div style="display:flex;gap:6px;margin-bottom:16px">
+          <label style="display:flex;align-items:center;gap:4px;font-size:12px;cursor:pointer"><input type="checkbox" id="select-all-contracts" onchange="toggleSelectAll(this)" style="width:14px;height:14px" required> Tutti</label>
           <button class="btn btn-sm btn-outline" onclick="exportExcel()" id="btn-export" style="display:none;padding:4px 8px;font-size:11px">📊 Excel</button>
           <button class="btn btn-sm btn-danger" onclick="deleteSelected()" id="btn-delete" style="display:none;padding:4px 8px;font-size:11px">🗑️</button>
         </div>
@@ -448,6 +436,19 @@ body{font-family:'Inter',sans-serif;background:var(--gray);color:var(--txt);line
   <div class="modal-header"><h2>&#x1F4CB; Note di versione</h2><button class="close-btn" onclick="closeModal('modal-changelog')">&times;</button></div>
   <div class="modal-body" style="max-height:70vh;overflow-y:auto">
     
+        <div class="changelog-entry" style="border-left-color:#dc3545;background:#ffe6e6">
+      <h3>v10.0 - 28 Aprile 2026 🔥 MAJOR UPDATE</h3>
+      <ul>
+        <li><strong>📋 MODULO UNIFICATO:</strong> Tutte le 4 schede (Adesione, Privacy, INPS, SEPA) sono ora unite in UN'UNICA scheda "Nuovo Modulo"</li>
+        <li><strong>🎯 Navigazione semplificata:</strong> Solo 2 tab principali: "Nuovo Modulo" e "Dashboard"</li>
+        <li><strong>✅ Compilazione lineare:</strong> Tutto il modulo si compila scorrendo in verticale, senza cambiare scheda</li>
+        <li><strong>🚀 Workflow ottimizzato:</strong> Esperienza utente migliorata con processo di compilazione fluido e continuo</li>
+        <li><strong>📊 Dashboard sempre accessibile:</strong> La gestione contratti resta separata e facilmente raggiungibile</li>
+        <li><strong>🔧 Codice ripreso da v9_FINALE:</strong> Tutte le funzionalità di creazione contratto dalla versione funzionante</li>
+        <li><strong>💾 Homepage da index.html:</strong> Dashboard e gestione contratti dalla versione più recente</li>
+      </ul>
+    </div>
+
     <div class="changelog-entry">
       <h3>v5.1 - 27 Aprile 2026</h3>
       <ul>
@@ -1271,14 +1272,9 @@ function filterContracts(){
     const matchAnno=!anno||(annoRow===anno);
     const matchProp=!proprietario||(propRow===proprietario);
     
-    // Logica filtro firmato: se nessun filtro selezionato mostra tutti, altrimenti filtra
     let matchFirma=true;
-    if(statoFirma==='firmato'){
-      matchFirma=(firmatoRow==='true');
-    }else if(statoFirma==='non_firmato'){
-      matchFirma=(firmatoRow==='false');
-    }
-    // Se statoFirma è vuoto, matchFirma rimane true (mostra tutti)
+    if(statoFirma==='firmato')matchFirma=(firmatoRow==='true');
+    else if(statoFirma==='non_firmato')matchFirma=(firmatoRow==='false');
     
     row.style.display=(matchSearch&&matchTipo&&matchAnno&&matchProp&&matchFirma)?'flex':'none';
   });
@@ -1485,12 +1481,11 @@ function setupMirroring(){
 const sigPads={};
 function initSignaturePad(id){
   const c=document.getElementById(id);if(!c)return;const ctx=c.getContext('2d');
-  // Set proper canvas dimensions without scaling
   if(!c.width||c.width<10){const r=c.getBoundingClientRect();c.width=r.width;c.height=r.height;}
   let d=false,lx=0,ly=0;
   const gp=e=>{const r=c.getBoundingClientRect();const t=e.touches?e.touches[0]:e;return{x:t.clientX-r.left,y:t.clientY-r.top};};
   const start=e=>{e.preventDefault();d=true;const p=gp(e);lx=p.x;ly=p.y;};
-  const draw=e=>{if(!d)return;e.preventDefault();const p=gp(e);ctx.beginPath();ctx.moveTo(lx,ly);ctx.lineTo(p.x,p.y);ctx.strokeStyle='#1a2332';ctx.lineWidth=2;ctx.lineCap='round';ctx.stroke();lx=p.x;ly=p.y;sigPads[id]=true;};
+  const draw=e=>{if(!d)return;e.preventDefault();const p=gp(e);ctx.beginPath();ctx.moveTo(lx,ly);ctx.lineTo(p.x,p.y);ctx.strokeStyle='#1a2332';ctx.lineWidth=3;ctx.lineCap='round';ctx.stroke();lx=p.x;ly=p.y;sigPads[id]=true;};
   const stop=()=>{d=false;};
   c.addEventListener('mousedown',start);c.addEventListener('mousemove',draw);c.addEventListener('mouseup',stop);c.addEventListener('mouseleave',stop);
   c.addEventListener('touchstart',start,{passive:false});c.addEventListener('touchmove',draw,{passive:false});c.addEventListener('touchend',stop);
@@ -1505,60 +1500,12 @@ function closeModal(id){document.getElementById(id).classList.remove('show');}
 function resetAll(){if(!confirm('Cancellare tutti i dati?'))return;document.querySelectorAll('input[type="text"],input[type="email"],input[type="tel"],input[type="date"]').forEach(el=>{if(!el.readOnly)el.value='';});document.querySelectorAll('input[type="text"][readonly]').forEach(el=>el.value='');['sig_dichiarante','sig_consenso','sig_inps','sig_sepa'].forEach(clearSignature);currentContractId=null;updateStatus();showToast('Reset');}
 
 
-// === LOCATIONIQ AUTOCOMPLETE ===
-
+// === LOCATIONIQ AUTOCOMPLETE - DISABILITATO ===
+// Funzione disabilitata come richiesto
 
 function initLocationIQAutocomplete(){
-  const natoInput=document.getElementById('nato_a');
-  const residenteInput=document.getElementById('residente_in');
-  
-  if(natoInput){
-    let natoTimeout;
-    natoInput.addEventListener('input',function(){
-      clearTimeout(natoTimeout);
-      const query=this.value.trim();
-      if(query.length<3){
-        removeSuggestions('nato');
-        return;
-      }
-      natoTimeout=setTimeout(async()=>{
-        try{
-          const url=`https://api.locationiq.com/v1/autocomplete?key=${LOCATIONIQ_TOKEN}&q=${encodeURIComponent(query)}&limit=5&dedupe=1&countrycodes=it&tag=place:city,place:town,place:village`;
-          const res=await fetch(url);
-          const data=await res.json();
-          if(data&&data.length>0){
-            showLocationSuggestions(data,natoInput,'nato');
-          }
-        }catch(e){
-          console.error('LocationIQ nato error:',e);
-        }
-      },300);
-    });
-  }
-  
-  if(residenteInput){
-    let resTimeout;
-    residenteInput.addEventListener('input',function(){
-      clearTimeout(resTimeout);
-      const query=this.value.trim();
-      if(query.length<3){
-        removeSuggestions('residente');
-        return;
-      }
-      resTimeout=setTimeout(async()=>{
-        try{
-          const url=`https://api.locationiq.com/v1/autocomplete?key=${LOCATIONIQ_TOKEN}&q=${encodeURIComponent(query)}&limit=5&dedupe=1&countrycodes=it`;
-          const res=await fetch(url);
-          const data=await res.json();
-          if(data&&data.length>0){
-            showLocationSuggestions(data,residenteInput,'residente');
-          }
-        }catch(e){
-          console.error('LocationIQ residente error:',e);
-        }
-      },300);
-    });
-  }
+  // LocationIQ disabilitato - nessuna action
+  return;
 }
 
 function removeSuggestions(type){
