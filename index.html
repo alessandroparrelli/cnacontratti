@@ -839,6 +839,37 @@ function doLogout(){
   document.getElementById('app-container').style.display='none';
 }
 
+// === CHECK ADMIN FOR LOG BUTTON ===
+async function checkAdminForLogs(){
+  console.log('🔍 checkAdminForLogs START');
+  if(!loggedUser||!loggedUser.id){
+    console.log('❌ No logged user');
+    return;
+  }
+  console.log('✓ loggedUser:', loggedUser);
+  try{
+    const user=await sb('cna_users?select=ruolo&id=eq.'+loggedUser.id,'GET');
+    console.log('✓ User from DB:', user);
+    if(user&&user[0]){
+      console.log('✓ User ruolo:', user[0].ruolo);
+      if(user[0].ruolo==='admin'){
+        console.log('✅ User is ADMIN - showing log button');
+        const btn=document.getElementById('btn-logs');
+        if(btn){
+          btn.style.display='block';
+          console.log('✅ Button shown!');
+        }else{
+          console.error('❌ btn-logs element NOT FOUND in DOM!');
+        }
+      }else{
+        console.log('ℹ️ User is NOT admin (ruolo: '+user[0].ruolo+')');
+      }
+    }
+  }catch(e){
+    console.error('❌ Error in checkAdminForLogs:', e);
+  }
+}
+
 function openChangelog(){
   openModal('modal-changelog');
 }
