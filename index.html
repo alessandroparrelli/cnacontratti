@@ -31,12 +31,12 @@
   --stat-bg-4:linear-gradient(135deg,#2d9b4e,#4cd964);
 }
 body.dark-mode{
-  --bg:#0f1419;--bg2:#1a1f2e;--txt:#e4e6eb;--txt2:#8b95a5;--brd:#2d3748;
+  --bg:#0d1117;--bg2:#161b22;--txt:#e4e6eb;--txt2:#8b95a5;--brd:#30363d;
   --header-bg:#1a1f2e;--stats-bg:rgba(0,0,0,0.4);
   --cna:#3b9eff;--cna-dk:#2d7dc5;--cna-50:#1a2942;
   --ok:#48bb78;--err:#f56565;--warn:#ecc94b;
   --sh:0 4px 12px rgba(0,0,0,0.3);
-  --input-bg:#262d3d;--card-bg:#1e2430;
+  --input-bg:#0d1117;--card-bg:#161b22;
   --stat-bg-1:linear-gradient(135deg,#1a5f9e,#2d7dc5);
   --stat-bg-2:linear-gradient(135deg,#c53030,#e53e3e);
   --stat-bg-3:linear-gradient(135deg,#d69e2e,#ecc94b);
@@ -164,6 +164,7 @@ input[readonly],select[readonly],textarea[readonly]{background:var(--input-bg);o
 .modal-header h2{font-size:18px;font-weight:700;color:var(--cna-dk)}.modal-body{padding:24px}.modal-footer{padding:16px 24px;border-top:1px solid var(--brd);display:flex;gap:10px;justify-content:flex-end}
 .close-btn{background:none;border:none;font-size:24px;cursor:pointer;color:var(--txt2)}
 .contract-item{display:flex;flex-direction:row;justify-content:space-between;align-items:center;padding:10px 14px;border:1px solid var(--brd);border-radius:var(--r);margin-bottom:8px;background:var(--card-bg);transition:.2s;gap:12px}
+body.dark-mode .contract-item{background:#161b22;border-color:#30363d}
 .contract-item:hover{box-shadow:var(--sh)}
 .contract-info{flex:1;min-width:0}
 .contract-info h4{font-size:14px;font-weight:700;margin-bottom:3px;color:var(--txt);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
