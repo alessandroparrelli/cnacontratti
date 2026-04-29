@@ -138,7 +138,7 @@ input[readonly],select[readonly],textarea[readonly]{background:var(--input-bg);o
 .consent-toggle{display:flex;gap:16px}.consent-toggle label{display:flex;align-items:center;gap:6px;font-size:13px;font-weight:600;cursor:pointer;text-transform:none;letter-spacing:0;margin-bottom:0}
 .consent-toggle input[type="radio"]{accent-color:var(--cna);width:16px;height:16px}
 .signature-container{border:2px dashed var(--brd);border-radius:var(--r);padding:8px;background:var(--cna-50)}
-.signature-container canvas{display:block;width:100%;height:120px;background:var(--input-bg);border-radius:4px;cursor:crosshair}
+.signature-container canvas{display:block;width:100%;height:180px;background:var(--input-bg);border-radius:4px;cursor:crosshair}
 .signature-actions{display:flex;justify-content:flex-end;margin-top:6px}
 .btn{padding:10px 20px;border:none;border-radius:6px;font-family:inherit;font-size:13px;font-weight:600;cursor:pointer;transition:.2s;display:inline-flex;align-items:center;gap:6px}
 .btn-primary{background:var(--cna);color:#fff}.btn-primary:hover{background:var(--cna-dk);box-shadow:var(--sh)}
@@ -499,6 +499,19 @@ body.dark-mode .contract-item{background:#161b22;border-color:#30363d}
   <div class="modal-header"><h2>&#x1F4CB; Note di versione</h2><button class="close-btn" onclick="closeModal('modal-changelog')">&times;</button></div>
   <div class="modal-body" style="max-height:70vh;overflow-y:auto">
     
+    <div class="changelog-entry">
+      <h3>v7.7 - 29 Aprile 2026 - VERSIONE FINALE 🎉</h3>
+      <ul>
+        <li><strong>Messaggio nuovo modulo:</strong> ora dice "Signature CNA Roma - Vuoi inserire un nuovo modulo di adesione?"</li>
+        <li><strong>Firma più grande:</strong> canvas 180px (era 120px) per firmare meglio</li>
+        <li><strong>Tratto più spesso:</strong> lineWidth 2.5 (era 1.5) per firme più visibili</li>
+        <li><strong>5 firme migliorate:</strong> tutte le 5 firme nel PDF ora più grandi e leggibili</li>
+        <li>Dark mode completa ✅</li>
+        <li>Icona toggle visibile ✅</li>
+        <li>Tutto nero in dark mode ✅</li>
+      </ul>
+    </div>
+
     <div class="changelog-entry">
       <h3>v7.6 - 29 Aprile 2026 - DARK MODE COMPLETA ✅</h3>
       <ul>
@@ -1686,7 +1699,7 @@ function updateStatus(){const req=['cognome','nome','cf','data_nascita','nato_a'
 function showToast(msg,type=''){const t=document.getElementById('toast');if(!t)return;t.textContent=msg;t.className='toast show '+type;setTimeout(()=>t.className='toast',3500);}
 function openModal(id){document.getElementById(id).classList.add('show');}
 function closeModal(id){document.getElementById(id).classList.remove('show');}
-function resetAll(){if(!confirm('Cancellare tutti i dati?'))return;document.querySelectorAll('input[type="text"],input[type="email"],input[type="tel"],input[type="date"]').forEach(el=>{if(!el.readOnly)el.value='';});document.querySelectorAll('input[type="text"][readonly]').forEach(el=>el.value='');['sig_dichiarante','sig_consenso','sig_inps','sig_sepa'].forEach(clearSignature);currentContractId=null;updateStatus();showToast('Reset');}
+function resetAll(){if(!confirm('Signature CNA Roma\n\nVuoi inserire un nuovo modulo di adesione?'))return;document.querySelectorAll('input[type="text"],input[type="email"],input[type="tel"],input[type="date"]').forEach(el=>{if(!el.readOnly)el.value='';});document.querySelectorAll('input[type="text"][readonly]').forEach(el=>el.value='');['sig_dichiarante','sig_consenso','sig_inps','sig_sepa'].forEach(clearSignature);currentContractId=null;updateStatus();showToast('Reset');}
 
 
 // === LOCATIONIQ AUTOCOMPLETE ===
