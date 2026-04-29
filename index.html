@@ -839,6 +839,91 @@ function doLogout(){
   document.getElementById('app-container').style.display='none';
 }
 
+
+// === LOG CONNESSIONI MODAL ===
+function openLogsModal(){
+  const modal=document.getElementById('modal-logs');
+  if(modal){
+    modal.style.display='flex';
+    loadConnectionLogs();
+  }else{
+    console.error('Modal log non trovato');
+  }
+}
+
+function closeLogsModal(){
+  const modal=document.getElementById('modal-logs');
+  if(modal)modal.style.display='none';
+}
+
+async function loadConnectionLogs(){
+  try{
+    const limit=document.getElementById('log-limit')?.value||50;
+    const action=document.getElementById('log-filter-action')?.value||'';
+    
+    let query='cna_admin_logs?select=*,cna_users(nome,cognome,email)&order=created_at.desc&limit='+limit;
+    if(action)query+='&action=eq.'+action;
+    
+    const logs=await sb(query,'GET');
+    const tbody=document.getElementById('logs-table-body');
+    
+    if(!tbody){
+      console.error('Tbody log non trovato');
+      return;
+    }
+    
+    if(!logs||logs.length===0){
+      tbody.innerHTML='<tr><td colspan="4" style="padding:20px;text-align:center;color:var(--txt2)">Nessun log trovato</td></tr>';
+      return;
+    }
+    
+    tbody.innerHTML=logs.map(log=>{
+      const timestamp=new Date(log.created_at).toLocaleString('it-IT');
+      const userName=log.cna_users?(log.cna_users.nome+' '+log.cna_users.cognome):'Utente sconosciuto';
+      const userEmail=log.cna_users?log.cna_users.email:'';
+      const details=log.details?JSON.stringify(log.details):'';
+      
+      let actionColor='#e2e3e5';
+      let actionText=log.action;
+      if(log.action==='login'){actionColor='#d1ecf1';actionText='🔓 Login';}
+      if(log.action==='logout'){actionColor='#f8d7da';actionText='🔒 Logout';}
+      
+      return `<tr style="border-bottom:1px solid var(--brd)">
+        <td style="padding:10px;font-size:12px">${timestamp}</td>
+        <td style="padding:10px">
+          <div style="font-weight:600">${userName}</div>
+          <div style="font-size:11px;color:var(--txt2)">${userEmail}</div>
+        </td>
+        <td style="padding:10px">
+          <span style="background:${actionColor};padding:4px 10px;border-radius:12px;font-size:11px;font-weight:600">${actionText}</span>
+        </td>
+        <td style="padding:10px;font-size:11px;color:var(--txt2)">${details}</td>
+      </tr>`;
+    }).join('');
+  }catch(e){
+    console.error('Errore caricamento log:',e);
+    const tbody=document.getElementById('logs-table-body');
+    if(tbody)tbody.innerHTML='<tr><td colspan="4" style="padding:20px;text-align:center;color:var(--err)">Errore: '+e.message+'</td></tr>';
+  }
+}
+
+async function logConnection(action){
+  try{
+    if(!loggedUser||!loggedUser.id){
+      console.warn('logConnection: nessun utente loggato');
+      return;
+    }
+    await sb('cna_admin_logs','POST',{
+      user_id:loggedUser.id,
+      action:action,
+      details:{timestamp:new Date().toISOString()},
+      ip_address:null,
+      user_agent:navigator.userAgent
+    });
+    console.log('Log registrato:',action);
+  }catch(e){console.error('Errore log:',e);}
+}
+
 // === CHECK ADMIN FOR LOG BUTTON ===
 async function checkAdminForLogs(){
   console.log('🔍 checkAdminForLogs START');
@@ -1973,12 +2058,6 @@ document.addEventListener('DOMContentLoaded',async()=>{
 
 
 <!-- MODAL LOG CONNESSIONI -->
-<div id="modal-logs" class="modal-overlay" style="display:none" onclick="if(event.target.id==='modal-logs')closeLogsModal()">
-  <div class="modal-content" style="max-width:900px;width:95vw">
-    <div class="modal-header">
-      <h2 style="margin:0">📜 Log Connessioni</h2>
-      <button onclick="closeLogsModal()" style="background:none;border:none;font-size:28px;cursor:pointer;color:var(--txt)">&times;</button>
-    </div>
     <div class="modal-body" style="max-height:70vh;overflow-y:auto">
       <div style="margin-bottom:15px;display:flex;gap:10px;flex-wrap:wrap">
         <select id="log-filter-action" onchange="loadConnectionLogs()" style="padding:8px;border:1px solid var(--brd);border-radius:6px;background:var(--input-bg);color:var(--txt);flex:1;min-width:150px">
