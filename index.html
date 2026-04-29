@@ -1252,7 +1252,7 @@ async function loadContracts(){
   const list=document.getElementById('contracts-list');
   list.innerHTML='<p style="text-align:center;padding:20px;color:var(--txt2)">Caricamento...</p>';
   try{
-    let query='contratti?select=id,token,stato,cognome,nome,ragione_sociale,email,partita_iva,codice_fiscale,created_at,firmato_at,documento_foto_base64,caricato_gestionale,created_by,tipo_contratto&order=created_at.desc&limit=50';
+    let query='contratti?select=id,token,stato,cognome,nome,ragione_sociale,email,partita_iva,codice_fiscale,created_at,firmato_at,caricato_gestionale,created_by,tipo_contratto&order=created_at.desc&limit=50';
     if(loggedUser&&loggedUser.ruolo!=='admin'&&loggedUser.ruolo!=='supervisore'){
       query+='&created_by=eq.'+loggedUser.id;
     }
@@ -1272,7 +1272,7 @@ async function loadContracts(){
       const d=new Date(x.created_at).toLocaleDateString('it-IT');
       const anno=new Date(x.created_at).getFullYear();
       const url=BASE_URL+'?firma='+x.token;
-      const hasDoc=!!x.documento_foto_base64;
+      const hasDoc=(st==='firmato');
       const gest=x.caricato_gestionale;
       const gestClass=gest?'background:#d4edda;color:#155724':'background:#fff3cd;color:#856404';
       const gestText=gest?'\u2713 Caricato':'\u25CF Da caricare';
