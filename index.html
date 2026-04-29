@@ -106,12 +106,12 @@ body{font-family:'Inter',sans-serif;background:var(--gray);color:var(--txt);line
 .modal-header{padding:20px 24px;border-bottom:1px solid var(--brd);display:flex;justify-content:space-between;align-items:center}
 .modal-header h2{font-size:18px;font-weight:700;color:var(--cna-dk)}.modal-body{padding:24px}.modal-footer{padding:16px 24px;border-top:1px solid var(--brd);display:flex;gap:10px;justify-content:flex-end}
 .close-btn{background:none;border:none;font-size:24px;cursor:pointer;color:var(--txt2)}
-.contract-item{display:flex;flex-direction:column;padding:12px 14px;border:1px solid var(--brd);border-radius:var(--r);margin-bottom:8px;background:#fff;transition:.2s;gap:8px}
+.contract-item{display:flex;flex-direction:row;justify-content:space-between;align-items:center;padding:10px 14px;border:1px solid var(--brd);border-radius:var(--r);margin-bottom:8px;background:#fff;transition:.2s;gap:12px}
 .contract-item:hover{box-shadow:var(--sh)}
-.contract-info{min-width:0;width:100%}
-.contract-info h4{font-size:14px;font-weight:700;margin-bottom:3px;color:var(--txt)}
-.contract-info p{font-size:12px;color:var(--txt2);line-height:1.5}
-.contract-actions{display:flex;gap:4px;flex-wrap:wrap;align-items:center}
+.contract-info{flex:1;min-width:0}
+.contract-info h4{font-size:14px;font-weight:700;margin-bottom:3px;color:var(--txt);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.contract-info p{font-size:11px;color:var(--txt2);line-height:1.4}
+.contract-actions{display:flex;gap:4px;flex-wrap:nowrap;align-items:center;flex-shrink:0;margin-left:auto}
 
 /* FIRMA PAGE - FULLSCREEN RESPONSIVE */
 .firma-page{min-height:100vh;background:var(--gray)}
@@ -147,7 +147,11 @@ body{font-family:'Inter',sans-serif;background:var(--gray);color:var(--txt);line
   .form-card-body{padding:14px}
   .footer-inner{flex-direction:column;text-align:center}
   .footer-inner>div:last-child{display:flex;flex-wrap:wrap;gap:6px;justify-content:center}
-  .contract-actions{width:100%;justify-content:flex-start;flex-wrap:wrap}
+  /* Mobile: vertical stacked layout */
+  .contract-item{flex-direction:column;align-items:flex-start;gap:10px}
+  .contract-info{width:100%}
+  .contract-info h4{white-space:normal}
+  .contract-actions{width:100%;justify-content:flex-start;flex-wrap:wrap;margin-left:0}
   .btn-sm{padding:5px 10px;font-size:11px}
 }
 @media(max-width:480px){
@@ -306,6 +310,12 @@ body{font-family:'Inter',sans-serif;background:var(--gray);color:var(--txt);line
             <option value="">Tutti i tipi</option>
             <option value="adesione_2025" selected>Tesseramento</option>
           </select>
+          <select id="filter-stato" onchange="filterContracts()" style="padding:6px 12px;border:1px solid var(--brd);border-radius:6px;font-size:13px">
+            <option value="">Tutti gli stati</option>
+            <option value="firmato">Firmati</option>
+            <option value="inviato">Da firmare</option>
+            <option value="bozza">Bozze</option>
+          </select>
           <select id="filter-anno" onchange="filterContracts()" style="padding:6px 12px;border:1px solid var(--brd);border-radius:6px;font-size:13px">
             <option value="">Tutti gli anni</option>
             <option value="2026" selected>2026</option>
@@ -416,6 +426,24 @@ body{font-family:'Inter',sans-serif;background:var(--gray);color:var(--txt);line
   <div class="modal-header"><h2>&#x1F4CB; Note di versione</h2><button class="close-btn" onclick="closeModal('modal-changelog')">&times;</button></div>
   <div class="modal-body" style="max-height:70vh;overflow-y:auto">
     
+    <div class="changelog-entry">
+      <h3>v7.2 - 29 Aprile 2026</h3>
+      <ul>
+        <li><strong>Layout desktop contratti:</strong> ripristinato layout orizzontale su 2 righe (info cliente/data/proprietario a sinistra, pulsanti a destra)</li>
+        <li><strong>Layout mobile contratti:</strong> mantenuto layout verticale impilato (tutto allineato a sinistra)</li>
+        <li>Responsive breakpoint a 768px per smartphone e tablet</li>
+      </ul>
+    </div>
+
+    <div class="changelog-entry">
+      <h3>v7.2 - 29 Aprile 2026</h3>
+      <ul>
+        <li><strong>Layout contratti desktop ripristinato:</strong> versione desktop con info cliente a sinistra e pulsanti a destra su due colonne</li>
+        <li><strong>Layout mobile responsive:</strong> versione mobile/tablet mantiene layout verticale con dati impilati</li>
+        <li><strong>Filtro stato contratti:</strong> aggiunto menu a tendina "Firmati" / "Da firmare" / "Bozze" nella dashboard</li>
+      </ul>
+    </div>
+
     <div class="changelog-entry">
       <h3>v7.1 - 29 Aprile 2026</h3>
       <ul>
@@ -1269,6 +1297,7 @@ async function editContract(id){
 function filterContracts(){
   const search=document.getElementById('search-contracts').value.toLowerCase();
   const tipo=document.getElementById('filter-tipo').value;
+  const stato=document.getElementById('filter-stato').value;
   const anno=document.getElementById('filter-anno').value;
   const proprietario=document.getElementById('filter-proprietario').value;
   const rows=document.querySelectorAll('.contract-item');
@@ -1277,15 +1306,17 @@ function filterContracts(){
     const nome=(row.dataset.nome||'').toLowerCase();
     const email=(row.dataset.email||'').toLowerCase();
     const tipoRow=row.dataset.tipo||'';
+    const statoRow=row.dataset.stato||'';
     const annoRow=row.dataset.anno||'';
     const propRow=row.dataset.proprietario||'';
     
     const matchSearch=!search||(nome.includes(search)||email.includes(search));
     const matchTipo=!tipo||(tipoRow===tipo);
+    const matchStato=!stato||(statoRow===stato);
     const matchAnno=!anno||(annoRow===anno);
     const matchProp=!proprietario||(propRow===proprietario);
     
-    row.style.display=(matchSearch&&matchTipo&&matchAnno&&matchProp)?'flex':'none';
+    row.style.display=(matchSearch&&matchTipo&&matchStato&&matchAnno&&matchProp)?'flex':'none';
   });
 }
 
@@ -1319,7 +1350,7 @@ async function loadContracts(){
       const gestClass=gest?'background:#d4edda;color:#155724':'background:#fff3cd;color:#856404';
       const gestText=gest?'\u2713 Caricato':'\u25CF Da caricare';
       const canEdit=(st==='bozza'||st==='inviato'); // Can edit if not yet signed
-      return `<div class="contract-item" data-id="${x.id}" data-nome="${(x.cognome||'')+' '+(x.nome||'')+' '+( x.ragione_sociale||'')}" data-email="${x.email||''}" data-tipo="${x.tipo_contratto||'adesione_2025'}" data-anno="${anno}">
+      return `<div class="contract-item" data-id="${x.id}" data-nome="${(x.cognome||'')+' '+(x.nome||'')+' '+( x.ragione_sociale||'')}" data-email="${x.email||''}" data-tipo="${x.tipo_contratto||'adesione_2025'}" data-anno="${anno}" data-stato="${st}">
         <input type="checkbox" class="contract-cb" value="${x.id}" onchange="updateExportBtn()" style="width:16px;height:16px;accent-color:var(--cna);flex-shrink:0">
         <div class="contract-info">
           <h4>${x.cognome||''} ${x.nome||''} - ${x.ragione_sociale||'N/D'}</h4>
