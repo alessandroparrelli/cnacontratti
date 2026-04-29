@@ -55,6 +55,9 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--txt);line-h
 .login-btn{width:100%;padding:14px;background:var(--cna);color:#fff;border:none;border-radius:8px;font-size:15px;font-weight:700;cursor:pointer;transition:.2s;font-family:inherit}
 .login-btn:hover{background:var(--cna-dk)}
 
+
+body.dark-mode .app-header{background:#1a5f9e}
+body.dark-mode .stats-bar-container{background:rgba(0,0,0,0.25)}
 /* HEADER - Dashboard Tesseramento style */
 .app-header{background:var(--cna);color:#fff;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,0.25)}
 .stats-bar-container{background:rgba(0,0,0,0.12);border-bottom:none;padding:10px 0}
@@ -469,6 +472,16 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--txt);line-h
   <div class="modal-header"><h2>&#x1F4CB; Note di versione</h2><button class="close-btn" onclick="closeModal('modal-changelog')">&times;</button></div>
   <div class="modal-body" style="max-height:70vh;overflow-y:auto">
     
+    <div class="changelog-entry">
+      <h3>v7.4.1 - 29 Aprile 2026</h3>
+      <ul>
+        <li><strong>Fix icona dark mode:</strong> icona luna/sole più visibile su header blu (bianca, stroke, 18px)</li>
+        <li><strong>Dark mode completo:</strong> tutti gli sfondi ora usano variabili CSS (tabs, footer, cards, inputs, toast)</li>
+        <li>Header blu più scuro in dark mode (#1a5f9e)</li>
+        <li>Signature container, status badge, bottoni con dark mode support</li>
+      </ul>
+    </div>
+
     <div class="changelog-entry">
       <h3>v7.4 - 29 Aprile 2026</h3>
       <ul>
