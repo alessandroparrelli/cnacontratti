@@ -327,6 +327,11 @@ body{font-family:'Inter',sans-serif;background:var(--gray);color:var(--txt);line
           <select id="filter-proprietario" onchange="filterContracts()" style="padding:6px 12px;border:1px solid var(--brd);border-radius:6px;font-size:13px">
             <option value="">Tutti i proprietari</option>
           </select>
+          <select id="filter-gestionale" onchange="filterContracts()" style="padding:6px 12px;border:1px solid var(--brd);border-radius:6px;font-size:13px">
+            <option value="">Tutti</option>
+            <option value="caricato">Caricati</option>
+            <option value="da-caricare">Da caricare</option>
+          </select>
           <label style="display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer"><input type="checkbox" id="select-all-contracts" onchange="toggleSelectAll(this)" style="width:16px;height:16px;accent-color:var(--cna)"> Seleziona tutti</label>
           <button class="btn btn-sm btn-outline" onclick="exportExcel()" id="btn-export" style="display:none">&#x1F4CA; Esporta Excel</button>
           <button class="btn btn-sm btn-danger" onclick="deleteSelected()" id="btn-delete" style="display:none">&#x1F5D1; Elimina</button>
@@ -1303,6 +1308,7 @@ function filterContracts(){
   const stato=document.getElementById('filter-stato').value;
   const anno=document.getElementById('filter-anno').value;
   const proprietario=document.getElementById('filter-proprietario').value;
+  const gestionale=document.getElementById('filter-gestionale').value;
   const rows=document.querySelectorAll('.contract-item');
   
   rows.forEach(row=>{
@@ -1312,14 +1318,16 @@ function filterContracts(){
     const statoRow=row.dataset.stato||'';
     const annoRow=row.dataset.anno||'';
     const propRow=row.dataset.proprietario||'';
+    const gestRow=row.dataset.gestionale||'';
     
     const matchSearch=!search||(nome.includes(search)||email.includes(search));
     const matchTipo=!tipo||(tipoRow===tipo);
     const matchStato=!stato||(statoRow===stato);
     const matchAnno=!anno||(annoRow===anno);
     const matchProp=!proprietario||(propRow===proprietario);
+    const matchGest=!gestionale||(gestRow===gestionale);
     
-    row.style.display=(matchSearch&&matchTipo&&matchStato&&matchAnno&&matchProp)?'flex':'none';
+    row.style.display=(matchSearch&&matchTipo&&matchStato&&matchAnno&&matchProp&&matchGest)?'flex':'none';
   });
 }
 
@@ -1352,8 +1360,9 @@ async function loadContracts(){
       const gest=x.caricato_gestionale;
       const gestClass=gest?'background:#d4edda;color:#155724':'background:#fff3cd;color:#856404';
       const gestText=gest?'\u2713 Caricato':'\u25CF Da caricare';
+      const gestValue=gest?'caricato':'da-caricare';
       const canEdit=(st==='bozza'||st==='inviato'); // Can edit if not yet signed
-      return `<div class="contract-item" data-id="${x.id}" data-nome="${(x.cognome||'')+' '+(x.nome||'')+' '+( x.ragione_sociale||'')}" data-email="${x.email||''}" data-tipo="${x.tipo_contratto||'adesione_2025'}" data-anno="${anno}" data-stato="${st}" data-proprietario="${createdByName}">
+      return `<div class="contract-item" data-id="${x.id}" data-nome="${(x.cognome||'')+' '+(x.nome||'')+' '+( x.ragione_sociale||'')}" data-email="${x.email||''}" data-tipo="${x.tipo_contratto||'adesione_2025'}" data-anno="${anno}" data-stato="${st}" data-proprietario="${createdByName}" data-gestionale="${gestValue}">
         <input type="checkbox" class="contract-cb" value="${x.id}" onchange="updateExportBtn()" style="width:16px;height:16px;accent-color:var(--cna);flex-shrink:0">
         <div class="contract-info">
           <h4>${x.cognome||''} ${x.nome||''} - ${x.ragione_sociale||'N/D'}</h4>
