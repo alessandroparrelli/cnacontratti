@@ -1,34 +1,4 @@
 <!DOCTYPE html>
-<!--
-╔════════════════════════════════════════════════════════════╗
-║  CNA ROMA - MODULI ADESIONE 2025                           ║
-║  VERSIONE: 4.0.0 PRODUCTION                                ║
-║  DATA: 28 Aprile 2026 - ore 16:00                         ║
-║  DEPLOY: GitHub + Vercel Automatico                        ║
-╚════════════════════════════════════════════════════════════╝
-
-MODIFICHE v4.0.0:
-✅ Firme corrette (no deformazione)
-✅ Firme NASCOSTE nell'app (display:none)
-✅ Indicazione "Firmare in orizzontale"
-✅ Tab ridotti (solo Nuovo modulo + Dashboard)
-✅ Dashboard 1050px larghezza fissa
-✅ Filtro Firmati/Non firmati FUNZIONANTE
-✅ Pulsanti dashboard su 2 righe
-✅ TUTTE le funzioni originali MANTENUTE
-✅ LocationIQ RIMOSSO come richiesto
-
-FUNZIONALITÀ VERIFICATE:
-✓ 37 funzioni JavaScript presenti
-✓ 26 async functions presenti
-✓ Autocomplete ATECO
-✓ Formato quote €
-✓ PDF generation
-✓ Supabase integration
-✓ Email system
-✓ Mirror fields
-✓ Tutti i campi obbligatori
--->
 <html lang="it">
 <head>
 <meta charset="UTF-8">
@@ -90,7 +60,6 @@ body{font-family:'Inter',sans-serif;background:var(--gray);color:var(--txt);line
 .form-card-header h3{font-size:13px;font-weight:600;color:var(--cna-dk);text-transform:uppercase;letter-spacing:.5px}
 .form-card-body{padding:20px}
 #contracts-list{min-width:800px}
-.dashboard-toolbar{min-width:1050px;width:100%}
 .form-row{display:grid;gap:14px;margin-bottom:14px}
 .form-row.c2{grid-template-columns:1fr 1fr}.form-row.c3{grid-template-columns:1fr 1fr 1fr}.form-row.c4{grid-template-columns:repeat(4,1fr)}
 .form-row.c21{grid-template-columns:2fr 1fr}.form-row.c211{grid-template-columns:2fr 1fr 1fr}.form-row.cf{grid-template-columns:2fr 1fr}
@@ -107,9 +76,8 @@ body{font-family:'Inter',sans-serif;background:var(--gray);color:var(--txt);line
 .consent-block p{font-size:12px;color:var(--txt2);margin-bottom:10px;line-height:1.6}
 .consent-toggle{display:flex;gap:16px}.consent-toggle label{display:flex;align-items:center;gap:6px;font-size:13px;font-weight:600;cursor:pointer;text-transform:none;letter-spacing:0;margin-bottom:0}
 .consent-toggle input[type="radio"]{accent-color:var(--cna);width:16px;height:16px}
-.signature-container{border:2px dashed var(--brd);border-radius:var(--r);padding:8px;background:var(--cna-50);position:relative;display:none}
-.signature-container canvas{display:block;width:100%;height:120px;background:#fff;border-radius:4px;cursor:crosshair;position:relative;z-index:1}
-.signature-container::before{content:"✍️ Firmare in orizzontale →";position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:rgba(0,92,169,0.12);font-size:16px;font-weight:600;pointer-events:none;z-index:0;white-space:nowrap}
+.signature-container{border:2px dashed var(--brd);border-radius:var(--r);padding:8px;background:var(--cna-50)}
+.signature-container canvas{display:block;width:100%;height:120px;background:#fff;border-radius:4px;cursor:crosshair}
 .signature-actions{display:flex;justify-content:flex-end;margin-top:6px}
 .btn{padding:10px 20px;border:none;border-radius:6px;font-family:inherit;font-size:13px;font-weight:600;cursor:pointer;transition:.2s;display:inline-flex;align-items:center;gap:6px}
 .btn-primary{background:var(--cna);color:#fff}.btn-primary:hover{background:var(--cna-dk);box-shadow:var(--sh)}
@@ -154,8 +122,9 @@ body{font-family:'Inter',sans-serif;background:var(--gray);color:var(--txt);line
 .sig-fullscreen.active{display:flex}
 .sig-fullscreen-header{background:var(--cna);color:#fff;padding:12px 20px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0}
 .sig-fullscreen-header h3{font-size:16px;font-weight:600}
+.sig-direction-hint{background:#fff3cd;border-bottom:2px solid #ffc107;padding:8px 16px;font-size:13px;font-weight:600;color:#856404;text-align:center;flex-shrink:0}
 .sig-fullscreen-body{flex:1;display:flex;flex-direction:column;padding:12px;min-height:0;overflow:hidden}
-.sig-fullscreen-body canvas{width:100%;height:100%;max-height:calc(100vh - 140px);background:#fafafa;border:2px solid var(--brd);border-radius:var(--r);cursor:crosshair;touch-action:none}
+.sig-fullscreen-body canvas{width:100%;height:100%;max-height:calc(100vh - 175px);background:#fafafa;border:2px solid var(--brd);border-radius:var(--r);cursor:crosshair;touch-action:none}
 .sig-fullscreen-footer{padding:12px 20px;display:flex;gap:10px;justify-content:center;border-top:1px solid var(--brd);flex-shrink:0;background:#fff}
 
 @media(max-width:768px){
@@ -224,35 +193,38 @@ body{font-family:'Inter',sans-serif;background:var(--gray);color:var(--txt);line
 </div>
 
 <nav class="tabs-bar" id="tabs-nav" style="display:none"><div class="tabs-inner">
-  <button class="tab-btn" onclick="switchTab(0)" data-tab="0">📝 Nuovo Modulo</button>
-  <button class="tab-btn active" onclick="switchTab(1)" data-tab="1">📂 Dashboard</button>
+  <button class="tab-btn" onclick="switchTab(0)" data-tab="0">&#x1F4CB; Scheda</button>
+  <button class="tab-btn" onclick="switchTab(1)" data-tab="1">&#x1F512; Privacy</button>
+  <button class="tab-btn" onclick="switchTab(2)" data-tab="2">&#x1F3DB;&#xFE0F; INPS</button>
+  <button class="tab-btn" onclick="switchTab(3)" data-tab="3">&#x1F3E6; SEPA</button>
+  <button class="tab-btn active" onclick="switchTab(4)" data-tab="4">&#x1F4C2; Contratti</button>
 </div></nav>
 
 <main class="main-content">
-<!-- TAB 0: MODULO UNIFICATO (Adesione + Privacy + INPS + SEPA) -->
+<!-- TAB 0 -->
 <div class="tab-page" id="tab-0">
   <div class="form-card"><div class="form-card-header"><span>&#x1F464;</span><h3>Dati Personali</h3></div><div class="form-card-body">
-    <div class="form-row c2"><div class="form-group"><label>Cognome</label><input type="text" id="cognome" required></div><div class="form-group"><label>Nome</label><input type="text" id="nome" required></div></div>
-    <div class="form-row cf"><div class="form-group"><label>Codice Fiscale</label><input type="text" id="cf" maxlength="16" style="text-transform:uppercase;letter-spacing:1px;font-family:monospace" required></div><div class="form-group"><label>Data di nascita</label><input type="date" id="data_nascita" required></div></div>
+    <div class="form-row c2"><div class="form-group"><label>Cognome *</label><input type="text" id="cognome" required></div><div class="form-group"><label>Nome *</label><input type="text" id="nome" required></div></div>
+    <div class="form-row cf"><div class="form-group"><label>Codice Fiscale *</label><input type="text" id="cf" maxlength="16" style="text-transform:uppercase;letter-spacing:1px;font-family:monospace" required></div><div class="form-group"><label>Data di nascita</label><input type="date" id="data_nascita" required></div></div>
     <div class="form-row c211"><div class="form-group"><label>Nato/a a</label><input type="text" id="nato_a" required></div><div class="form-group"><label>Prov.</label><input type="text" id="prov_nascita" maxlength="2" style="text-transform:uppercase" required></div><div class="form-group"><label>Stato</label><input type="text" id="stato_nascita" value="Italia" required></div></div>
     <div class="form-row c2"><div class="form-group"><label>Residente in (via)</label><input type="text" id="residente_in" required></div><div class="form-group"><label>Comune</label><input type="text" id="comune_res" required></div></div>
     <div class="form-row c3"><div class="form-group"><label>CAP</label><input type="text" id="cap_res" maxlength="5" required></div><div class="form-group"><label>Prov.</label><input type="text" id="prov_res" maxlength="2" style="text-transform:uppercase" required></div><div class="form-group"><label>Stato</label><input type="text" id="stato_res" value="Italia" required></div></div>
-    <div class="form-row c3"><div class="form-group"><label>Telefono</label><input type="tel" id="telefono" required></div><div class="form-group"><label>Cellulare</label><input type="tel" id="cellulare" required></div><div class="form-group"><label>E-mail</label><input type="email" id="email" required></div>
+    <div class="form-row c3"><div class="form-group"><label>Telefono</label><input type="tel" id="telefono" required></div><div class="form-group"><label>Cellulare</label><input type="tel" id="cellulare" required></div><div class="form-group"><label>E-mail *</label><input type="email" id="email" required></div>
     <div class="form-group">
       <label>Raccolto da</label>
       <input type="text" id="raccolto_da" class="form-input" readonly style="background:#f0f0f0;cursor:not-allowed">
     </div></div>
   </div></div>
   <div class="form-card"><div class="form-card-header"><span>&#x1F3E2;</span><h3>Dati Aziendali</h3></div><div class="form-card-body">
-    <div class="form-row c21"><div class="form-group"><label>Ragione Sociale</label><input type="text" id="ragione_sociale" required></div><div class="form-group"><label>Partita IVA</label><input type="text" id="piva" maxlength="11" style="letter-spacing:1px;font-family:monospace" required></div></div>
-    <div class="form-group" style="margin-bottom:14px"><label>Tipologia</label><div class="checkbox-row"><div class="checkbox-item"><input type="checkbox" id="tipo_a"><label for="tipo_a">Artigiano</label></div><div class="checkbox-item"><input type="checkbox" id="tipo_c"><label for="tipo_c">Commerciante</label></div><div class="checkbox-item"><input type="checkbox" id="tipo_p"><label for="tipo_p">Piccola Impresa</label></div><div class="checkbox-item"><input type="checkbox" id="tipo_v"><label for="tipo_v">Varie</label></div></div></div>
-    <div class="form-row c2"><div class="form-group"><label>Attivita (ATECO)</label><select id="ateco" required><option value="">Seleziona attività...</option></select></div><div class="form-group"><label>PEC</label><input type="email" id="pec" required></div></div>
+    <div class="form-row c21"><div class="form-group"><label>Ragione Sociale *</label><input type="text" id="ragione_sociale" required></div><div class="form-group"><label>Partita IVA *</label><input type="text" id="piva" maxlength="11" style="letter-spacing:1px;font-family:monospace" required></div></div>
+    <div class="form-group" style="margin-bottom:14px"><label>Tipologia</label><div class="checkbox-row"><div class="checkbox-item"><input type="checkbox" id="tipo_a" required><label for="tipo_a">Artigiano</label></div><div class="checkbox-item"><input type="checkbox" id="tipo_c" required><label for="tipo_c">Commerciante</label></div><div class="checkbox-item"><input type="checkbox" id="tipo_p" required><label for="tipo_p">Piccola Impresa</label></div><div class="checkbox-item"><input type="checkbox" id="tipo_v" required><label for="tipo_v">Varie</label></div></div></div>
+    <div class="form-row c2"><div class="form-group"><label>Attivita (ATECO)</label><select id="ateco" required><option value="">Seleziona attività...</option><option value="9602 - Acconciatori">Acconciatori</option><option value="01 - Agricoltori">Agricoltori</option><option value="01192 - Art.ne di Mestiere NON deliberata">Art.ne di Mestiere NON deliberata</option><option value="432901 - Ascensoristi">Ascensoristi</option><option value="45202 - Carrozzerie">Carrozzerie</option><option value="2341 - Ceramisti">Ceramisti</option><option value="20 - Chimica Vetro/Gomma/Plastica">Chimica Vetro/Gomma/Plastica</option><option value="18 - Comunicazione e stampa">Comunicazione e stampa</option><option value="332006 - Digitale">Digitale</option><option value="1052 - Dolciari e Panificatori">Dolciari e Panificatori</option><option value="2332 - Edilizia">Edilizia</option><option value="46181 - Editoria">Editoria</option><option value="332001 - Elettrici">Elettrici</option><option value="263 - Elettronici">Elettronici</option><option value="461833 - Estetiste">Estetiste</option><option value="13 - Filiera della Moda">Filiera della Moda</option><option value="26702 - Fotografia e Video">Fotografia e Video</option><option value="33124 - Frigoristi">Frigoristi</option><option value="45204 - Gommisti">Gommisti</option><option value="37 - Imprese di pulizia e disinfestazione">Imprese di pulizia e disinfestazione</option><option value="05 - Lapidei ed altri materiali da costruzione">Lapidei ed altri materiali da costruzione</option><option value="25993 - Lavorazione artistica metalli">Lavorazione artistica metalli</option><option value="016201 - Lavorazioni artistiche legno, vetro e marmo">Lavorazioni artistiche legno, vetro e marmo</option><option value="0129 - Legno e Arredo">Legno e Arredo</option><option value="24 - Meccanica">Meccanica</option><option value="452 - Meccatronici">Meccatronici</option><option value="14 - Moda Calzature, Pelletterie e Pellicceria">Moda Calzature, Pelletterie e Pellicceria</option><option value="14132 - Moda su Misura">Moda su Misura</option><option value="139 - Moda Tessile e Abbigliamento">Moda Tessile e Abbigliamento</option><option value="301 - Nautica">Nautica</option><option value="49322 - NCC Auto">NCC Auto</option><option value="491 - NCC Bus">NCC Bus</option><option value="32502 - Odontotecnici (SNO)">Odontotecnici (SNO)</option><option value="813 - Operatori Giardini e verde">Operatori Giardini e verde</option><option value="2441 - Orafi">Orafi</option><option value="106 - Pastai">Pastai</option><option value="1032 - Produttori bevande">Produttori bevande</option><option value="03 - Produzione Alimentari">Produzione Alimentari</option><option value="900302 - Restauratori">Restauratori</option><option value="33122 - Riparatori Elettrodomestici">Riparatori Elettrodomestici</option><option value="1084 - Ristorazione">Ristorazione</option><option value="267 - Sanità (Podologi, Optometristi)">Sanità (Podologi, Optometristi)</option><option value="16231 - Serramenti e Infissi">Serramenti e Infissi</option><option value="93292 - Stabilimenti balneari">Stabilimenti balneari</option><option value="493 - Taxi">Taxi</option><option value="36 - Termoidraulici">Termoidraulici</option><option value="9601 - Tintolavanderie">Tintolavanderie</option><option value="492 - Trasporto merci">Trasporto merci</option><option value="461 - Unione NON assegnata">Unione NON assegnata</option></select></div><div class="form-group"><label>PEC</label><input type="email" id="pec" required></div></div>
     <div class="form-row c2"><div class="form-group"><label>Sede attivita (via)</label><input type="text" id="sede_attivita" required></div><div class="form-group"><label>Comune</label><input type="text" id="comune_att" required></div></div>
     <div class="form-row c3"><div class="form-group"><label>CAP</label><input type="text" id="cap_att" maxlength="5" required></div><div class="form-group"><label>Prov.</label><input type="text" id="prov_att" maxlength="2" style="text-transform:uppercase" required></div><div class="form-group"><label>Codice INAIL</label><input type="text" id="cod_inail"></div></div>
     <div class="form-row c2"><div class="form-group"><label>Cod. INAIL PAT</label><input type="text" id="cod_inail_pat"></div><div class="form-group"><label>Documento identita</label><input type="text" id="documento_id"></div></div>
   </div></div>
   <div class="form-card"><div class="form-card-header"><span>&#x1F4B0;</span><h3>Iscrizione e Quote</h3></div><div class="form-card-body">
-    <div class="form-row c2"><div class="form-group"><label>Motivo iscrizione</label><select id="motivo_iscrizione" class="form-input" required>
+    <div class="form-row c2"><div class="form-group"><label>Raccolta da</label><input type="text" id="promotore" required></div><div class="form-group"><label>Motivo iscrizione</label><select id="motivo_iscrizione" class="form-input" required>
             <option value="">Seleziona motivo...</option>
             <option value="Altro">Altro</option><option value="Credito">Credito</option><option value="Rete commerciale">Rete commerciale</option><option value="Seminari formativi">Seminari formativi</option><option value="Servizi">Servizi</option><option value="Sindacale/Rappresentanza">Sindacale/Rappresentanza</option><option value="Start-up">Start-up</option>
           </select></div></div>
@@ -260,85 +232,87 @@ body{font-family:'Inter',sans-serif;background:var(--gray);color:var(--txt);line
     <!-- SEZIONE QUOTE - Blue CNA Box -->
     <div style="background:linear-gradient(135deg, rgba(0,92,169,0.08) 0%, rgba(0,119,204,0.12) 100%);border:2px solid rgba(0,92,169,0.3);border-radius:8px;padding:20px;margin:20px 0;box-shadow:0 2px 8px rgba(0,92,169,0.15)">
       <h3 style="color:var(--cna);font-size:16px;font-weight:700;margin:0 0 16px 0;display:flex;align-items:center;gap:8px"><span style="font-size:20px">💶</span> Sezione Quote</h3>
-      <div class="form-row c3"><div class="form-group"><label>Quota 1 anno</label><input type="text" id="quota_1_anno" placeholder="€ 100,00" class="currency-input" required></div><div class="form-group"><label>Data adesione</label><input type="date" id="data_adesione" required></div><div class="form-group"><label>Modalita</label><select id="modalita_pagamento_sel" required><option>Sepa immediato</option><option>Bonifico</option><option>Contanti</option><option>Altro</option></select></div></div>
-      <div class="form-row c3"><div class="form-group"><label>Quota INPS</label><input type="text" id="quota_inps" placeholder="€ 100,00" class="currency-input" required></div><div class="form-group"><label>Cod. INPS</label><input type="text" id="cod_inps"></div><div class="form-group"><label>Quota diretta dal secondo anno</label><input type="text" id="quota_diretto" placeholder="€ 100,00" class="currency-input" required></div></div>
+      <div class="form-row c3"><div class="form-group"><label>Quota 1 anno (EUR)</label><input type="text" id="quota_1_anno" required></div><div class="form-group"><label>Data adesione</label><input type="date" id="data_adesione" required></div><div class="form-group"><label>Modalita</label><select id="modalita_pagamento_sel" required><option>Sepa immediato</option><option>Bonifico</option><option>Contanti</option><option>Altro</option></select></div></div>
+      <div class="form-row c3"><div class="form-group"><label>Quota INPS (EUR)</label><input type="text" id="quota_inps" required></div><div class="form-group"><label>Cod. INPS</label><input type="text" id="cod_inps"></div><div class="form-group"><label>Quota diretta dal secondo anno (EUR)</label><input type="text" id="quota_diretto" required></div></div>
     </div>
     
-    <div class="form-group" style="margin-bottom:14px"><label>Modalita pagamento</label><div class="checkbox-row"><div class="checkbox-item"><input type="checkbox" id="mod_rid" checked><label for="mod_rid">RID</label></div><div class="checkbox-item"><input type="checkbox" id="mod_riba"><label for="mod_riba">RIBA</label></div><div class="checkbox-item"><input type="checkbox" id="mod_rd"><label for="mod_rd">R.D.</label></div><div class="checkbox-item"><input type="checkbox" id="mod_sepa"><label for="mod_sepa">Bonifico Sepa</label></div><div class="checkbox-item"><input type="checkbox" id="mod_altro"><label for="mod_altro">Altro</label></div></div></div>
-    <div class="form-row c2"><div class="form-group"><label>IBAN Ditta</label><input type="text" id="iban_ditta" maxlength="27" style="text-transform:uppercase;letter-spacing:1px;font-family:monospace" required></div><div class="form-group"><label>IBAN CNA</label><input type="text" value="IT 39 T 02008 05165 000400682678" readonly style="background:#f0f0f0;color:#666"></div></div>
+    <div class="form-group" style="margin-bottom:14px"><label>Modalita pagamento</label><div class="checkbox-row"><div class="checkbox-item"><input type="checkbox" id="mod_rid" checked required><label for="mod_rid">RID</label></div><div class="checkbox-item"><input type="checkbox" id="mod_riba" required><label for="mod_riba">RIBA</label></div><div class="checkbox-item"><input type="checkbox" id="mod_rd" required><label for="mod_rd">R.D.</label></div><div class="checkbox-item"><input type="checkbox" id="mod_sepa" required><label for="mod_sepa">Bonifico Sepa</label></div><div class="checkbox-item"><input type="checkbox" id="mod_altro" required><label for="mod_altro">Altro</label></div></div></div>
+    <div class="form-row c2"><div class="form-group"><label>IBAN Ditta</label><input type="text" id="iban_ditta" maxlength="27" style="text-transform:uppercase;letter-spacing:1px;font-family:monospace" required></div><div class="form-group" style="display:none"><label>IBAN CNA</label><input type="text" value="IT 39 T 02008 05165 000400682678" readonly style="background:#f0f0f0;color:#666"></div></div>
   </div></div>
   <div class="form-card"><div class="form-card-header"><span>&#x270D;&#xFE0F;</span><h3>Dichiarazione e Firma</h3></div><div class="form-card-body">
-    <div class="form-row"><div class="form-group"><label>Data</label><input type="date" id="data_dichiarazione" required></div></div>
+    <div class="form-row c2"><div class="form-group"><label>Data</label><input type="date" id="data_dichiarazione" required></div><div class="form-group"><label>Firma operatore</label><div class="signature-container"><p style="font-size:11px;color:var(--txt2);margin-bottom:4px;text-align:center">✍️ Firmare leggendo da sinistra verso destra</p><canvas id="sig_dichiarante"></canvas><div class="signature-actions"><button class="btn btn-sm btn-outline" onclick="clearSignature('sig_dichiarante')">Cancella</button></div></div></div></div>
   </div></div>
+</div>
+
+<!-- TAB 1: PRIVACY -->
+<div class="tab-page" id="tab-1">
   <div class="form-card"><div class="form-card-header"><span>&#x1F512;</span><h3>Privacy e Consensi</h3></div><div class="form-card-body">
-    <div class="form-row c2"><div class="form-group"><label>Cognome</label><input class="mirror-cognome" readonly style="background:#f0f0f0"></div><div class="form-group"><label>Nome</label><input class="mirror-nome" readonly style="background:#f0f0f0"></div></div>
-    <div class="form-group" style="margin-bottom:20px"><label>C.F.</label><input class="mirror-cf" readonly style="background:#f0f0f0;text-transform:uppercase;font-family:monospace"></div>
+    <div class="form-row c2" style="display:none"><div class="form-group"><label>Cognome</label><input class="mirror-cognome" readonly style="background:#f0f0f0"></div><div class="form-group"><label>Nome</label><input class="mirror-nome" readonly style="background:#f0f0f0"></div></div>
+    <div class="form-group" style="display:none;margin-bottom:20px"><label>C.F.</label><input class="mirror-cf" readonly style="background:#f0f0f0;text-transform:uppercase;font-family:monospace"></div>
     <div class="consent-block"><p><strong>a)</strong> Trattamento dati per finalita statutarie e associative.</p><div class="consent-toggle"><label><input type="radio" name="consent_a" value="consente" checked> CONSENTE</label><label><input type="radio" name="consent_a" value="non_consente"> NON CONSENTE</label></div></div>
     <div class="consent-block"><p><strong>b)</strong> Trattamento dati per convenzioni INPS e INAIL.</p><div class="consent-toggle"><label><input type="radio" name="consent_b" value="consente" checked> CONSENTE</label><label><input type="radio" name="consent_b" value="non_consente"> NON CONSENTE</label></div></div>
     <div class="consent-block"><p><strong>Art. 9</strong> Trattamento categorie particolari di dati.</p><div class="consent-toggle"><label><input type="radio" name="consent_art9" value="consenso" checked> Consenso</label><label><input type="radio" name="consent_art9" value="mancato"> Mancato</label></div></div>
     <div class="consent-block"><p>Comunicazione dati al Sistema Nazionale CNA.</p><div class="consent-toggle"><label><input type="radio" name="consent_sistema" value="consenso" checked> Consenso</label><label><input type="radio" name="consent_sistema" value="mancato"> Mancato</label></div></div>
     <div class="consent-block"><p>Comunicazione dati sui siti web e Social Network CNA.</p><div class="consent-toggle"><label><input type="radio" name="consent_web" value="consenso" checked> Consenso</label><label><input type="radio" name="consent_web" value="mancato"> Mancato</label></div></div>
-    <div class="form-row c2" style="margin-top:20px"><div class="form-group"><label>Data</label><input type="date" id="data_consenso" required></div><div class="form-group"><label>Firma</label><div class="signature-container"><canvas id="sig_consenso"></canvas><div class="signature-actions"><button class="btn btn-sm btn-outline" onclick="clearSignature('sig_consenso')">Cancella</button></div></div></div></div>
-  </div></div>
-  <div class="form-card"><div class="form-card-header"><span>&#x1F3DB;&#xFE0F;</span><h3>Delega INPS</h3></div><div class="form-card-body">
-    <div class="form-row c2"><div class="form-group"><label>Cognome</label><input class="mirror-cognome" readonly style="background:#f0f0f0"></div><div class="form-group"><label>Nome</label><input class="mirror-nome" readonly style="background:#f0f0f0"></div></div>
-    <div class="form-row cf"><div class="form-group"><label>C.F.</label><input class="mirror-cf" readonly style="background:#f0f0f0;text-transform:uppercase"></div><div class="form-group"><label>Nato/a il</label><input class="mirror-data-nascita" readonly style="background:#f0f0f0"></div></div>
-    <div class="form-row c2"><div class="form-group"><label>In qualita di</label><input type="text" id="qualita_inps" required></div><div class="form-group"><label>Data delega</label><input type="date" id="data_inps" required></div></div>
-    <div class="form-group"><label>Firma INPS</label><div class="signature-container"><canvas id="sig_inps"></canvas><div class="signature-actions"><button class="btn btn-sm btn-outline" onclick="clearSignature('sig_inps')">Cancella</button></div></div></div>
-  </div></div>
-  <div class="form-card"><div class="form-card-header"><span>&#x1F3E6;</span><h3>Mandato SEPA</h3></div><div class="form-card-body">
-    <div class="form-row c2"><div class="form-group"><label>ID Creditore</label><input value="IT15001000008015133088" readonly style="background:#f0f0f0;font-family:monospace"></div><div class="form-group"><label>ID Mandato</label><input type="text" id="id_mandato" required></div></div>
-    <div class="form-group" style="margin-bottom:14px"><label>Nome debitore</label><input class="mirror-ragione-sociale" readonly style="background:#f0f0f0"></div>
-    <div class="form-group" style="margin-bottom:14px"><label>Partita IVA</label><input class="mirror-piva" readonly style="background:#f0f0f0;font-family:monospace"></div>
-    <div class="form-group" style="margin-bottom:14px"><label>IBAN</label><input class="mirror-iban" readonly style="background:#f0f0f0;font-family:monospace"></div>
-    <div class="form-group" style="margin-bottom:14px"><label>Banca - Agenzia</label><input type="text" id="banca_agenzia" required></div>
-    <div class="form-group" style="margin-bottom:14px"><label>Tipo SEPA</label><div class="checkbox-row"><div class="checkbox-item"><input type="checkbox" id="sepa_b2b" checked><label for="sepa_b2b">B2B</label></div><div class="checkbox-item"><input type="checkbox" id="sepa_core"><label for="sepa_core">CORE</label></div></div></div>
-    <div class="form-row c2"><div class="form-group"><label>Data</label><input type="date" id="data_sepa" required></div><div class="form-group"><label>Luogo</label><input type="text" id="luogo_sepa" value="Roma" required></div></div>
-    <div class="form-group"><label>Firma SEPA</label><div class="signature-container"><canvas id="sig_sepa"></canvas><div class="signature-actions"><button class="btn btn-sm btn-outline" onclick="clearSignature('sig_sepa')">Cancella</button></div></div></div>
+    <div class="form-row c2" style="margin-top:20px"><div class="form-group"><label>Data</label><input type="date" id="data_consenso" required></div><div class="form-group"><label>Firma</label><div class="signature-container"><p style="font-size:11px;color:var(--txt2);margin-bottom:4px;text-align:center">✍️ Firmare leggendo da sinistra verso destra</p><canvas id="sig_consenso"></canvas><div class="signature-actions"><button class="btn btn-sm btn-outline" onclick="clearSignature('sig_consenso')">Cancella</button></div></div></div></div>
   </div></div>
 </div>
 
+<!-- TAB 2: INPS -->
+<div class="tab-page" id="tab-2">
+  <div class="form-card"><div class="form-card-header"><span>&#x1F3DB;&#xFE0F;</span><h3>Delega INPS</h3></div><div class="form-card-body">
+    <div class="form-row c2" style="display:none"><div class="form-group"><label>Cognome</label><input class="mirror-cognome" readonly style="background:#f0f0f0"></div><div class="form-group"><label>Nome</label><input class="mirror-nome" readonly style="background:#f0f0f0"></div></div>
+    <div class="form-row cf" style="display:none"><div class="form-group"><label>C.F.</label><input class="mirror-cf" readonly style="background:#f0f0f0;text-transform:uppercase"></div><div class="form-group"><label>Nato/a il</label><input class="mirror-data-nascita" readonly style="background:#f0f0f0"></div></div>
+    <div class="form-row c2"><div class="form-group" style="display:none"><label>In qualita di</label><input type="text" id="qualita_inps"></div><div class="form-group"><label>Data delega</label><input type="date" id="data_inps" required></div></div>
+    <div class="form-group"><label>Firma INPS</label><div class="signature-container"><p style="font-size:11px;color:var(--txt2);margin-bottom:4px;text-align:center">✍️ Firmare leggendo da sinistra verso destra</p><canvas id="sig_inps"></canvas><div class="signature-actions"><button class="btn btn-sm btn-outline" onclick="clearSignature('sig_inps')">Cancella</button></div></div></div>
+  </div></div>
+</div>
 
-<!-- TAB 1: DASHBOARD CONTRATTI -->
-<div class="tab-page active" id="tab-1">
+<!-- TAB 3: SEPA -->
+<div class="tab-page" id="tab-3">
+  <div class="form-card"><div class="form-card-header"><span>&#x1F3E6;</span><h3>Mandato SEPA</h3></div><div class="form-card-body">
+    <div class="form-row c2"><div class="form-group"><label>ID Creditore</label><input value="IT15001000008015133088" readonly style="background:#f0f0f0;font-family:monospace"></div><div class="form-group"><label>ID Mandato</label><input type="text" id="id_mandato" required></div></div>
+    <div class="form-group" style="display:none;margin-bottom:14px"><label>Nome debitore</label><input class="mirror-ragione-sociale" readonly style="background:#f0f0f0"></div>
+    <div class="form-group" style="display:none;margin-bottom:14px"><label>Partita IVA</label><input class="mirror-piva" readonly style="background:#f0f0f0;font-family:monospace"></div>
+    <div class="form-group" style="display:none;margin-bottom:14px"><label>IBAN</label><input class="mirror-iban" readonly style="background:#f0f0f0;font-family:monospace"></div>
+    <div class="form-group" style="margin-bottom:14px"><label>Banca - Agenzia</label><input type="text" id="banca_agenzia" required></div>
+    <div class="form-group" style="margin-bottom:14px"><label>Tipo SEPA</label><div class="checkbox-row"><div class="checkbox-item"><input type="checkbox" id="sepa_b2b" checked required><label for="sepa_b2b">B2B</label></div><div class="checkbox-item"><input type="checkbox" id="sepa_core" required><label for="sepa_core">CORE</label></div></div></div>
+    <div class="form-row c2"><div class="form-group"><label>Data</label><input type="date" id="data_sepa" required></div><div class="form-group"><label>Luogo</label><input type="text" id="luogo_sepa" value="Roma" required></div></div>
+    <div class="form-group"><label>Firma SEPA</label><div class="signature-container"><p style="font-size:11px;color:var(--txt2);margin-bottom:4px;text-align:center">✍️ Firmare leggendo da sinistra verso destra</p><canvas id="sig_sepa"></canvas><div class="signature-actions"><button class="btn btn-sm btn-outline" onclick="clearSignature('sig_sepa')">Cancella</button></div></div></div>
+  </div></div>
+</div>
+
+<!-- TAB 4: CONTRATTI -->
+<div class="tab-page active" id="tab-4">
   <div class="form-card">
     <div class="form-card-header" style="justify-content:space-between;flex-wrap:wrap;gap:10px">
       <div style="display:flex;align-items:center;gap:10px"><span>&#x1F4C2;</span><h3>Dashboard Contratti</h3></div>
       <button class="btn btn-primary" onclick="newContract()" style="font-size:14px;padding:10px 24px">&#x2795; Nuovo modulo di adesione</button>
     </div>
     <div class="form-card-body">
-      <div style="width:1050px;max-width:100%">
-        <div style="display:flex;justify-content:space-between;margin-bottom:8px;gap:8px">
-          <div style="display:flex;gap:6px;flex-wrap:wrap">
-            <input type="text" id="search-contracts" placeholder="🔍 Cerca..." style="padding:5px 10px;border:1px solid var(--brd);border-radius:6px;font-size:12px;width:150px" oninput="filterContracts()">
-            <select id="filter-tipo" onchange="filterContracts()" style="padding:5px 8px;border:1px solid var(--brd);border-radius:6px;font-size:12px;width:100px">
-              <option value="">Tutti</option>
-              <option value="adesione_2025" selected>Tesseramento</option>
-            </select>
-            <select id="filter-anno" onchange="filterContracts()" style="padding:5px 8px;border:1px solid var(--brd);border-radius:6px;font-size:12px;width:80px">
-              <option value="">Anni</option>
-              <option value="2026" selected>2026</option>
-              <option value="2025">2025</option>
-              <option value="2024">2024</option>
-            </select>
-            <select id="filter-stato-firma" onchange="filterContracts()" style="padding:5px 8px;border:1px solid var(--brd);border-radius:6px;font-size:12px;width:100px">
-              <option value="">Firma</option>
-              <option value="firmato">Firmati</option>
-              <option value="non_firmato">Non firmati</option>
-            </select>
-            <select id="filter-proprietario" onchange="filterContracts()" style="padding:5px 8px;border:1px solid var(--brd);border-radius:6px;font-size:12px;width:130px">
-              <option value="">Proprietari</option>
-            </select>
-          </div>
-          <button class="btn btn-sm btn-outline" onclick="loadContracts()" style="padding:5px 10px;font-size:12px">🔄</button>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:8px">
+        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+          <input type="text" id="search-contracts" placeholder="🔍 Cerca cliente..." style="padding:6px 12px;border:1px solid var(--brd);border-radius:6px;font-size:13px;min-width:200px" oninput="filterContracts()">
+          <select id="filter-tipo" onchange="filterContracts()" style="padding:6px 12px;border:1px solid var(--brd);border-radius:6px;font-size:13px">
+            <option value="">Tutti i tipi</option>
+            <option value="adesione_2025" selected>Tesseramento</option>
+          </select>
+          <select id="filter-anno" onchange="filterContracts()" style="padding:6px 12px;border:1px solid var(--brd);border-radius:6px;font-size:13px">
+            <option value="">Tutti gli anni</option>
+            <option value="2026" selected>2026</option>
+            <option value="2025">2025</option>
+            <option value="2024">2024</option>
+          </select>
+          <select id="filter-proprietario" onchange="filterContracts()" style="padding:6px 12px;border:1px solid var(--brd);border-radius:6px;font-size:13px">
+            <option value="">Tutti i proprietari</option>
+          </select>
+          <label style="display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer"><input type="checkbox" id="select-all-contracts" onchange="toggleSelectAll(this)" style="width:16px;height:16px;accent-color:var(--cna)" required> Seleziona tutti</label>
+          <button class="btn btn-sm btn-outline" onclick="exportExcel()" id="btn-export" style="display:none">&#x1F4CA; Esporta Excel</button>
+          <button class="btn btn-sm btn-danger" onclick="deleteSelected()" id="btn-delete" style="display:none">&#x1F5D1; Elimina</button>
         </div>
-        <div style="display:flex;gap:6px;margin-bottom:16px">
-          <label style="display:flex;align-items:center;gap:4px;font-size:12px;cursor:pointer"><input type="checkbox" id="select-all-contracts" onchange="toggleSelectAll(this)" style="width:14px;height:14px" required> Tutti</label>
-          <button class="btn btn-sm btn-outline" onclick="exportExcel()" id="btn-export" style="display:none;padding:4px 8px;font-size:11px">📊 Excel</button>
-          <button class="btn btn-sm btn-danger" onclick="deleteSelected()" id="btn-delete" style="display:none;padding:4px 8px;font-size:11px">🗑️</button>
-        </div>
+        <button class="btn btn-sm btn-outline" onclick="loadContracts()">&#x21BB; Aggiorna</button>
       </div>
-      <div id="contracts-list" style="width:1050px;max-width:100%"><p style="text-align:center;color:var(--txt2);padding:40px">Caricamento...</p></div>
+      <div id="contracts-list"><p style="text-align:center;color:var(--txt2);padding:40px">Caricamento...</p></div>
     </div>
   </div>
 </div>
@@ -380,16 +354,13 @@ body{font-family:'Inter',sans-serif;background:var(--gray);color:var(--txt);line
         </div>
       </div>
     </div>
-    <div style="background:#d1ecf1;border:2px solid #0c5460;border-radius:8px;padding:14px;margin-top:14px">
-      <p style="font-size:14px;font-weight:700;color:#0c5460;margin:0 0 8px 0;display:flex;align-items:center;gap:6px">
-        <span style="font-size:18px">📧</span> Come funziona l'invio
+    <div style="background:#fff3cd;border:2px solid #ffc107;border-radius:8px;padding:14px;margin-top:14px">
+      <p style="font-size:14px;font-weight:700;color:#856404;margin:0 0 8px 0;display:flex;align-items:center;gap:6px">
+        <span style="font-size:18px">⚠️</span> IMPORTANTE: Come formattare l'email
       </p>
-      <p style="font-size:13px;color:#0c5460;margin:0;line-height:1.6">
-        Quando clicchi su <strong>"Invia Link"</strong>:<br>
-        1️⃣ Il corpo dell'email HTML viene <strong>copiato automaticamente</strong> negli appunti<br>
-        2️⃣ Si apre <strong>Gmail web</strong> in una nuova scheda con destinatario e oggetto già compilati<br>
-        3️⃣ Clicca nel corpo dell'email e <strong style="background:#bee5eb;padding:2px 6px;border-radius:4px;color:#000">incolla (Ctrl+V o Cmd+V)</strong><br>
-        4️⃣ Verifica che il formato sia corretto e clicca <strong>"Invia"</strong>
+      <p style="font-size:13px;color:#856404;margin:0;line-height:1.6">
+        <strong>Il corpo della mail con firma HTML viene copiato negli appunti.</strong><br>
+        Dopo l'apertura del client di posta, <strong style="background:#ffc107;padding:2px 6px;border-radius:4px;color:#000">incolla (Ctrl+V o Cmd+V)</strong> per avere la formattazione completa con logo e link cliccabile.
       </p>
     </div>
   </div>
@@ -436,16 +407,15 @@ body{font-family:'Inter',sans-serif;background:var(--gray);color:var(--txt);line
   <div class="modal-header"><h2>&#x1F4CB; Note di versione</h2><button class="close-btn" onclick="closeModal('modal-changelog')">&times;</button></div>
   <div class="modal-body" style="max-height:70vh;overflow-y:auto">
     
-        <div class="changelog-entry" style="border-left-color:#dc3545;background:#ffe6e6">
-      <h3>v10.0 - 28 Aprile 2026 🔥 MAJOR UPDATE</h3>
+    <div class="changelog-entry">
+      <h3>v6.0 - 29 Aprile 2026</h3>
       <ul>
-        <li><strong>📋 MODULO UNIFICATO:</strong> Tutte le 4 schede (Adesione, Privacy, INPS, SEPA) sono ora unite in UN'UNICA scheda "Nuovo Modulo"</li>
-        <li><strong>🎯 Navigazione semplificata:</strong> Solo 2 tab principali: "Nuovo Modulo" e "Dashboard"</li>
-        <li><strong>✅ Compilazione lineare:</strong> Tutto il modulo si compila scorrendo in verticale, senza cambiare scheda</li>
-        <li><strong>🚀 Workflow ottimizzato:</strong> Esperienza utente migliorata con processo di compilazione fluido e continuo</li>
-        <li><strong>📊 Dashboard sempre accessibile:</strong> La gestione contratti resta separata e facilmente raggiungibile</li>
-        <li><strong>🔧 Codice ripreso da v9_FINALE:</strong> Tutte le funzionalità di creazione contratto dalla versione funzionante</li>
-        <li><strong>💾 Homepage da index.html:</strong> Dashboard e gestione contratti dalla versione più recente</li>
+        <li><strong>Campi obbligatori:</strong> resi obbligatori tutti i campi tranne Cod. INAIL, Cod. INAIL PAT, Documento identità e Cod. INPS</li>
+        <li><strong>Campi nascosti:</strong> nascosti tutti i campi auto-compilati (specchi di cognome/nome/CF/data nascita nei box INPS, Privacy e SEPA, IBAN CNA, "In qualità di")</li>
+        <li><strong>ATECO:</strong> menu a tendina con mestieri reali dalla tabella codiciateco su Supabase</li>
+        <li><strong>Firma PDF corretta:</strong> la firma non viene più deformata nel PDF (rispetto delle proporzioni)</li>
+        <li><strong>Indicazione verso firma:</strong> aggiunta istruzione "Firmare da sinistra verso destra" in tutti i box firma e nel pannello fullscreen</li>
+        <li><strong>5 posizioni firma cliente:</strong> 2 box pagina 1, 1 pagina 2, 1 pagina 3, 1 pagina 4</li>
       </ul>
     </div>
 
@@ -555,7 +525,8 @@ body{font-family:'Inter',sans-serif;background:var(--gray);color:var(--txt);line
 
 <!-- FULLSCREEN SIGNATURE OVERLAY -->
 <div class="sig-fullscreen" id="sig-fullscreen">
-  <div class="sig-fullscreen-header"><h3>Firma qui</h3><button class="close-btn" onclick="closeSigFullscreen()" style="color:#fff;font-size:28px">&times;</button></div>
+  <div class="sig-fullscreen-header"><h3>✍️ Firma qui</h3><button class="close-btn" onclick="closeSigFullscreen()" style="color:#fff;font-size:28px">&times;</button></div>
+  <div class="sig-direction-hint">⬅️ Apponi la firma leggendo il documento da sinistra verso destra ➡️</div>
   <div class="sig-fullscreen-body"><canvas id="sig-fullscreen-canvas"></canvas></div>
   <div class="sig-fullscreen-footer">
     <button class="btn btn-outline" onclick="clearFullscreenSig()">Cancella</button>
@@ -897,7 +868,7 @@ function showSigningUI(ct,token){
       <!-- FIRMA -->
       <div class="form-group" style="margin-bottom:20px">
         <label style="font-size:14px;font-weight:700;color:var(--cna-dk)">FIRMA</label>
-        <p style="font-size:12px;color:var(--txt2);margin-bottom:10px">Tocca il pulsante per aprire il pannello firma a tutto schermo</p>
+        <p style="font-size:12px;color:var(--txt2);margin-bottom:10px">Tocca il pulsante per aprire il pannello firma a tutto schermo.<br><strong>Apponi la firma leggendo il testo da sinistra verso destra.</strong></p>
         <button class="btn btn-primary" onclick="openFullscreenSig('sig_cliente_target','${token}')" style="width:100%;padding:20px;font-size:18px" id="btn-open-sig">&#x270D;&#xFE0F; Apri pannello firma</button>
         <canvas id="sig_cliente_target" style="display:none"></canvas>
       </div>
@@ -1038,24 +1009,40 @@ async function previewContractPDF(token){
 const SIG_POS={
   // dichiarante:[0,340,180,250,35],   // REMOVED: Firma operatore
   consenso:[0,340,64,250,35],       // Page 1: "Firma di chi esprime il consenso"
+  dichiarazione:[0,340,170,250,35], // Page 1: "Dichiarazione e Firma" second box
   privacy:[1,265,15,250,35],        // Page 2: "FIRMA" privacy
   inps:[2,280,80,250,35],           // Page 3: "FIRMA" delega INPS (raised from 42 to 80)
   sepa:[3,300,148,250,35]           // Page 4: "Firma" SEPA
 };
 async function embedSigs(doc,pages,data){
-  const es=async(b64,pos)=>{if(!b64||!b64.startsWith('data:'))return;try{const i=await doc.embedPng(b64);pages[pos[0]].drawImage(i,{x:pos[1],y:pos[2],width:pos[3],height:pos[4]});}catch(e){console.warn('Sig embed:',e);}};
-  
-  // If client signature exists, apply it to ALL 4 positions (removed dichiarante/operatore)
+  const es=async(b64,pos)=>{
+    if(!b64||!b64.startsWith('data:'))return;
+    try{
+      // Load the image to get its natural dimensions
+      const imgBytes=Uint8Array.from(atob(b64.split(',')[1]),c=>c.charCodeAt(0));
+      let img;
+      try{img=await doc.embedPng(b64);}catch(e){img=await doc.embedJpg(imgBytes);}
+      const natW=img.width;const natH=img.height;
+      const boxW=pos[3];const boxH=pos[4];
+      // Calculate scaled dimensions preserving aspect ratio
+      const scale=Math.min(boxW/natW,boxH/natH);
+      const drawW=natW*scale;const drawH=natH*scale;
+      // Center within the box
+      const offsetX=(boxW-drawW)/2;const offsetY=(boxH-drawH)/2;
+      pages[pos[0]].drawImage(img,{x:pos[1]+offsetX,y:pos[2]+offsetY,width:drawW,height:drawH});
+    }catch(e){console.warn('Sig embed:',e);}
+  };
+  // If client signature exists, apply it to ALL 5 positions
   if(data.firma_cliente_path){
-    // await es(data.firma_cliente_path,SIG_POS.dichiarante); // REMOVED
     await es(data.firma_cliente_path,SIG_POS.consenso);
+    await es(data.firma_cliente_path,SIG_POS.dichiarazione);
     await es(data.firma_cliente_path,SIG_POS.privacy);
     await es(data.firma_cliente_path,SIG_POS.inps);
     await es(data.firma_cliente_path,SIG_POS.sepa);
   }else{
     // Otherwise use individual signatures from form
-    // await es(data.firma_dichiarante_base64,SIG_POS.dichiarante); // REMOVED
     await es(data.firma_consenso_base64,SIG_POS.consenso);
+    await es(data.firma_consenso_base64,SIG_POS.dichiarazione);
     await es(data.firma_consenso_base64,SIG_POS.privacy);
     await es(data.firma_delega_inps_base64,SIG_POS.inps);
     await es(data.firma_sepa_base64,SIG_POS.sepa);
@@ -1136,7 +1123,7 @@ async function confirmSend(){
 
     const subj='Completa l\'adesione alla CNA di Roma';
     
-    // HTML email body for display
+    // HTML email body
     const htmlBody=`<div style="font-family:Arial,sans-serif;font-size:10pt;color:#000;line-height:1.6">
 <p>Gentile ${cognome} ${nome},</p>
 <p>La preghiamo di firmare il contratto di adesione CNA Roma tramite il link in questa email.</p>
@@ -1146,35 +1133,21 @@ async function confirmSend(){
 <br><img src="https://festivaldellelibrerie.it/wp-content/uploads/2024/11/logo-cna-colore.svg" alt="CNA Roma" style="height:45px;width:auto;display:block;margin-bottom:8px">
 <div style="font-size:10pt"><strong style="color:#005CA9">CNA Roma</strong><br><span style="font-size:9pt">Via Cristoforo Colombo 283A – 00147 – Roma<br>Tel: 06/570151 | Mail: <a href="mailto:info@cnaroma.it" style="color:#005CA9">info@cnaroma.it</a> | <a href="http://cnaroma.it" style="color:#005CA9">cnaroma.it</a></span></div></div>`;
 
-    // Copy HTML to clipboard for manual paste
+    // Plain text for mailto
+    const plainBody=`Gentile ${cognome} ${nome},\n\nLa preghiamo di firmare il contratto di adesione CNA Roma tramite il link in questa email.\n\nCordiali saluti,\nCNA Roma\n\n🔗 Clicca qui per visualizzare e firmare il contratto:\n${url}\n\nSe il link non funziona, copia e incolla questo indirizzo nel browser:\n${url}\n\n--\nCNA Roma\nVia Cristoforo Colombo 283A – 00147 – Roma\nTel: 06/570151 | Mail: info@cnaroma.it | cnaroma.it`;
+
+    // Copy HTML to clipboard
     try{
-      await navigator.clipboard.write([new ClipboardItem({'text/html':new Blob([htmlBody],{type:'text/html'}),'text/plain':new Blob([htmlBody],{type:'text/plain'})})]);
+      await navigator.clipboard.write([new ClipboardItem({'text/html':new Blob([htmlBody],{type:'text/html'}),'text/plain':new Blob([plainBody],{type:'text/plain'})})]);
     }catch(e){try{await navigator.clipboard.writeText(htmlBody);}catch(e2){}}
 
     closeModal('modal-email');
 
-    // Create a temporary textarea with the HTML content
-    const tempDiv=document.createElement('div');
-    tempDiv.style.position='fixed';
-    tempDiv.style.left='-9999px';
-    tempDiv.contentEditable=true;
-    tempDiv.innerHTML=htmlBody;
-    document.body.appendChild(tempDiv);
-    
-    // Select and copy the formatted content
-    const range=document.createRange();
-    range.selectNodeContents(tempDiv);
-    const selection=window.getSelection();
-    selection.removeAllRanges();
-    selection.addRange(range);
-    document.execCommand('copy');
-    document.body.removeChild(tempDiv);
+    // Build mailto URL and open it
+    const mailtoUrl=`mailto:${email}?subject=${encodeURIComponent(subj)}&body=${encodeURIComponent(plainBody)}`;
+    window.location.href=mailtoUrl;
 
-    // Try to open Gmail compose with pre-filled data
-    const gmailUrl=`https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(email)}&su=${encodeURIComponent(subj)}`;
-    window.open(gmailUrl,'_blank');
-
-    showToast('✅ Email copiata! Apri Gmail e incolla (Ctrl+V) nel corpo dell\'email','success');
+    showToast('Client email aperto! Email HTML copiata - incolla con Ctrl+V','success');
   }catch(e){console.error('confirmSend:',e);showToast('Errore: '+e.message,'error');}
 }
 
@@ -1255,7 +1228,6 @@ function filterContracts(){
   const search=document.getElementById('search-contracts').value.toLowerCase();
   const tipo=document.getElementById('filter-tipo').value;
   const anno=document.getElementById('filter-anno').value;
-  const statoFirma=document.getElementById('filter-stato-firma').value;
   const proprietario=document.getElementById('filter-proprietario').value;
   const rows=document.querySelectorAll('.contract-item');
   
@@ -1264,7 +1236,6 @@ function filterContracts(){
     const email=(row.dataset.email||'').toLowerCase();
     const tipoRow=row.dataset.tipo||'';
     const annoRow=row.dataset.anno||'';
-    const firmatoRow=row.dataset.firmato||'';
     const propRow=row.dataset.proprietario||'';
     
     const matchSearch=!search||(nome.includes(search)||email.includes(search));
@@ -1272,11 +1243,7 @@ function filterContracts(){
     const matchAnno=!anno||(annoRow===anno);
     const matchProp=!proprietario||(propRow===proprietario);
     
-    let matchFirma=true;
-    if(statoFirma==='firmato')matchFirma=(firmatoRow==='true');
-    else if(statoFirma==='non_firmato')matchFirma=(firmatoRow==='false');
-    
-    row.style.display=(matchSearch&&matchTipo&&matchAnno&&matchProp&&matchFirma)?'flex':'none';
+    row.style.display=(matchSearch&&matchTipo&&matchAnno&&matchProp)?'flex':'none';
   });
 }
 
@@ -1310,7 +1277,7 @@ async function loadContracts(){
       const gestClass=gest?'background:#d4edda;color:#155724':'background:#fff3cd;color:#856404';
       const gestText=gest?'\u2713 Caricato':'\u25CF Da caricare';
       const canEdit=(st==='bozza'||st==='inviato'); // Can edit if not yet signed
-      return `<div class="contract-item" data-id="${x.id}" data-nome="${(x.cognome||'')+' '+(x.nome||'')+' '+( x.ragione_sociale||'')}" data-email="${x.email||''}" data-tipo="${x.tipo_contratto||'adesione_2025'}" data-anno="${anno}" data-firmato="${st==='firmato'?'true':'false'}" data-proprietario="${createdByName}">
+      return `<div class="contract-item" data-id="${x.id}" data-nome="${(x.cognome||'')+' '+(x.nome||'')+' '+( x.ragione_sociale||'')}" data-email="${x.email||''}" data-tipo="${x.tipo_contratto||'adesione_2025'}" data-anno="${anno}">
         <input type="checkbox" class="contract-cb" value="${x.id}" onchange="updateExportBtn()" style="width:16px;height:16px;accent-color:var(--cna);flex-shrink:0">
         <div class="contract-info">
           <h4>${x.cognome||''} ${x.nome||''} - ${x.ragione_sociale||'N/D'}</h4>
@@ -1481,7 +1448,7 @@ function setupMirroring(){
 const sigPads={};
 function initSignaturePad(id){
   const c=document.getElementById(id);if(!c)return;const ctx=c.getContext('2d');
-  if(!c.width||c.width<10){const r=c.getBoundingClientRect();c.width=r.width;c.height=r.height;}
+  if(!c.width||c.width<10){const r=c.getBoundingClientRect();c.width=r.width*2;c.height=r.height*2;ctx.scale(2,2);}
   let d=false,lx=0,ly=0;
   const gp=e=>{const r=c.getBoundingClientRect();const t=e.touches?e.touches[0]:e;return{x:t.clientX-r.left,y:t.clientY-r.top};};
   const start=e=>{e.preventDefault();d=true;const p=gp(e);lx=p.x;ly=p.y;};
@@ -1500,12 +1467,60 @@ function closeModal(id){document.getElementById(id).classList.remove('show');}
 function resetAll(){if(!confirm('Cancellare tutti i dati?'))return;document.querySelectorAll('input[type="text"],input[type="email"],input[type="tel"],input[type="date"]').forEach(el=>{if(!el.readOnly)el.value='';});document.querySelectorAll('input[type="text"][readonly]').forEach(el=>el.value='');['sig_dichiarante','sig_consenso','sig_inps','sig_sepa'].forEach(clearSignature);currentContractId=null;updateStatus();showToast('Reset');}
 
 
-// === LOCATIONIQ AUTOCOMPLETE - DISABILITATO ===
-// Funzione disabilitata come richiesto
+// === LOCATIONIQ AUTOCOMPLETE ===
+
 
 function initLocationIQAutocomplete(){
-  // LocationIQ disabilitato - nessuna action
-  return;
+  const natoInput=document.getElementById('nato_a');
+  const residenteInput=document.getElementById('residente_in');
+  
+  if(natoInput){
+    let natoTimeout;
+    natoInput.addEventListener('input',function(){
+      clearTimeout(natoTimeout);
+      const query=this.value.trim();
+      if(query.length<3){
+        removeSuggestions('nato');
+        return;
+      }
+      natoTimeout=setTimeout(async()=>{
+        try{
+          const url=`https://api.locationiq.com/v1/autocomplete?key=${LOCATIONIQ_TOKEN}&q=${encodeURIComponent(query)}&limit=5&dedupe=1&countrycodes=it&tag=place:city,place:town,place:village`;
+          const res=await fetch(url);
+          const data=await res.json();
+          if(data&&data.length>0){
+            showLocationSuggestions(data,natoInput,'nato');
+          }
+        }catch(e){
+          console.error('LocationIQ nato error:',e);
+        }
+      },300);
+    });
+  }
+  
+  if(residenteInput){
+    let resTimeout;
+    residenteInput.addEventListener('input',function(){
+      clearTimeout(resTimeout);
+      const query=this.value.trim();
+      if(query.length<3){
+        removeSuggestions('residente');
+        return;
+      }
+      resTimeout=setTimeout(async()=>{
+        try{
+          const url=`https://api.locationiq.com/v1/autocomplete?key=${LOCATIONIQ_TOKEN}&q=${encodeURIComponent(query)}&limit=5&dedupe=1&countrycodes=it`;
+          const res=await fetch(url);
+          const data=await res.json();
+          if(data&&data.length>0){
+            showLocationSuggestions(data,residenteInput,'residente');
+          }
+        }catch(e){
+          console.error('LocationIQ residente error:',e);
+        }
+      },300);
+    });
+  }
 }
 
 function removeSuggestions(type){
@@ -1577,13 +1592,8 @@ function showLocationSuggestions(data,input,type){
 
 // === LOAD CODICI ATECO ===
 async function loadCodiciAteco(){
-  try{
-    const codes=await sb('codiciateco?select=codiceateco,mestiere&order=codiceateco.asc&limit=1000');
-    const select=document.getElementById('attivita');
-    if(select&&codes&&codes.length){
-      select.innerHTML='<option value="">Seleziona attività...</option>'+codes.map(c=>`<option value="${c.codiceateco} - ${c.mestiere}">${c.codiceateco} - ${c.mestiere}</option>`).join('');
-    }
-  }catch(e){console.error('loadCodiciAteco:',e);}
+  // ATECO is now a static select built from Supabase data at build time
+  // No dynamic loading needed
 }
 
 // === AUTO-POPULATE RACCOLTO DA ===
