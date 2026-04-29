@@ -30,7 +30,7 @@ body{font-family:'Inter',sans-serif;background:var(--gray);color:var(--txt);line
 /* HEADER - Dashboard Tesseramento style */
 .app-header{background:var(--cna);color:#fff;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,0.25)}
 .stats-bar-container{background:rgba(0,0,0,0.12);border-bottom:none;padding:10px 0}
-.stats-bar{display:flex;justify-content:center;align-items:center;gap:10px;max-width:1200px;margin:0 auto;padding:0 24px}
+.stats-bar{display:flex;justify-content:center;align-items:center;gap:10px;max-width:1400px;margin:0 auto;padding:0 24px}
 .stat-mini-box{border:none;border-radius:10px;padding:10px 20px;min-width:140px;text-align:center;box-shadow:0 2px 8px rgba(0,0,0,0.15);display:flex;flex-direction:column;align-items:center;flex:1}
 .stat-mini-box:nth-child(1){background:linear-gradient(135deg,#0077cc,#00aaff)}
 .stat-mini-box:nth-child(2){background:linear-gradient(135deg,#e63946,#ff6b6b)}
@@ -38,7 +38,7 @@ body{font-family:'Inter',sans-serif;background:var(--gray);color:var(--txt);line
 .stat-mini-box:nth-child(4){background:linear-gradient(135deg,#2d9b4e,#4cd964)}
 .stat-mini-num{font-size:24px;font-weight:800;color:#fff;line-height:1;margin-bottom:4px;text-shadow:0 1px 2px rgba(0,0,0,0.2)}
 .stat-mini-label{font-size:10px;color:rgba(255,255,255,0.9);font-weight:600;line-height:1.2;text-transform:uppercase;letter-spacing:.3px}
-.header-inner{max-width:1200px;margin:0 auto;padding:14px 24px;display:flex;align-items:center;gap:16px}
+.header-inner{max-width:1400px;margin:0 auto;padding:14px 24px;display:flex;align-items:center;gap:16px}
 .header-logo img{height:44px;width:auto}
 .header-text h1{font-size:20px;font-weight:700;color:#fff}.header-text p{font-size:12px;color:rgba(255,255,255,0.7)}
 .header-actions{margin-left:auto;display:flex;gap:8px;align-items:center}
@@ -47,12 +47,12 @@ body{font-family:'Inter',sans-serif;background:var(--gray);color:var(--txt);line
 
 /* TABS */
 .tabs-bar{background:#fff;border-bottom:1px solid var(--brd);box-shadow:0 1px 3px rgba(0,0,0,.06)}
-.tabs-inner{max-width:1100px;margin:0 auto;display:flex;padding:0 24px;overflow-x:auto;-webkit-overflow-scrolling:touch}
+.tabs-inner{max-width:1400px;margin:0 auto;display:flex;padding:0 24px;overflow-x:auto;-webkit-overflow-scrolling:touch}
 .tab-btn{padding:13px 18px;border:none;background:none;font-family:inherit;font-size:13px;font-weight:500;color:var(--txt2);cursor:pointer;white-space:nowrap;border-bottom:3px solid transparent;transition:.2s}
 .tab-btn:hover{color:var(--cna);background:var(--cna-50)}.tab-btn.active{color:var(--cna);border-bottom-color:var(--cna);font-weight:600}
 
 /* MAIN */
-.main-content{max-width:1100px;margin:24px auto;padding:0 24px 100px}
+.main-content{max-width:1400px;margin:24px auto;padding:0 24px 100px}
 .tab-page{display:none}.tab-page.active{display:block}
 .form-card{background:#fff;border-radius:var(--rl);box-shadow:0 1px 3px rgba(0,0,0,.08);border:1px solid var(--brd);margin-bottom:20px;overflow:hidden}
 .form-card-header{background:var(--cna-lt);padding:13px 20px;border-bottom:1px solid var(--brd);display:flex;align-items:center;gap:10px}
@@ -90,7 +90,7 @@ body{font-family:'Inter',sans-serif;background:var(--gray);color:var(--txt);line
 .btn-success{background:var(--ok);color:#fff}.btn-success:hover{background:#218838}
 .btn-warning{background:var(--warn);color:#333}.btn-warning:hover{background:#e0a800}
 .footer-actions{background:#fff;border-top:1px solid var(--brd);padding:14px 24px;position:fixed;bottom:0;left:0;right:0;box-shadow:0 -4px 12px rgba(0,0,0,.06);z-index:50}
-.footer-inner{max-width:1100px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.footer-inner{max-width:1400px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
 .toast{position:fixed;bottom:80px;right:24px;background:var(--txt);color:#fff;padding:12px 20px;border-radius:var(--r);font-size:13px;font-weight:500;box-shadow:0 8px 30px rgba(0,0,0,.12);transform:translateY(100px);opacity:0;transition:.3s;z-index:1000;max-width:90vw}
 .toast.show{transform:translateY(0);opacity:1}.toast.success{background:var(--ok)}.toast.error{background:var(--err)}
 .status-badge{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600}
@@ -305,38 +305,42 @@ body{font-family:'Inter',sans-serif;background:var(--gray);color:var(--txt);line
       <button class="btn btn-primary" onclick="newContract()" style="font-size:14px;padding:10px 24px">&#x2795; Nuovo modulo di adesione</button>
     </div>
     <div class="form-card-body">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:8px">
-        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
-          <input type="text" id="search-contracts" placeholder="🔍 Cerca cliente..." style="padding:6px 12px;border:1px solid var(--brd);border-radius:6px;font-size:13px;min-width:200px" oninput="filterContracts()">
-          <select id="filter-tipo" onchange="filterContracts()" style="padding:6px 12px;border:1px solid var(--brd);border-radius:6px;font-size:13px">
-            <option value="">Tutti i tipi</option>
-            <option value="adesione_2025" selected>Tesseramento</option>
-          </select>
-          <select id="filter-stato" onchange="filterContracts()" style="padding:6px 12px;border:1px solid var(--brd);border-radius:6px;font-size:13px">
-            <option value="">Tutti gli stati</option>
-            <option value="firmato">Firmati</option>
-            <option value="inviato">Da firmare</option>
-            <option value="bozza">Bozze</option>
-          </select>
-          <select id="filter-anno" onchange="filterContracts()" style="padding:6px 12px;border:1px solid var(--brd);border-radius:6px;font-size:13px">
-            <option value="">Tutti gli anni</option>
-            <option value="2026" selected>2026</option>
-            <option value="2025">2025</option>
-            <option value="2024">2024</option>
-          </select>
-          <select id="filter-proprietario" onchange="filterContracts()" style="padding:6px 12px;border:1px solid var(--brd);border-radius:6px;font-size:13px">
-            <option value="">Tutti i proprietari</option>
-          </select>
-          <select id="filter-gestionale" onchange="filterContracts()" style="padding:6px 12px;border:1px solid var(--brd);border-radius:6px;font-size:13px">
-            <option value="">Tutti</option>
-            <option value="caricato">Caricati</option>
-            <option value="da-caricare">Da caricare</option>
-          </select>
-          <label style="display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer"><input type="checkbox" id="select-all-contracts" onchange="toggleSelectAll(this)" style="width:16px;height:16px;accent-color:var(--cna)"> Seleziona tutti</label>
-          <button class="btn btn-sm btn-outline" onclick="exportExcel()" id="btn-export" style="display:none">&#x1F4CA; Esporta Excel</button>
-          <button class="btn btn-sm btn-danger" onclick="deleteSelected()" id="btn-delete" style="display:none">&#x1F5D1; Elimina</button>
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px;gap:12px">
+        <div style="flex:1;min-width:0">
+          <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:8px">
+            <input type="text" id="search-contracts" placeholder="🔍 Cerca cliente..." style="padding:6px 12px;border:1px solid var(--brd);border-radius:6px;font-size:13px;min-width:200px" oninput="filterContracts()">
+            <select id="filter-tipo" onchange="filterContracts()" style="padding:6px 12px;border:1px solid var(--brd);border-radius:6px;font-size:13px">
+              <option value="">Tutti i tipi</option>
+              <option value="adesione_2025" selected>Tesseramento</option>
+            </select>
+            <select id="filter-stato" onchange="filterContracts()" style="padding:6px 12px;border:1px solid var(--brd);border-radius:6px;font-size:13px">
+              <option value="">Tutti gli stati</option>
+              <option value="firmato">Firmati</option>
+              <option value="inviato">Da firmare</option>
+              <option value="bozza">Bozze</option>
+            </select>
+            <select id="filter-anno" onchange="filterContracts()" style="padding:6px 12px;border:1px solid var(--brd);border-radius:6px;font-size:13px">
+              <option value="">Tutti gli anni</option>
+              <option value="2026" selected>2026</option>
+              <option value="2025">2025</option>
+              <option value="2024">2024</option>
+            </select>
+            <select id="filter-proprietario" onchange="filterContracts()" style="padding:6px 12px;border:1px solid var(--brd);border-radius:6px;font-size:13px">
+              <option value="">Tutti i proprietari</option>
+            </select>
+            <select id="filter-gestionale" onchange="filterContracts()" style="padding:6px 12px;border:1px solid var(--brd);border-radius:6px;font-size:13px">
+              <option value="">Tutti</option>
+              <option value="caricato">Caricati</option>
+              <option value="da-caricare">Da caricare</option>
+            </select>
+          </div>
+          <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;min-height:32px">
+            <label style="display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer"><input type="checkbox" id="select-all-contracts" onchange="toggleSelectAll(this)" style="width:16px;height:16px;accent-color:var(--cna)"> Seleziona tutti</label>
+            <button class="btn btn-sm btn-outline" onclick="exportExcel()" id="btn-export" style="display:none">&#x1F4CA; Esporta Excel</button>
+            <button class="btn btn-sm btn-danger" onclick="deleteSelected()" id="btn-delete" style="display:none">&#x1F5D1; Elimina</button>
+          </div>
         </div>
-        <button class="btn btn-sm btn-outline" onclick="loadContracts()">&#x21BB; Aggiorna</button>
+        <button class="btn btn-sm btn-outline" onclick="loadContracts()" style="flex-shrink:0">&#x21BB; Aggiorna</button>
       </div>
       <div id="contracts-list"><p style="text-align:center;color:var(--txt2);padding:40px">Caricamento...</p></div>
     </div>
