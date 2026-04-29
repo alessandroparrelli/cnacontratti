@@ -249,7 +249,6 @@ body.dark-mode .contract-item{background:#161b22;border-color:#30363d}
     <div class="header-text"><h1>Signature v2.0</h1></div>
     <div class="header-actions">
       <button class="btn btn-sm" onclick="openChangelog()" title="Note di versione" style="border:1px solid rgba(255,255,255,0.3);color:#fff;background:rgba(255,255,255,0.1);border-radius:20px">&#x1F4CB; Versioni</button>
-      <button class="btn btn-sm" id="btn-logs" onclick="openLogsModal()" title="Log connessioni" style="display:none;border:1px solid rgba(255,255,255,0.3);color:#fff;background:rgba(255,255,255,0.1);border-radius:20px;cursor:pointer;position:relative;z-index:100">📜 Log</button>
       <button class="dark-mode-toggle" onclick="toggleDarkMode()" id="dark-mode-btn" title="Attiva/Disattiva modalità scura">
         <svg id="icon-sun" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
         <svg id="icon-moon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" style="display:none"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
@@ -501,31 +500,20 @@ body.dark-mode .contract-item{background:#161b22;border-color:#30363d}
   <div class="modal-body" style="max-height:70vh;overflow-y:auto">
     
     <div class="changelog-entry">
-      <h3>v7.10.1 - 29 Aprile 2026 - LOG CONNESSIONI (FIX) 📜</h3>
+      <h3>v7.11 - 29 Aprile 2026 - VERSIONE PULITA FINALE 🎯</h3>
       <ul>
-        <li><strong>Fix pulsante Log:</strong> ora funziona correttamente e carica i log</li>
-        <li><strong>Visibile solo admin:</strong> pulsante "📜 Log" appare SOLO per utenti con ruolo admin</li>
-        <li><strong>Check automatico:</strong> verifica ruolo al login e mostra/nasconde pulsante di conseguenza</li>
-        <li>Modal log con filtri funzionante</li>
-        <li>Auto-logging login/logout attivo</li>
+        <li><strong>Rimosso sistema log:</strong> eliminato completamente pulsante log e funzionalità connessioni</li>
+        <li><strong>App pulita:</strong> interfaccia essenziale e veloce</li>
+        <li><strong>Firme grandi BLU:</strong> canvas 250px, tratto 4px spesso, colore #003d73 (blu CNA)</li>
+        <li><strong>PDF firme 3x PIÙ GRANDI:</strong> 300x90px invece di 250x35px in tutte le 5 posizioni</li>
+        <li><strong>Dark mode completa:</strong> tutto nero quando attivata (#0d1117)</li>
+        <li><strong>Favicon CNA:</strong> logo ufficiale nell'app</li>
+        <li>Versione finale pulita e ottimizzata</li>
       </ul>
     </div>
 
     <div class="changelog-entry">
-      <h3>v7.10 - 29 Aprile 2026 - LOG CONNESSIONI 📜</h3>
-      <ul>
-        <li><strong>Pulsante "📜 Log":</strong> nuovo pulsante nell'header per visualizzare log connessioni</li>
-        <li><strong>Modal Log:</strong> tabella con data/ora, utente, email, azione (login/logout)</li>
-        <li><strong>Filtri log:</strong> filtra per tipo azione, limite risultati configurabile (10-200)</li>
-        <li><strong>Auto-logging:</strong> ogni login/logout registrato automaticamente in database</li>
-        <li><strong>Info dettagliate:</strong> nome, cognome, email, timestamp per ogni connessione</li>
-        <li><strong>Design pulito:</strong> badge colorati per azioni, tabella responsive</li>
-        <li>Gestione utenti completa disponibile su Dashboard Tesseramento separata</li>
-      </ul>
-    </div>
-
-    <div class="changelog-entry">
-      <h3>v7.7 - 29 Aprile 2026 - VERSIONE FINALE 🎉</h3>
+      <h3>v7.7 - 29 Aprile 2026</h3>
       <ul>
         <li><strong>Messaggio nuovo modulo:</strong> ora dice "Signature CNA Roma - Vuoi inserire un nuovo modulo di adesione?"</li>
         <li><strong>Firma più grande:</strong> canvas 180px (era 120px) per firmare meglio</li>
@@ -829,7 +817,7 @@ function showApp(){
   updateHeaderAvatar();
   initApp();
   updateStats();
-  checkAdminForLogs();
+  
 }
 
 function doLogout(){
@@ -840,7 +828,6 @@ function doLogout(){
 }
 
 
-// === LOG CONNESSIONI MODAL ===
 function openLogsModal(){
   console.log("📜 openLogsModal chiamata!");
   const modal=document.getElementById('modal-logs');
@@ -925,36 +912,6 @@ async function logConnection(action){
   }catch(e){console.error('Errore log:',e);}
 }
 
-// === CHECK ADMIN FOR LOG BUTTON ===
-async function checkAdminForLogs(){
-  console.log('🔍 checkAdminForLogs START');
-  if(!loggedUser||!loggedUser.id){
-    console.log('❌ No logged user');
-    return;
-  }
-  console.log('✓ loggedUser:', loggedUser);
-  try{
-    const user=await sb('cna_users?select=ruolo&id=eq.'+loggedUser.id,'GET');
-    console.log('✓ User from DB:', user);
-    if(user&&user[0]){
-      console.log('✓ User ruolo:', user[0].ruolo);
-      if(user[0].ruolo==='admin'){
-        console.log('✅ User is ADMIN - showing log button');
-        const btn=document.getElementById('btn-logs');
-        if(btn){
-          btn.style.display='block';
-          console.log('✅ Button shown!');
-        }else{
-          console.error('❌ btn-logs element NOT FOUND in DOM!');
-        }
-      }else{
-        console.log('ℹ️ User is NOT admin (ruolo: '+user[0].ruolo+')');
-      }
-    }
-  }catch(e){
-    console.error('❌ Error in checkAdminForLogs:', e);
-  }
-}
 
 function openChangelog(){
   openModal('modal-changelog');
@@ -1561,41 +1518,6 @@ async function viewDoc(id){
     const w=window.open('','_blank','width=800,height=600');
     w.document.write(`<html><head><title>Documento - ${d[0].cognome} ${d[0].nome}</title><style>body{margin:0;display:flex;justify-content:center;align-items:center;min-height:100vh;background:#f5f5f5}</style></head><body><img src="${d[0].documento_foto_base64}" style="max-width:95vw;max-height:95vh;border-radius:8px;box-shadow:0 4px 20px rgba(0,0,0,0.2)">
 
-<!-- MODAL LOG CONNESSIONI -->
-<div id="modal-logs" class="modal-overlay" style="display:none" onclick="if(event.target.id==='modal-logs')closeLogsModal()">
-  <div class="modal-content" style="max-width:900px;width:95vw">
-    <div class="modal-header">
-      <h2 style="margin:0">📜 Log Connessioni</h2>
-      <button onclick="closeLogsModal()" style="background:none;border:none;font-size:28px;cursor:pointer;color:var(--txt)">&times;</button>
-    </div>
-    <div class="modal-body" style="max-height:70vh;overflow-y:auto">
-      <div style="margin-bottom:15px;display:flex;gap:10px;flex-wrap:wrap">
-        <select id="log-filter-action" onchange="loadConnectionLogs()" style="padding:8px;border:1px solid var(--brd);border-radius:6px;background:var(--input-bg);color:var(--txt);flex:1;min-width:150px">
-          <option value="">Tutte le azioni</option>
-          <option value="login">Login</option>
-          <option value="logout">Logout</option>
-        </select>
-        <input type="number" id="log-limit" value="50" min="10" max="200" onchange="loadConnectionLogs()" style="width:100px;padding:8px;border:1px solid var(--brd);border-radius:6px;background:var(--input-bg);color:var(--txt)" placeholder="Limite">
-        <button onclick="loadConnectionLogs()" class="btn" style="background:var(--cna);color:#fff">🔄 Aggiorna</button>
-      </div>
-      
-      <div id="logs-table-container" style="overflow-x:auto">
-        <table style="width:100%;border-collapse:collapse;font-size:13px">
-          <thead>
-            <tr style="background:var(--cna-50);border-bottom:2px solid var(--brd)">
-              <th style="padding:10px;text-align:left">Data/Ora</th>
-              <th style="padding:10px;text-align:left">Utente</th>
-              <th style="padding:10px;text-align:left">Azione</th>
-              <th style="padding:10px;text-align:left">Dettagli</th>
-            </tr>
-          </thead>
-          <tbody id="logs-table-body">
-            <tr><td colspan="4" style="padding:20px;text-align:center;color:var(--txt2)">Caricamento...</td></tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </div>
 </div>
 
 </body></html>`);
@@ -2058,35 +1980,6 @@ document.addEventListener('DOMContentLoaded',async()=>{
 </script>
 
 
-<!-- MODAL LOG CONNESSIONI -->
-    <div class="modal-body" style="max-height:70vh;overflow-y:auto">
-      <div style="margin-bottom:15px;display:flex;gap:10px;flex-wrap:wrap">
-        <select id="log-filter-action" onchange="loadConnectionLogs()" style="padding:8px;border:1px solid var(--brd);border-radius:6px;background:var(--input-bg);color:var(--txt);flex:1;min-width:150px">
-          <option value="">Tutte le azioni</option>
-          <option value="login">Login</option>
-          <option value="logout">Logout</option>
-        </select>
-        <input type="number" id="log-limit" value="50" min="10" max="200" onchange="loadConnectionLogs()" style="width:100px;padding:8px;border:1px solid var(--brd);border-radius:6px;background:var(--input-bg);color:var(--txt)" placeholder="Limite">
-        <button onclick="loadConnectionLogs()" class="btn" style="background:var(--cna);color:#fff">🔄 Aggiorna</button>
-      </div>
-      
-      <div id="logs-table-container" style="overflow-x:auto">
-        <table style="width:100%;border-collapse:collapse;font-size:13px">
-          <thead>
-            <tr style="background:var(--cna-50);border-bottom:2px solid var(--brd)">
-              <th style="padding:10px;text-align:left">Data/Ora</th>
-              <th style="padding:10px;text-align:left">Utente</th>
-              <th style="padding:10px;text-align:left">Azione</th>
-              <th style="padding:10px;text-align:left">Dettagli</th>
-            </tr>
-          </thead>
-          <tbody id="logs-table-body">
-            <tr><td colspan="4" style="padding:20px;text-align:center;color:var(--txt2)">Caricamento...</td></tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </div>
 </div>
 
 </body>
