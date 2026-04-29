@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Test Dark Mode - Signature CNA</title>
+<style>
+:root{
+  --bg:#f5f6f8;--bg2:#fff;--txt:#1a2332;--txt2:#6b7a8d;--brd:#d1d9e6;
+  --cna:#005CA9;
+}
+body.dark-mode{
+  --bg:#0f1419;--bg2:#1a1f2e;--txt:#e4e6eb;--txt2:#8b95a5;--brd:#2d3748;
+  --cna:#3b9eff;
+}
+body{
+  font-family:system-ui,sans-serif;
+  background:var(--bg);
+  color:var(--txt);
+  padding:40px;
+  transition:background .3s,color .3s;
+}
+.card{
+  background:var(--card-bg, var(--bg2));
+  border:1px solid var(--brd);
+  padding:20px;
+  border-radius:8px;
+  margin:20px 0;
+}
+.dark-mode-toggle{
+  background:rgba(0,92,169,0.2);
+  border:1px solid rgba(0,92,169,0.4);
+  border-radius:20px;
+  padding:10px 20px;
+  cursor:pointer;
+  color:#fff;
+  font-size:16px;
+}
+.dark-mode-toggle svg{
+  width:20px;
+  height:20px;
+  vertical-align:middle;
+  margin-right:8px;
+}
+.header{
+  background:var(--cna);
+  color:#fff;
+  padding:20px;
+  border-radius:8px;
+  margin-bottom:20px;
+}
+</style>
+</head>
+<body>
+<div class="header">
+  <h1>Test Dark Mode - Signature CNA v2.0</h1>
+  <button class="dark-mode-toggle" onclick="toggleDark()" id="btn">
+    <svg id="sun" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <circle cx="12" cy="12" r="4"/>
+      <line x1="12" y1="1" x2="12" y2="3"/>
+      <line x1="12" y1="21" x2="12" y2="23"/>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+      <line x1="1" y1="12" x2="3" y2="12"/>
+      <line x1="21" y1="12" x2="23" y2="12"/>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+    </svg>
+    <svg id="moon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" style="display:none">
+      <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+    </svg>
+    <span id="txt">Attiva Dark Mode</span>
+  </button>
+</div>
+
+<div class="card">
+  <h2>Verifica Dark Mode</h2>
+  <p>Se vedi questo pulsante e cliccandolo lo sfondo diventa scuro, la dark mode funziona!</p>
+  <p>Colore background: <code id="bg">--</code></p>
+  <p>Colore testo: <code id="color">--</code></p>
+</div>
+
+<div class="card">
+  <h3>Istruzioni Deploy</h3>
+  <ol>
+    <li>Vai su <a href="https://github.com/alessandroparrelli/cnacontratti" target="_blank">GitHub Repository</a></li>
+    <li>Verifica che l'ultimo commit sia <strong>v7.4.3</strong></li>
+    <li>Vai su <a href="https://vercel.com/dashboard" target="_blank">Vercel Dashboard</a></li>
+    <li>Cerca il progetto "cnacontratti"</li>
+    <li>Verifica che lo stato deployment sia "Ready"</li>
+    <li>Clicca su "Visit" per aprire il sito</li>
+    <li>Fai <strong>Ctrl+Shift+R</strong> per hard refresh</li>
+  </ol>
+</div>
+
+<script>
+function toggleDark(){
+  const isDark = document.body.classList.toggle('dark-mode');
+  document.getElementById('sun').style.display = isDark ? 'none' : 'inline';
+  document.getElementById('moon').style.display = isDark ? 'inline' : 'none';
+  document.getElementById('txt').textContent = isDark ? 'Disattiva Dark Mode' : 'Attiva Dark Mode';
+  updateColors();
+}
+
+function updateColors(){
+  const bg = getComputedStyle(document.body).backgroundColor;
+  const color = getComputedStyle(document.body).color;
+  document.getElementById('bg').textContent = bg;
+  document.getElementById('color').textContent = color;
+}
+
+updateColors();
+</script>
+</body>
+</html>
