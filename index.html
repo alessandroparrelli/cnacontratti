@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>CNA Roma - Dashboard Tesseramento</title>
+<title>Signature CNA v2.0</title>
 <link rel="icon" type="image/png" href="https://festivaldellelibrerie.it/wp-content/uploads/2024/11/logo-cna-colore.svg">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
 <style>
@@ -170,13 +170,15 @@ body{font-family:'Inter',sans-serif;background:var(--gray);color:var(--txt);line
 <!-- ==================== LOGIN PAGE ==================== -->
 <div id="login-page" class="login-page">
   <div class="login-card">
-    <div class="login-logo"><img src="https://customer31551.img.musvc2.net/static/31551/images/1/CNARoma%20NEGATIVO%20COLORE%20SOLO%20ROMA.png" alt="CNA Roma" style="background:var(--cna);padding:16px 24px;border-radius:12px"></div>
-    <h2>Dashboard Tesseramento</h2>
+    <div class="login-logo"><img src="https://festivaldellelibrerie.it/wp-content/uploads/2024/11/logo-cna-colore.svg" alt="CNA Roma"></div>
+    <h2>Signature CNA v2.0</h2>
+    <p style="text-align:center;color:var(--txt2);font-size:13px;margin-bottom:20px">Accedi con le tue credenziali</p>
     <div id="login-error" class="login-error"></div>
-    <div class="form-group"><label>Email</label><input type="text" id="login-email" placeholder="email@cnaroma.it" autocomplete="username" required></div>
-    <div class="form-group"><label>Password</label><input type="password" id="login-password" placeholder="Password" autocomplete="current-password" required></div>
+    <div class="form-group"><label>Email</label><input type="text" id="login-email" placeholder="email@esempio.com" autocomplete="username" required></div>
+    <div class="form-group"><label>Password</label><input type="password" id="login-password" placeholder="••••••••" autocomplete="current-password" required></div>
     <button class="login-btn" onclick="doLogin()">Accedi</button>
-    <p style="text-align:center;font-size:11px;color:var(--txt2);margin-top:16px">CNA Roma &mdash; Area riservata operatori</p>
+    <p style="text-align:center;font-size:11px;color:var(--txt2);margin-top:20px">Signature CNA v2.0</p>
+    <p style="text-align:center;font-size:10px;color:var(--txt2);margin-top:4px">&copy; 2026 CNA Roma - Confederazione Nazionale dell'Artigianato</p>
   </div>
 </div>
 
@@ -427,20 +429,21 @@ body{font-family:'Inter',sans-serif;background:var(--gray);color:var(--txt);line
   <div class="modal-body" style="max-height:70vh;overflow-y:auto">
     
     <div class="changelog-entry">
-      <h3>v7.2 - 29 Aprile 2026</h3>
+      <h3>v7.3 - 29 Aprile 2026</h3>
       <ul>
-        <li><strong>Layout desktop contratti:</strong> ripristinato layout orizzontale su 2 righe (info cliente/data/proprietario a sinistra, pulsanti a destra)</li>
-        <li><strong>Layout mobile contratti:</strong> mantenuto layout verticale impilato (tutto allineato a sinistra)</li>
-        <li>Responsive breakpoint a 768px per smartphone e tablet</li>
+        <li><strong>Nuova schermata login:</strong> design aggiornato con logo CNA colore centrato</li>
+        <li><strong>Rebranding:</strong> titolo cambiato in "Signature CNA v2.0"</li>
+        <li>Footer con copyright CNA Roma aggiornato</li>
       </ul>
     </div>
 
     <div class="changelog-entry">
       <h3>v7.2 - 29 Aprile 2026</h3>
       <ul>
-        <li><strong>Layout contratti desktop ripristinato:</strong> versione desktop con info cliente a sinistra e pulsanti a destra su due colonne</li>
-        <li><strong>Layout mobile responsive:</strong> versione mobile/tablet mantiene layout verticale con dati impilati</li>
+        <li><strong>Layout desktop contratti:</strong> ripristinato layout orizzontale su 2 righe (info cliente/data/proprietario a sinistra, pulsanti a destra)</li>
+        <li><strong>Layout mobile contratti:</strong> mantenuto layout verticale impilato (tutto allineato a sinistra)</li>
         <li><strong>Filtro stato contratti:</strong> aggiunto menu a tendina "Firmati" / "Da firmare" / "Bozze" nella dashboard</li>
+        <li>Responsive breakpoint a 768px per smartphone e tablet</li>
       </ul>
     </div>
 
