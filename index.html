@@ -8,6 +8,9 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Signature CNA">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
 <title>Signature CNA v2.0</title>
 <link rel="icon" type="image/x-icon" href="favicon.ico">
 <link rel="apple-touch-icon" href="favicon.ico">
@@ -95,6 +98,8 @@ body.dark-mode .stats-bar-container{background:rgba(0,0,0,0.25)}
 .form-row.c21{grid-template-columns:2fr 1fr}.form-row.c211{grid-template-columns:2fr 1fr 1fr}.form-row.cf{grid-template-columns:2fr 1fr}
 .form-group{display:flex;flex-direction:column}
 .form-group label{font-size:11px;font-weight:600;color:var(--txt2);text-transform:uppercase;letter-spacing:.4px;margin-bottom:5px}
+
+input[readonly],select[readonly],textarea[readonly]{background:var(--input-bg);opacity:0.7;cursor:not-allowed}
 .form-group input,.form-group select,.form-group textarea{border:1.5px solid var(--brd);border-radius:6px;padding:9px 12px;font-family:inherit;font-size:14px;color:var(--txt);transition:.2s;background:var(--input-bg)}
 .form-group input:focus,.form-group select:focus{outline:none;border-color:var(--cna);box-shadow:0 0 0 3px rgba(0,92,169,.12)}
 .form-group input::placeholder{color:#b0b8c4;font-size:13px}
@@ -223,8 +228,8 @@ body.dark-mode .stats-bar-container{background:rgba(0,0,0,0.25)}
     <div class="header-actions">
       <button class="btn btn-sm" onclick="openChangelog()" title="Note di versione" style="border:1px solid rgba(255,255,255,0.3);color:#fff;background:rgba(255,255,255,0.1);border-radius:20px">&#x1F4CB; Versioni</button>
       <button class="dark-mode-toggle" onclick="toggleDarkMode()" id="dark-mode-btn" title="Attiva/Disattiva modalità scura">
-        <svg id="icon-sun" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><path d="M12 1v6m0 6v6m-5-7H1m6 0h6m-1-5.4L5.6 18.4m12.8 0L5.6 5.6"/></svg>
-        <svg id="icon-moon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" style="display:none"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        <svg id="icon-sun" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+        <svg id="icon-moon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" style="display:none"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
       </button>
       <span class="header-user" id="logged-user" onclick="openProfile()"></span>
       <button class="btn btn-sm" style="background:rgba(255,255,255,0.15);color:#fff;border:1px solid rgba(255,255,255,0.3);border-radius:20px" onclick="doLogout()">&#x2192; Esci</button>
@@ -271,7 +276,7 @@ body.dark-mode .stats-bar-container{background:rgba(0,0,0,0.25)}
     <div class="form-row c3"><div class="form-group required"><label>Telefono</label><input type="tel" id="telefono" placeholder=" " required></div><div class="form-group required"><label>Cellulare</label><input type="tel" id="cellulare" placeholder=" " required></div><div class="form-group required"><label>E-mail</label><input type="email" id="email" placeholder=" " required></div>
     <div class="form-group">
       <label>Raccolto da</label>
-      <input type="text" id="raccolto_da" class="form-input" readonly style="background:#f0f0f0;cursor:not-allowed">
+      <input type="text" id="raccolto_da" class="form-input" readonly style="background:var(--input-bg);opacity:0.7;cursor:not-allowed">
     </div></div>
   </div></div>
   <div class="form-card"><div class="form-card-header"><span>&#x1F3E2;</span><h3>Dati Aziendali</h3></div><div class="form-card-body">
@@ -296,7 +301,7 @@ body.dark-mode .stats-bar-container{background:rgba(0,0,0,0.25)}
     </div>
     
     <div class="form-group" style="margin-bottom:14px"><label>Modalita pagamento</label><div class="checkbox-row"><div class="checkbox-item"><input type="checkbox" id="mod_rid" checked><label for="mod_rid">RID</label></div><div class="checkbox-item"><input type="checkbox" id="mod_riba"><label for="mod_riba">RIBA</label></div><div class="checkbox-item"><input type="checkbox" id="mod_rd"><label for="mod_rd">R.D.</label></div><div class="checkbox-item"><input type="checkbox" id="mod_sepa"><label for="mod_sepa">Bonifico Sepa</label></div><div class="checkbox-item"><input type="checkbox" id="mod_altro"><label for="mod_altro">Altro</label></div></div></div>
-    <div class="form-row c2"><div class="form-group required"><label>IBAN Ditta</label><input type="text" id="iban_ditta" maxlength="27" placeholder=" " style="text-transform:uppercase;letter-spacing:1px;font-family:monospace" required></div><div class="form-group" style="display:none"><label>IBAN CNA</label><input type="text" value="IT 39 T 02008 05165 000400682678" readonly style="background:#f0f0f0;color:#666"></div></div>
+    <div class="form-row c2"><div class="form-group required"><label>IBAN Ditta</label><input type="text" id="iban_ditta" maxlength="27" placeholder=" " style="text-transform:uppercase;letter-spacing:1px;font-family:monospace" required></div><div class="form-group" style="display:none"><label>IBAN CNA</label><input type="text" value="IT 39 T 02008 05165 000400682678" readonly style="background:var(--input-bg);opacity:0.7;color:#666"></div></div>
   </div></div>
   <div class="form-card" style="display:none"><div class="form-card-header"><span>&#x270D;&#xFE0F;</span><h3>Dichiarazione e Firma</h3></div><div class="form-card-body">
     <div class="form-row c2"><div class="form-group"><label>Data</label><input type="date" id="data_dichiarazione"></div><div class="form-group"><label>Firma operatore</label><div class="signature-container"><p style="font-size:11px;color:var(--txt2);margin-bottom:4px;text-align:center">✍️ Firmare leggendo da sinistra verso destra</p><canvas id="sig_dichiarante"></canvas><div class="signature-actions"><button class="btn btn-sm btn-outline" onclick="clearSignature('sig_dichiarante')">Cancella</button></div></div></div></div>
@@ -304,8 +309,8 @@ body.dark-mode .stats-bar-container{background:rgba(0,0,0,0.25)}
 
 <!-- PRIVACY (merged into single page) -->
   <div class="form-card"><div class="form-card-header"><span>&#x1F512;</span><h3>Privacy e Consensi</h3></div><div class="form-card-body">
-    <div class="form-row c2" style="display:none"><div class="form-group"><label>Cognome</label><input class="mirror-cognome" readonly style="background:#f0f0f0"></div><div class="form-group"><label>Nome</label><input class="mirror-nome" readonly style="background:#f0f0f0"></div></div>
-    <div class="form-group" style="display:none;margin-bottom:20px"><label>C.F.</label><input class="mirror-cf" readonly style="background:#f0f0f0;text-transform:uppercase;font-family:monospace"></div>
+    <div class="form-row c2" style="display:none"><div class="form-group"><label>Cognome</label><input class="mirror-cognome" readonly style="background:var(--input-bg);opacity:0.7"></div><div class="form-group"><label>Nome</label><input class="mirror-nome" readonly style="background:var(--input-bg);opacity:0.7"></div></div>
+    <div class="form-group" style="display:none;margin-bottom:20px"><label>C.F.</label><input class="mirror-cf" readonly style="background:var(--input-bg);opacity:0.7;text-transform:uppercase;font-family:monospace"></div>
     <div class="consent-block"><p><strong>a)</strong> Trattamento dati per finalita statutarie e associative.</p><div class="consent-toggle"><label><input type="radio" name="consent_a" value="consente" checked> CONSENTE</label><label><input type="radio" name="consent_a" value="non_consente"> NON CONSENTE</label></div></div>
     <div class="consent-block"><p><strong>b)</strong> Trattamento dati per convenzioni INPS e INAIL.</p><div class="consent-toggle"><label><input type="radio" name="consent_b" value="consente" checked> CONSENTE</label><label><input type="radio" name="consent_b" value="non_consente"> NON CONSENTE</label></div></div>
     <div class="consent-block"><p><strong>Art. 9</strong> Trattamento categorie particolari di dati.</p><div class="consent-toggle"><label><input type="radio" name="consent_art9" value="consenso" checked> Consenso</label><label><input type="radio" name="consent_art9" value="mancato"> Mancato</label></div></div>
@@ -315,17 +320,17 @@ body.dark-mode .stats-bar-container{background:rgba(0,0,0,0.25)}
   </div></div>
 <!-- INPS (merged into single page) -->
   <div class="form-card"><div class="form-card-header"><span>&#x1F3DB;&#xFE0F;</span><h3>Delega INPS</h3></div><div class="form-card-body">
-    <div class="form-row c2" style="display:none"><div class="form-group"><label>Cognome</label><input class="mirror-cognome" readonly style="background:#f0f0f0"></div><div class="form-group"><label>Nome</label><input class="mirror-nome" readonly style="background:#f0f0f0"></div></div>
-    <div class="form-row cf" style="display:none"><div class="form-group"><label>C.F.</label><input class="mirror-cf" readonly style="background:#f0f0f0;text-transform:uppercase"></div><div class="form-group"><label>Nato/a il</label><input class="mirror-data-nascita" readonly style="background:#f0f0f0"></div></div>
+    <div class="form-row c2" style="display:none"><div class="form-group"><label>Cognome</label><input class="mirror-cognome" readonly style="background:var(--input-bg);opacity:0.7"></div><div class="form-group"><label>Nome</label><input class="mirror-nome" readonly style="background:var(--input-bg);opacity:0.7"></div></div>
+    <div class="form-row cf" style="display:none"><div class="form-group"><label>C.F.</label><input class="mirror-cf" readonly style="background:var(--input-bg);opacity:0.7;text-transform:uppercase"></div><div class="form-group"><label>Nato/a il</label><input class="mirror-data-nascita" readonly style="background:var(--input-bg);opacity:0.7"></div></div>
     <div class="form-row c2"><div class="form-group" style="display:none"><label>In qualita di</label><input type="text" id="qualita_inps"></div><div class="form-group required"><label>Data delega</label><input type="date" id="data_inps" required></div></div>
     <div class="form-group" style="display:none"><label>Firma INPS</label><div class="signature-container"><canvas id="sig_inps"></canvas></div></div>
   </div></div>
 <!-- SEPA (merged into single page) -->
   <div class="form-card"><div class="form-card-header"><span>&#x1F3E6;</span><h3>Mandato SEPA</h3></div><div class="form-card-body">
-    <div class="form-row c2"><div class="form-group"><label>ID Creditore</label><input value="IT15001000008015133088" readonly style="background:#f0f0f0;font-family:monospace"></div><div class="form-group"><label>ID Mandato</label><input type="text" id="id_mandato" placeholder=" "></div></div>
-    <div class="form-group" style="display:none;margin-bottom:14px"><label>Nome debitore</label><input class="mirror-ragione-sociale" readonly style="background:#f0f0f0"></div>
-    <div class="form-group" style="display:none;margin-bottom:14px"><label>Partita IVA</label><input class="mirror-piva" readonly style="background:#f0f0f0;font-family:monospace"></div>
-    <div class="form-group" style="display:none;margin-bottom:14px"><label>IBAN</label><input class="mirror-iban" readonly style="background:#f0f0f0;font-family:monospace"></div>
+    <div class="form-row c2"><div class="form-group"><label>ID Creditore</label><input value="IT15001000008015133088" readonly style="background:var(--input-bg);opacity:0.7;font-family:monospace"></div><div class="form-group"><label>ID Mandato</label><input type="text" id="id_mandato" placeholder=" "></div></div>
+    <div class="form-group" style="display:none;margin-bottom:14px"><label>Nome debitore</label><input class="mirror-ragione-sociale" readonly style="background:var(--input-bg);opacity:0.7"></div>
+    <div class="form-group" style="display:none;margin-bottom:14px"><label>Partita IVA</label><input class="mirror-piva" readonly style="background:var(--input-bg);opacity:0.7;font-family:monospace"></div>
+    <div class="form-group" style="display:none;margin-bottom:14px"><label>IBAN</label><input class="mirror-iban" readonly style="background:var(--input-bg);opacity:0.7;font-family:monospace"></div>
     <div class="form-group required" style="margin-bottom:14px"><label>Banca - Agenzia</label><input type="text" id="banca_agenzia" placeholder=" " required></div>
     <div class="form-group" style="margin-bottom:14px"><label>Tipo SEPA</label><div class="checkbox-row"><div class="checkbox-item"><input type="checkbox" id="sepa_b2b" checked><label for="sepa_b2b">B2B</label></div><div class="checkbox-item"><input type="checkbox" id="sepa_core"><label for="sepa_core">CORE</label></div></div></div>
     <div class="form-row c2"><div class="form-group required"><label>Data</label><input type="date" id="data_sepa" required></div><div class="form-group required"><label>Luogo</label><input type="text" id="luogo_sepa" value="Roma" placeholder=" " required></div></div>
@@ -344,26 +349,26 @@ body.dark-mode .stats-bar-container{background:rgba(0,0,0,0.25)}
         <div style="flex:1;min-width:0">
           <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:8px">
             <input type="text" id="search-contracts" placeholder="🔍 Cerca cliente..." style="padding:6px 12px;border:1px solid var(--brd);border-radius:6px;font-size:13px;min-width:200px" oninput="filterContracts()">
-            <select id="filter-tipo" onchange="filterContracts()" style="padding:6px 12px;border:1px solid var(--brd);border-radius:6px;font-size:13px">
+            <select id="filter-tipo" onchange="filterContracts()" style="padding:6px 12px;border:1px solid var(--brd);border-radius:6px;font-size:13px;background:var(--input-bg);color:var(--txt)">
               <option value="">Tutti i tipi</option>
               <option value="adesione_2025" selected>Tesseramento</option>
             </select>
-            <select id="filter-stato" onchange="filterContracts()" style="padding:6px 12px;border:1px solid var(--brd);border-radius:6px;font-size:13px">
+            <select id="filter-stato" onchange="filterContracts()" style="padding:6px 12px;border:1px solid var(--brd);border-radius:6px;font-size:13px;background:var(--input-bg);color:var(--txt)">
               <option value="">Tutti gli stati</option>
               <option value="firmato">Firmati</option>
               <option value="inviato">Da firmare</option>
               <option value="bozza">Bozze</option>
             </select>
-            <select id="filter-anno" onchange="filterContracts()" style="padding:6px 12px;border:1px solid var(--brd);border-radius:6px;font-size:13px">
+            <select id="filter-anno" onchange="filterContracts()" style="padding:6px 12px;border:1px solid var(--brd);border-radius:6px;font-size:13px;background:var(--input-bg);color:var(--txt)">
               <option value="">Tutti gli anni</option>
               <option value="2026" selected>2026</option>
               <option value="2025">2025</option>
               <option value="2024">2024</option>
             </select>
-            <select id="filter-proprietario" onchange="filterContracts()" style="padding:6px 12px;border:1px solid var(--brd);border-radius:6px;font-size:13px">
+            <select id="filter-proprietario" onchange="filterContracts()" style="padding:6px 12px;border:1px solid var(--brd);border-radius:6px;font-size:13px;background:var(--input-bg);color:var(--txt)">
               <option value="">Tutti i proprietari</option>
             </select>
-            <select id="filter-gestionale" onchange="filterContracts()" style="padding:6px 12px;border:1px solid var(--brd);border-radius:6px;font-size:13px">
+            <select id="filter-gestionale" onchange="filterContracts()" style="padding:6px 12px;border:1px solid var(--brd);border-radius:6px;font-size:13px;background:var(--input-bg);color:var(--txt)">
               <option value="">Tutti</option>
               <option value="caricato">Caricati</option>
               <option value="da-caricare">Da caricare</option>
@@ -451,8 +456,8 @@ body.dark-mode .stats-bar-container{background:rgba(0,0,0,0.25)}
     </div>
     <div class="form-group" style="margin-bottom:14px"><label>Nome</label><input type="text" id="profile-nome" required></div>
     <div class="form-group" style="margin-bottom:14px"><label>Cognome</label><input type="text" id="profile-cognome" required></div>
-    <div class="form-group" style="margin-bottom:14px"><label>Email</label><input type="text" id="profile-email" readonly style="background:#f0f0f0;color:#666" required></div>
-    <div class="form-group" style="margin-bottom:14px"><label>Ruolo</label><input type="text" id="profile-ruolo" readonly style="background:#f0f0f0;color:#666" required></div>
+    <div class="form-group" style="margin-bottom:14px"><label>Email</label><input type="text" id="profile-email" readonly style="background:var(--input-bg);opacity:0.7;color:#666" required></div>
+    <div class="form-group" style="margin-bottom:14px"><label>Ruolo</label><input type="text" id="profile-ruolo" readonly style="background:var(--input-bg);opacity:0.7;color:#666" required></div>
     <hr style="border:none;border-top:1px solid var(--brd);margin:20px 0">
     <h3 style="font-size:14px;font-weight:600;color:var(--cna-dk);margin-bottom:14px">Cambia password</h3>
     <div class="form-group" style="margin-bottom:14px"><label>Password attuale</label><input type="password" id="profile-pw-old" autocomplete="current-password" required></div>
@@ -472,6 +477,17 @@ body.dark-mode .stats-bar-container{background:rgba(0,0,0,0.25)}
   <div class="modal-header"><h2>&#x1F4CB; Note di versione</h2><button class="close-btn" onclick="closeModal('modal-changelog')">&times;</button></div>
   <div class="modal-body" style="max-height:70vh;overflow-y:auto">
     
+    <div class="changelog-entry">
+      <h3>v7.4.2 - 29 Aprile 2026</h3>
+      <ul>
+        <li><strong>Fix icone dark mode:</strong> icona sole con stroke bianco ben visibile, icona luna con fill</li>
+        <li><strong>Tutti gli input dark:</strong> input readonly, select, filtri dashboard ora con sfondo dark corretto</li>
+        <li><strong>Messaggio nuovo modulo:</strong> cambiato da "Cancellare tutti i dati" a "Vuoi creare un nuovo modulo di adesione?"</li>
+        <li><strong>Meta tag cache:</strong> aggiunti no-cache headers per forzare refresh</li>
+        <li>Fix sfondi trasparenti su testi info contratti</li>
+      </ul>
+    </div>
+
     <div class="changelog-entry">
       <h3>v7.4.1 - 29 Aprile 2026</h3>
       <ul>
