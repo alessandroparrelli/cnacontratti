@@ -249,6 +249,7 @@ body.dark-mode .contract-item{background:#161b22;border-color:#30363d}
     <div class="header-text"><h1>Signature v2.0</h1></div>
     <div class="header-actions">
       <button class="btn btn-sm" onclick="openChangelog()" title="Note di versione" style="border:1px solid rgba(255,255,255,0.3);color:#fff;background:rgba(255,255,255,0.1);border-radius:20px">&#x1F4CB; Versioni</button>
+      <button class="btn btn-sm" onclick="openLogsModal()" title="Log connessioni" style="border:1px solid rgba(255,255,255,0.3);color:#fff;background:rgba(255,255,255,0.1);border-radius:20px">📜 Log</button>
       <button class="dark-mode-toggle" onclick="toggleDarkMode()" id="dark-mode-btn" title="Attiva/Disattiva modalità scura">
         <svg id="icon-sun" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
         <svg id="icon-moon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" style="display:none"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
@@ -500,31 +501,15 @@ body.dark-mode .contract-item{background:#161b22;border-color:#30363d}
   <div class="modal-body" style="max-height:70vh;overflow-y:auto">
     
     <div class="changelog-entry">
-      <h3>v7.9 - 29 Aprile 2026 - PANNELLO ADMIN COMPLETO 👥</h3>
+      <h3>v7.10 - 29 Aprile 2026 - LOG CONNESSIONI 📜</h3>
       <ul>
-        <li><strong>Tab Admin:</strong> nuovo pannello amministrazione visibile solo per utenti admin</li>
-        <li><strong>Gestione Utenti:</strong> crea, modifica, elimina utenti con interfaccia completa</li>
-        <li><strong>Assegnazione Ruoli:</strong> operatore o admin, con controllo accessi</li>
-        <li><strong>Stato Utente:</strong> attiva/disattiva utenti, visualizza ultimo login</li>
-        <li><strong>Log Connessioni:</strong> traccia tutte le azioni (login, logout, CRUD utenti)</li>
-        <li><strong>Filtri Log:</strong> filtra per tipo azione, limite risultati personalizzabile</li>
-        <li><strong>Database:</strong> tabella cna_admin_logs per storico completo</li>
-        <li><strong>Sicurezza:</strong> password SHA256, solo admin può accedere al pannello</li>
-        <li><strong>Auto-logging:</strong> ogni login/logout viene registrato automaticamente</li>
-      </ul>
-    </div>
-
-    <div class="changelog-entry">
-      <h3>v7.8 - 29 Aprile 2026 - FIRME GRANDI E BLU 🖊️</h3>
-      <ul>
-        <li><strong>Canvas firma MOLTO PIÙ GRANDE:</strong> 250px altezza (era 120px) - +108%!</li>
-        <li><strong>Tratto MOLTO PIÙ SPESSO:</strong> 4px (era 1.5px) - +166%!</li>
-        <li><strong>Colore BLU SCURO CNA:</strong> #003d73 invece di nero - molto più elegante e professionale</li>
-        <li><strong>Firme nel PDF 3x PIÙ GRANDI:</strong> 300x90px (erano 250x35px)</li>
-        <li><strong>5 firme PDF tutte GRANDI:</strong> Consenso, Dichiarazione, Privacy, INPS, SEPA - tutte 3x più visibili</li>
-        <li>Firme ora MOLTO più leggibili e professionali nel PDF finale</li>
-        <li>Messaggio "Signature CNA Roma - Vuoi inserire un nuovo modulo?" ✅</li>
-        <li>Dark mode completa ✅</li>
+        <li><strong>Pulsante "📜 Log":</strong> nuovo pulsante nell'header per visualizzare log connessioni</li>
+        <li><strong>Modal Log:</strong> tabella con data/ora, utente, email, azione (login/logout)</li>
+        <li><strong>Filtri log:</strong> filtra per tipo azione, limite risultati configurabile (10-200)</li>
+        <li><strong>Auto-logging:</strong> ogni login/logout registrato automaticamente in database</li>
+        <li><strong>Info dettagliate:</strong> nome, cognome, email, timestamp per ogni connessione</li>
+        <li><strong>Design pulito:</strong> badge colorati per azioni, tabella responsive</li>
+        <li>Gestione utenti completa disponibile su Dashboard Tesseramento separata</li>
       </ul>
     </div>
 
@@ -1265,11 +1250,11 @@ async function previewContractPDF(token){
 // Signature positions: [page_index, x, y, width, height]
 const SIG_POS={
   // dichiarante:[0,340,180,250,35],   // REMOVED: Firma operatore
-  consenso:[0,320,50,300,90],       // Page 1: "Firma di chi esprime il consenso" - 3x PIÙ GRANDE
-  dichiarazione:[0,320,155,300,90], // Page 1: "Dichiarazione e Firma" second box - 3x PIÙ GRANDE
-  privacy:[1,250,10,300,90],        // Page 2: "FIRMA" privacy - 3x PIÙ GRANDE
-  inps:[2,265,70,300,90],           // Page 3: "FIRMA" delega INPS - 3x PIÙ GRANDE
-  sepa:[3,285,135,300,90]           // Page 4: "Firma" SEPA - 3x PIÙ GRANDE
+  consenso:[0,340,64,250,35],       // Page 1: "Firma di chi esprime il consenso"
+  dichiarazione:[0,340,170,250,35], // Page 1: "Dichiarazione e Firma" second box
+  privacy:[1,265,15,250,35],        // Page 2: "FIRMA" privacy
+  inps:[2,280,80,250,35],           // Page 3: "FIRMA" delega INPS (raised from 42 to 80)
+  sepa:[3,300,148,250,35]           // Page 4: "Firma" SEPA
 };
 async function embedSigs(doc,pages,data){
   const es=async(b64,pos)=>{
@@ -1446,146 +1431,43 @@ async function viewDoc(id){
     if(!d||!d[0]||!d[0].documento_foto_base64){showToast('Nessun documento allegato','error');return;}
     const w=window.open('','_blank','width=800,height=600');
     w.document.write(`<html><head><title>Documento - ${d[0].cognome} ${d[0].nome}</title><style>body{margin:0;display:flex;justify-content:center;align-items:center;min-height:100vh;background:#f5f5f5}</style></head><body><img src="${d[0].documento_foto_base64}" style="max-width:95vw;max-height:95vh;border-radius:8px;box-shadow:0 4px 20px rgba(0,0,0,0.2)">
-  <!-- ADMIN PANEL -->
-  <div id="tab-admin" class="tab-content" style="display:none">
-    <div class="form-card">
-      <div class="form-card-header">
-        <span style="font-size:24px">👥</span>
-        <h2>Pannello Amministrazione</h2>
+
+<!-- MODAL LOG CONNESSIONI -->
+<div id="modal-logs" class="modal-overlay" style="display:none" onclick="if(event.target.id==='modal-logs')closeLogsModal()">
+  <div class="modal-content" style="max-width:900px;width:95vw">
+    <div class="modal-header">
+      <h2 style="margin:0">📜 Log Connessioni</h2>
+      <button onclick="closeLogsModal()" style="background:none;border:none;font-size:28px;cursor:pointer;color:var(--txt)">&times;</button>
+    </div>
+    <div class="modal-body" style="max-height:70vh;overflow-y:auto">
+      <div style="margin-bottom:15px;display:flex;gap:10px;flex-wrap:wrap">
+        <select id="log-filter-action" onchange="loadConnectionLogs()" style="padding:8px;border:1px solid var(--brd);border-radius:6px;background:var(--input-bg);color:var(--txt);flex:1;min-width:150px">
+          <option value="">Tutte le azioni</option>
+          <option value="login">Login</option>
+          <option value="logout">Logout</option>
+        </select>
+        <input type="number" id="log-limit" value="50" min="10" max="200" onchange="loadConnectionLogs()" style="width:100px;padding:8px;border:1px solid var(--brd);border-radius:6px;background:var(--input-bg);color:var(--txt)" placeholder="Limite">
+        <button onclick="loadConnectionLogs()" class="btn" style="background:var(--cna);color:#fff">🔄 Aggiorna</button>
       </div>
-      <div class="form-card-body" style="padding:20px">
-        
-        <!-- Admin Sub-Tabs -->
-        <div style="display:flex;gap:10px;margin-bottom:20px;border-bottom:2px solid var(--brd);padding-bottom:10px">
-          <button class="btn" id="admin-subtab-users" onclick="switchAdminTab('users')" style="background:var(--cna);color:#fff">👥 Utenti</button>
-          <button class="btn btn-outline" id="admin-subtab-logs" onclick="switchAdminTab('logs')">📜 Log Connessioni</button>
-        </div>
-
-        <!-- UTENTI TAB -->
-        <div id="admin-tab-users" style="display:block">
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
-            <h3 style="margin:0">Gestione Utenti</h3>
-            <button class="btn" onclick="openUserModal()" style="background:var(--ok);color:#fff">+ Nuovo Utente</button>
-          </div>
-          
-          <div id="users-table-container" style="overflow-x:auto">
-            <table style="width:100%;border-collapse:collapse">
-              <thead>
-                <tr style="background:var(--cna-50);border-bottom:2px solid var(--brd)">
-                  <th style="padding:12px;text-align:left">Nome</th>
-                  <th style="padding:12px;text-align:left">Email</th>
-                  <th style="padding:12px;text-align:left">Ruolo</th>
-                  <th style="padding:12px;text-align:left">Stato</th>
-                  <th style="padding:12px;text-align:left">Ultimo Login</th>
-                  <th style="padding:12px;text-align:left">Azioni</th>
-                </tr>
-              </thead>
-              <tbody id="users-table-body">
-                <tr><td colspan="6" style="padding:20px;text-align:center;color:var(--txt2)">Caricamento...</td></tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-
-        <!-- LOG TAB -->
-        <div id="admin-tab-logs" style="display:none">
-          <h3 style="margin-bottom:20px">Log Connessioni e Azioni</h3>
-          
-          <div style="margin-bottom:20px;display:flex;gap:10px">
-            <select id="log-filter-action" onchange="loadLogs()" style="padding:8px;border:1px solid var(--brd);border-radius:6px;background:var(--input-bg);color:var(--txt)">
-              <option value="">Tutte le azioni</option>
-              <option value="login">Login</option>
-              <option value="logout">Logout</option>
-              <option value="contract_create">Crea contratto</option>
-              <option value="contract_update">Modifica contratto</option>
-              <option value="contract_delete">Elimina contratto</option>
-              <option value="user_create">Crea utente</option>
-              <option value="user_update">Modifica utente</option>
-              <option value="user_delete">Elimina utente</option>
-            </select>
-            <input type="number" id="log-limit" value="50" min="10" max="500" onchange="loadLogs()" style="width:100px;padding:8px;border:1px solid var(--brd);border-radius:6px;background:var(--input-bg);color:var(--txt)" placeholder="Limite">
-          </div>
-          
-          <div id="logs-table-container" style="overflow-x:auto">
-            <table style="width:100%;border-collapse:collapse;font-size:13px">
-              <thead>
-                <tr style="background:var(--cna-50);border-bottom:2px solid var(--brd)">
-                  <th style="padding:10px;text-align:left">Data/Ora</th>
-                  <th style="padding:10px;text-align:left">Utente</th>
-                  <th style="padding:10px;text-align:left">Azione</th>
-                  <th style="padding:10px;text-align:left">Dettagli</th>
-                  <th style="padding:10px;text-align:left">User Agent</th>
-                </tr>
-              </thead>
-              <tbody id="logs-table-body">
-                <tr><td colspan="5" style="padding:20px;text-align:center;color:var(--txt2)">Caricamento...</td></tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-
+      
+      <div id="logs-table-container" style="overflow-x:auto">
+        <table style="width:100%;border-collapse:collapse;font-size:13px">
+          <thead>
+            <tr style="background:var(--cna-50);border-bottom:2px solid var(--brd)">
+              <th style="padding:10px;text-align:left">Data/Ora</th>
+              <th style="padding:10px;text-align:left">Utente</th>
+              <th style="padding:10px;text-align:left">Azione</th>
+              <th style="padding:10px;text-align:left">Dettagli</th>
+            </tr>
+          </thead>
+          <tbody id="logs-table-body">
+            <tr><td colspan="4" style="padding:20px;text-align:center;color:var(--txt2)">Caricamento...</td></tr>
+          </tbody>
+        </table>
       </div>
     </div>
   </div>
-
-  <!-- MODAL CREA/MODIFICA UTENTE -->
-  <div id="modal-user" class="modal-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:9999;display:flex;align-items:center;justify-content:center" onclick="if(event.target===this)closeUserModal()">
-    <div class="modal" style="max-width:500px;width:90%" onclick="event.stopPropagation()">
-      <div style="display:flex;justify-content:space-between;align-items:center;padding:20px;border-bottom:1px solid var(--brd)">
-        <h2 id="modal-user-title" style="margin:0">Nuovo Utente</h2>
-        <button onclick="closeUserModal()" style="background:none;border:none;font-size:24px;cursor:pointer;color:var(--txt)">&times;</button>
-      </div>
-      <div style="padding:20px">
-        <input type="hidden" id="edit-user-id">
-        
-        <div style="margin-bottom:15px">
-          <label style="display:block;margin-bottom:5px;font-weight:600">Nome *</label>
-          <input id="user-nome" type="text" placeholder="Nome" style="width:100%;padding:10px;border:1px solid var(--brd);border-radius:6px;background:var(--input-bg);color:var(--txt)">
-        </div>
-        
-        <div style="margin-bottom:15px">
-          <label style="display:block;margin-bottom:5px;font-weight:600">Cognome *</label>
-          <input id="user-cognome" type="text" placeholder="Cognome" style="width:100%;padding:10px;border:1px solid var(--brd);border-radius:6px;background:var(--input-bg);color:var(--txt)">
-        </div>
-        
-        <div style="margin-bottom:15px">
-          <label style="display:block;margin-bottom:5px;font-weight:600">Email *</label>
-          <input id="user-email" type="email" placeholder="email@example.com" style="width:100%;padding:10px;border:1px solid var(--brd);border-radius:6px;background:var(--input-bg);color:var(--txt)">
-        </div>
-        
-        <div style="margin-bottom:15px">
-          <label style="display:block;margin-bottom:5px;font-weight:600">Cellulare</label>
-          <input id="user-cellulare" type="tel" placeholder="+39 333 1234567" style="width:100%;padding:10px;border:1px solid var(--brd);border-radius:6px;background:var(--input-bg);color:var(--txt)">
-        </div>
-        
-        <div style="margin-bottom:15px" id="password-field-container">
-          <label style="display:block;margin-bottom:5px;font-weight:600">Password *</label>
-          <input id="user-password" type="password" placeholder="Minimo 6 caratteri" style="width:100%;padding:10px;border:1px solid var(--brd);border-radius:6px;background:var(--input-bg);color:var(--txt)">
-          <small style="color:var(--txt2)">Lascia vuoto per non modificare (solo in modifica)</small>
-        </div>
-        
-        <div style="margin-bottom:15px">
-          <label style="display:block;margin-bottom:5px;font-weight:600">Ruolo *</label>
-          <select id="user-ruolo" style="width:100%;padding:10px;border:1px solid var(--brd);border-radius:6px;background:var(--input-bg);color:var(--txt)">
-            <option value="operatore">Operatore</option>
-            <option value="admin">Admin</option>
-          </select>
-        </div>
-        
-        <div style="margin-bottom:20px">
-          <label style="display:flex;align-items:center;gap:8px;cursor:pointer">
-            <input type="checkbox" id="user-attivo" checked style="width:18px;height:18px">
-            <span>Utente attivo</span>
-          </label>
-        </div>
-        
-        <div style="display:flex;gap:10px">
-          <button onclick="saveUser()" class="btn" style="flex:1;background:var(--cna);color:#fff;padding:12px">Salva</button>
-          <button onclick="closeUserModal()" class="btn btn-outline" style="flex:1;padding:12px">Annulla</button>
-        </div>
-      </div>
-    </div>
-  </div>
+</div>
 
 </body></html>`);
   }catch(e){console.error('viewDoc:',e);showToast('Errore: '+e.message,'error');}
@@ -1811,7 +1693,7 @@ function switchTab(i){
     if(footer)footer.style.display='none';
     if(tabs)tabs.style.display='block';
   }
-  if(i==='contratti')loadContracts();if(i==='admin'){switchAdminTab('users');}
+  if(i===4)loadContracts();
 }
 
 function newContract(){
@@ -2046,146 +1928,43 @@ document.addEventListener('DOMContentLoaded',async()=>{
 });
 </script>
 
-  <!-- ADMIN PANEL -->
-  <div id="tab-admin" class="tab-content" style="display:none">
-    <div class="form-card">
-      <div class="form-card-header">
-        <span style="font-size:24px">👥</span>
-        <h2>Pannello Amministrazione</h2>
+
+<!-- MODAL LOG CONNESSIONI -->
+<div id="modal-logs" class="modal-overlay" style="display:none" onclick="if(event.target.id==='modal-logs')closeLogsModal()">
+  <div class="modal-content" style="max-width:900px;width:95vw">
+    <div class="modal-header">
+      <h2 style="margin:0">📜 Log Connessioni</h2>
+      <button onclick="closeLogsModal()" style="background:none;border:none;font-size:28px;cursor:pointer;color:var(--txt)">&times;</button>
+    </div>
+    <div class="modal-body" style="max-height:70vh;overflow-y:auto">
+      <div style="margin-bottom:15px;display:flex;gap:10px;flex-wrap:wrap">
+        <select id="log-filter-action" onchange="loadConnectionLogs()" style="padding:8px;border:1px solid var(--brd);border-radius:6px;background:var(--input-bg);color:var(--txt);flex:1;min-width:150px">
+          <option value="">Tutte le azioni</option>
+          <option value="login">Login</option>
+          <option value="logout">Logout</option>
+        </select>
+        <input type="number" id="log-limit" value="50" min="10" max="200" onchange="loadConnectionLogs()" style="width:100px;padding:8px;border:1px solid var(--brd);border-radius:6px;background:var(--input-bg);color:var(--txt)" placeholder="Limite">
+        <button onclick="loadConnectionLogs()" class="btn" style="background:var(--cna);color:#fff">🔄 Aggiorna</button>
       </div>
-      <div class="form-card-body" style="padding:20px">
-        
-        <!-- Admin Sub-Tabs -->
-        <div style="display:flex;gap:10px;margin-bottom:20px;border-bottom:2px solid var(--brd);padding-bottom:10px">
-          <button class="btn" id="admin-subtab-users" onclick="switchAdminTab('users')" style="background:var(--cna);color:#fff">👥 Utenti</button>
-          <button class="btn btn-outline" id="admin-subtab-logs" onclick="switchAdminTab('logs')">📜 Log Connessioni</button>
-        </div>
-
-        <!-- UTENTI TAB -->
-        <div id="admin-tab-users" style="display:block">
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
-            <h3 style="margin:0">Gestione Utenti</h3>
-            <button class="btn" onclick="openUserModal()" style="background:var(--ok);color:#fff">+ Nuovo Utente</button>
-          </div>
-          
-          <div id="users-table-container" style="overflow-x:auto">
-            <table style="width:100%;border-collapse:collapse">
-              <thead>
-                <tr style="background:var(--cna-50);border-bottom:2px solid var(--brd)">
-                  <th style="padding:12px;text-align:left">Nome</th>
-                  <th style="padding:12px;text-align:left">Email</th>
-                  <th style="padding:12px;text-align:left">Ruolo</th>
-                  <th style="padding:12px;text-align:left">Stato</th>
-                  <th style="padding:12px;text-align:left">Ultimo Login</th>
-                  <th style="padding:12px;text-align:left">Azioni</th>
-                </tr>
-              </thead>
-              <tbody id="users-table-body">
-                <tr><td colspan="6" style="padding:20px;text-align:center;color:var(--txt2)">Caricamento...</td></tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-
-        <!-- LOG TAB -->
-        <div id="admin-tab-logs" style="display:none">
-          <h3 style="margin-bottom:20px">Log Connessioni e Azioni</h3>
-          
-          <div style="margin-bottom:20px;display:flex;gap:10px">
-            <select id="log-filter-action" onchange="loadLogs()" style="padding:8px;border:1px solid var(--brd);border-radius:6px;background:var(--input-bg);color:var(--txt)">
-              <option value="">Tutte le azioni</option>
-              <option value="login">Login</option>
-              <option value="logout">Logout</option>
-              <option value="contract_create">Crea contratto</option>
-              <option value="contract_update">Modifica contratto</option>
-              <option value="contract_delete">Elimina contratto</option>
-              <option value="user_create">Crea utente</option>
-              <option value="user_update">Modifica utente</option>
-              <option value="user_delete">Elimina utente</option>
-            </select>
-            <input type="number" id="log-limit" value="50" min="10" max="500" onchange="loadLogs()" style="width:100px;padding:8px;border:1px solid var(--brd);border-radius:6px;background:var(--input-bg);color:var(--txt)" placeholder="Limite">
-          </div>
-          
-          <div id="logs-table-container" style="overflow-x:auto">
-            <table style="width:100%;border-collapse:collapse;font-size:13px">
-              <thead>
-                <tr style="background:var(--cna-50);border-bottom:2px solid var(--brd)">
-                  <th style="padding:10px;text-align:left">Data/Ora</th>
-                  <th style="padding:10px;text-align:left">Utente</th>
-                  <th style="padding:10px;text-align:left">Azione</th>
-                  <th style="padding:10px;text-align:left">Dettagli</th>
-                  <th style="padding:10px;text-align:left">User Agent</th>
-                </tr>
-              </thead>
-              <tbody id="logs-table-body">
-                <tr><td colspan="5" style="padding:20px;text-align:center;color:var(--txt2)">Caricamento...</td></tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-
+      
+      <div id="logs-table-container" style="overflow-x:auto">
+        <table style="width:100%;border-collapse:collapse;font-size:13px">
+          <thead>
+            <tr style="background:var(--cna-50);border-bottom:2px solid var(--brd)">
+              <th style="padding:10px;text-align:left">Data/Ora</th>
+              <th style="padding:10px;text-align:left">Utente</th>
+              <th style="padding:10px;text-align:left">Azione</th>
+              <th style="padding:10px;text-align:left">Dettagli</th>
+            </tr>
+          </thead>
+          <tbody id="logs-table-body">
+            <tr><td colspan="4" style="padding:20px;text-align:center;color:var(--txt2)">Caricamento...</td></tr>
+          </tbody>
+        </table>
       </div>
     </div>
   </div>
-
-  <!-- MODAL CREA/MODIFICA UTENTE -->
-  <div id="modal-user" class="modal-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:9999;display:flex;align-items:center;justify-content:center" onclick="if(event.target===this)closeUserModal()">
-    <div class="modal" style="max-width:500px;width:90%" onclick="event.stopPropagation()">
-      <div style="display:flex;justify-content:space-between;align-items:center;padding:20px;border-bottom:1px solid var(--brd)">
-        <h2 id="modal-user-title" style="margin:0">Nuovo Utente</h2>
-        <button onclick="closeUserModal()" style="background:none;border:none;font-size:24px;cursor:pointer;color:var(--txt)">&times;</button>
-      </div>
-      <div style="padding:20px">
-        <input type="hidden" id="edit-user-id">
-        
-        <div style="margin-bottom:15px">
-          <label style="display:block;margin-bottom:5px;font-weight:600">Nome *</label>
-          <input id="user-nome" type="text" placeholder="Nome" style="width:100%;padding:10px;border:1px solid var(--brd);border-radius:6px;background:var(--input-bg);color:var(--txt)">
-        </div>
-        
-        <div style="margin-bottom:15px">
-          <label style="display:block;margin-bottom:5px;font-weight:600">Cognome *</label>
-          <input id="user-cognome" type="text" placeholder="Cognome" style="width:100%;padding:10px;border:1px solid var(--brd);border-radius:6px;background:var(--input-bg);color:var(--txt)">
-        </div>
-        
-        <div style="margin-bottom:15px">
-          <label style="display:block;margin-bottom:5px;font-weight:600">Email *</label>
-          <input id="user-email" type="email" placeholder="email@example.com" style="width:100%;padding:10px;border:1px solid var(--brd);border-radius:6px;background:var(--input-bg);color:var(--txt)">
-        </div>
-        
-        <div style="margin-bottom:15px">
-          <label style="display:block;margin-bottom:5px;font-weight:600">Cellulare</label>
-          <input id="user-cellulare" type="tel" placeholder="+39 333 1234567" style="width:100%;padding:10px;border:1px solid var(--brd);border-radius:6px;background:var(--input-bg);color:var(--txt)">
-        </div>
-        
-        <div style="margin-bottom:15px" id="password-field-container">
-          <label style="display:block;margin-bottom:5px;font-weight:600">Password *</label>
-          <input id="user-password" type="password" placeholder="Minimo 6 caratteri" style="width:100%;padding:10px;border:1px solid var(--brd);border-radius:6px;background:var(--input-bg);color:var(--txt)">
-          <small style="color:var(--txt2)">Lascia vuoto per non modificare (solo in modifica)</small>
-        </div>
-        
-        <div style="margin-bottom:15px">
-          <label style="display:block;margin-bottom:5px;font-weight:600">Ruolo *</label>
-          <select id="user-ruolo" style="width:100%;padding:10px;border:1px solid var(--brd);border-radius:6px;background:var(--input-bg);color:var(--txt)">
-            <option value="operatore">Operatore</option>
-            <option value="admin">Admin</option>
-          </select>
-        </div>
-        
-        <div style="margin-bottom:20px">
-          <label style="display:flex;align-items:center;gap:8px;cursor:pointer">
-            <input type="checkbox" id="user-attivo" checked style="width:18px;height:18px">
-            <span>Utente attivo</span>
-          </label>
-        </div>
-        
-        <div style="display:flex;gap:10px">
-          <button onclick="saveUser()" class="btn" style="flex:1;background:var(--cna);color:#fff;padding:12px">Salva</button>
-          <button onclick="closeUserModal()" class="btn btn-outline" style="flex:1;padding:12px">Annulla</button>
-        </div>
-      </div>
-    </div>
-  </div>
+</div>
 
 </body>
 </html>
