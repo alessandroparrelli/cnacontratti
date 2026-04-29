@@ -32,6 +32,7 @@
 }
 body.dark-mode{
   --bg:#0f1419;--bg2:#1a1f2e;--txt:#e4e6eb;--txt2:#8b95a5;--brd:#2d3748;
+  --header-bg:#1a1f2e;--stats-bg:rgba(0,0,0,0.4);
   --cna:#3b9eff;--cna-dk:#2d7dc5;--cna-50:#1a2942;
   --ok:#48bb78;--err:#f56565;--warn:#ecc94b;
   --sh:0 4px 12px rgba(0,0,0,0.3);
@@ -60,8 +61,26 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--txt);line-h
 .login-btn:hover{background:var(--cna-dk)}
 
 
-body.dark-mode .app-header{background:#1a5f9e}
-body.dark-mode .stats-bar-container{background:rgba(0,0,0,0.25)}
+body.dark-mode .app-header{background:var(--header-bg,#1a1f2e)!important}
+body.dark-mode .stats-bar-container{background:rgba(0,0,0,0.4)!important}
+/* DARK MODE TOGGLE */
+.dark-mode-toggle{
+  background:rgba(255,255,255,0.2);
+  border:1px solid rgba(255,255,255,0.4);
+  border-radius:20px;
+  padding:8px 16px;
+  cursor:pointer;
+  transition:.2s;
+  display:flex;
+  align-items:center;
+  gap:6px;
+  font-size:13px;
+  color:#fff;
+}
+.dark-mode-toggle:hover{background:rgba(255,255,255,0.35)}
+.dark-mode-toggle svg{width:20px;height:20px;stroke:#fff;fill:none}
+.dark-mode-toggle svg#icon-moon{fill:#fff;stroke:none}
+
 /* HEADER - Dashboard Tesseramento style */
 .app-header{background:var(--cna);color:#fff;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,0.25)}
 .stats-bar-container{background:rgba(0,0,0,0.12);border-bottom:none;padding:10px 0}
