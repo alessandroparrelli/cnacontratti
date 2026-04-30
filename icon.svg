@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <style>
+      .cls-1{fill:#005ca9;}
+      .cls-2{fill:#fff;}
+      .cls-3{fill:#e30613;}
+    </style>
+  </defs>
+  <!-- Sfondo blu CNA -->
+  <rect class="cls-1" width="512" height="512" rx="80"/>
+  
+  <!-- Lettere CNA in bianco -->
+  <text class="cls-2" x="256" y="320" font-family="Arial, sans-serif" font-size="200" font-weight="bold" text-anchor="middle">CNA</text>
+  
+  <!-- Barra rossa sotto -->
+  <rect class="cls-3" x="80" y="380" width="352" height="40" rx="8"/>
+</svg>

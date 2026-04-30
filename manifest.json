@@ -1,24 +1,37 @@
 {
   "name": "Signature CNA Roma",
-  "short_name": "CNA Signature",
+  "short_name": "CNA",
   "description": "Sistema gestione contratti e tesseramento CNA Roma",
   "start_url": "/",
+  "scope": "/",
   "display": "standalone",
   "background_color": "#005CA9",
   "theme_color": "#005CA9",
-  "orientation": "portrait",
+  "orientation": "portrait-primary",
   "icons": [
     {
       "src": "icon-192.png",
       "sizes": "192x192",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "any"
+    },
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
     },
     {
       "src": "icon-512.png",
       "sizes": "512x512",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "any"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
     }
   ]
 }
