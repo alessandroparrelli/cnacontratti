@@ -1036,7 +1036,7 @@ function closeLogsModal(){
 async function deleteAllLogs(){
   if(!confirm('Vuoi eliminare TUTTI i log di connessione?\n\nQuesta azione non può essere annullata.'))return;
   try{
-    await sb('cna_admin_logs?id=gt.0','DELETE');
+    await sb('cna_admin_logs?id=neq.00000000-0000-0000-0000-000000000000','DELETE');
     showToast('Log eliminati','success');
     loadConnectionLogs();
   }catch(e){showToast('Errore: '+e.message,'error');}
