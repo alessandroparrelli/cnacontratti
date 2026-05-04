@@ -24,6 +24,8 @@
 
 <!-- PWA Manifest -->
 <link rel="manifest" href="manifest.json">
+<link rel="stylesheet" href="styles.css">
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
@@ -238,32 +240,32 @@ body.dark-mode .contract-item{background:#161b22;border-color:#30363d}
   <div class="login-card">
     <div class="login-logo"><img src="https://festivaldellelibrerie.it/wp-content/uploads/2024/11/logo-cna-colore.svg" alt="CNA Roma"></div>
     <h2>Signature CNA v8.2</h2>
-    <p style="text-align:center;color:var(--txt2);font-size:13px;margin-bottom:20px">Accedi con le tue credenziali</p>
+    <p class="style-0">Accedi con le tue credenziali</p>
     <div id="login-error" class="login-error"></div>
     <div class="form-group"><label>Email</label><input type="text" id="login-email" placeholder="email@esempio.com" autocomplete="username" required></div>
     <div class="form-group"><label>Password</label><input type="password" id="login-password" placeholder="••••••••" autocomplete="current-password" required></div>
     <button class="login-btn" onclick="doLogin()">Accedi</button>
-    <p style="text-align:center;font-size:11px;color:var(--txt2);margin-top:20px">Signature CNA v8.2</p>
-    <p style="text-align:center;font-size:10px;color:var(--txt2);margin-top:4px">&copy; 2026 CNA Roma - Confederazione Nazionale dell'Artigianato</p>
+    <p class="style-1">Signature CNA v8.2</p>
+    <p class="style-2">&copy; 2026 CNA Roma - Confederazione Nazionale dell'Artigianato</p>
   </div>
 </div>
 
 <!-- ==================== APP (hidden until login) ==================== -->
-<div id="app-container" style="display:none">
+<div id="app-container" class="style-3">
 
 <header class="app-header">
   <div class="header-inner">
     <div class="header-logo"><img src="https://customer31551.img.musvc2.net/static/31551/images/1/CNARoma%20NEGATIVO%20COLORE%20SOLO%20ROMA.png" alt="CNA Roma"></div>
     <div class="header-text"><h1>Signature</h1></div>
     <div class="header-actions">
-      <button class="btn btn-sm" onclick="openChangelog()" title="Note di versione" style="border:1px solid rgba(255,255,255,0.3);color:#fff;background:rgba(255,255,255,0.1);border-radius:20px">&#x1F4CB; Versioni</button>
-      <button class="btn btn-sm" id="btn-logs" onclick="openLogsModal()" title="Log connessioni" style="display:none;border:1px solid rgba(255,255,255,0.3);color:#fff;background:rgba(255,255,255,0.1);border-radius:20px;cursor:pointer">&#x1F4DC; Log</button>
+      <button class="btn btn-sm" onclick="openChangelog()" title="Note di versione" class="style-4">&#x1F4CB; Versioni</button>
+      <button class="btn btn-sm" id="btn-logs" onclick="openLogsModal()" title="Log connessioni" class="style-5">&#x1F4DC; Log</button>
       <button class="dark-mode-toggle" onclick="toggleDarkMode()" id="dark-mode-btn" title="Attiva/Disattiva modalità scura">
         <svg id="icon-sun" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
-        <svg id="icon-moon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" style="display:none"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        <svg id="icon-moon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="style-6"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
       </button>
       <span class="header-user" id="logged-user" onclick="openProfile()"></span>
-      <button class="btn btn-sm" style="background:rgba(255,255,255,0.15);color:#fff;border:1px solid rgba(255,255,255,0.3);border-radius:20px" onclick="doLogout()">&#x2192; Esci</button>
+      <button class="btn btn-sm" class="style-7" onclick="doLogout()">&#x2192; Esci</button>
     </div>
   </div>
 </header>
@@ -290,7 +292,7 @@ body.dark-mode .contract-item{background:#161b22;border-color:#30363d}
   </div>
 </div>
 
-<nav class="tabs-bar" id="tabs-nav" style="display:none"><div class="tabs-inner">
+<nav class="tabs-bar" id="tabs-nav" class="style-8"><div class="tabs-inner">
   <button class="tab-btn" onclick="switchTab(0)" data-tab="0">&#x1F4CB; Modulo Adesione</button>
   <button class="tab-btn active" onclick="switchTab(4)" data-tab="4">&#x1F4C2; Contratti</button>
 </div></nav>
@@ -300,22 +302,22 @@ body.dark-mode .contract-item{background:#161b22;border-color:#30363d}
 <div class="tab-page" id="tab-0">
   <div class="form-card"><div class="form-card-header"><span>&#x1F464;</span><h3>Dati Personali</h3></div><div class="form-card-body">
     <div class="form-row c2"><div class="form-group required"><label>Cognome</label><input type="text" id="cognome" placeholder=" " required></div><div class="form-group required"><label>Nome</label><input type="text" id="nome" placeholder=" " required></div></div>
-    <div class="form-row cf"><div class="form-group required"><label>Codice Fiscale</label><input type="text" id="cf" maxlength="16" placeholder=" " style="text-transform:uppercase;letter-spacing:1px;font-family:monospace" required></div><div class="form-group required"><label>Data di nascita</label><input type="date" id="data_nascita" required></div></div>
-    <div class="form-row c211"><div class="form-group required"><label>Nato/a a</label><input type="text" id="nato_a" placeholder=" " required></div><div class="form-group required"><label>Prov.</label><input type="text" id="prov_nascita" maxlength="2" placeholder=" " style="text-transform:uppercase" required></div><div class="form-group required"><label>Stato</label><input type="text" id="stato_nascita" value="Italia" placeholder=" " required></div></div>
+    <div class="form-row cf"><div class="form-group required"><label>Codice Fiscale</label><input type="text" id="cf" maxlength="16" placeholder=" " class="style-9" required></div><div class="form-group required"><label>Data di nascita</label><input type="date" id="data_nascita" required></div></div>
+    <div class="form-row c211"><div class="form-group required"><label>Nato/a a</label><input type="text" id="nato_a" placeholder=" " required></div><div class="form-group required"><label>Prov.</label><input type="text" id="prov_nascita" maxlength="2" placeholder=" " class="style-10" required></div><div class="form-group required"><label>Stato</label><input type="text" id="stato_nascita" value="Italia" placeholder=" " required></div></div>
     <div class="form-row c2"><div class="form-group required"><label>Residente in (via)</label><input type="text" id="residente_in" placeholder=" " required></div><div class="form-group required"><label>Comune</label><input type="text" id="comune_res" placeholder=" " required></div></div>
-    <div class="form-row c3"><div class="form-group required"><label>CAP</label><input type="text" id="cap_res" maxlength="5" placeholder=" " required></div><div class="form-group required"><label>Prov.</label><input type="text" id="prov_res" maxlength="2" placeholder=" " style="text-transform:uppercase" required></div><div class="form-group required"><label>Stato</label><input type="text" id="stato_res" value="Italia" placeholder=" " required></div></div>
+    <div class="form-row c3"><div class="form-group required"><label>CAP</label><input type="text" id="cap_res" maxlength="5" placeholder=" " required></div><div class="form-group required"><label>Prov.</label><input type="text" id="prov_res" maxlength="2" placeholder=" " class="style-11" required></div><div class="form-group required"><label>Stato</label><input type="text" id="stato_res" value="Italia" placeholder=" " required></div></div>
     <div class="form-row c3"><div class="form-group required"><label>Telefono</label><input type="tel" id="telefono" placeholder=" " required></div><div class="form-group required"><label>Cellulare</label><input type="tel" id="cellulare" placeholder=" " required></div><div class="form-group required"><label>E-mail</label><input type="email" id="email" placeholder=" " required></div>
     <div class="form-group">
       <label>Raccolto da</label>
-      <input type="text" id="raccolto_da" class="form-input" readonly style="background:var(--input-bg);opacity:0.7;cursor:not-allowed">
+      <input type="text" id="raccolto_da" class="form-input" readonly class="style-12">
     </div></div>
   </div></div>
   <div class="form-card"><div class="form-card-header"><span>&#x1F3E2;</span><h3>Dati Aziendali</h3></div><div class="form-card-body">
-    <div class="form-row c21"><div class="form-group required"><label>Ragione Sociale</label><input type="text" id="ragione_sociale" placeholder=" " required></div><div class="form-group required"><label>Partita IVA</label><input type="text" id="piva" maxlength="11" placeholder=" " style="letter-spacing:1px;font-family:monospace" required></div></div>
-    <div class="form-group" style="margin-bottom:14px"><label>Tipologia</label><div class="checkbox-row"><div class="checkbox-item"><input type="checkbox" id="tipo_a"><label for="tipo_a">Artigiano</label></div><div class="checkbox-item"><input type="checkbox" id="tipo_c"><label for="tipo_c">Commerciante</label></div><div class="checkbox-item"><input type="checkbox" id="tipo_p"><label for="tipo_p">Piccola Impresa</label></div><div class="checkbox-item"><input type="checkbox" id="tipo_v"><label for="tipo_v">Varie</label></div></div></div>
+    <div class="form-row c21"><div class="form-group required"><label>Ragione Sociale</label><input type="text" id="ragione_sociale" placeholder=" " required></div><div class="form-group required"><label>Partita IVA</label><input type="text" id="piva" maxlength="11" placeholder=" " class="style-13" required></div></div>
+    <div class="form-group" class="style-14"><label>Tipologia</label><div class="checkbox-row"><div class="checkbox-item"><input type="checkbox" id="tipo_a"><label for="tipo_a">Artigiano</label></div><div class="checkbox-item"><input type="checkbox" id="tipo_c"><label for="tipo_c">Commerciante</label></div><div class="checkbox-item"><input type="checkbox" id="tipo_p"><label for="tipo_p">Piccola Impresa</label></div><div class="checkbox-item"><input type="checkbox" id="tipo_v"><label for="tipo_v">Varie</label></div></div></div>
     <div class="form-row c2"><div class="form-group required"><label>Attivita (ATECO)</label><select id="ateco" required><option value="">Seleziona attività...</option><option value="9602 - Acconciatori">Acconciatori</option><option value="01 - Agricoltori">Agricoltori</option><option value="01192 - Art.ne di Mestiere NON deliberata">Art.ne di Mestiere NON deliberata</option><option value="432901 - Ascensoristi">Ascensoristi</option><option value="45202 - Carrozzerie">Carrozzerie</option><option value="2341 - Ceramisti">Ceramisti</option><option value="20 - Chimica Vetro/Gomma/Plastica">Chimica Vetro/Gomma/Plastica</option><option value="18 - Comunicazione e stampa">Comunicazione e stampa</option><option value="332006 - Digitale">Digitale</option><option value="1052 - Dolciari e Panificatori">Dolciari e Panificatori</option><option value="2332 - Edilizia">Edilizia</option><option value="46181 - Editoria">Editoria</option><option value="332001 - Elettrici">Elettrici</option><option value="263 - Elettronici">Elettronici</option><option value="461833 - Estetiste">Estetiste</option><option value="13 - Filiera della Moda">Filiera della Moda</option><option value="26702 - Fotografia e Video">Fotografia e Video</option><option value="33124 - Frigoristi">Frigoristi</option><option value="45204 - Gommisti">Gommisti</option><option value="37 - Imprese di pulizia e disinfestazione">Imprese di pulizia e disinfestazione</option><option value="05 - Lapidei ed altri materiali da costruzione">Lapidei ed altri materiali da costruzione</option><option value="25993 - Lavorazione artistica metalli">Lavorazione artistica metalli</option><option value="016201 - Lavorazioni artistiche legno, vetro e marmo">Lavorazioni artistiche legno, vetro e marmo</option><option value="0129 - Legno e Arredo">Legno e Arredo</option><option value="24 - Meccanica">Meccanica</option><option value="452 - Meccatronici">Meccatronici</option><option value="14 - Moda Calzature, Pelletterie e Pellicceria">Moda Calzature, Pelletterie e Pellicceria</option><option value="14132 - Moda su Misura">Moda su Misura</option><option value="139 - Moda Tessile e Abbigliamento">Moda Tessile e Abbigliamento</option><option value="301 - Nautica">Nautica</option><option value="49322 - NCC Auto">NCC Auto</option><option value="491 - NCC Bus">NCC Bus</option><option value="32502 - Odontotecnici (SNO)">Odontotecnici (SNO)</option><option value="813 - Operatori Giardini e verde">Operatori Giardini e verde</option><option value="2441 - Orafi">Orafi</option><option value="106 - Pastai">Pastai</option><option value="1032 - Produttori bevande">Produttori bevande</option><option value="03 - Produzione Alimentari">Produzione Alimentari</option><option value="900302 - Restauratori">Restauratori</option><option value="33122 - Riparatori Elettrodomestici">Riparatori Elettrodomestici</option><option value="1084 - Ristorazione">Ristorazione</option><option value="267 - Sanità (Podologi, Optometristi)">Sanità (Podologi, Optometristi)</option><option value="16231 - Serramenti e Infissi">Serramenti e Infissi</option><option value="93292 - Stabilimenti balneari">Stabilimenti balneari</option><option value="493 - Taxi">Taxi</option><option value="36 - Termoidraulici">Termoidraulici</option><option value="9601 - Tintolavanderie">Tintolavanderie</option><option value="492 - Trasporto merci">Trasporto merci</option><option value="461 - Unione NON assegnata">Unione NON assegnata</option></select></div><div class="form-group required"><label>PEC</label><input type="email" id="pec" placeholder=" " required></div></div>
     <div class="form-row c2"><div class="form-group required"><label>Sede attivita (via)</label><input type="text" id="sede_attivita" placeholder=" " required></div><div class="form-group required"><label>Comune</label><input type="text" id="comune_att" placeholder=" " required></div></div>
-    <div class="form-row c3"><div class="form-group required"><label>CAP</label><input type="text" id="cap_att" maxlength="5" placeholder=" " required></div><div class="form-group required"><label>Prov.</label><input type="text" id="prov_att" maxlength="2" placeholder=" " style="text-transform:uppercase" required></div><div class="form-group"><label>Codice INAIL</label><input type="text" id="cod_inail" placeholder=" "></div></div>
+    <div class="form-row c3"><div class="form-group required"><label>CAP</label><input type="text" id="cap_att" maxlength="5" placeholder=" " required></div><div class="form-group required"><label>Prov.</label><input type="text" id="prov_att" maxlength="2" placeholder=" " class="style-15" required></div><div class="form-group"><label>Codice INAIL</label><input type="text" id="cod_inail" placeholder=" "></div></div>
     <div class="form-row c2"><div class="form-group"><label>Cod. INAIL PAT</label><input type="text" id="cod_inail_pat" placeholder=" "></div><div class="form-group"><label>Documento identita</label><input type="text" id="documento_id" placeholder=" "></div></div>
   </div></div>
   <div class="form-card"><div class="form-card-header"><span>&#x1F4B0;</span><h3>Iscrizione e Quote</h3></div><div class="form-card-body">
@@ -325,103 +327,103 @@ body.dark-mode .contract-item{background:#161b22;border-color:#30363d}
           </select></div></div>
     
     <!-- SEZIONE QUOTE - Blue CNA Box -->
-    <div style="background:linear-gradient(135deg, rgba(0,92,169,0.08) 0%, rgba(0,119,204,0.12) 100%);border:2px solid rgba(0,92,169,0.3);border-radius:8px;padding:20px;margin:20px 0;box-shadow:0 2px 8px rgba(0,92,169,0.15)">
-      <h3 style="color:var(--cna);font-size:16px;font-weight:700;margin:0 0 16px 0;display:flex;align-items:center;gap:8px"><span style="font-size:20px">💶</span> Sezione Quote</h3>
-      <div class="form-row c3"><div class="form-group required"><label>Quota 1° anno</label><div style="position:relative"><span style="position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--txt2);font-weight:600;pointer-events:none">€</span><input type="text" id="quota_1_anno" placeholder="0,00" style="padding-left:28px" required></div></div><div class="form-group required"><label>Data adesione</label><input type="date" id="data_adesione" required></div><div class="form-group required"><label>Modalita</label><select id="modalita_pagamento_sel" required><option>Sepa immediato</option><option>Bonifico</option><option>Contanti</option><option>Altro</option></select></div></div>
-      <div class="form-row c3"><div class="form-group required"><label>Quota INPS</label><div style="position:relative"><span style="position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--txt2);font-weight:600;pointer-events:none">€</span><input type="text" id="quota_inps" placeholder="0,00" style="padding-left:28px" required></div></div><div class="form-group"><label>Cod. INPS</label><input type="text" id="cod_inps"></div><div class="form-group required"><label>Quota dal 2° anno</label><div style="position:relative"><span style="position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--txt2);font-weight:600;pointer-events:none">€</span><input type="text" id="quota_diretto" placeholder="0,00" style="padding-left:28px" required></div></div></div>
+    <div class="style-16">
+      <h3 class="style-17"><span class="style-18">💶</span> Sezione Quote</h3>
+      <div class="form-row c3"><div class="form-group required"><label>Quota 1° anno</label><div class="style-19"><span class="style-20">€</span><input type="text" id="quota_1_anno" placeholder="0,00" class="style-21" required></div></div><div class="form-group required"><label>Data adesione</label><input type="date" id="data_adesione" required></div><div class="form-group required"><label>Modalita</label><select id="modalita_pagamento_sel" required><option>Sepa immediato</option><option>Bonifico</option><option>Contanti</option><option>Altro</option></select></div></div>
+      <div class="form-row c3"><div class="form-group required"><label>Quota INPS</label><div class="style-22"><span class="style-23">€</span><input type="text" id="quota_inps" placeholder="0,00" class="style-24" required></div></div><div class="form-group"><label>Cod. INPS</label><input type="text" id="cod_inps"></div><div class="form-group required"><label>Quota dal 2° anno</label><div class="style-25"><span class="style-26">€</span><input type="text" id="quota_diretto" placeholder="0,00" class="style-27" required></div></div></div>
     </div>
     
-    <div class="form-group" style="margin-bottom:14px"><label>Modalita pagamento</label><div class="checkbox-row"><div class="checkbox-item"><input type="checkbox" id="mod_rid" checked><label for="mod_rid">RID</label></div><div class="checkbox-item"><input type="checkbox" id="mod_riba"><label for="mod_riba">RIBA</label></div><div class="checkbox-item"><input type="checkbox" id="mod_rd"><label for="mod_rd">R.D.</label></div><div class="checkbox-item"><input type="checkbox" id="mod_sepa"><label for="mod_sepa">Bonifico Sepa</label></div><div class="checkbox-item"><input type="checkbox" id="mod_altro"><label for="mod_altro">Altro</label></div></div></div>
-    <div class="form-row c2"><div class="form-group required"><label>IBAN Ditta</label><input type="text" id="iban_ditta" maxlength="27" placeholder=" " style="text-transform:uppercase;letter-spacing:1px;font-family:monospace" required></div><div class="form-group" style="display:none"><label>IBAN CNA</label><input type="text" value="IT 39 T 02008 05165 000400682678" readonly style="background:var(--input-bg);opacity:0.7;color:#666"></div></div>
+    <div class="form-group" class="style-28"><label>Modalita pagamento</label><div class="checkbox-row"><div class="checkbox-item"><input type="checkbox" id="mod_rid" checked><label for="mod_rid">RID</label></div><div class="checkbox-item"><input type="checkbox" id="mod_riba"><label for="mod_riba">RIBA</label></div><div class="checkbox-item"><input type="checkbox" id="mod_rd"><label for="mod_rd">R.D.</label></div><div class="checkbox-item"><input type="checkbox" id="mod_sepa"><label for="mod_sepa">Bonifico Sepa</label></div><div class="checkbox-item"><input type="checkbox" id="mod_altro"><label for="mod_altro">Altro</label></div></div></div>
+    <div class="form-row c2"><div class="form-group required"><label>IBAN Ditta</label><input type="text" id="iban_ditta" maxlength="27" placeholder=" " class="style-29" required></div><div class="form-group" class="style-30"><label>IBAN CNA</label><input type="text" value="IT 39 T 02008 05165 000400682678" readonly class="style-31"></div></div>
   </div></div>
-  <div class="form-card" style="display:none"><div class="form-card-header"><span>&#x270D;&#xFE0F;</span><h3>Dichiarazione e Firma</h3></div><div class="form-card-body">
-    <div class="form-row c2"><div class="form-group"><label>Data</label><input type="date" id="data_dichiarazione"></div><div class="form-group"><label>Firma operatore</label><div class="signature-container"><p style="font-size:11px;color:var(--txt2);margin-bottom:4px;text-align:center">✍️ Firmare leggendo da sinistra verso destra</p><canvas id="sig_dichiarante"></canvas><div class="signature-actions"><button class="btn btn-sm btn-outline" onclick="clearSignature('sig_dichiarante')">Cancella</button></div></div></div></div>
+  <div class="form-card" class="style-32"><div class="form-card-header"><span>&#x270D;&#xFE0F;</span><h3>Dichiarazione e Firma</h3></div><div class="form-card-body">
+    <div class="form-row c2"><div class="form-group"><label>Data</label><input type="date" id="data_dichiarazione"></div><div class="form-group"><label>Firma operatore</label><div class="signature-container"><p class="style-33">✍️ Firmare leggendo da sinistra verso destra</p><canvas id="sig_dichiarante"></canvas><div class="signature-actions"><button class="btn btn-sm btn-outline" onclick="clearSignature('sig_dichiarante')">Cancella</button></div></div></div></div>
   </div></div>
 
 <!-- PRIVACY (merged into single page) -->
   <div class="form-card"><div class="form-card-header"><span>&#x1F512;</span><h3>Privacy e Consensi</h3></div><div class="form-card-body">
-    <div class="form-row c2" style="display:none"><div class="form-group"><label>Cognome</label><input class="mirror-cognome" readonly style="background:var(--input-bg);opacity:0.7"></div><div class="form-group"><label>Nome</label><input class="mirror-nome" readonly style="background:var(--input-bg);opacity:0.7"></div></div>
-    <div class="form-group" style="display:none;margin-bottom:20px"><label>C.F.</label><input class="mirror-cf" readonly style="background:var(--input-bg);opacity:0.7;text-transform:uppercase;font-family:monospace"></div>
+    <div class="form-row c2" class="style-34"><div class="form-group"><label>Cognome</label><input class="mirror-cognome" readonly class="style-35"></div><div class="form-group"><label>Nome</label><input class="mirror-nome" readonly class="style-36"></div></div>
+    <div class="form-group" class="style-37"><label>C.F.</label><input class="mirror-cf" readonly class="style-38"></div>
     <div class="consent-block"><p><strong>a)</strong> Trattamento dati per finalita statutarie e associative.</p><div class="consent-toggle"><label><input type="radio" name="consent_a" value="consente" checked> CONSENTE</label><label><input type="radio" name="consent_a" value="non_consente"> NON CONSENTE</label></div></div>
     <div class="consent-block"><p><strong>b)</strong> Trattamento dati per convenzioni INPS e INAIL.</p><div class="consent-toggle"><label><input type="radio" name="consent_b" value="consente" checked> CONSENTE</label><label><input type="radio" name="consent_b" value="non_consente"> NON CONSENTE</label></div></div>
     <div class="consent-block"><p><strong>Art. 9</strong> Trattamento categorie particolari di dati.</p><div class="consent-toggle"><label><input type="radio" name="consent_art9" value="consenso" checked> Consenso</label><label><input type="radio" name="consent_art9" value="mancato"> Mancato</label></div></div>
     <div class="consent-block"><p>Comunicazione dati al Sistema Nazionale CNA.</p><div class="consent-toggle"><label><input type="radio" name="consent_sistema" value="consenso" checked> Consenso</label><label><input type="radio" name="consent_sistema" value="mancato"> Mancato</label></div></div>
     <div class="consent-block"><p>Comunicazione dati sui siti web e Social Network CNA.</p><div class="consent-toggle"><label><input type="radio" name="consent_web" value="consenso" checked> Consenso</label><label><input type="radio" name="consent_web" value="mancato"> Mancato</label></div></div>
-    <div class="form-row c2" style="margin-top:20px"><div class="form-group required"><label>Data</label><input type="date" id="data_consenso" required></div><div class="form-group" style="display:none"><label>Firma</label><div class="signature-container"><canvas id="sig_consenso"></canvas></div></div></div>
+    <div class="form-row c2" class="style-39"><div class="form-group required"><label>Data</label><input type="date" id="data_consenso" required></div><div class="form-group" class="style-40"><label>Firma</label><div class="signature-container"><canvas id="sig_consenso"></canvas></div></div></div>
   </div></div>
 <!-- INPS (merged into single page) -->
   <div class="form-card"><div class="form-card-header"><span>&#x1F3DB;&#xFE0F;</span><h3>Delega INPS</h3></div><div class="form-card-body">
-    <div class="form-row c2" style="display:none"><div class="form-group"><label>Cognome</label><input class="mirror-cognome" readonly style="background:var(--input-bg);opacity:0.7"></div><div class="form-group"><label>Nome</label><input class="mirror-nome" readonly style="background:var(--input-bg);opacity:0.7"></div></div>
-    <div class="form-row cf" style="display:none"><div class="form-group"><label>C.F.</label><input class="mirror-cf" readonly style="background:var(--input-bg);opacity:0.7;text-transform:uppercase"></div><div class="form-group"><label>Nato/a il</label><input class="mirror-data-nascita" readonly style="background:var(--input-bg);opacity:0.7"></div></div>
-    <div class="form-row c2"><div class="form-group" style="display:none"><label>In qualita di</label><input type="text" id="qualita_inps"></div><div class="form-group required"><label>Data delega</label><input type="date" id="data_inps" required></div></div>
-    <div class="form-group" style="display:none"><label>Firma INPS</label><div class="signature-container"><canvas id="sig_inps"></canvas></div></div>
+    <div class="form-row c2" class="style-41"><div class="form-group"><label>Cognome</label><input class="mirror-cognome" readonly class="style-42"></div><div class="form-group"><label>Nome</label><input class="mirror-nome" readonly class="style-43"></div></div>
+    <div class="form-row cf" class="style-44"><div class="form-group"><label>C.F.</label><input class="mirror-cf" readonly class="style-45"></div><div class="form-group"><label>Nato/a il</label><input class="mirror-data-nascita" readonly class="style-46"></div></div>
+    <div class="form-row c2"><div class="form-group" class="style-47"><label>In qualita di</label><input type="text" id="qualita_inps"></div><div class="form-group required"><label>Data delega</label><input type="date" id="data_inps" required></div></div>
+    <div class="form-group" class="style-48"><label>Firma INPS</label><div class="signature-container"><canvas id="sig_inps"></canvas></div></div>
   </div></div>
 <!-- SEPA (merged into single page) -->
   <div class="form-card"><div class="form-card-header"><span>&#x1F3E6;</span><h3>Mandato SEPA</h3></div><div class="form-card-body">
-    <div class="form-row c2"><div class="form-group"><label>ID Creditore</label><input value="IT15001000008015133088" readonly style="background:var(--input-bg);opacity:0.7;font-family:monospace"></div><div class="form-group"><label>ID Mandato</label><input type="text" id="id_mandato" placeholder=" "></div></div>
-    <div class="form-group" style="display:none;margin-bottom:14px"><label>Nome debitore</label><input class="mirror-ragione-sociale" readonly style="background:var(--input-bg);opacity:0.7"></div>
-    <div class="form-group" style="display:none;margin-bottom:14px"><label>Partita IVA</label><input class="mirror-piva" readonly style="background:var(--input-bg);opacity:0.7;font-family:monospace"></div>
-    <div class="form-group" style="display:none;margin-bottom:14px"><label>IBAN</label><input class="mirror-iban" readonly style="background:var(--input-bg);opacity:0.7;font-family:monospace"></div>
-    <div class="form-group required" style="margin-bottom:14px"><label>Banca - Agenzia</label><input type="text" id="banca_agenzia" placeholder=" " required></div>
-    <div class="form-group" style="margin-bottom:14px"><label>Tipo SEPA</label><div class="checkbox-row"><div class="checkbox-item"><input type="checkbox" id="sepa_b2b" checked><label for="sepa_b2b">B2B</label></div><div class="checkbox-item"><input type="checkbox" id="sepa_core"><label for="sepa_core">CORE</label></div></div></div>
+    <div class="form-row c2"><div class="form-group"><label>ID Creditore</label><input value="IT15001000008015133088" readonly class="style-49"></div><div class="form-group"><label>ID Mandato</label><input type="text" id="id_mandato" placeholder=" "></div></div>
+    <div class="form-group" class="style-50"><label>Nome debitore</label><input class="mirror-ragione-sociale" readonly class="style-51"></div>
+    <div class="form-group" class="style-52"><label>Partita IVA</label><input class="mirror-piva" readonly class="style-53"></div>
+    <div class="form-group" class="style-54"><label>IBAN</label><input class="mirror-iban" readonly class="style-55"></div>
+    <div class="form-group required" class="style-56"><label>Banca - Agenzia</label><input type="text" id="banca_agenzia" placeholder=" " required></div>
+    <div class="form-group" class="style-57"><label>Tipo SEPA</label><div class="checkbox-row"><div class="checkbox-item"><input type="checkbox" id="sepa_b2b" checked><label for="sepa_b2b">B2B</label></div><div class="checkbox-item"><input type="checkbox" id="sepa_core"><label for="sepa_core">CORE</label></div></div></div>
     <div class="form-row c2"><div class="form-group required"><label>Data</label><input type="date" id="data_sepa" required></div><div class="form-group required"><label>Luogo</label><input type="text" id="luogo_sepa" value="Roma" placeholder=" " required></div></div>
-    <div class="form-group" style="display:none"><label>Firma SEPA</label><div class="signature-container"><canvas id="sig_sepa"></canvas></div></div>
+    <div class="form-group" class="style-58"><label>Firma SEPA</label><div class="signature-container"><canvas id="sig_sepa"></canvas></div></div>
   </div></div>
 </div><!-- end tab-0 -->
 <!-- TAB 4: CONTRATTI -->
 <div class="tab-page active" id="tab-4">
   <div class="form-card">
-    <div class="form-card-header" style="justify-content:space-between;flex-wrap:wrap;gap:10px">
-      <div style="display:flex;align-items:center;gap:10px"><span>&#x1F4C2;</span><h3>Dashboard Contratti</h3></div>
-      <button class="btn btn-primary" onclick="newContract()" style="font-size:14px;padding:10px 24px">&#x2795; Nuovo modulo di adesione</button>
+    <div class="form-card-header" class="style-59">
+      <div class="style-60"><span>&#x1F4C2;</span><h3>Dashboard Contratti</h3></div>
+      <button class="btn btn-primary" onclick="newContract()" class="style-61">&#x2795; Nuovo modulo di adesione</button>
     </div>
     <div class="form-card-body">
-      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px;gap:12px">
-        <div style="flex:1;min-width:0">
-          <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:8px">
-            <input type="text" id="search-contracts" placeholder="🔍 Cerca cliente..." style="padding:6px 12px;border:1px solid var(--brd);border-radius:6px;font-size:13px;min-width:200px" oninput="filterContracts()">
-            <select id="filter-tipo" onchange="filterContracts()" style="padding:6px 12px;border:1px solid var(--brd);border-radius:6px;font-size:13px;background:var(--input-bg);color:var(--txt)">
+      <div class="style-62">
+        <div class="style-63">
+          <div class="style-64">
+            <input type="text" id="search-contracts" placeholder="🔍 Cerca cliente..." class="style-65" oninput="filterContracts()">
+            <select id="filter-tipo" onchange="filterContracts()" class="style-66">
               <option value="">Tutti i tipi</option>
               <option value="adesione_2025" selected>Tesseramento</option>
             </select>
-            <select id="filter-stato" onchange="filterContracts()" style="padding:6px 12px;border:1px solid var(--brd);border-radius:6px;font-size:13px;background:var(--input-bg);color:var(--txt)">
+            <select id="filter-stato" onchange="filterContracts()" class="style-67">
               <option value="">Tutti gli stati</option>
               <option value="firmato">Firmati</option>
               <option value="inviato">Da firmare</option>
               <option value="bozza">Bozze</option>
             </select>
-            <select id="filter-anno" onchange="filterContracts()" style="padding:6px 12px;border:1px solid var(--brd);border-radius:6px;font-size:13px;background:var(--input-bg);color:var(--txt)">
+            <select id="filter-anno" onchange="filterContracts()" class="style-68">
               <option value="">Tutti gli anni</option>
               <option value="2026" selected>2026</option>
               <option value="2025">2025</option>
               <option value="2024">2024</option>
             </select>
-            <select id="filter-proprietario" onchange="filterContracts()" style="padding:6px 12px;border:1px solid var(--brd);border-radius:6px;font-size:13px;background:var(--input-bg);color:var(--txt)">
+            <select id="filter-proprietario" onchange="filterContracts()" class="style-69">
               <option value="">Tutti i proprietari</option>
             </select>
-            <select id="filter-gestionale" onchange="filterContracts()" style="padding:6px 12px;border:1px solid var(--brd);border-radius:6px;font-size:13px;background:var(--input-bg);color:var(--txt)">
+            <select id="filter-gestionale" onchange="filterContracts()" class="style-70">
               <option value="">Tutti</option>
               <option value="caricato">Caricati</option>
               <option value="da-caricare">Da caricare</option>
             </select>
           </div>
-          <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;min-height:32px">
-            <label style="display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer"><input type="checkbox" id="select-all-contracts" onchange="toggleSelectAll(this)" style="width:16px;height:16px;accent-color:var(--cna)"> Seleziona tutti</label>
-            <button class="btn btn-sm btn-outline" onclick="exportExcel()" id="btn-export" style="display:none">&#x1F4CA; Esporta Excel</button>
-            <button class="btn btn-sm btn-danger" onclick="deleteSelected()" id="btn-delete" style="display:none">&#x1F5D1; Elimina</button>
+          <div class="style-71">
+            <label class="style-72"><input type="checkbox" id="select-all-contracts" onchange="toggleSelectAll(this)" class="style-73"> Seleziona tutti</label>
+            <button class="btn btn-sm btn-outline" onclick="exportExcel()" id="btn-export" class="style-74">&#x1F4CA; Esporta Excel</button>
+            <button class="btn btn-sm btn-danger" onclick="deleteSelected()" id="btn-delete" class="style-75">&#x1F5D1; Elimina</button>
           </div>
         </div>
-        <button class="btn btn-sm btn-outline" onclick="loadContracts()" style="flex-shrink:0">&#x21BB; Aggiorna</button>
+        <button class="btn btn-sm btn-outline" onclick="loadContracts()" class="style-76">&#x21BB; Aggiorna</button>
       </div>
-      <div id="contracts-list"><p style="text-align:center;color:var(--txt2);padding:40px">Caricamento...</p></div>
+      <div id="contracts-list"><p class="style-77">Caricamento...</p></div>
     </div>
   </div>
 </div>
 </main>
 
-<div class="footer-actions" id="footer-form-actions" style="display:none"><div class="footer-inner">
+<div class="footer-actions" id="footer-form-actions" class="style-78"><div class="footer-inner">
   <span id="status-indicator" class="status-badge empty">Non compilato</span>
-  <div style="display:flex;gap:8px;flex-wrap:wrap">
+  <div class="style-79">
     <button class="btn btn-outline" onclick="previewPDF()">Anteprima</button>
     <button class="btn btn-primary" onclick="saveToSupabase()">Salva</button>
     <button class="btn btn-warning" onclick="saveAndSend()">Salva e Invia</button>
@@ -434,41 +436,41 @@ body.dark-mode .contract-item{background:#161b22;border-color:#30363d}
 <div class="modal-overlay" id="modal-email"><div class="modal">
   <div class="modal-header"><h2>Invia al Cliente</h2><button class="close-btn" onclick="closeModal('modal-email')">&times;</button></div>
   <div class="modal-body">
-    <div class="form-group" style="margin-bottom:14px"><label>Email destinatario</label><input type="email" id="send-email" required></div>
+    <div class="form-group" class="style-80"><label>Email destinatario</label><input type="email" id="send-email" required></div>
     <input type="hidden" id="send-message" value="" required>
-    <div style="background:#f9f9f9;border:1px solid var(--brd);border-radius:var(--r);padding:16px;margin-top:8px">
-      <label style="font-size:10px;font-weight:600;color:var(--txt2);text-transform:uppercase;letter-spacing:.4px;margin-bottom:10px;display:block">Anteprima email</label>
-      <div style="font-family:Arial,sans-serif;font-size:10pt;color:#000;line-height:1.6">
+    <div class="style-81">
+      <label class="style-82">Anteprima email</label>
+      <div class="style-83">
         <p>Gentile [Nome Cognome],</p>
         <p>La preghiamo di firmare il contratto di adesione CNA Roma tramite il link in questa email.</p>
         <p>Cordiali saluti,<br>CNA Roma</p>
-        <p style="margin:16px 0;font-size:11pt;font-weight:bold"><a href="#" style="color:#005CA9">&#x1F517; Clicca qui per visualizzare e firmare il contratto</a></p>
-        <p style="font-size:9pt;color:#999">Se il link non funziona, copia e incolla l'indirizzo nel browser</p>
+        <p class="style-84"><a href="#" class="style-85">&#x1F517; Clicca qui per visualizzare e firmare il contratto</a></p>
+        <p class="style-86">Se il link non funziona, copia e incolla l'indirizzo nel browser</p>
       </div>
-      <hr style="border:none;border-top:1px solid var(--brd);margin:14px 0">
-      <div style="text-align:left">
-        <img src="https://festivaldellelibrerie.it/wp-content/uploads/2024/11/logo-cna-colore.svg" alt="CNA Roma" style="height:45px;width:auto;margin-bottom:8px;display:block">
-        <div style="font-family:Arial,sans-serif;font-size:10pt;color:#000">
-        <strong style="color:#005CA9">CNA Roma</strong><br>
-        <span style="font-size:9pt">Via Cristoforo Colombo 283A &ndash; 00147 &ndash; Roma<br>
-        Tel: 06/570151 | Mail: <a href="mailto:info@cnaroma.it" style="color:#005CA9">info@cnaroma.it</a> | <a href="http://cnaroma.it" style="color:#005CA9">cnaroma.it</a></span>
+      <hr class="style-87">
+      <div class="style-88">
+        <img src="https://festivaldellelibrerie.it/wp-content/uploads/2024/11/logo-cna-colore.svg" alt="CNA Roma" class="style-89">
+        <div class="style-90">
+        <strong class="style-91">CNA Roma</strong><br>
+        <span class="style-92">Via Cristoforo Colombo 283A &ndash; 00147 &ndash; Roma<br>
+        Tel: 06/570151 | Mail: <a href="mailto:info@cnaroma.it" class="style-93">info@cnaroma.it</a> | <a href="http://cnaroma.it" class="style-94">cnaroma.it</a></span>
         </div>
       </div>
     </div>
-    <div style="background:#fff3cd;border:2px solid #ffc107;border-radius:8px;padding:14px;margin-top:14px">
-      <p style="font-size:14px;font-weight:700;color:#856404;margin:0 0 8px 0;display:flex;align-items:center;gap:6px">
-        <span style="font-size:18px">⚠️</span> IMPORTANTE: Come formattare l'email
+    <div class="style-95">
+      <p class="style-96">
+        <span class="style-97">⚠️</span> IMPORTANTE: Come formattare l'email
       </p>
-      <p style="font-size:13px;color:#856404;margin:0;line-height:1.6">
+      <p class="style-98">
         <strong>Il corpo della mail con firma HTML viene copiato negli appunti.</strong><br>
-        Dopo l'apertura del client di posta, <strong style="background:#ffc107;padding:2px 6px;border-radius:4px;color:#000">incolla (Ctrl+V o Cmd+V)</strong> per avere la formattazione completa con logo e link cliccabile.
+        Dopo l'apertura del client di posta, <strong class="style-99">incolla (Ctrl+V o Cmd+V)</strong> per avere la formattazione completa con logo e link cliccabile.
       </p>
     </div>
   </div>
   <div class="modal-footer">
     <button class="btn btn-outline" onclick="closeModal('modal-email')">Annulla</button>
-    <a id="mailto-link" href="#" style="display:none"></a>
-    <button class="btn" onclick="sendViaWhatsApp()" style="background:#25D366;color:#fff;display:flex;align-items:center;gap:8px">
+    <a id="mailto-link" href="#" class="style-100"></a>
+    <button class="btn" onclick="sendViaWhatsApp()" class="style-101">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
         <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
       </svg>
@@ -482,30 +484,30 @@ body.dark-mode .contract-item{background:#161b22;border-color:#30363d}
 <div class="modal-overlay" id="modal-profile"><div class="modal">
   <div class="modal-header"><h2>&#x1F464; Il mio profilo</h2><button class="close-btn" onclick="closeModal('modal-profile')">&times;</button></div>
   <div class="modal-body">
-    <div class="form-group" style="margin-bottom:14px">
+    <div class="form-group" class="style-102">
       <label>Immagine profilo</label>
-      <div style="display:flex;align-items:center;gap:12px;margin-top:8px">
-        <img id="profile-foto-preview" src="" alt="Foto profilo" style="width:80px;height:80px;border-radius:50%;object-fit:cover;border:2px solid var(--brd);background:#f5f5f5;display:none">
-        <div id="profile-foto-placeholder" style="width:80px;height:80px;border-radius:50%;background:#e0e0e0;display:flex;align-items:center;justify-content:center;font-size:32px;color:#999">👤</div>
+      <div class="style-103">
+        <img id="profile-foto-preview" src="" alt="Foto profilo" class="style-104">
+        <div id="profile-foto-placeholder" class="style-105">👤</div>
         <div>
-          <input type="file" id="profile-foto-input" accept="image/*" style="display:none" onchange="handleProfileImageUpload(this)" required>
+          <input type="file" id="profile-foto-input" accept="image/*" class="style-106" onchange="handleProfileImageUpload(this)" required>
           <button class="btn btn-sm btn-outline" onclick="document.getElementById('profile-foto-input').click()">Carica foto</button>
-          <button class="btn btn-sm btn-outline" onclick="removeProfileImage()" style="margin-left:4px">Rimuovi</button>
-          <p style="font-size:11px;color:var(--txt2);margin-top:6px">Max 5MB, ridimensionata a 128x128px</p>
+          <button class="btn btn-sm btn-outline" onclick="removeProfileImage()" class="style-107">Rimuovi</button>
+          <p class="style-108">Max 5MB, ridimensionata a 128x128px</p>
         </div>
       </div>
     </div>
-    <div class="form-group" style="margin-bottom:14px"><label>Nome</label><input type="text" id="profile-nome" required></div>
-    <div class="form-group" style="margin-bottom:14px"><label>Cognome</label><input type="text" id="profile-cognome" required></div>
-    <div class="form-group" style="margin-bottom:14px"><label>Email</label><input type="text" id="profile-email" readonly style="background:var(--input-bg);opacity:0.7;color:#666" required></div>
-    <div class="form-group" style="margin-bottom:14px"><label>Ruolo</label><input type="text" id="profile-ruolo" readonly style="background:var(--input-bg);opacity:0.7;color:#666" required></div>
-    <hr style="border:none;border-top:1px solid var(--brd);margin:20px 0">
-    <h3 style="font-size:14px;font-weight:600;color:var(--cna-dk);margin-bottom:14px">Cambia password</h3>
-    <div class="form-group" style="margin-bottom:14px"><label>Password attuale</label><input type="password" id="profile-pw-old" autocomplete="current-password" required></div>
-    <div class="form-group" style="margin-bottom:14px"><label>Nuova password</label><input type="password" id="profile-pw-new" autocomplete="new-password" required></div>
-    <div class="form-group" style="margin-bottom:14px"><label>Conferma nuova password</label><input type="password" id="profile-pw-confirm" autocomplete="new-password" required></div>
-    <div id="profile-error" style="color:var(--err);font-size:13px;display:none;margin-bottom:10px"></div>
-    <div id="profile-success" style="color:var(--ok);font-size:13px;display:none;margin-bottom:10px"></div>
+    <div class="form-group" class="style-109"><label>Nome</label><input type="text" id="profile-nome" required></div>
+    <div class="form-group" class="style-110"><label>Cognome</label><input type="text" id="profile-cognome" required></div>
+    <div class="form-group" class="style-111"><label>Email</label><input type="text" id="profile-email" readonly class="style-112" required></div>
+    <div class="form-group" class="style-113"><label>Ruolo</label><input type="text" id="profile-ruolo" readonly class="style-114" required></div>
+    <hr class="style-115">
+    <h3 class="style-116">Cambia password</h3>
+    <div class="form-group" class="style-117"><label>Password attuale</label><input type="password" id="profile-pw-old" autocomplete="current-password" required></div>
+    <div class="form-group" class="style-118"><label>Nuova password</label><input type="password" id="profile-pw-new" autocomplete="new-password" required></div>
+    <div class="form-group" class="style-119"><label>Conferma nuova password</label><input type="password" id="profile-pw-confirm" autocomplete="new-password" required></div>
+    <div id="profile-error" class="style-120"></div>
+    <div id="profile-success" class="style-121"></div>
   </div>
   <div class="modal-footer">
     <button class="btn btn-outline" onclick="closeModal('modal-profile')">Chiudi</button>
@@ -514,9 +516,9 @@ body.dark-mode .contract-item{background:#161b22;border-color:#30363d}
 </div></div>
 
 <!-- MODAL: Changelog -->
-<div class="modal-overlay" id="modal-changelog"><div class="modal" style="max-width:800px">
+<div class="modal-overlay" id="modal-changelog"><div class="modal" class="style-122">
   <div class="modal-header"><h2>&#x1F4CB; Note di versione</h2><button class="close-btn" onclick="closeModal('modal-changelog')">&times;</button></div>
-  <div class="modal-body" style="max-height:70vh;overflow-y:auto">
+  <div class="modal-body" class="style-123">
     
     <div class="changelog-entry">
       <h3>v8.1 - 1 Maggio 2026 - VERSIONE STABILE 🎯</h3>
@@ -913,7 +915,7 @@ body.dark-mode .contract-item{background:#161b22;border-color:#30363d}
 
 <!-- FULLSCREEN SIGNATURE OVERLAY -->
 <div class="sig-fullscreen" id="sig-fullscreen">
-  <div class="sig-fullscreen-header"><h3>✍️ Firma qui</h3><button class="close-btn" onclick="closeSigFullscreen()" style="color:#fff;font-size:28px">&times;</button></div>
+  <div class="sig-fullscreen-header"><h3>✍️ Firma qui</h3><button class="close-btn" onclick="closeSigFullscreen()" class="style-124">&times;</button></div>
   <div class="sig-direction-hint">📱 Gira il telefono in ORIZZONTALE per avere piu spazio &nbsp;|&nbsp; ⬅️ Firma da sinistra verso destra ➡️</div>
   <div class="sig-fullscreen-body"><canvas id="sig-fullscreen-canvas"></canvas></div>
   <div class="sig-fullscreen-footer">
@@ -1059,7 +1061,7 @@ async function loadConnectionLogs(){
     }
     
     if(!logs||logs.length===0){
-      tbody.innerHTML='<tr><td colspan="2" style="padding:20px;text-align:center;color:var(--txt2)">Nessun log trovato</td></tr>';
+      tbody.innerHTML='<tr><td colspan="2" class="style-125">Nessun log trovato</td></tr>';
       return;
     }
     
@@ -1067,15 +1069,15 @@ async function loadConnectionLogs(){
       const timestamp=new Date(log.created_at).toLocaleString('it-IT');
       const userName=log.cna_users?(log.cna_users.nome+' '+log.cna_users.cognome):'Sconosciuto';
       
-      return `<tr style="border-bottom:1px solid var(--brd)">
-        <td style="padding:10px;font-size:12px">${timestamp}</td>
-        <td style="padding:10px;font-weight:600">${userName}</td>
+      return `<tr class="style-126">
+        <td class="style-127">${timestamp}</td>
+        <td class="style-128">${userName}</td>
       </tr>`;
     }).join('');
   }catch(e){
     console.error('Errore caricamento log:',e);
     const tbody=document.getElementById('logs-table-body');
-    if(tbody)tbody.innerHTML='<tr><td colspan="2" style="padding:20px;text-align:center;color:var(--err)">Errore: '+e.message+'</td></tr>';
+    if(tbody)tbody.innerHTML='<tr><td colspan="2" class="style-129">Errore: '+e.message+'</td></tr>';
   }
 }
 
@@ -1241,7 +1243,7 @@ function updateHeaderAvatar(){
   const isMobile=window.innerWidth<768;
   const displayName=isMobile?(loggedUser?.nome||''):((loggedUser?.nome||'')+' '+(loggedUser?.cognome||''));
   if(loggedUser&&loggedUser.foto_profilo_base64){
-    userEl.innerHTML=`<img src="${loggedUser.foto_profilo_base64}" alt="Profilo" style="width:32px;height:32px;border-radius:50%;object-fit:cover;vertical-align:middle;margin-right:6px">${displayName}`;
+    userEl.innerHTML=`<img src="${loggedUser.foto_profilo_base64}" alt="Profilo" class="style-130">${displayName}`;
   }else{
     userEl.textContent=displayName;
   }
@@ -1286,72 +1288,72 @@ async function checkSigningMode(){
   const appC=document.getElementById('app-container');if(appC)appC.style.display='none';
   // Create firma page container
   const firmaDiv=document.createElement('div');firmaDiv.className='firma-page';
-  firmaDiv.innerHTML=`<div class="firma-header"><img src="https://festivaldellelibrerie.it/wp-content/uploads/2024/11/logo-cna-colore.svg" alt="CNA"><h1>CNA Roma</h1><p>Firma Contratto di Adesione</p></div><div class="firma-content"><p style="text-align:center;padding:40px;color:var(--txt2)">Caricamento contratto...</p></div>`;
+  firmaDiv.innerHTML=`<div class="firma-header"><img src="https://festivaldellelibrerie.it/wp-content/uploads/2024/11/logo-cna-colore.svg" alt="CNA"><h1>CNA Roma</h1><p>Firma Contratto di Adesione</p></div><div class="firma-content"><p class="style-131">Caricamento contratto...</p></div>`;
   document.body.insertBefore(firmaDiv,document.getElementById('sig-fullscreen'));
   try{
     const c=await sb(`contratti?token=eq.${token}&select=*`);
-    if(!c||!c.length){document.querySelector('.firma-content').innerHTML='<div class="form-card"><div class="form-card-body" style="text-align:center;padding:60px"><h2 style="color:var(--err)">Contratto non trovato</h2><p>Il link non e valido.</p></div></div>';return true;}
+    if(!c||!c.length){document.querySelector('.firma-content').innerHTML='<div class="form-card"><div class="form-card-body" class="style-132"><h2 class="style-133">Contratto non trovato</h2><p>Il link non e valido.</p></div></div>';return true;}
     const ct=c[0];
-    if(ct.stato==='firmato'){document.querySelector('.firma-content').innerHTML=`<div class="form-card"><div class="form-card-body" style="text-align:center;padding:60px"><div style="font-size:64px">&#x2705;</div><h2 style="color:var(--ok);margin:12px 0">Contratto gia firmato</h2><p>Firmato il ${new Date(ct.firmato_at).toLocaleDateString('it-IT')}</p></div></div>`;return true;}
+    if(ct.stato==='firmato'){document.querySelector('.firma-content').innerHTML=`<div class="form-card"><div class="form-card-body" class="style-134"><div class="style-135">&#x2705;</div><h2 class="style-136">Contratto gia firmato</h2><p>Firmato il ${new Date(ct.firmato_at).toLocaleDateString('it-IT')}</p></div></div>`;return true;}
     showSigningUI(ct,token);
-  }catch(e){document.querySelector('.firma-content').innerHTML=`<div class="form-card"><div class="form-card-body" style="text-align:center;padding:40px"><h2 style="color:var(--err)">Errore</h2><p>${e.message}</p></div></div>`;}
+  }catch(e){document.querySelector('.firma-content').innerHTML=`<div class="form-card"><div class="form-card-body" class="style-137"><h2 class="style-138">Errore</h2><p>${e.message}</p></div></div>`;}
   return true;
 }
 
 function showSigningUI(ct,token){
   document.querySelector('.firma-content').innerHTML=`
     <div class="form-card"><div class="form-card-body">
-      <div style="background:var(--cna-50);border-radius:var(--r);padding:16px;margin-bottom:20px">
-        <h3 style="font-size:16px;margin-bottom:8px">Riepilogo Contratto</h3>
+      <div class="style-139">
+        <h3 class="style-140">Riepilogo Contratto</h3>
         <p><strong>Intestatario:</strong> ${ct.cognome||''} ${ct.nome||''}</p>
         <p><strong>Ragione Sociale:</strong> ${ct.ragione_sociale||'N/D'}</p>
         <p><strong>P.IVA:</strong> ${ct.partita_iva||'N/D'}</p>
         <p><strong>C.F.:</strong> ${ct.codice_fiscale||'N/D'}</p>
       </div>
 
-      <div class="form-group" style="margin-bottom:20px">
-        <button class="btn btn-outline" onclick="previewContractPDF('${token}')" style="width:100%">&#x1F4C4; Visualizza contratto PDF</button>
+      <div class="form-group" class="style-141">
+        <button class="btn btn-outline" onclick="previewContractPDF('${token}')" class="style-142">&#x1F4C4; Visualizza contratto PDF</button>
       </div>
 
       <!-- PRIVACY / CONSENSI -->
-      <div class="form-card" style="margin-bottom:20px;border:2px solid var(--cna)">
+      <div class="form-card" class="style-143">
         <div class="form-card-header"><span>&#x1F512;</span><h3>Informativa Privacy - Consensi obbligatori</h3></div>
-        <div class="form-card-body" style="padding:16px">
-          <p style="font-size:12px;color:var(--txt2);line-height:1.7;margin-bottom:16px">
+        <div class="form-card-body" class="style-144">
+          <p class="style-145">
             Ai sensi del Regolamento UE 2016/679 (GDPR), art. 13 e 14, il Titolare del trattamento e CNA - Confederazione Nazionale dell'Artigianato e della Piccola e Media Impresa, P.zza Mariano Armellini 9A, 00162 Roma. RPD: rpd@cna.it. I dati sono raccolti per dare corso all'adesione, gestire gli associati, fornire servizi di consulenza e assistenza. Base giuridica: consenso dell'interessato, obbligo contrattuale, obbligo legale, legittimo interesse. Conservazione: max 10 anni dalla revoca. Diritti: accesso, rettifica, cancellazione, limitazione, opposizione, revoca consenso, reclamo all'Autorita di controllo.
           </p>
 
-          <div style="background:var(--card-bg);border:1px solid var(--brd);border-radius:var(--r);padding:12px;margin-bottom:10px">
-            <label style="display:flex;align-items:flex-start;gap:10px;cursor:pointer;font-size:13px">
-              <input type="checkbox" id="privacy_a" style="width:20px;height:20px;accent-color:var(--cna);flex-shrink:0;margin-top:2px" required>
+          <div class="style-146">
+            <label class="style-147">
+              <input type="checkbox" id="privacy_a" class="style-148" required>
               <span><strong>a)</strong> Acconsento al trattamento dei miei dati da parte dell'Associazione per tutte le finalita e gli scopi previsti dallo Statuto, dal Regolamento Nazionale, dal Regolamento CNA Privacy e dal Codice Etico.</span>
             </label>
           </div>
 
-          <div style="background:var(--card-bg);border:1px solid var(--brd);border-radius:var(--r);padding:12px;margin-bottom:10px">
-            <label style="display:flex;align-items:flex-start;gap:10px;cursor:pointer;font-size:13px">
-              <input type="checkbox" id="privacy_b" style="width:20px;height:20px;accent-color:var(--cna);flex-shrink:0;margin-top:2px" required>
+          <div class="style-149">
+            <label class="style-150">
+              <input type="checkbox" id="privacy_b" class="style-151" required>
               <span><strong>b)</strong> Acconsento al trattamento dei miei dati ai fini dell'attuazione delle Convenzioni con INPS e INAIL per la riscossione dei contributi associativi.</span>
             </label>
           </div>
 
-          <div style="background:var(--card-bg);border:1px solid var(--brd);border-radius:var(--r);padding:12px;margin-bottom:10px">
-            <label style="display:flex;align-items:flex-start;gap:10px;cursor:pointer;font-size:13px">
-              <input type="checkbox" id="privacy_c" style="width:20px;height:20px;accent-color:var(--cna);flex-shrink:0;margin-top:2px" required>
+          <div class="style-152">
+            <label class="style-153">
+              <input type="checkbox" id="privacy_c" class="style-154" required>
               <span>Acconsento al trattamento di categorie particolari di dati (art. 9 GDPR) ove necessario per dar corso allo Statuto e ai regolamenti associativi.</span>
             </label>
           </div>
 
-          <div style="background:var(--card-bg);border:1px solid var(--brd);border-radius:var(--r);padding:12px;margin-bottom:10px">
-            <label style="display:flex;align-items:flex-start;gap:10px;cursor:pointer;font-size:13px">
-              <input type="checkbox" id="privacy_d" style="width:20px;height:20px;accent-color:var(--cna);flex-shrink:0;margin-top:2px" required>
+          <div class="style-155">
+            <label class="style-156">
+              <input type="checkbox" id="privacy_d" class="style-157" required>
               <span>Acconsento alla comunicazione dei miei dati al Sistema Nazionale CNA ai fini di ricerche di mercato e invio di materiale informativo e promozionale.</span>
             </label>
           </div>
 
-          <div style="background:var(--card-bg);border:1px solid var(--brd);border-radius:var(--r);padding:12px;margin-bottom:4px">
-            <label style="display:flex;align-items:flex-start;gap:10px;cursor:pointer;font-size:13px">
-              <input type="checkbox" id="privacy_e" style="width:20px;height:20px;accent-color:var(--cna);flex-shrink:0;margin-top:2px" required>
+          <div class="style-158">
+            <label class="style-159">
+              <input type="checkbox" id="privacy_e" class="style-160" required>
               <span>Acconsento alla comunicazione/diffusione dei miei dati sui siti web CNA e sui Social Network riferibili alla stessa.</span>
             </label>
           </div>
@@ -1359,64 +1361,64 @@ function showSigningUI(ct,token){
       </div>
 
       <!-- DOCUMENTO DI IDENTITA - FRONTE E RETRO -->
-      <div class="form-card" style="margin-bottom:20px;border:2px solid var(--cna)">
+      <div class="form-card" class="style-161">
         <div class="form-card-header"><span>&#x1F4F7;</span><h3>Documento di Identita (obbligatorio)</h3></div>
-        <div class="form-card-body" style="padding:16px">
-          <p style="font-size:12px;color:var(--txt2);margin-bottom:14px">Carica fronte e retro del documento di identita in corso di validita (CI, Passaporto, Patente).</p>
+        <div class="form-card-body" class="style-162">
+          <p class="style-163">Carica fronte e retro del documento di identita in corso di validita (CI, Passaporto, Patente).</p>
           
           <!-- FRONTE -->
-          <div style="border:2px dashed var(--brd);border-radius:var(--r);padding:14px;margin-bottom:14px;background:var(--input-bg)">
-            <p style="font-weight:700;font-size:13px;margin-bottom:10px;color:var(--cna-dk)">📄 FRONTE documento</p>
-            <div style="display:flex;gap:10px;flex-wrap:wrap">
-              <label class="btn btn-outline" style="cursor:pointer;flex:1;justify-content:center;min-width:130px;font-size:13px">
+          <div class="style-164">
+            <p class="style-165">📄 FRONTE documento</p>
+            <div class="style-166">
+              <label class="btn btn-outline" class="style-167">
                 &#x1F4C1; Scegli file
-                <input type="file" id="doc-fronte-file" accept="image/*,.pdf" style="display:none" onchange="handleDocUploadSide(this,'fronte')">
+                <input type="file" id="doc-fronte-file" accept="image/*,.pdf" class="style-168" onchange="handleDocUploadSide(this,'fronte')">
               </label>
-              <label class="btn btn-primary" style="cursor:pointer;flex:1;justify-content:center;min-width:130px;font-size:13px">
+              <label class="btn btn-primary" class="style-169">
                 &#x1F4F7; Scatta foto
-                <input type="file" id="doc-fronte-camera" accept="image/*" capture="environment" style="display:none" onchange="handleDocUploadSide(this,'fronte')">
+                <input type="file" id="doc-fronte-camera" accept="image/*" capture="environment" class="style-170" onchange="handleDocUploadSide(this,'fronte')">
               </label>
             </div>
-            <div id="doc-fronte-preview" style="display:none;text-align:center;margin-top:10px">
-              <p style="font-size:11px;color:var(--ok);font-weight:600;margin-bottom:6px">&#x2705; Fronte caricato</p>
-              <img id="doc-fronte-img" style="max-width:100%;max-height:160px;border:1px solid var(--brd);border-radius:var(--r)">
+            <div id="doc-fronte-preview" class="style-171">
+              <p class="style-172">&#x2705; Fronte caricato</p>
+              <img id="doc-fronte-img" class="style-173">
             </div>
           </div>
           
           <!-- RETRO -->
-          <div style="border:2px dashed var(--brd);border-radius:var(--r);padding:14px;background:var(--input-bg)">
-            <p style="font-weight:700;font-size:13px;margin-bottom:10px;color:var(--cna-dk)">📄 RETRO documento</p>
-            <div style="display:flex;gap:10px;flex-wrap:wrap">
-              <label class="btn btn-outline" style="cursor:pointer;flex:1;justify-content:center;min-width:130px;font-size:13px">
+          <div class="style-174">
+            <p class="style-175">📄 RETRO documento</p>
+            <div class="style-176">
+              <label class="btn btn-outline" class="style-177">
                 &#x1F4C1; Scegli file
-                <input type="file" id="doc-retro-file" accept="image/*,.pdf" style="display:none" onchange="handleDocUploadSide(this,'retro')">
+                <input type="file" id="doc-retro-file" accept="image/*,.pdf" class="style-178" onchange="handleDocUploadSide(this,'retro')">
               </label>
-              <label class="btn btn-primary" style="cursor:pointer;flex:1;justify-content:center;min-width:130px;font-size:13px">
+              <label class="btn btn-primary" class="style-179">
                 &#x1F4F7; Scatta foto
-                <input type="file" id="doc-retro-camera" accept="image/*" capture="environment" style="display:none" onchange="handleDocUploadSide(this,'retro')">
+                <input type="file" id="doc-retro-camera" accept="image/*" capture="environment" class="style-180" onchange="handleDocUploadSide(this,'retro')">
               </label>
             </div>
-            <div id="doc-retro-preview" style="display:none;text-align:center;margin-top:10px">
-              <p style="font-size:11px;color:var(--ok);font-weight:600;margin-bottom:6px">&#x2705; Retro caricato</p>
-              <img id="doc-retro-img" style="max-width:100%;max-height:160px;border:1px solid var(--brd);border-radius:var(--r)">
+            <div id="doc-retro-preview" class="style-181">
+              <p class="style-182">&#x2705; Retro caricato</p>
+              <img id="doc-retro-img" class="style-183">
             </div>
           </div>
         </div>
       </div>
 
       <!-- FIRMA -->
-      <div class="form-group" style="margin-bottom:20px">
-        <label style="font-size:14px;font-weight:700;color:var(--cna-dk)">FIRMA</label>
-        <p style="font-size:12px;color:var(--txt2);margin-bottom:10px">Tocca il pulsante per aprire il pannello firma a tutto schermo.<br><strong>Apponi la firma leggendo il testo da sinistra verso destra.</strong></p>
-        <button class="btn btn-primary" onclick="openFullscreenSig('sig_cliente_target','${token}')" style="width:100%;padding:20px;font-size:18px" id="btn-open-sig">&#x270D;&#xFE0F; Apri pannello firma</button>
-        <canvas id="sig_cliente_target" style="display:none"></canvas>
+      <div class="form-group" class="style-184">
+        <label class="style-185">FIRMA</label>
+        <p class="style-186">Tocca il pulsante per aprire il pannello firma a tutto schermo.<br><strong>Apponi la firma leggendo il testo da sinistra verso destra.</strong></p>
+        <button class="btn btn-primary" onclick="openFullscreenSig('sig_cliente_target','${token}')" class="style-187" id="btn-open-sig">&#x270D;&#xFE0F; Apri pannello firma</button>
+        <canvas id="sig_cliente_target" class="style-188"></canvas>
       </div>
-      <div id="sig-preview" style="display:none;margin-bottom:20px;text-align:center">
-        <p style="font-size:12px;color:var(--ok);font-weight:600;margin-bottom:8px">Anteprima firma:</p>
-        <img id="sig-preview-img" style="max-width:100%;height:80px;border:1px solid var(--brd);border-radius:var(--r)">
+      <div id="sig-preview" class="style-189">
+        <p class="style-190">Anteprima firma:</p>
+        <img id="sig-preview-img" class="style-191">
       </div>
-      <button id="submit-sig-btn" class="btn btn-success" onclick="submitClientSignature('${token}')" style="width:100%;padding:16px;font-size:16px;display:none">Conferma e Invia Firma</button>
-      <p style="font-size:11px;color:var(--txt2);text-align:center;margin-top:16px">Firmando accetti i termini del contratto di adesione CNA Roma. IP e data verranno registrati.</p>
+      <button id="submit-sig-btn" class="btn btn-success" onclick="submitClientSignature('${token}')" class="style-192">Conferma e Invia Firma</button>
+      <p class="style-193">Firmando accetti i termini del contratto di adesione CNA Roma. IP e data verranno registrati.</p>
     </div></div>`;
 }
 
@@ -1615,7 +1617,7 @@ async function submitSignature(token,consents){
       await sb(`contratti?token=eq.${token}`,'PATCH',{documento_retro_base64:consents.documento_retro_base64});
     }
     
-    document.querySelector('.firma-content').innerHTML=`<div class="form-card"><div class="form-card-body" style="text-align:center;padding:60px"><div style="font-size:64px">&#x2705;</div><h2 style="color:var(--ok);margin:12px 0">Contratto Firmato!</h2><p>Il contratto e stato firmato con successo.</p><p style="margin-top:16px;font-size:13px;color:var(--txt2)">Scarica la tua copia del contratto firmato:</p><button class="btn btn-success" onclick="downloadClientPDF('${token}')" style="margin-top:12px;padding:14px 28px;font-size:15px">&#x1F4C4; Scarica PDF firmato</button></div></div>`;
+    document.querySelector('.firma-content').innerHTML=`<div class="form-card"><div class="form-card-body" class="style-194"><div class="style-195">&#x2705;</div><h2 class="style-196">Contratto Firmato!</h2><p>Il contratto e stato firmato con successo.</p><p class="style-197">Scarica la tua copia del contratto firmato:</p><button class="btn btn-success" onclick="downloadClientPDF('${token}')" class="style-198">&#x1F4C4; Scarica PDF firmato</button></div></div>`;
   }catch(e){alert('Errore: '+e.message);}
 }
 
@@ -1774,14 +1776,14 @@ async function confirmSend(){
     const subj='Completa l\'adesione alla CNA di Roma';
     
     // HTML email body
-    const htmlBody=`<div style="font-family:Arial,sans-serif;font-size:10pt;color:#000;line-height:1.6">
+    const htmlBody=`<div class="style-199">
 <p>Gentile ${cognome} ${nome},</p>
 <p>La preghiamo di firmare il contratto di adesione CNA Roma tramite il link in questa email.</p>
 <p>Cordiali saluti,<br>CNA Roma</p>
-<p style="margin:20px 0;font-size:12pt"><a href="${url}" style="color:#005CA9;text-decoration:underline;font-weight:bold">🔗 Clicca qui per visualizzare e firmare il contratto</a></p>
-<p style="font-size:9pt;color:#666">Se il link non funziona, copia e incolla questo indirizzo nel browser:<br><a href="${url}" style="color:#005CA9">${url}</a></p>
-<br><img src="https://festivaldellelibrerie.it/wp-content/uploads/2024/11/logo-cna-colore.svg" alt="CNA Roma" style="height:45px;width:auto;display:block;margin-bottom:8px">
-<div style="font-size:10pt"><strong style="color:#005CA9">CNA Roma</strong><br><span style="font-size:9pt">Via Cristoforo Colombo 283A – 00147 – Roma<br>Tel: 06/570151 | Mail: <a href="mailto:info@cnaroma.it" style="color:#005CA9">info@cnaroma.it</a> | <a href="http://cnaroma.it" style="color:#005CA9">cnaroma.it</a></span></div></div>`;
+<p class="style-200"><a href="${url}" class="style-201">🔗 Clicca qui per visualizzare e firmare il contratto</a></p>
+<p class="style-202">Se il link non funziona, copia e incolla questo indirizzo nel browser:<br><a href="${url}" class="style-203">${url}</a></p>
+<br><img src="https://festivaldellelibrerie.it/wp-content/uploads/2024/11/logo-cna-colore.svg" alt="CNA Roma" class="style-204">
+<div class="style-205"><strong class="style-206">CNA Roma</strong><br><span class="style-207">Via Cristoforo Colombo 283A – 00147 – Roma<br>Tel: 06/570151 | Mail: <a href="mailto:info@cnaroma.it" class="style-208">info@cnaroma.it</a> | <a href="http://cnaroma.it" class="style-209">cnaroma.it</a></span></div></div>`;
 
     // Plain text for mailto
     const plainBody=`Gentile ${cognome} ${nome},\n\nLa preghiamo di firmare il contratto di adesione CNA Roma tramite il link in questa email.\n\nCordiali saluti,\nCNA Roma\n\n🔗 Clicca qui per visualizzare e firmare il contratto:\n${url}\n\nSe il link non funziona, copia e incolla questo indirizzo nel browser:\n${url}\n\n--\nCNA Roma\nVia Cristoforo Colombo 283A – 00147 – Roma\nTel: 06/570151 | Mail: info@cnaroma.it | cnaroma.it`;
@@ -1938,7 +1940,7 @@ async function viewDoc(id){
     const d=await sb(`contratti?id=eq.${id}&select=documento_foto_base64,documento_foto_tipo,cognome,nome`);
     if(!d||!d[0]||!d[0].documento_foto_base64){showToast('Nessun documento allegato','error');return;}
     const w=window.open('','_blank','width=800,height=600');
-    w.document.write(`<html><head><title>Documento - ${d[0].cognome} ${d[0].nome}</title><style>body{margin:0;display:flex;justify-content:center;align-items:center;min-height:100vh;background:#f5f5f5}</style></head><body><img src="${d[0].documento_foto_base64}" style="max-width:95vw;max-height:95vh;border-radius:8px;box-shadow:0 4px 20px rgba(0,0,0,0.2)">
+    w.document.write(`<html><head><title>Documento - ${d[0].cognome} ${d[0].nome}</title><style>body{margin:0;display:flex;justify-content:center;align-items:center;min-height:100vh;background:#f5f5f5}</style></head><body><img src="${d[0].documento_foto_base64}" class="style-210">
 
 </div>
 
@@ -2010,14 +2012,14 @@ function filterContracts(){
 
 async function loadContracts(){
   const list=document.getElementById('contracts-list');
-  list.innerHTML='<p style="text-align:center;padding:20px;color:var(--txt2)">Caricamento...</p>';
+  list.innerHTML='<p class="style-211">Caricamento...</p>';
   try{
     let query='contratti?select=id,token,stato,cognome,nome,ragione_sociale,email,partita_iva,codice_fiscale,created_at,firmato_at,caricato_gestionale,created_by,tipo_contratto&order=created_at.desc&limit=50';
     if(loggedUser&&loggedUser.ruolo!=='admin'){
       query+='&created_by=eq.'+loggedUser.id;
     }
     const c=await sb(query);
-    if(!c||!c.length){list.innerHTML='<p style="text-align:center;padding:40px;color:var(--txt2)">Nessun contratto</p>';return;}
+    if(!c||!c.length){list.innerHTML='<p class="style-212">Nessun contratto</p>';return;}
     window._contractsData=c;
     // Fetch user names for created_by
     const userIds=[...new Set(c.map(x=>x.created_by).filter(Boolean))];
@@ -2039,18 +2041,18 @@ async function loadContracts(){
       const gestValue=gest?'caricato':'da-caricare';
       const canEdit=(st==='bozza'||st==='inviato'); // Can edit if not yet signed
       return `<div class="contract-item" data-id="${x.id}" data-nome="${(x.cognome||'')+' '+(x.nome||'')+' '+( x.ragione_sociale||'')}" data-email="${x.email||''}" data-tipo="${x.tipo_contratto||'adesione_2025'}" data-anno="${anno}" data-stato="${st}" data-proprietario="${createdByName}" data-gestionale="${gestValue}">
-        <input type="checkbox" class="contract-cb" value="${x.id}" onchange="updateExportBtn()" style="width:16px;height:16px;accent-color:var(--cna);flex-shrink:0">
+        <input type="checkbox" class="contract-cb" value="${x.id}" onchange="updateExportBtn()" class="style-213">
         <div class="contract-info">
           <h4>${x.cognome||''} ${x.nome||''} - ${x.ragione_sociale||'N/D'}</h4>
-          <p>${x.email||''} \u00B7 ${d} \u00B7 <span class="status-badge ${bc}">${bt}</span> \u00B7 <span style="font-size:10px;color:var(--txt2)">Proprietario: ${createdByName}</span></p>
+          <p>${x.email||''} \u00B7 ${d} \u00B7 <span class="status-badge ${bc}">${bt}</span> \u00B7 <span class="style-214">Proprietario: ${createdByName}</span></p>
         </div>
         <div class="contract-actions">
-          ${st==='firmato'?`<span style="padding:3px 8px;border-radius:10px;font-size:10px;font-weight:600;${gestClass};white-space:nowrap">${gestText}</span><select onchange="toggleGestionale('${x.id}',this.value==='1')" style="font-size:10px;padding:2px 4px;border:1px solid var(--brd);border-radius:4px"><option value="0" ${!gest?'selected':''}>Da caricare</option><option value="1" ${gest?'selected':''}>Caricato</option></select>`:''}
+          ${st==='firmato'?`<span class="style-215">${gestText}</span><select onchange="toggleGestionale('${x.id}',this.value==='1')" class="style-216"><option value="0" ${!gest?'selected':''}>Da caricare</option><option value="1" ${gest?'selected':''}>Caricato</option></select>`:''}
           ${canEdit?`<button class="btn btn-sm btn-outline" onclick="editContract('${x.id}')" title="Modifica contratto">&#x270F; Modifica</button>`:''}
-          ${st==='bozza'?`<button class="btn btn-sm btn-warning" onclick="sendFromList('${x.id}','${x.token}','${x.email||''}')">Invia</button><button class="btn btn-sm" onclick="sendWhatsAppFromList('${x.id}')" style="background:#25D366;color:#fff;font-size:10px" title="Invia su WhatsApp">&#x1F4AC; WA</button>`:''}
-          ${st==='inviato'?`<button class="btn btn-sm btn-warning" onclick="sendFromList('${x.id}','${x.token}','${x.email||''}')">Invia di nuovo</button><button class="btn btn-sm" onclick="sendWhatsAppFromList('${x.id}')" style="background:#25D366;color:#fff;font-size:10px" title="Invia su WhatsApp">&#x1F4AC; WA</button>`:''}
+          ${st==='bozza'?`<button class="btn btn-sm btn-warning" onclick="sendFromList('${x.id}','${x.token}','${x.email||''}')">Invia</button><button class="btn btn-sm" onclick="sendWhatsAppFromList('${x.id}')" class="style-217" title="Invia su WhatsApp">&#x1F4AC; WA</button>`:''}
+          ${st==='inviato'?`<button class="btn btn-sm btn-warning" onclick="sendFromList('${x.id}','${x.token}','${x.email||''}')">Invia di nuovo</button><button class="btn btn-sm" onclick="sendWhatsAppFromList('${x.id}')" class="style-218" title="Invia su WhatsApp">&#x1F4AC; WA</button>`:''}
           ${st==='firmato'?`<button class="btn btn-sm btn-success" onclick="dlSigned('${x.id}')">PDF</button>`:''}
-          ${st==='firmato'?`<button class="btn btn-sm" onclick="resetFirma('${x.id}')" style="background:#dc3545;color:#fff;font-size:10px" title="Annulla firma e reinvia">&#x1F504; Reset</button>`:''}
+          ${st==='firmato'?`<button class="btn btn-sm" onclick="resetFirma('${x.id}')" class="style-219" title="Annulla firma e reinvia">&#x1F504; Reset</button>`:''}
           ${hasDoc?`<button class="btn btn-sm btn-outline" onclick="viewDoc('${x.id}')">Doc</button>`:''}
           <button class="btn btn-sm btn-outline" onclick="cpLink('${url}')" title="Copia link">Link</button>
         </div>
@@ -2063,7 +2065,7 @@ async function loadContracts(){
     filterProp.innerHTML='<option value="">Tutti i proprietari</option>'+proprietari.map(p=>`<option value="${p}">${p}</option>`).join('');
     
     updateStats(); // Update footer statistics
-  }catch(e){list.innerHTML='<p style="color:var(--err);text-align:center;padding:20px">'+e.message+'</p>';}
+  }catch(e){list.innerHTML='<p class="style-220">'+e.message+'</p>';}
 }
 
 function toggleSelectAll(el){
@@ -2306,7 +2308,7 @@ function showLocationSuggestions(data,input,type){
   
   data.forEach((item,idx)=>{
     const div=document.createElement('div');
-    div.innerHTML=`<div style="font-weight:600;font-size:13px">${item.address.name||item.address.city||item.address.town||item.address.village||''}</div><div style="font-size:11px;color:#666">${item.display_place||''}</div>`;
+    div.innerHTML=`<div class="style-221">${item.address.name||item.address.city||item.address.town||item.address.village||''}</div><div class="style-222">${item.display_place||''}</div>`;
     div.style.cssText='padding:10px 12px;cursor:pointer;border-bottom:1px solid #eee;transition:background 0.2s';
     div.onmouseover=()=>div.style.background='#f5f5f5';
     div.onmouseout=()=>div.style.background='#fff';
@@ -2408,32 +2410,32 @@ document.addEventListener('DOMContentLoaded',async()=>{
 </div>
 
 <!-- MODAL LOG CONNESSIONI -->
-<div id="modal-logs" class="modal-overlay" style="display:none" onclick="if(event.target.id==='modal-logs')closeLogsModal()">
-  <div class="modal" style="max-width:800px;max-height:85vh;display:flex;flex-direction:column">
+<div id="modal-logs" class="modal-overlay" class="style-223" onclick="if(event.target.id==='modal-logs')closeLogsModal()">
+  <div class="modal" class="style-224">
     <div class="modal-header"><h2>📜 Log Connessioni</h2><button class="close-btn" onclick="closeLogsModal()">&times;</button></div>
-    <div style="padding:12px 20px;display:flex;gap:10px;align-items:center;border-bottom:1px solid var(--brd);flex-wrap:wrap">
-      <select id="log-filter-action" onchange="loadConnectionLogs()" style="padding:6px 10px;border-radius:var(--r);border:1px solid var(--brd);background:var(--input-bg);color:var(--txt);font-size:13px">
+    <div class="style-225">
+      <select id="log-filter-action" onchange="loadConnectionLogs()" class="style-226">
         <option value="">Tutte le azioni</option>
         <option value="login">🔓 Login</option>
         <option value="logout">🔒 Logout</option>
       </select>
-      <select id="log-limit" onchange="loadConnectionLogs()" style="padding:6px 10px;border-radius:var(--r);border:1px solid var(--brd);background:var(--input-bg);color:var(--txt);font-size:13px">
+      <select id="log-limit" onchange="loadConnectionLogs()" class="style-227">
         <option value="25">25 risultati</option>
         <option value="50" selected>50 risultati</option>
         <option value="100">100 risultati</option>
       </select>
-      <button onclick="deleteAllLogs()" style="margin-left:auto;padding:6px 14px;border-radius:var(--r);border:1px solid #dc3545;background:#dc3545;color:#fff;font-size:12px;cursor:pointer;font-weight:600">🗑️ Elimina Log</button>
+      <button onclick="deleteAllLogs()" class="style-228">🗑️ Elimina Log</button>
     </div>
-    <div class="modal-body" style="flex:1;overflow-y:auto;padding:0">
-      <table style="width:100%;border-collapse:collapse;font-size:13px">
-        <thead style="position:sticky;top:0;background:var(--card-bg);z-index:1">
-          <tr style="border-bottom:2px solid var(--brd)">
-            <th style="padding:10px;text-align:left">Data/Ora</th>
-            <th style="padding:10px;text-align:left">Utente</th>
+    <div class="modal-body" class="style-229">
+      <table class="style-230">
+        <thead class="style-231">
+          <tr class="style-232">
+            <th class="style-233">Data/Ora</th>
+            <th class="style-234">Utente</th>
           </tr>
         </thead>
         <tbody id="logs-table-body">
-          <tr><td colspan="2" style="padding:30px;text-align:center;color:var(--txt2)">Caricamento...</td></tr>
+          <tr><td colspan="2" class="style-235">Caricamento...</td></tr>
         </tbody>
       </table>
     </div>
