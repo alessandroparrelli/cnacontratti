@@ -293,7 +293,6 @@ body.dark-mode .contract-item{background:#161b22;border-color:#30363d}
 <nav class="tabs-bar" id="tabs-nav" style="display:none"><div class="tabs-inner">
   <button class="tab-btn" onclick="switchTab(0)" data-tab="0">&#x1F4CB; Modulo Adesione</button>
   <button class="tab-btn active" onclick="switchTab(4)" data-tab="4">&#x1F4C2; Contratti</button>
-  <button class="tab-btn" onclick="switchTab(5)" data-tab="5" id="tab-btn-users" style="display:none">&#x1F465; Utenti</button>
 </div></nav>
 
 <main class="main-content">
@@ -418,50 +417,6 @@ body.dark-mode .contract-item{background:#161b22;border-color:#30363d}
     </div>
   </div>
 </div>
-
-<!-- TAB 5: GESTIONE UTENTI (solo admin/supervisore) -->
-<div class="tab-page" id="tab-5">
-  <div class="form-card">
-    <div class="form-card-header" style="justify-content:space-between;flex-wrap:wrap;gap:10px">
-      <div style="display:flex;align-items:center;gap:10px"><span>&#x1F465;</span><h3>Gestione Utenti e Commerciali</h3></div>
-      <button class="btn btn-primary" onclick="openNewUserModal()" style="font-size:14px;padding:10px 24px">&#x2795; Nuovo Utente</button>
-    </div>
-    <div class="form-card-body">
-      <div style="display:flex;gap:8px;align-items:center;margin-bottom:16px;flex-wrap:wrap">
-        <input type="text" id="search-users" placeholder="🔍 Cerca utente..." style="padding:6px 12px;border:1px solid var(--brd);border-radius:6px;font-size:13px;min-width:200px" oninput="filterUsersTable()">
-        <select id="filter-ruolo" onchange="filterUsersTable()" style="padding:6px 12px;border:1px solid var(--brd);border-radius:6px;font-size:13px">
-          <option value="">Tutti i ruoli</option>
-          <option value="admin">Admin</option>
-          <option value="supervisore">Supervisore</option>
-          <option value="commerciale">Commerciale</option>
-          <option value="utente">Utente</option>
-          <option value="readonly">Readonly</option>
-        </select>
-        <button class="btn btn-sm btn-outline" onclick="loadUsersTab()">&#x21BB; Aggiorna</button>
-      </div>
-      <div style="overflow-x:auto">
-        <table style="width:100%;border-collapse:collapse;font-size:13px">
-          <thead style="background:var(--cna-lt)">
-            <tr>
-              <th style="padding:10px 12px;text-align:left;font-weight:700;font-size:11px;color:var(--cna-dk);text-transform:uppercase;border-bottom:2px solid var(--brd)">Nome</th>
-              <th style="padding:10px 12px;text-align:left;font-weight:700;font-size:11px;color:var(--cna-dk);text-transform:uppercase;border-bottom:2px solid var(--brd)">Email</th>
-              <th style="padding:10px 12px;text-align:left;font-weight:700;font-size:11px;color:var(--cna-dk);text-transform:uppercase;border-bottom:2px solid var(--brd)">Ruolo</th>
-              <th style="padding:10px 12px;text-align:left;font-weight:700;font-size:11px;color:var(--cna-dk);text-transform:uppercase;border-bottom:2px solid var(--brd)">% Provv.</th>
-              <th style="padding:10px 12px;text-align:left;font-weight:700;font-size:11px;color:var(--cna-dk);text-transform:uppercase;border-bottom:2px solid var(--brd)">Obiettivo</th>
-              <th style="padding:10px 12px;text-align:left;font-weight:700;font-size:11px;color:var(--cna-dk);text-transform:uppercase;border-bottom:2px solid var(--brd)">Ultimo Login</th>
-              <th style="padding:10px 12px;text-align:left;font-weight:700;font-size:11px;color:var(--cna-dk);text-transform:uppercase;border-bottom:2px solid var(--brd)">Attivo</th>
-              <th style="padding:10px 12px;text-align:left;font-weight:700;font-size:11px;color:var(--cna-dk);text-transform:uppercase;border-bottom:2px solid var(--brd)">Azioni</th>
-            </tr>
-          </thead>
-          <tbody id="users-tbody">
-            <tr><td colspan="8" style="text-align:center;padding:40px;color:var(--txt2)">Caricamento utenti...</td></tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </div>
-</div>
-
 </main>
 
 <div class="footer-actions" id="footer-form-actions" style="display:none"><div class="footer-inner">
@@ -475,74 +430,6 @@ body.dark-mode .contract-item{background:#161b22;border-color:#30363d}
 </div></div>
 
 <div class="toast" id="toast"></div>
-
-<!-- MODAL: Nuovo Utente -->
-<div class="modal-overlay" id="modal-new-user">
-<div class="modal" style="max-width:550px">
-  <div class="modal-header"><h2>&#x2795; Nuovo Utente</h2><button class="close-btn" onclick="closeModal('modal-new-user')">&times;</button></div>
-  <div class="modal-body">
-    <div class="form-row c2">
-      <div class="form-group"><label>Nome *</label><input type="text" id="nu-nome" required></div>
-      <div class="form-group"><label>Cognome *</label><input type="text" id="nu-cognome" required></div>
-    </div>
-    <div class="form-row c2">
-      <div class="form-group"><label>Email *</label><input type="email" id="nu-email" placeholder="nome@cnaroma.it" required></div>
-      <div class="form-group"><label>Telefono</label><input type="tel" id="nu-tel"></div>
-    </div>
-    <div class="form-group"><label>Password *</label><input type="password" id="nu-password" placeholder="Minimo 4 caratteri" required></div>
-    <div class="form-row c2">
-      <div class="form-group"><label>Ruolo *</label>
-        <select id="nu-ruolo" onchange="document.getElementById('nu-prov-section').style.display=this.value==='commerciale'?'block':'none'">
-          <option value="commerciale">Commerciale</option>
-          <option value="utente">Utente</option>
-          <option value="supervisore">Supervisore</option>
-          <option value="admin">Admin</option>
-          <option value="readonly">Readonly</option>
-        </select>
-      </div>
-      <div class="form-group">&nbsp;</div>
-    </div>
-    <div id="nu-prov-section">
-      <div class="form-row c2">
-        <div class="form-group"><label>% Provvigione</label><input type="number" id="nu-prov" min="0" max="100" step="0.5" value="5"></div>
-        <div class="form-group"><label>Obiettivo Mensile &euro;</label><input type="number" id="nu-obiettivo" min="0" step="100"></div>
-      </div>
-    </div>
-  </div>
-  <div class="modal-footer"><button class="btn btn-outline" onclick="closeModal('modal-new-user')">Annulla</button><button class="btn btn-primary" onclick="createNewUser()">&#x1F4BE; Crea Utente</button></div>
-</div></div>
-
-<!-- MODAL: Modifica Utente -->
-<div class="modal-overlay" id="modal-edit-user">
-<div class="modal" style="max-width:500px">
-  <div class="modal-header"><h2>&#x270F;&#xFE0F; Modifica Utente</h2><button class="close-btn" onclick="closeModal('modal-edit-user')">&times;</button></div>
-  <div class="modal-body">
-    <p id="eu-name" style="font-weight:700;font-size:16px;color:var(--cna-dk);margin-bottom:4px"></p>
-    <p id="eu-email" style="font-size:13px;color:var(--txt2);margin-bottom:16px"></p>
-    <div class="form-row c2">
-      <div class="form-group"><label>Ruolo</label>
-        <select id="eu-ruolo" onchange="document.getElementById('eu-prov-section').style.display=this.value==='commerciale'?'block':'none'">
-          <option value="commerciale">Commerciale</option>
-          <option value="utente">Utente</option>
-          <option value="supervisore">Supervisore</option>
-          <option value="admin">Admin</option>
-          <option value="readonly">Readonly</option>
-        </select>
-      </div>
-      <div class="form-group"><label>Attivo</label>
-        <select id="eu-attivo"><option value="true">S&igrave;</option><option value="false">No</option></select>
-      </div>
-    </div>
-    <div id="eu-prov-section">
-      <div class="form-row c2">
-        <div class="form-group"><label>% Provvigione</label><input type="number" id="eu-prov" min="0" max="100" step="0.5"></div>
-        <div class="form-group"><label>Obiettivo Mensile &euro;</label><input type="number" id="eu-obiettivo" min="0" step="100"></div>
-      </div>
-    </div>
-    <div class="form-group"><label>Nuova Password (lascia vuoto per non cambiare)</label><input type="password" id="eu-password" placeholder="Nuova password..."></div>
-  </div>
-  <div class="modal-footer"><button class="btn btn-outline" onclick="closeModal('modal-edit-user')">Annulla</button><button class="btn btn-primary" onclick="updateExistingUser()">&#x1F4BE; Salva</button></div>
-</div></div>
 
 <div class="modal-overlay" id="modal-email"><div class="modal">
   <div class="modal-header"><h2>Invia al Cliente</h2><button class="close-btn" onclick="closeModal('modal-email')">&times;</button></div>
@@ -1100,11 +987,6 @@ function showApp(){
   document.getElementById('login-page').style.display='none';
   document.getElementById('app-container').style.display='flex';
   updateHeaderAvatar();
-  // Mostra tab Utenti per admin/supervisore
-  if(loggedUser && (loggedUser.ruolo==='admin' || loggedUser.ruolo==='supervisore')){
-    const tabBtn=document.getElementById('tab-btn-users');
-    if(tabBtn) tabBtn.style.display='inline-flex';
-  }
   initApp();
   updateStats();
   // Mostra pulsante Log per admin
@@ -2286,7 +2168,6 @@ function switchTab(i){
     if(tabs)tabs.style.display='block';
   }
   if(i===4)loadContracts();
-  if(i===5)loadUsersTab();
 }
 
 function newContract(){
@@ -2505,121 +2386,11 @@ function initCurrencyFields(){
   });
 }
 
-// === GESTIONE UTENTI ===
-let allUsersData=[];
-let editingUserId=null;
-
-function openNewUserModal(){openModal('modal-new-user');}
-
-async function loadUsersTab(){
-  try{
-    allUsersData=await sb('cna_users?select=*,crm_commerciali_extra(percentuale_provvigione,obiettivo_mensile)&order=ruolo.asc,nome.asc');
-    renderUsersTable(allUsersData);
-  }catch(e){showToast('Errore: '+e.message,'error');}
-}
-
-function renderUsersTable(users){
-  const tb=document.getElementById('users-tbody');
-  if(!users?.length){tb.innerHTML='<tr><td colspan="8" style="text-align:center;padding:40px;color:var(--txt2)">Nessun utente</td></tr>';return;}
-  const rc={admin:'#dc3545',supervisore:'#6f42c1',commerciale:'#28a745',utente:'#17a2b8',readonly:'#6c757d'};
-  tb.innerHTML=users.map(u=>{
-    const extra=u.crm_commerciali_extra?.[0]||{};
-    const c=rc[u.ruolo]||'#666';
-    const ll=u.last_login?new Date(u.last_login).toLocaleDateString('it-IT')+' '+new Date(u.last_login).toLocaleTimeString('it-IT',{hour:'2-digit',minute:'2-digit'}):'Mai';
-    return `<tr style="border-bottom:1px solid var(--brd)">
-      <td style="padding:10px 12px"><strong>${u.nome||''} ${u.cognome||''}</strong></td>
-      <td style="padding:10px 12px">${u.email}</td>
-      <td style="padding:10px 12px"><span style="background:${c}20;color:${c};padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;text-transform:uppercase">${u.ruolo}</span></td>
-      <td style="padding:10px 12px">${u.ruolo==='commerciale'?(extra.percentuale_provvigione||5)+'%':'-'}</td>
-      <td style="padding:10px 12px">${u.ruolo==='commerciale'&&extra.obiettivo_mensile?'€'+parseFloat(extra.obiettivo_mensile).toLocaleString('it-IT'):'-'}</td>
-      <td style="padding:10px 12px;font-size:12px;color:var(--txt2)">${ll}</td>
-      <td style="padding:10px 12px">${u.attivo?'<span style="color:#28a745;font-weight:700">✅</span>':'<span style="color:#dc3545;font-weight:700">❌</span>'}</td>
-      <td style="padding:10px 12px"><button class="btn btn-sm btn-outline" onclick="openEditUserModal('${u.id}')">✏️ Modifica</button></td>
-    </tr>`;
-  }).join('');
-}
-
-function filterUsersTable(){
-  const s=document.getElementById('search-users').value.toLowerCase();
-  const r=document.getElementById('filter-ruolo').value;
-  renderUsersTable(allUsersData.filter(u=>(!s||(u.nome+' '+u.cognome+' '+u.email).toLowerCase().includes(s))&&(!r||u.ruolo===r)));
-}
-
-async function createNewUser(){
-  const nome=document.getElementById('nu-nome').value.trim();
-  const cognome=document.getElementById('nu-cognome').value.trim();
-  const email=document.getElementById('nu-email').value.trim();
-  const pw=document.getElementById('nu-password').value;
-  const ruolo=document.getElementById('nu-ruolo').value;
-  if(!nome||!cognome||!email||!pw){showToast('Compila tutti i campi obbligatori','error');return;}
-  if(pw.length<4){showToast('Password minimo 4 caratteri','error');return;}
-  try{
-    const hash=await sha256(pw);
-    await sb('cna_users','POST',{nome,cognome,email,password_sha256:hash,ruolo,attivo:true,telefono:document.getElementById('nu-tel').value.trim()||null});
-    if(ruolo==='commerciale'){
-      await new Promise(r=>setTimeout(r,500));
-      const users=await sb(`cna_users?email=eq.${encodeURIComponent(email)}&select=id`);
-      if(users?.[0]?.id){
-        const prov=parseFloat(document.getElementById('nu-prov').value)||5;
-        const obj=document.getElementById('nu-obiettivo').value||null;
-        await sb(`crm_commerciali_extra?user_id=eq.${users[0].id}`,'PATCH',{percentuale_provvigione:prov,obiettivo_mensile:obj?parseFloat(obj):null});
-      }
-    }
-    showToast(`${nome} ${cognome} creato come ${ruolo}!`,'success');
-    closeModal('modal-new-user');
-    ['nu-nome','nu-cognome','nu-email','nu-password','nu-tel'].forEach(id=>document.getElementById(id).value='');
-    loadUsersTab();
-  }catch(e){
-    if(e.message.includes('duplicate')||e.message.includes('unique'))showToast('Email già esistente','error');
-    else showToast('Errore: '+e.message,'error');
-  }
-}
-
-function openEditUserModal(userId){
-  const user=allUsersData.find(u=>u.id===userId);
-  if(!user)return;
-  editingUserId=userId;
-  document.getElementById('eu-name').textContent=`${user.nome||''} ${user.cognome||''}`;
-  document.getElementById('eu-email').textContent=user.email;
-  document.getElementById('eu-ruolo').value=user.ruolo;
-  document.getElementById('eu-attivo').value=user.attivo?'true':'false';
-  document.getElementById('eu-password').value='';
-  const extra=user.crm_commerciali_extra?.[0]||{};
-  document.getElementById('eu-prov').value=extra.percentuale_provvigione||5;
-  document.getElementById('eu-obiettivo').value=extra.obiettivo_mensile||'';
-  document.getElementById('eu-prov-section').style.display=user.ruolo==='commerciale'?'block':'none';
-  openModal('modal-edit-user');
-}
-
-async function updateExistingUser(){
-  if(!editingUserId)return;
-  try{
-    const ruolo=document.getElementById('eu-ruolo').value;
-    const attivo=document.getElementById('eu-attivo').value==='true';
-    const patch={ruolo,attivo};
-    const newPw=document.getElementById('eu-password').value;
-    if(newPw&&newPw.length>=4)patch.password_sha256=await sha256(newPw);
-    await sb(`cna_users?id=eq.${editingUserId}`,'PATCH',patch);
-    if(ruolo==='commerciale'){
-      await new Promise(r=>setTimeout(r,300));
-      const prov=parseFloat(document.getElementById('eu-prov').value)||5;
-      const obj=document.getElementById('eu-obiettivo').value||null;
-      try{await sb(`crm_commerciali_extra?user_id=eq.${editingUserId}`,'PATCH',{percentuale_provvigione:prov,obiettivo_mensile:obj?parseFloat(obj):null});}
-      catch(e){await sb('crm_commerciali_extra','POST',{user_id:editingUserId,percentuale_provvigione:prov,obiettivo_mensile:obj?parseFloat(obj):null});}
-    }
-    showToast('Utente aggiornato!','success');
-    closeModal('modal-edit-user');loadUsersTab();
-  }catch(e){showToast('Errore: '+e.message,'error');}
-}
-
 function initApp(){
   setupMirroring();['sig_dichiarante','sig_consenso','sig_inps','sig_sepa'].forEach(initSignaturePad);
   document.querySelectorAll('input,select').forEach(el=>el.addEventListener('input',updateStatus));document.querySelectorAll('select').forEach(el=>el.addEventListener('change',updateStatus));updateStatus();
   const today=new Date().toISOString().slice(0,10);['data_adesione','data_dichiarazione','data_consenso','data_inps','data_sepa'].forEach(id=>{const el=document.getElementById(id);if(el&&!el.value)el.value=today;});  loadCodiciAteco();
   initCurrencyFields();
-  // Mostra la barra di navigazione
-  const tabsNav=document.getElementById('tabs-nav');
-  if(tabsNav) tabsNav.style.display='block';
   loadContracts(); // Auto-load dashboard
 }
 
