@@ -2617,6 +2617,9 @@ function initApp(){
   document.querySelectorAll('input,select').forEach(el=>el.addEventListener('input',updateStatus));document.querySelectorAll('select').forEach(el=>el.addEventListener('change',updateStatus));updateStatus();
   const today=new Date().toISOString().slice(0,10);['data_adesione','data_dichiarazione','data_consenso','data_inps','data_sepa'].forEach(id=>{const el=document.getElementById(id);if(el&&!el.value)el.value=today;});  loadCodiciAteco();
   initCurrencyFields();
+  // Mostra la barra di navigazione
+  const tabsNav=document.getElementById('tabs-nav');
+  if(tabsNav) tabsNav.style.display='block';
   loadContracts(); // Auto-load dashboard
 }
 
