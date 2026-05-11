@@ -74,9 +74,9 @@ body.dark-mode .app-header{background:rgba(17,26,46,0.7)!important;border-bottom
 body.dark-mode .stats-bar-container{background:rgba(0,0,0,0.4)!important}
 /* DARK MODE TOGGLE */
 .dark-mode-toggle{
-  background:rgba(255,255,255,0.2);
-  border:1px solid rgba(255,255,255,0.4);
-  border-radius:20px;
+  background:#5B21B6;
+  border:none;
+  border-radius:999px;
   padding:8px 16px;
   cursor:pointer;
   transition:.2s;
@@ -86,9 +86,13 @@ body.dark-mode .stats-bar-container{background:rgba(0,0,0,0.4)!important}
   font-size:13px;
   color:#fff;
 }
-.dark-mode-toggle:hover{background:rgba(255,255,255,0.35)}
-.dark-mode-toggle svg{width:20px;height:20px;stroke:#fff;fill:none}
+.dark-mode-toggle:hover{background:#4C1D95}
+.dark-mode-toggle svg{width:20px;height:20px;stroke:#fff;fill:none;stroke-width:2.5}
 .dark-mode-toggle svg#icon-moon{fill:#fff;stroke:none}
+body.dark-mode .dark-mode-toggle{background:#EAB308;border:none}
+body.dark-mode .dark-mode-toggle:hover{background:#CA8A04}
+body.dark-mode .dark-mode-toggle svg{stroke:#000;stroke-width:2.5}
+body.dark-mode .dark-mode-toggle svg#icon-moon{fill:#000;stroke:none}
 
 /* HEADER - Dashboard Tesseramento style */
 .app-header{background:rgba(255,255,255,0.72);backdrop-filter:blur(20px) saturate(180%);-webkit-backdrop-filter:blur(20px) saturate(180%);color:var(--txt);position:sticky;top:0;z-index:100;box-shadow:0 1px 3px rgba(15,23,42,0.04),0 8px 24px rgba(15,23,42,0.03);border-bottom:1px solid rgba(255,255,255,0.5)}
@@ -107,8 +111,8 @@ body.dark-mode .stats-bar-container{background:rgba(0,0,0,0.4)!important}
 .header-logo img{height:44px;width:auto}
 .header-text h1{font-size:20px;font-weight:700;color:#fff}.header-text p{font-size:12px;color:rgba(255,255,255,0.7)}
 .header-actions{margin-left:auto;display:flex;gap:8px;align-items:center}
-.header-user{font-size:13px;color:#fff;cursor:pointer;padding:6px 14px;border-radius:20px;transition:.2s;border:1px solid rgba(255,255,255,0.35);font-weight:500;background:rgba(255,255,255,0.1)}
-.header-user:hover{background:rgba(255,255,255,0.2)}
+.header-user{font-size:13px;color:#065F46;cursor:pointer;padding:6px 14px;border-radius:999px;transition:.2s;border:1px solid rgba(16,185,129,0.3);font-weight:600;background:rgba(16,185,129,0.12)}
+.header-user:hover{background:rgba(16,185,129,0.22)}
 
 /* TABS */
 .tabs-bar{background:var(--bg2);border-bottom:1px solid var(--brd);box-shadow:0 1px 3px rgba(0,0,0,.06)}
@@ -117,9 +121,9 @@ body.dark-mode .stats-bar-container{background:rgba(0,0,0,0.4)!important}
 .tab-btn:hover{color:var(--cna);background:var(--cna-50)}.tab-btn.active{color:var(--cna);border-bottom-color:var(--cna);font-weight:600}
 
 /* MAIN */
-.main-content{max-width:100%;margin:24px auto;padding:0 24px 100px}
-.tab-page{display:none}.tab-page.active{display:block}
-.form-card{background:var(--card-bg);border-radius:var(--rl);box-shadow:0 1px 3px rgba(0,0,0,.08);border:1px solid var(--brd);margin-bottom:20px;overflow:hidden}
+.main-content{width:100%;margin:0;padding:24px 24px 100px}
+.tab-page{display:none;width:100%}.tab-page.active{display:block;width:100%}
+.form-card{background:var(--card-bg);border-radius:var(--rl);box-shadow:0 1px 3px rgba(0,0,0,.08);border:1px solid var(--brd);margin-bottom:20px;overflow:hidden;width:100%}
 .form-card-header{background:var(--cna-lt);padding:13px 20px;border-bottom:1px solid var(--brd);display:flex;align-items:center;gap:10px}
 .form-card-header h3{font-size:13px;font-weight:600;color:var(--cna-dk);text-transform:uppercase;letter-spacing:.5px}
 .form-card-body{padding:20px}
@@ -255,7 +259,7 @@ body.dark-mode .contract-item{background:linear-gradient(135deg,#1a2332 0%,#1620
 
 <header class="app-header">
   <div class="header-inner">
-    <div class="header-logo"><img src="https://customer31551.img.musvc2.net/static/31551/images/1/CNARoma%20NEGATIVO%20COLORE%20SOLO%20ROMA.png" alt="CNA Roma" style="height:42px;width:auto"></div>
+    <div class="header-logo"><img src="https://raw.githubusercontent.com/alessandroparrelli/fileappoggio/17b50df8f22632eb360e1da944d997289a598012/NUOVO-LOGO-CNA-ROMA-SOLO-ROMA.png" alt="CNA Roma" style="height:42px;width:auto"></div>
     <div class="header-text" style="padding-left:18px;border-left:1px solid rgba(226,232,240,0.9)"><h1 style="font-size:17px;font-weight:600;color:#0F172A;letter-spacing:-0.015em;font-family:'Manrope',sans-serif">Signature CNA Roma</h1></div>
     <div class="header-actions">
       <button class="btn btn-sm" onclick="openChangelog()" title="Note di versione" style="border:1px solid rgba(0,92,169,0.15);color:#005CA9;background:rgba(0,92,169,0.06);border-radius:999px;font-weight:600;font-size:12px;padding:6px 14px">&#x1F4CB; Versioni</button>
@@ -264,7 +268,7 @@ body.dark-mode .contract-item{background:linear-gradient(135deg,#1a2332 0%,#1620
         <svg id="icon-sun" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
         <svg id="icon-moon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" style="display:none"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
       </button>
-      <span class="header-user" id="logged-user" onclick="openProfile()" style="color:#0F172A"></span>
+      <span class="header-user" id="logged-user" onclick="openProfile()"></span>
       <button class="btn btn-sm" style="background:linear-gradient(135deg,#005CA9,#0073C8);color:#fff;border:none;border-radius:999px;font-weight:600;font-size:12px;padding:6px 14px;box-shadow:0 2px 8px rgba(0,92,169,0.25)" onclick="doLogout()">&#x2192; Esci</button>
     </div>
   </div>
