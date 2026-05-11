@@ -971,17 +971,54 @@ async function doLogin(){
   const em=document.getElementById('login-email').value.trim();
   const pw=document.getElementById('login-password').value;
   const errEl=document.getElementById('login-error');
-  if(!em||!pw){errEl.textContent='Inserisci email e password';errEl.style.display='block';return;}
+  
+  console.log('🔐 Login attempt:', em);
+  
+  if(!em||!pw){
+    errEl.textContent='Inserisci email e password';
+    errEl.style.display='block';
+    return;
+  }
+  
   try{
     const hash=await sha256(pw);
-    const users=await sb(`cna_users?email=eq.${encodeURIComponent(em)}&password_sha256=eq.${hash}&attivo=eq.true&select=*`);
-    if(!users||users.length===0){errEl.textContent='Credenziali non valide';errEl.style.display='block';return;}
+    console.log('🔑 Password hash generated');
+    
+    const query=`cna_users?email=eq.${encodeURIComponent(em)}&password_sha256=eq.${hash}&attivo=eq.true&select=*`;
+    console.log('🌐 Query:', query);
+    
+    const users=await sb(query);
+    console.log('📦 Users result:', users);
+    
+    if(!users||users.length===0){
+      console.warn('⚠️ No users found or wrong password');
+      errEl.textContent='Credenziali non valide';
+      errEl.style.display='block';
+      return;
+    }
+    
     loggedUser=users[0];
-    localStorage.setItem('cna_session',JSON.stringify({email:em,hash,nome:loggedUser.nome,cognome:loggedUser.cognome}));
+    console.log('✅ Login successful:', loggedUser.email);
+    
+    localStorage.setItem('cna_session',JSON.stringify({
+      email:em,
+      hash,
+      nome:loggedUser.nome,
+      cognome:loggedUser.cognome,
+      id:loggedUser.id,
+      ruolo:loggedUser.ruolo
+    }));
+    
     // Update last_login
     sb(`cna_users?id=eq.${loggedUser.id}`,'PATCH',{last_login:new Date().toISOString()});
     showApp();
-  }catch(e){errEl.textContent='Errore: '+e.message;errEl.style.display='block';}
+    
+  }catch(e){
+    console.error('❌ Login error:', e);
+    errEl.textContent='Errore: '+e.message;
+    errEl.style.display='block';
+  }
+}
 }
 
 function showApp(){
