@@ -1910,8 +1910,9 @@ async function sendWhatsAppFromList(id){
 async function resetFirma(id){
   if(!confirm('Vuoi annullare la firma di questo contratto?\n\nIl link verrà rinnovato e il contratto tornerà "inviato" per essere rifirmato dal cliente.'))return;
   try{
+    console.log('🔄 Reset firma per contratto:', id);
     const newToken=crypto.randomUUID();
-    await sb(`contratti?id=eq.${id}`,'PATCH',{
+    const result=await sb(`contratti?id=eq.${id}`,'PATCH',{
       stato:'inviato',
       token:newToken,
       firma_cliente_path:null,
@@ -1930,10 +1931,11 @@ async function resetFirma(id){
       caricato_gestionale:false,
       updated_at:new Date().toISOString()
     });
+    console.log('✅ Reset result:', result);
     showToast('Firma annullata! Nuovo link generato. Puoi reinviare al cliente.','success');
     loadContracts();
     updateStats();
-  }catch(e){showToast('Errore: '+e.message,'error');}
+  }catch(e){console.error('❌ Reset error:', e);showToast('Errore reset: '+e.message,'error');}
 }
 
 async function dlSigned(id){
@@ -1973,6 +1975,17 @@ async function viewDoc(id){
 }
 
 function cpLink(u){navigator.clipboard.writeText(u).then(()=>showToast('Link copiato!','success'));}
+
+async function viewDocSide(id,side){
+  try{
+    var field=side==='fronte'?'documento_foto_base64':'documento_retro_base64';
+    var d=await sb('contratti?id=eq.'+id+'&select='+field+',cognome,nome');
+    if(!d||!d[0]||!d[0][field]){showToast('Nessuna foto '+side+' trovata','error');return;}
+    var title=side==='fronte'?'FRONTE':'RETRO';
+    var w=window.open('','_blank');
+    w.document.write('<html><head><title>'+title+' Documento - '+d[0].cognome+' '+d[0].nome+'</title><style>@media print{body{margin:0;padding:0}img{width:100%!important;max-height:100vh!important}}body{margin:0;padding:0;background:#000;display:flex;align-items:center;justify-content:center;min-height:100vh}img{max-width:100vw;max-height:100vh;object-fit:contain}</style></head><body><img src="'+d[0][field]+'" onclick="window.print()"></body></html>');
+  }catch(e){showToast('Errore: '+e.message,'error');}
+}
 
 async function editContract(id){
   try{
@@ -2077,7 +2090,7 @@ async function loadContracts(){
           ${st==='inviato'?`<button class="btn btn-sm btn-warning" onclick="sendFromList('${x.id}','${x.token}','${x.email||''}')">Invia di nuovo</button><button class="btn btn-sm" onclick="sendWhatsAppFromList('${x.id}')" style="background:#25D366;color:#fff;font-size:10px" title="Invia su WhatsApp">&#x1F4AC; WA</button>`:''}
           ${st==='firmato'?`<button class="btn btn-sm btn-success" onclick="dlSigned('${x.id}')">PDF</button>`:''}
           ${st==='firmato'?`<button class="btn btn-sm" onclick="resetFirma('${x.id}')" style="background:#dc3545;color:#fff;font-size:10px" title="Annulla firma e reinvia">&#x1F504; Reset</button>`:''}
-          ${hasDoc?`<button class="btn btn-sm btn-outline" onclick="viewDoc('${x.id}')">Doc</button>`:''}
+          ${hasDoc?`<button class="btn btn-sm btn-outline" onclick="viewDocSide('${x.id}','fronte')" title="Vedi fronte documento">📸 Fronte</button><button class="btn btn-sm btn-outline" onclick="viewDocSide('${x.id}','retro')" title="Vedi retro documento">📸 Retro</button>`:''}
           <button class="btn btn-sm btn-outline" onclick="cpLink('${url}')" title="Copia link">Link</button>
         </div>
       </div>`;
