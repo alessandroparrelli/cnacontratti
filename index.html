@@ -121,7 +121,7 @@ body.dark-mode .stats-bar-container{background:rgba(0,0,0,0.4)!important}
 .form-card-header{background:var(--cna-lt);padding:13px 20px;border-bottom:1px solid var(--brd);display:flex;align-items:center;gap:10px}
 .form-card-header h3{font-size:13px;font-weight:600;color:var(--cna-dk);text-transform:uppercase;letter-spacing:.5px}
 .form-card-body{padding:20px}
-#contracts-list{min-width:0}
+#contracts-list{min-width:0;width:100%}
 .form-row{display:grid;gap:14px;margin-bottom:14px}
 .form-row.c2{grid-template-columns:1fr 1fr}.form-row.c3{grid-template-columns:1fr 1fr 1fr}.form-row.c4{grid-template-columns:repeat(4,1fr)}
 .form-row.c21{grid-template-columns:2fr 1fr}.form-row.c211{grid-template-columns:2fr 1fr 1fr}.form-row.cf{grid-template-columns:2fr 1fr}
@@ -171,9 +171,9 @@ input[readonly],select[readonly],textarea[readonly]{background:var(--input-bg);o
 .modal-header{padding:20px 24px;border-bottom:1px solid var(--brd);display:flex;justify-content:space-between;align-items:center}
 .modal-header h2{font-size:18px;font-weight:700;color:var(--cna-dk)}.modal-body{padding:24px}.modal-footer{padding:16px 24px;border-top:1px solid var(--brd);display:flex;gap:10px;justify-content:flex-end}
 .close-btn{background:none;border:none;font-size:24px;cursor:pointer;color:var(--txt2)}
-.contract-item{display:flex;flex-direction:row;justify-content:space-between;align-items:center;padding:10px 14px;border:1px solid var(--brd);border-radius:var(--r);margin-bottom:8px;background:var(--card-bg);transition:.2s;gap:12px}
-body.dark-mode .contract-item{background:#161b22;border-color:#30363d}
-.contract-item:hover{box-shadow:var(--sh)}
+.contract-item{display:flex;flex-direction:row;justify-content:space-between;align-items:center;padding:12px 16px;border:1px solid rgba(37,99,235,0.2);border-radius:8px;margin-bottom:10px;background:linear-gradient(135deg,#f0f7ff 0%,#e8f2ff 100%);box-shadow:0 0 20px rgba(37,99,235,0.15),inset 0 1px 0 rgba(255,255,255,0.8);transition:.3s ease;gap:12px;width:100%}
+body.dark-mode .contract-item{background:linear-gradient(135deg,#1a2f4e 0%,#162847 100%);border-color:rgba(37,99,235,0.3);box-shadow:0 0 20px rgba(37,99,235,0.2),inset 0 1px 0 rgba(100,150,255,0.1)}
+.contract-item:hover{box-shadow:0 0 30px rgba(37,99,235,0.4),0 0 60px rgba(37,99,235,0.2),inset 0 1px 0 rgba(255,255,255,0.8);transform:translateY(-2px);background:linear-gradient(135deg,#e8f2ff 0%,#dfe9ff 100%)}
 .contract-info{flex:1;min-width:0}
 .contract-info h4{font-size:14px;font-weight:700;margin-bottom:3px;color:var(--txt);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .contract-info p{font-size:11px;color:var(--txt2);line-height:1.4}
@@ -317,6 +317,7 @@ body.dark-mode .contract-item{background:#161b22;border-color:#30363d}
     <div class="form-row c2"><div class="form-group required"><label>Sede attivita (via)</label><input type="text" id="sede_attivita" placeholder=" " required></div><div class="form-group required"><label>Comune</label><input type="text" id="comune_att" placeholder=" " required></div></div>
     <div class="form-row c3"><div class="form-group required"><label>CAP</label><input type="text" id="cap_att" maxlength="5" placeholder=" " required></div><div class="form-group required"><label>Prov.</label><input type="text" id="prov_att" maxlength="2" placeholder=" " style="text-transform:uppercase" required></div><div class="form-group"><label>Codice INAIL</label><input type="text" id="cod_inail" placeholder=" "></div></div>
     <div class="form-row c2"><div class="form-group"><label>Cod. INAIL PAT</label><input type="text" id="cod_inail_pat" placeholder=" "></div><div class="form-group"><label>Documento identita</label><input type="text" id="documento_id" placeholder=" "></div></div>
+    <div class="form-row c2"><div class="form-group"><label>📄 Fronte Documento</label><input type="file" id="doc-fronte-input" accept="image/*" style="display:none" onchange="handleDocPhotoUpload(this,'fronte')"><button class="btn btn-sm btn-primary" onclick="document.getElementById('doc-fronte-input').click()">📸 Carica Fronte</button><span id="doc-fronte-status" style="font-size:12px;color:#666;margin-left:10px;"></span></div><div class="form-group"><label>📄 Retro Documento</label><input type="file" id="doc-retro-input" accept="image/*" style="display:none" onchange="handleDocPhotoUpload(this,'retro')"><button class="btn btn-sm btn-primary" onclick="document.getElementById('doc-retro-input').click()">📸 Carica Retro</button><span id="doc-retro-status" style="font-size:12px;color:#666;margin-left:10px;"></span></div></div>
   </div></div>
   <div class="form-card"><div class="form-card-header"><span>&#x1F4B0;</span><h3>Iscrizione e Quote</h3></div><div class="form-card-body">
     <div class="form-row c2"><div class="form-group required"><label>Motivo iscrizione</label><select id="motivo_iscrizione" class="form-input" required>
@@ -1210,6 +1211,40 @@ async function removeProfileImage(){
   }catch(e){showToast('Errore: '+e.message,'error');}
 }
 
+// Gestione foto documento (Fronte/Retro)
+async function handleDocPhotoUpload(input,type){
+  if(!input.files||!input.files[0])return;
+  const file=input.files[0];
+  
+  if(file.size>10*1024*1024){showToast('Immagine troppo grande (max 10MB)','error');return;}
+  if(!file.type.startsWith('image/')){showToast('File non valido','error');return;}
+  
+  try{
+    // Leggi il file come base64
+    const reader=new FileReader();
+    reader.onload=(e)=>{
+      const base64=e.target.result;
+      const statusEl=document.getElementById(`doc-${type}-status`);
+      statusEl.textContent='✅ Caricato';
+      statusEl.style.color='#28a745';
+      
+      // Salva nel contratto corrente (se in editing)
+      const contrattoId=document.getElementById('form-id')?.value;
+      if(contrattoId){
+        const fieldName=type==='fronte'?'doc_fronte_base64':'doc_retro_base64';
+        sb(`contratti?id=eq.${contrattoId}`,'PATCH',{[fieldName]:base64}).then(()=>{
+          showToast(`Foto ${type} del documento salvata`,'success');
+        }).catch(e=>showToast('Errore: '+e.message,'error'));
+      }
+      
+      // Reset input
+      input.value='';
+    };
+    reader.readAsDataURL(file);
+  }catch(e){showToast('Errore: '+e.message,'error');}
+}
+}
+
 function resizeImage(file,maxW,maxH){
   return new Promise((resolve,reject)=>{
     const reader=new FileReader();
@@ -1853,7 +1888,7 @@ info@cnaroma.it | cnaroma.it`;
     window.open(whatsappUrl,'_blank');
     
     showToast('WhatsApp aperto! Invia il messaggio al cliente','success');
-    updateList();
+    loadContracts(); // Ricarica la lista
     
   }catch(e){
     console.error('sendViaWhatsApp:',e);
@@ -1880,7 +1915,7 @@ async function sendWhatsAppFromList(id){
     await sb(`contratti?id=eq.${id}`,'PATCH',{stato:'inviato',inviato_at:new Date().toISOString()});
     window.open(`https://wa.me/${phone}?text=${encodeURIComponent(msg)}`,'_blank');
     showToast('WhatsApp aperto','success');
-    updateList();
+    loadContracts();
   }catch(e){showToast('Errore: '+e.message,'error');}
 }
 
@@ -1904,7 +1939,7 @@ async function resetFirma(id){
       updated_at:new Date().toISOString()
     });
     showToast('Firma annullata! Nuovo link generato. Puoi reinviare al cliente.','success');
-    updateList();
+    loadContracts();
     updateStats();
   }catch(e){showToast('Errore: '+e.message,'error');}
 }
