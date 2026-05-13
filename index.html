@@ -2250,13 +2250,19 @@ const sigPads={};
 function initSignaturePad(id){
   const c=document.getElementById(id);if(!c)return;const ctx=c.getContext('2d');
   const dpr=window.devicePixelRatio||1;
-  // Only init size if canvas has no pixel dimensions yet
   if(!c.width||c.width<10){const r=c.getBoundingClientRect();c.width=Math.round(r.width*dpr);c.height=Math.round(r.height*dpr);ctx.scale(dpr,dpr);}
-  let d=false,lx=0,ly=0;
+  let d=false,lx=0,ly=0,lt=0,pts=[],pbuf=[];
+  const SMOOTH=0.7,MINP=0.3,MAXP=2.2,DECIM=2;
   const gp=e=>{const r=c.getBoundingClientRect();const t=e.touches?e.touches[0]:e;return{x:t.clientX-r.left,y:t.clientY-r.top};};
-  const start=e=>{e.preventDefault();d=true;const p=gp(e);lx=p.x;ly=p.y;};
-  const draw=e=>{if(!d)return;e.preventDefault();const p=gp(e);ctx.beginPath();ctx.moveTo(lx,ly);ctx.lineTo(p.x,p.y);ctx.strokeStyle='#003d73';ctx.lineWidth=3.5;ctx.lineCap='round';ctx.lineJoin='round';ctx.stroke();lx=p.x;ly=p.y;sigPads[id]=true;};
-  const stop=()=>{d=false;};
+  const calcVel=(x1,y1,x2,y2,dt)=>{if(dt===0)return 0;const dx=x2-x1,dy=y2-y1,dist=Math.sqrt(dx*dx+dy*dy);return Math.min(1,dist/dt/500);};
+  const calcPress=(v)=>Math.max(MINP,Math.min(MAXP,MAXP-(v*MAXP*0.8)));
+  const interp=(p0,p1,p2,p3,t)=>{const v0=(p2-p0)*0.5,v1=(p3-p1)*0.5,t2=t*t,t3=t2*t;return(2*p1-2*p2+v0+v1)*t3+(-3*p1+3*p2-2*v0-v1)*t2+v0*t+p1;};
+  const smooth=(ps)=>{if(ps.length<4)return ps;const sm=[];for(let i=1;i<ps.length-2;i++){for(let t=0;t<1;t+=0.25){const x=interp(ps[i-1].x,ps[i].x,ps[i+1].x,ps[i+2].x,t),y=interp(ps[i-1].y,ps[i].y,ps[i+1].y,ps[i+2].y,t),p=ps[i].p+(ps[i+1].p-ps[i].p)*t;sm.push({x,y,p});}}return sm;};
+  const drawPt=(x,y,p,px,py,pp)=>{const w=p*2.5,pw=pp*2.5;const g=ctx.createLinearGradient(px||x,py||y,x,y);g.addColorStop(0,`rgba(0,61,115,${pp*0.8})`);g.addColorStop(1,`rgba(0,61,115,${p*0.8})`);ctx.strokeStyle=g;ctx.lineWidth=(w+pw)/2;ctx.lineCap='round';ctx.lineJoin='round';if(px!==undefined){ctx.beginPath();ctx.moveTo(px,py);ctx.lineTo(x,y);ctx.stroke();}else{ctx.beginPath();ctx.arc(x,y,w/2,0,Math.PI*2);ctx.fillStyle=`rgba(0,61,115,${p*0.8})`;ctx.fill();}};
+  const drawSmooth=(sps)=>{for(let i=0;i<sps.length-1;i++){const p=sps[i];drawPt(p.x,p.y,p.p,sps[i-1]?.x,sps[i-1]?.y,sps[i-1]?.p);}};
+  const start=e=>{e.preventDefault();const p=gp(e);lx=p.x;ly=p.y;lt=Date.now();d=true;pts=[];pbuf=[];pts.push({x:lx,y:ly,p:1});};
+  const draw=e=>{if(!d)return;e.preventDefault();const p=gp(e);const now=Date.now(),dt=Math.max(1,now-lt),v=calcVel(lx,ly,p.x,p.y,dt),pr=calcPress(v);if(pts.length%DECIM===0||Math.hypot(p.x-lx,p.y-ly)>10){pts.push({x:p.x,y:p.y,p:pr});pbuf.push(pr);if(pbuf.length>3){pbuf.shift();const ap=pbuf.reduce((a,b)=>a+b)/pbuf.length;if(pts.length>1)pts[pts.length-1].p=SMOOTH*ap+(1-SMOOTH)*pts[pts.length-1].p;}if(pts.length>1){const cur=pts[pts.length-1],prv=pts[pts.length-2];drawPt(cur.x,cur.y,cur.p,prv.x,prv.y,prv.p);}}lx=p.x;ly=p.y;lt=now;sigPads[id]=true;};
+  const stop=()=>{if(d&&pts.length>2){ctx.clearRect(0,0,c.width,c.height);const smd=smooth(pts);drawSmooth(smd);}d=false;};
   c.addEventListener('mousedown',start);c.addEventListener('mousemove',draw);c.addEventListener('mouseup',stop);c.addEventListener('mouseleave',stop);
   c.addEventListener('touchstart',start,{passive:false});c.addEventListener('touchmove',draw,{passive:false});c.addEventListener('touchend',stop);
 }
