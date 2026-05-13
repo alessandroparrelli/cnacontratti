@@ -218,10 +218,12 @@ body.dark-mode .contract-item{background:linear-gradient(135deg,#1a2332 0%,#1620
   .header-logo img{height:36px}
   .header-user{font-size:11px;padding:5px 10px}
   .header-actions{gap:6px}
-  .stats-bar{gap:6px;padding:0 12px;flex-wrap:wrap}
-  .stat-mini-box{min-width:0;flex:1 1 45%;padding:14px 14px 12px 14px}
-  .stat-mini-num{font-size:28px}
-  .stat-mini-label{font-size:9px}
+  .stats-bar{gap:8px;padding:0 12px;grid-template-columns:repeat(4,1fr)}
+  .stat-mini-box{padding:10px 10px 8px 10px}
+  .stat-mini-num{font-size:22px}
+  .stat-mini-label{font-size:8px;letter-spacing:0.02em}
+  .stat-mini-icon{width:26px;height:26px}
+  .stat-mini-icon svg{width:13px;height:13px}
   .main-content{padding:0 12px 100px;margin:12px auto}
   .form-card-body{padding:14px}
   .footer-inner{flex-direction:column;text-align:center}
@@ -236,7 +238,8 @@ body.dark-mode .contract-item{background:linear-gradient(135deg,#1a2332 0%,#1620
 @media(max-width:480px){
   .header-inner{flex-wrap:wrap;justify-content:center;text-align:center}
   .header-actions{width:100%;justify-content:center;margin-left:0}
-  .stat-mini-box{flex:1 1 45%}
+  .stat-mini-box{padding:8px 8px 6px 8px}
+  .stat-mini-num{font-size:20px}
   .tabs-inner{padding:0 12px}
 }
 @media print{body{display:none}}
@@ -409,42 +412,54 @@ body.dark-mode .contract-item{background:linear-gradient(135deg,#1a2332 0%,#1620
       <button class="btn btn-primary" onclick="newContract()" style="font-size:14px;padding:10px 24px">&#x2795; Nuovo modulo di adesione</button>
     </div>
     <div class="form-card-body">
-      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px;gap:12px">
-        <div style="flex:1;min-width:0">
-          <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:8px">
-            <input type="text" id="search-contracts" placeholder="🔍 Cerca cliente..." style="padding:6px 12px;border:1px solid var(--brd);border-radius:6px;font-size:13px;min-width:200px" oninput="filterContracts()">
-            <select id="filter-tipo" onchange="filterContracts()" style="padding:6px 12px;border:1px solid var(--brd);border-radius:6px;font-size:13px;background:var(--input-bg);color:var(--txt)">
+      <div style="margin-bottom:16px">
+        <!-- Barra superiore: cerca + pulsante filtri + aggiorna -->
+        <div style="display:flex;gap:8px;align-items:center;margin-bottom:10px">
+          <input type="text" id="search-contracts" placeholder="🔍 Cerca cliente..." style="flex:1;padding:8px 12px;border:1px solid var(--brd);border-radius:8px;font-size:13px;background:var(--input-bg);color:var(--txt)" oninput="filterContracts()">
+          <button onclick="toggleFilters()" id="btn-toggle-filters" style="display:flex;align-items:center;gap:6px;padding:8px 14px;border:1.5px solid var(--cna);border-radius:8px;background:#fff;color:var(--cna);font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;font-family:inherit">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="6" x2="20" y2="6"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="11" y1="18" x2="13" y2="18"/></svg>
+            Filtri
+          </button>
+          <button onclick="loadContracts()" style="display:flex;align-items:center;gap:5px;padding:8px 12px;border:1px solid var(--brd);border-radius:8px;background:#fff;color:var(--txt2);font-size:13px;cursor:pointer;font-family:inherit" title="Aggiorna">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+          </button>
+        </div>
+        <!-- Pannello filtri collassabile -->
+        <div id="filters-panel" style="display:none;background:var(--cna-50);border:1px solid var(--brd);border-radius:10px;padding:14px;margin-bottom:10px">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
+            <select id="filter-tipo" onchange="filterContracts()" style="padding:7px 10px;border:1px solid var(--brd);border-radius:6px;font-size:13px;background:#fff;color:var(--txt)">
               <option value="">Tutti i tipi</option>
               <option value="adesione_2025" selected>Tesseramento</option>
             </select>
-            <select id="filter-stato" onchange="filterContracts()" style="padding:6px 12px;border:1px solid var(--brd);border-radius:6px;font-size:13px;background:var(--input-bg);color:var(--txt)">
+            <select id="filter-stato" onchange="filterContracts()" style="padding:7px 10px;border:1px solid var(--brd);border-radius:6px;font-size:13px;background:#fff;color:var(--txt)">
               <option value="">Tutti gli stati</option>
               <option value="firmato">Firmati</option>
               <option value="inviato">Da firmare</option>
               <option value="bozza">Bozze</option>
             </select>
-            <select id="filter-anno" onchange="filterContracts()" style="padding:6px 12px;border:1px solid var(--brd);border-radius:6px;font-size:13px;background:var(--input-bg);color:var(--txt)">
+            <select id="filter-anno" onchange="filterContracts()" style="padding:7px 10px;border:1px solid var(--brd);border-radius:6px;font-size:13px;background:#fff;color:var(--txt)">
               <option value="">Tutti gli anni</option>
               <option value="2026" selected>2026</option>
               <option value="2025">2025</option>
               <option value="2024">2024</option>
             </select>
-            <select id="filter-proprietario" onchange="filterContracts()" style="padding:6px 12px;border:1px solid var(--brd);border-radius:6px;font-size:13px;background:var(--input-bg);color:var(--txt)">
+            <select id="filter-proprietario" onchange="filterContracts()" style="padding:7px 10px;border:1px solid var(--brd);border-radius:6px;font-size:13px;background:#fff;color:var(--txt)">
               <option value="">Tutti i proprietari</option>
             </select>
-            <select id="filter-gestionale" onchange="filterContracts()" style="padding:6px 12px;border:1px solid var(--brd);border-radius:6px;font-size:13px;background:var(--input-bg);color:var(--txt)">
+            <select id="filter-gestionale" onchange="filterContracts()" style="padding:7px 10px;border:1px solid var(--brd);border-radius:6px;font-size:13px;background:#fff;color:var(--txt)">
               <option value="">Tutti</option>
-              <option value="caricato">Caricati</option>
-              <option value="da-caricare">Da caricare</option>
+              <option value="caricato">✅ Caricati</option>
+              <option value="da-caricare">⏳ Da caricare</option>
             </select>
           </div>
-          <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;min-height:32px">
-            <label style="display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer"><input type="checkbox" id="select-all-contracts" onchange="toggleSelectAll(this)" style="width:16px;height:16px;accent-color:var(--cna)"> Seleziona tutti</label>
-            <button class="btn btn-sm btn-outline" onclick="exportExcel()" id="btn-export" style="display:none">&#x1F4CA; Esporta Excel</button>
-            <button class="btn btn-sm btn-danger" onclick="deleteSelected()" id="btn-delete" style="display:none">&#x1F5D1; Elimina</button>
-          </div>
         </div>
-        <button class="btn btn-sm btn-outline" onclick="loadContracts()" style="flex-shrink:0">&#x21BB; Aggiorna</button>
+        <!-- Selezione e azioni bulk -->
+        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;min-height:32px">
+          <label style="display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer"><input type="checkbox" id="select-all-contracts" onchange="toggleSelectAll(this)" style="width:16px;height:16px;accent-color:var(--cna)"> Seleziona tutti</label>
+          <button class="btn btn-sm btn-outline" onclick="exportExcel()" id="btn-export" style="display:none">&#x1F4CA; Esporta Excel</button>
+          <button class="btn btn-sm btn-danger" onclick="deleteSelected()" id="btn-delete" style="display:none">&#x1F5D1; Elimina</button>
+        </div>
+        </div>
       </div>
       <div id="contracts-list"><p style="text-align:center;color:var(--txt2);padding:40px">Caricamento...</p></div>
     </div>
@@ -2047,6 +2062,14 @@ async function editContract(id){
   }catch(e){console.error('editContract:',e);showToast('Errore: '+e.message,'error');}
 }
 
+function toggleFilters(){
+  const panel=document.getElementById('filters-panel');
+  const btn=document.getElementById('btn-toggle-filters');
+  const open=panel.style.display==='none'||panel.style.display==='';
+  panel.style.display=open?'block':'none';
+  btn.style.background=open?'var(--cna)':'#fff';
+  btn.style.color=open?'#fff':'var(--cna)';
+}
 function filterContracts(){
   const search=document.getElementById('search-contracts').value.toLowerCase();
   const tipo=document.getElementById('filter-tipo').value;
