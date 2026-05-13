@@ -98,15 +98,12 @@ body.dark-mode .dark-mode-toggle svg#icon-moon{fill:#000;stroke:none}
 .app-header{background:rgba(255,255,255,0.72);backdrop-filter:blur(20px) saturate(180%);-webkit-backdrop-filter:blur(20px) saturate(180%);color:var(--txt);position:sticky;top:0;z-index:100;box-shadow:0 1px 3px rgba(15,23,42,0.04),0 8px 24px rgba(15,23,42,0.03);border-bottom:1px solid rgba(255,255,255,0.5)}
 .stats-bar-container{background:transparent;border-bottom:none;padding:16px 0}
 .stats-bar{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;max-width:100%;margin:0 auto;padding:0 24px}
-.stat-mini-box{border:none;border-radius:14px;padding:0;text-align:center;box-shadow:0 4px 16px rgba(0,92,169,0.15);display:flex;flex-direction:column;align-items:stretch;gap:0;background:#fff;position:relative;overflow:hidden;transition:all 0.25s cubic-bezier(0.4,0,0.2,1)}
-.stat-mini-box:hover{transform:translateY(-3px);box-shadow:0 8px 24px rgba(0,92,169,0.25)}
-
-.stat-mini-box:nth-child(1) .stat-mini-label{background:#005CA9}.stat-mini-box:nth-child(2) .stat-mini-label{background:#005CA9}.stat-mini-box:nth-child(3) .stat-mini-label{background:#005CA9}.stat-mini-box:nth-child(4) .stat-mini-label{background:#005CA9}
-.stat-mini-box:nth-child(1){background:#fff}.stat-mini-box:nth-child(2){background:#fff}.stat-mini-box:nth-child(3){background:#fff}.stat-mini-box:nth-child(4){background:#fff}
-
-
-.stat-mini-num{font-size:40px;font-weight:800;color:#1a2332;line-height:1;margin:16px 0 8px 0;font-family:'Inter',sans-serif;letter-spacing:-0.03em;display:block}
-.stat-mini-label{font-size:12px;color:#fff;font-weight:700;font-family:'Inter',sans-serif;letter-spacing:0.04em;text-transform:uppercase;background:#005CA9;padding:10px 16px;display:block;width:100%;text-align:center;margin:0}
+.stat-mini-box{border:1.5px solid rgba(0,92,169,0.18);border-radius:16px;padding:20px 20px 18px 20px;background:#fff;display:flex;flex-direction:column;gap:0;position:relative;box-shadow:none;transition:all 0.2s ease}
+.stat-mini-box:hover{border-color:rgba(0,92,169,0.45);box-shadow:0 4px 16px rgba(0,92,169,0.1);transform:translateY(-2px)}
+.stat-mini-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:12px}
+.stat-mini-label{font-size:11px;font-weight:600;color:#6b7a8d;font-family:'Inter',sans-serif;letter-spacing:0.06em;text-transform:uppercase;line-height:1.3}
+.stat-mini-icon{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.stat-mini-num{font-size:42px;font-weight:800;color:#1a2332;line-height:1;font-family:'Inter',sans-serif;letter-spacing:-0.03em}
 .header-inner{max-width:100%;margin:0 auto;padding:14px 24px;display:flex;align-items:center;gap:16px}
 .header-logo img{height:44px;width:auto}
 .header-text h1{font-size:20px;font-weight:700;color:#fff}.header-text p{font-size:12px;color:rgba(255,255,255,0.7)}
@@ -222,8 +219,8 @@ body.dark-mode .contract-item{background:linear-gradient(135deg,#1a2332 0%,#1620
   .header-user{font-size:11px;padding:5px 10px}
   .header-actions{gap:6px}
   .stats-bar{gap:6px;padding:0 12px;flex-wrap:wrap}
-  .stat-mini-box{min-width:0;flex:1 1 45%;padding:8px 10px}
-  .stat-mini-num{font-size:20px}
+  .stat-mini-box{min-width:0;flex:1 1 45%;padding:14px 14px 12px 14px}
+  .stat-mini-num{font-size:28px}
   .stat-mini-label{font-size:9px}
   .main-content{padding:0 12px 100px;margin:12px auto}
   .form-card-body{padding:14px}
@@ -295,19 +292,31 @@ body.dark-mode .contract-item{background:linear-gradient(135deg,#1a2332 0%,#1620
 <div class="stats-bar-container">
   <div class="stats-bar">
     <div class="stat-mini-box">
-      <span class="stat-mini-label">Contratti creati</span>
+      <div class="stat-mini-header">
+        <span class="stat-mini-label">Contratti creati</span>
+        <span class="stat-mini-icon" style="background:rgba(0,92,169,0.08)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#005CA9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg></span>
+      </div>
       <span class="stat-mini-num" id="stat-totali">0</span>
     </div>
     <div class="stat-mini-box">
-      <span class="stat-mini-label">In attesa di firma</span>
+      <div class="stat-mini-header">
+        <span class="stat-mini-label">In attesa di firma</span>
+        <span class="stat-mini-icon" style="background:rgba(249,115,22,0.08)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#F97316" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></span>
+      </div>
       <span class="stat-mini-num" id="stat-attesa">0</span>
     </div>
     <div class="stat-mini-box">
-      <span class="stat-mini-label">Da caricare</span>
+      <div class="stat-mini-header">
+        <span class="stat-mini-label">Da caricare</span>
+        <span class="stat-mini-icon" style="background:rgba(0,92,169,0.08)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#005CA9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 16 12 12 8 16"/><line x1="12" y1="12" x2="12" y2="21"/><path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"/></svg></span>
+      </div>
       <span class="stat-mini-num" id="stat-da-caricare">0</span>
     </div>
     <div class="stat-mini-box">
-      <span class="stat-mini-label">Caricati</span>
+      <div class="stat-mini-header">
+        <span class="stat-mini-label">Caricati</span>
+        <span class="stat-mini-icon" style="background:rgba(16,185,129,0.08)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></span>
+      </div>
       <span class="stat-mini-num" id="stat-caricati">0</span>
     </div>
   </div>
