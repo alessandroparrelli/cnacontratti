@@ -1293,7 +1293,7 @@ function updateHeaderAvatar(){
 
 async function updateStats(){
   try{
-    let query='cna_contratti?select=stato,caricato_gestionale';
+    let query='contratti?select=stato,caricato_gestionale';
     if(loggedUser.ruolo!=='admin'){
       query+=`&created_by=eq.${loggedUser.id}`;
     }
@@ -1783,7 +1783,7 @@ async function saveToSupabase(){
   try{
     showToast('Salvataggio...');const data=collectFormData();
     if(currentContractId){data.updated_at=new Date().toISOString();await sb(`contratti?id=eq.${currentContractId}`,'PATCH',data);showToast('Aggiornato!','success');}
-    else{const r=await sb('cna_contratti','POST',data);if(r&&r.length){currentContractId=r[0].id;showToast('Salvato! ID: '+currentContractId.slice(0,8),'success');}};updateStatus();
+    else{const r=await sb('contratti','POST',data);if(r&&r.length){currentContractId=r[0].id;showToast('Salvato! ID: '+currentContractId.slice(0,8),'success');}};updateStatus();
   }catch(e){showToast('Errore: '+e.message,'error');}
 }
 
@@ -2000,7 +2000,7 @@ function cpLink(u){navigator.clipboard.writeText(u).then(()=>showToast('Link cop
 async function viewDocSide(id,side){
   try{
     var field=side==='fronte'?'documento_foto_base64':'documento_retro_base64';
-    var d=await sb('cna_contratti?id=eq.'+id+'&select='+field+',cognome,nome');
+    var d=await sb('contratti?id=eq.'+id+'&select='+field+',cognome,nome');
     if(!d||!d[0]||!d[0][field]){showToast('Nessuna foto '+side+' trovata','error');return;}
     var title=side==='fronte'?'FRONTE':'RETRO';
     var w=window.open('','_blank');
@@ -2072,7 +2072,7 @@ async function loadContracts(){
   const list=document.getElementById('contracts-list');
   list.innerHTML='<p style="text-align:center;padding:20px;color:var(--txt2)">Caricamento...</p>';
   try{
-    let query='cna_contratti?select=id,token,stato,cognome,nome,ragione_sociale,email,partita_iva,codice_fiscale,created_at,firmato_at,caricato_gestionale,created_by,tipo_contratto&order=created_at.desc&limit=50';
+    let query='contratti?select=id,token,stato,cognome,nome,ragione_sociale,email,partita_iva,codice_fiscale,created_at,firmato_at,caricato_gestionale,created_by,tipo_contratto&order=created_at.desc&limit=50';
     if(loggedUser&&loggedUser.ruolo!=='admin'){
       query+='&created_by=eq.'+loggedUser.id;
     }
