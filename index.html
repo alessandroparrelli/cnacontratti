@@ -71,7 +71,11 @@ body.dark-mode{background:#0d1117}
 
 
 body.dark-mode .app-header{background:rgba(17,26,46,0.7)!important;border-bottom:1px solid rgba(255,255,255,0.06)}
-body.dark-mode .stats-bar-container{background:rgba(0,0,0,0.4)!important}
+body.dark-mode .stats-bar-container{background:transparent!important}
+body.dark-mode .stat-mini-box{background:#161b22!important;border-color:rgba(59,130,246,0.25)!important}
+body.dark-mode .stat-mini-num{color:#e4e6eb!important}
+body.dark-mode .stat-mini-label{color:#8b95a5!important}
+body.dark-mode .stat-mini-icon{background:rgba(59,130,246,0.15)!important}
 /* DARK MODE TOGGLE */
 .dark-mode-toggle{
   background:#5B21B6;
@@ -174,8 +178,20 @@ input[readonly],select[readonly],textarea[readonly]{background:var(--input-bg);o
 .modal-header{padding:20px 24px;border-bottom:1px solid var(--brd);display:flex;justify-content:space-between;align-items:center}
 .modal-header h2{font-size:18px;font-weight:700;color:var(--cna-dk)}.modal-body{padding:24px}.modal-footer{padding:16px 24px;border-top:1px solid var(--brd);display:flex;gap:10px;justify-content:flex-end}
 .close-btn{background:none;border:none;font-size:24px;cursor:pointer;color:var(--txt2)}
-.contract-item{display:flex;flex-direction:row;justify-content:space-between;align-items:center;padding:12px 16px;border:1px solid rgba(37,99,235,0.15);border-radius:10px;margin-bottom:10px;background:linear-gradient(135deg,rgba(240,247,255,0.9) 0%,rgba(232,242,255,0.95) 100%);box-shadow:0 2px 15px rgba(37,99,235,0.08),inset 0 1px 0 rgba(255,255,255,0.9);transition:all .3s ease;gap:12px;width:100%}
-body.dark-mode .contract-item{background:linear-gradient(135deg,#1a2332 0%,#162040 100%);border-color:rgba(59,130,246,0.25);box-shadow:0 2px 15px rgba(59,130,246,0.1)}
+.contract-item{display:flex;flex-direction:column;border:1px solid rgba(37,99,235,0.15);border-radius:12px;margin-bottom:10px;background:#fff;box-shadow:0 2px 8px rgba(37,99,235,0.07);transition:all .2s ease;overflow:hidden;width:100%}
+.contract-item:hover{box-shadow:0 4px 18px rgba(37,99,235,0.15);border-color:rgba(37,99,235,0.3);transform:translateY(-1px)}
+.contract-header-bar{display:flex;align-items:center;gap:10px;background:#005CA9;padding:10px 14px;border-radius:0}
+.contract-header-bar input[type=checkbox]{accent-color:#fff;width:15px;height:15px;flex-shrink:0;filter:brightness(10)}
+.contract-header-bar h4{font-size:13px;font-weight:700;color:#fff;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin:0}
+.contract-header-bar .status-badge{flex-shrink:0}
+.contract-body{padding:10px 14px;display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.contract-meta{font-size:11px;color:var(--txt2);line-height:1.6;flex:1;min-width:0}
+body.dark-mode .contract-item{background:#161b22;border-color:rgba(59,130,246,0.25);box-shadow:0 2px 15px rgba(59,130,246,0.1)}
+body.dark-mode .form-card{background:#161b22;border-color:#30363d}
+body.dark-mode .form-card-header{background:#1a1f2e;border-color:#30363d}
+body.dark-mode #filters-panel{background:#1a1f2e!important;border-color:#30363d!important}
+body.dark-mode #filters-panel select{background:#0d1117;color:#e4e6eb;border-color:#30363d}
+body.dark-mode .contract-header-bar{background:var(--cna)!important}
 .contract-item:hover{box-shadow:0 4px 25px rgba(37,99,235,0.2),0 0 40px rgba(37,99,235,0.08);transform:translateY(-1px);border-color:rgba(37,99,235,0.3)}
 .contract-info{flex:1;min-width:0}
 .contract-info h4{font-size:14px;font-weight:700;margin-bottom:3px;color:var(--txt);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
@@ -2130,21 +2146,27 @@ async function loadContracts(){
       const gestText=gest?'\u2713 Caricato':'\u25CF Da caricare';
       const gestValue=gest?'caricato':'da-caricare';
       const canEdit=(st==='bozza'||st==='inviato'); // Can edit if not yet signed
-      return `<div class="contract-item" data-id="${x.id}" data-nome="${(x.cognome||'')+' '+(x.nome||'')+' '+( x.ragione_sociale||'')}" data-email="${x.email||''}" data-tipo="${x.tipo_contratto||'adesione_2025'}" data-anno="${anno}" data-stato="${st}" data-proprietario="${createdByName}" data-gestionale="${gestValue}">
-        <input type="checkbox" class="contract-cb" value="${x.id}" onchange="updateExportBtn()" style="width:16px;height:16px;accent-color:var(--cna);flex-shrink:0">
-        <div class="contract-info">
+      return `<div class="contract-item" data-id="${x.id}" data-nome="${(x.cognome||'')+' '+(x.nome||'')+' '+(x.ragione_sociale||'')}" data-email="${x.email||''}" data-tipo="${x.tipo_contratto||'adesione_2025'}" data-anno="${anno}" data-stato="${st}" data-proprietario="${createdByName}" data-gestionale="${gestValue}">
+        <div class="contract-header-bar">
+          <input type="checkbox" class="contract-cb" value="${x.id}" onchange="updateExportBtn()">
           <h4>${x.cognome||''} ${x.nome||''} - ${x.ragione_sociale||'N/D'}</h4>
-          <p>${x.email||''} \u00B7 ${d} \u00B7 <span class="status-badge ${bc}">${bt}</span> \u00B7 <span style="font-size:10px;color:var(--txt2)">Proprietario: ${createdByName}</span></p>
+          <span class="status-badge ${bc}" style="font-size:10px">${bt}</span>
         </div>
-        <div class="contract-actions">
-          ${st==='firmato'?`<span style="padding:3px 8px;border-radius:10px;font-size:10px;font-weight:600;${gestClass};white-space:nowrap">${gestText}</span><select onchange="toggleGestionale('${x.id}',this.value==='1')" style="font-size:10px;padding:2px 4px;border:1px solid var(--brd);border-radius:4px"><option value="0" ${!gest?'selected':''}>Da caricare</option><option value="1" ${gest?'selected':''}>Caricato</option></select>`:''}
-          ${canEdit?`<button class="btn btn-sm btn-outline" onclick="editContract('${x.id}')" title="Modifica contratto">&#x270F; Modifica</button>`:''}
-          ${st==='bozza'?`<button class="btn btn-sm btn-warning" onclick="sendFromList('${x.id}','${x.token}','${x.email||''}')">Invia</button><button class="btn btn-sm" onclick="sendWhatsAppFromList('${x.id}')" style="background:#25D366;color:#fff;font-size:10px" title="Invia su WhatsApp">&#x1F4AC; WA</button>`:''}
-          ${st==='inviato'?`<button class="btn btn-sm btn-warning" onclick="sendFromList('${x.id}','${x.token}','${x.email||''}')">Invia di nuovo</button><button class="btn btn-sm" onclick="sendWhatsAppFromList('${x.id}')" style="background:#25D366;color:#fff;font-size:10px" title="Invia su WhatsApp">&#x1F4AC; WA</button>`:''}
-          ${st==='firmato'?`<button class="btn btn-sm btn-success" onclick="dlSigned('${x.id}')">PDF</button>`:''}
-          ${st==='firmato'?`<button class="btn btn-sm" onclick="resetFirma('${x.id}')" style="background:#dc3545;color:#fff;font-size:10px" title="Annulla firma e reinvia">&#x1F504; Reset</button>`:''}
-          ${hasDoc?`<button class="btn btn-sm btn-outline" onclick="viewDocSide('${x.id}','fronte')" title="Vedi fronte documento">📸 Fronte</button><button class="btn btn-sm btn-outline" onclick="viewDocSide('${x.id}','retro')" title="Vedi retro documento">📸 Retro</button>`:''}
-          <button class="btn btn-sm btn-outline" onclick="cpLink('${url}')" title="Copia link">Link</button>
+        <div class="contract-body">
+          <div class="contract-meta">
+            ${x.email||''} &middot; ${d}<br>
+            <span style="font-size:10px">Proprietario: ${createdByName}</span>
+          </div>
+          <div class="contract-actions" style="display:flex;gap:4px;flex-wrap:wrap;align-items:center;justify-content:flex-end">
+            ${st==='firmato'?`<span style="padding:3px 8px;border-radius:10px;font-size:10px;font-weight:600;${gestClass};white-space:nowrap">${gestText}</span><select onchange="toggleGestionale('${x.id}',this.value==='1')" style="font-size:10px;padding:2px 4px;border:1px solid var(--brd);border-radius:4px"><option value="0" ${!gest?'selected':''}>Da caricare</option><option value="1" ${gest?'selected':''}>Caricato</option></select>`:''}
+            ${canEdit?`<button class="btn btn-sm btn-outline" onclick="editContract('${x.id}')">✏️ Modifica</button>`:''}
+            ${st==='bozza'?`<button class="btn btn-sm btn-warning" onclick="sendFromList('${x.id}','${x.token}','${x.email||''}')">Invia</button><button class="btn btn-sm" onclick="sendWhatsAppFromList('${x.id}')" style="background:#25D366;color:#fff;font-size:10px">&#x1F4AC; WA</button>`:''}
+            ${st==='inviato'?`<button class="btn btn-sm btn-warning" onclick="sendFromList('${x.id}','${x.token}','${x.email||''}')">Invia di nuovo</button><button class="btn btn-sm" onclick="sendWhatsAppFromList('${x.id}')" style="background:#25D366;color:#fff;font-size:10px">&#x1F4AC; WA</button>`:''}
+            ${st==='firmato'?`<button class="btn btn-sm btn-success" onclick="dlSigned('${x.id}')">PDF</button>`:''}
+            ${st==='firmato'?`<button class="btn btn-sm" onclick="resetFirma('${x.id}')" style="background:#dc3545;color:#fff;font-size:10px">&#x1F504; Reset</button>`:''}
+            ${hasDoc?`<button class="btn btn-sm btn-outline" onclick="viewDocSide('${x.id}','fronte')">📸 Fronte</button><button class="btn btn-sm btn-outline" onclick="viewDocSide('${x.id}','retro')">📸 Retro</button>`:''}
+            <button class="btn btn-sm btn-outline" onclick="cpLink('${url}')">Link</button>
+          </div>
         </div>
       </div>`;
     }).join('');
