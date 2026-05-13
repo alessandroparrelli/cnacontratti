@@ -245,6 +245,7 @@ body.dark-mode .hero-title{color:#e4e6eb}
 body.dark-mode .hero-sub{color:#8b95a5}
 body.dark-mode .hero-desc{color:#8b95a5}
 body.dark-mode .hero-accent{color:#3b9eff}
+body.dark-mode #app-footer{background:#161b22;border-color:#30363d}
 @media(max-width:768px){
   .form-row.c2,.form-row.c3,.form-row.c4,.form-row.c21,.form-row.c211,.form-row.cf{grid-template-columns:1fr}
   .tab-btn{padding:12px 14px;font-size:13px}
@@ -504,11 +505,17 @@ body.dark-mode .hero-accent{color:#3b9eff}
         </div>
       </div>
       <div id="contracts-list"><p style="text-align:center;color:var(--txt2);padding:40px">Caricamento...</p></div>
-      <div id="pagination-bar" style="display:none;margin-top:16px;display:flex;align-items:center;justify-content:center;gap:6px;flex-wrap:wrap"></div>
+      <div id="pagination-bar" style="display:none;margin-top:16px;align-items:center;justify-content:center;gap:6px;flex-wrap:wrap"></div>
     </div>
   </div>
 </div>
 </main>
+
+<!-- APP FOOTER -->
+<footer id="app-footer" style="display:none;margin-top:auto;border-top:1px solid var(--brd);padding:28px 24px;text-align:center;background:var(--bg2)">
+  <p style="font-family:'Inter',sans-serif;font-size:13px;font-weight:700;color:var(--txt2);letter-spacing:0.12em;text-transform:uppercase;margin:0 0 8px 0">Signature V8.2 &middot; CNA Roma</p>
+  <p style="font-family:'Inter',sans-serif;font-size:12px;font-weight:600;color:var(--txt2);letter-spacing:0.05em;margin:0">&copy; CNA Roma &middot; Sistema gestione contratti</p>
+</footer>
 
 <div class="footer-actions" id="footer-form-actions" style="display:none"><div class="footer-inner">
   <span id="status-indicator" class="status-badge empty">Non compilato</span>
@@ -2222,7 +2229,7 @@ async function loadContracts(){
   const list=document.getElementById('contracts-list');
   list.innerHTML='<p style="text-align:center;padding:20px;color:var(--txt2)">Caricamento...</p>';
   try{
-    let query='contratti?select=id,token,stato,cognome,nome,ragione_sociale,email,partita_iva,codice_fiscale,created_at,firmato_at,caricato_gestionale,created_by,tipo_contratto&order=created_at.desc&limit=500';
+    let query='contratti?select=id,token,stato,cognome,nome,ragione_sociale,email,partita_iva,codice_fiscale,created_at,firmato_at,caricato_gestionale,created_by,tipo_contratto&order=created_at.desc&limit=200';
     if(loggedUser&&loggedUser.ruolo!=='admin'){
       query+='&created_by=eq.'+loggedUser.id;
     }
@@ -2648,6 +2655,7 @@ function initApp(){
   const today=new Date().toISOString().slice(0,10);['data_adesione','data_dichiarazione','data_consenso','data_inps','data_sepa'].forEach(id=>{const el=document.getElementById(id);if(el&&!el.value)el.value=today;});  loadCodiciAteco();
   initCurrencyFields();
   loadContracts(); // Auto-load dashboard
+  const appFooter=document.getElementById('app-footer');if(appFooter)appFooter.style.display='block';
 }
 
 // === BOOT ===
