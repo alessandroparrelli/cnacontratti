@@ -2262,7 +2262,7 @@ function initSignaturePad(id){
   const drawSmooth=(sps)=>{for(let i=0;i<sps.length-1;i++){const p=sps[i];drawPt(p.x,p.y,p.p,sps[i-1]?.x,sps[i-1]?.y,sps[i-1]?.p);}};
   const start=e=>{e.preventDefault();const p=gp(e);lx=p.x;ly=p.y;lt=Date.now();d=true;pts=[];pbuf=[];pts.push({x:lx,y:ly,p:1});};
   const draw=e=>{if(!d)return;e.preventDefault();const p=gp(e);const now=Date.now(),dt=Math.max(1,now-lt),v=calcVel(lx,ly,p.x,p.y,dt),pr=calcPress(v);if(pts.length%DECIM===0||Math.hypot(p.x-lx,p.y-ly)>10){pts.push({x:p.x,y:p.y,p:pr});pbuf.push(pr);if(pbuf.length>3){pbuf.shift();const ap=pbuf.reduce((a,b)=>a+b)/pbuf.length;if(pts.length>1)pts[pts.length-1].p=SMOOTH*ap+(1-SMOOTH)*pts[pts.length-1].p;}if(pts.length>1){const cur=pts[pts.length-1],prv=pts[pts.length-2];drawPt(cur.x,cur.y,cur.p,prv.x,prv.y,prv.p);}}lx=p.x;ly=p.y;lt=now;sigPads[id]=true;};
-  const stop=()=>{if(d&&pts.length>2){ctx.clearRect(0,0,c.width,c.height);const smd=smooth(pts);drawSmooth(smd);}d=false;};
+  const stop=()=>{d=false;};
   c.addEventListener('mousedown',start);c.addEventListener('mousemove',draw);c.addEventListener('mouseup',stop);c.addEventListener('mouseleave',stop);
   c.addEventListener('touchstart',start,{passive:false});c.addEventListener('touchmove',draw,{passive:false});c.addEventListener('touchend',stop);
 }
