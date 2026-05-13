@@ -229,6 +229,14 @@ body.dark-mode .contract-header-bar{background:var(--cna)!important}
 .sig-direction-hint{display:none}
 }
 
+.pagination-btn{min-width:36px;height:36px;padding:0 10px;border-radius:8px;border:1.5px solid rgba(0,92,169,0.2);background:#fff;color:var(--cna);font-size:13px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;transition:.15s;display:inline-flex;align-items:center;justify-content:center}
+.pagination-btn:hover{background:var(--cna-50);border-color:var(--cna)}
+.pagination-btn.active{background:var(--cna);color:#fff;border-color:var(--cna)}
+.pagination-btn:disabled{opacity:0.35;cursor:not-allowed}
+.pagination-info{font-size:12px;color:var(--txt2);font-family:'Inter',sans-serif;padding:0 6px}
+body.dark-mode .pagination-btn{background:#161b22;border-color:rgba(59,130,246,0.3);color:#3b9eff}
+body.dark-mode .pagination-btn.active{background:#3b9eff;color:#fff}
+body.dark-mode .pagination-btn:hover{background:#1a2942}
 .hero-sub{font-size:11px;font-weight:600;color:#6b7a8d;text-transform:uppercase;letter-spacing:1.2px;margin:0 0 8px 0}
 .hero-title{font-size:36px;font-weight:800;color:#1a2332;margin:0 0 6px 0;line-height:1.15;letter-spacing:-0.02em}
 .hero-accent{color:#005CA9}
@@ -496,6 +504,7 @@ body.dark-mode .hero-accent{color:#3b9eff}
         </div>
       </div>
       <div id="contracts-list"><p style="text-align:center;color:var(--txt2);padding:40px">Caricamento...</p></div>
+      <div id="pagination-bar" style="display:none;margin-top:16px;display:flex;align-items:center;justify-content:center;gap:6px;flex-wrap:wrap"></div>
     </div>
   </div>
 </div>
@@ -2114,33 +2123,98 @@ function toggleFilters(){
   btn.style.background=open?'var(--cna)':'#fff';
   btn.style.color=open?'#fff':'var(--cna)';
 }
-function filterContracts(){
+let _currentPage=1;
+const PAGE_SIZE=10;
+
+function filterContracts(resetPage){
+  if(resetPage!==false)_currentPage=1;
   const search=document.getElementById('search-contracts').value.toLowerCase();
   const tipo=document.getElementById('filter-tipo').value;
   const stato=document.getElementById('filter-stato').value;
   const anno=document.getElementById('filter-anno').value;
   const proprietario=document.getElementById('filter-proprietario').value;
   const gestionale=document.getElementById('filter-gestionale').value;
-  const rows=document.querySelectorAll('.contract-item');
-  
-  rows.forEach(row=>{
-    const nome=(row.dataset.nome||'').toLowerCase();
-    const email=(row.dataset.email||'').toLowerCase();
-    const tipoRow=row.dataset.tipo||'';
-    const statoRow=row.dataset.stato||'';
-    const annoRow=row.dataset.anno||'';
-    const propRow=row.dataset.proprietario||'';
-    const gestRow=row.dataset.gestionale||'';
-    
-    const matchSearch=!search||(nome.includes(search)||email.includes(search));
-    const matchTipo=!tipo||(tipoRow===tipo);
-    const matchStato=!stato||(statoRow===stato);
-    const matchAnno=!anno||(annoRow===anno);
-    const matchProp=!proprietario||(propRow===proprietario);
-    const matchGest=!gestionale||(gestRow===gestionale);
-    
-    row.style.display=(matchSearch&&matchTipo&&matchStato&&matchAnno&&matchProp&&matchGest)?'flex':'none';
+  const all=window._contractsData||[];
+  const filtered=all.filter(x=>{
+    const nome=((x.cognome||'')+' '+(x.nome||'')+' '+(x.ragione_sociale||'')).toLowerCase();
+    const email=(x.email||'').toLowerCase();
+    const st=x.stato||'bozza';
+    const yr=new Date(x.created_at).getFullYear().toString();
+    const propName=window._userMap?window._userMap[x.created_by]||'':'';
+    const gestVal=x.caricato_gestionale?'caricato':'da-caricare';
+    const tipoVal=x.tipo_contratto||'adesione_2025';
+    return (!search||(nome.includes(search)||email.includes(search)))
+      &&(!tipo||tipoVal===tipo)
+      &&(!stato||st===stato)
+      &&(!anno||yr===anno)
+      &&(!proprietario||propName===proprietario)
+      &&(!gestionale||gestVal===gestionale);
   });
+  window._filteredData=filtered;
+  renderPage(_currentPage);
+}
+
+function renderPage(page){
+  _currentPage=page;
+  const filtered=window._filteredData||[];
+  const total=filtered.length;
+  const totalPages=Math.max(1,Math.ceil(total/PAGE_SIZE));
+  if(page<1)page=1;if(page>totalPages)page=totalPages;
+  _currentPage=page;
+  const start=(page-1)*PAGE_SIZE;
+  const pageData=filtered.slice(start,start+PAGE_SIZE);
+  const list=document.getElementById('contracts-list');
+  if(!pageData.length){list.innerHTML='<p style="text-align:center;padding:40px;color:var(--txt2)">Nessun contratto trovato</p>';renderPagination(0,1,1);return;}
+  list.innerHTML=pageData.map(x=>{
+    const createdByName=(window._userMap&&window._userMap[x.created_by])||'N/D';
+    const st=x.stato||'bozza';const bc=st==='firmato'?'signed':st==='inviato'?'sent':'empty';
+    const bt=st==='firmato'?'Firmato':st==='inviato'?'Inviato':'Bozza';
+    const d=new Date(x.created_at).toLocaleDateString('it-IT');
+    const anno=new Date(x.created_at).getFullYear();
+    const url=BASE_URL+'?firma='+x.token;
+    const hasDoc=(st==='firmato');
+    const gest=x.caricato_gestionale;
+    const gestClass=gest?'background:#d4edda;color:#155724':'background:#fff3cd;color:#856404';
+    const gestText=gest?'✓ Caricato':'● Da caricare';
+    const gestValue=gest?'caricato':'da-caricare';
+    const canEdit=(st==='bozza'||st==='inviato');
+    return `<div class="contract-item" data-id="${x.id}" data-nome="${(x.cognome||'')+' '+(x.nome||'')+' '+(x.ragione_sociale||'')}" data-email="${x.email||''}" data-tipo="${x.tipo_contratto||'adesione_2025'}" data-anno="${anno}" data-stato="${st}" data-proprietario="${createdByName}" data-gestionale="${gestValue}">
+        <input type="checkbox" class="contract-cb" value="${x.id}" onchange="updateExportBtn()" style="width:16px;height:16px;accent-color:var(--cna);flex-shrink:0">
+        <div class="contract-info">
+          <h4>${x.cognome||''} ${x.nome||''} - ${x.ragione_sociale||'N/D'}</h4>
+          <p>${x.email||''} · ${d} · <span class="status-badge ${bc}">${bt}</span> · <span style="font-size:10px;color:var(--txt2)">Proprietario: ${createdByName}</span></p>
+        </div>
+        <div class="contract-actions">
+          ${st==='firmato'?`<span style="padding:3px 8px;border-radius:10px;font-size:10px;font-weight:600;${gestClass};white-space:nowrap">${gestText}</span><select onchange="toggleGestionale('${x.id}',this.value==='1')" style="font-size:10px;padding:2px 4px;border:1px solid var(--brd);border-radius:4px"><option value="0" ${!gest?'selected':''}>Da caricare</option><option value="1" ${gest?'selected':''}>Caricato</option></select>`:''}
+          ${canEdit?`<button class="btn btn-sm btn-outline" onclick="editContract('${x.id}')" title="Modifica contratto">&#x270F; Modifica</button>`:''}
+          ${st==='bozza'?`<button class="btn btn-sm btn-warning" onclick="sendFromList('${x.id}','${x.token}','${x.email||''}')">Invia</button><button class="btn btn-sm" onclick="sendWhatsAppFromList('${x.id}')" style="background:#25D366;color:#fff;font-size:10px">&#x1F4AC; WA</button>`:''}
+          ${st==='inviato'?`<button class="btn btn-sm btn-warning" onclick="sendFromList('${x.id}','${x.token}','${x.email||''}')">Invia di nuovo</button><button class="btn btn-sm" onclick="sendWhatsAppFromList('${x.id}')" style="background:#25D366;color:#fff;font-size:10px">&#x1F4AC; WA</button>`:''}
+          ${st==='firmato'?`<button class="btn btn-sm btn-success" onclick="dlSigned('${x.id}')">PDF</button>`:''}
+          ${st==='firmato'?`<button class="btn btn-sm" onclick="resetFirma('${x.id}')" style="background:#dc3545;color:#fff;font-size:10px">&#x1F504; Reset</button>`:''}
+          ${hasDoc?`<button class="btn btn-sm btn-outline" onclick="viewDocSide('${x.id}','fronte')">📸 Fronte</button><button class="btn btn-sm btn-outline" onclick="viewDocSide('${x.id}','retro')">📸 Retro</button>`:''}
+          <button class="btn btn-sm btn-outline" onclick="cpLink('${url}')">Link</button>
+        </div>
+      </div>`;
+  }).join('');
+  renderPagination(total,page,totalPages);
+}
+
+function renderPagination(total,page,totalPages){
+  const bar=document.getElementById('pagination-bar');
+  if(!bar)return;
+  if(totalPages<=1){bar.style.display='none';return;}
+  bar.style.display='flex';
+  const start=(page-1)*PAGE_SIZE+1;
+  const end=Math.min(page*PAGE_SIZE,total);
+  let html=`<span class="pagination-info">${start}-${end} di ${total}</span>`;
+  html+=`<button class="pagination-btn" onclick="renderPage(1)" ${page===1?'disabled':''}>&#171;</button>`;
+  html+=`<button class="pagination-btn" onclick="renderPage(${page-1})" ${page===1?'disabled':''}>&#8249;</button>`;
+  // Numeri pagine: max 5 visibili centrati sulla pagina corrente
+  let s=Math.max(1,page-2);let e=Math.min(totalPages,s+4);s=Math.max(1,e-4);
+  for(let i=s;i<=e;i++)html+=`<button class="pagination-btn${i===page?' active':''}" onclick="renderPage(${i})">${i}</button>`;
+  html+=`<button class="pagination-btn" onclick="renderPage(${page+1})" ${page===totalPages?'disabled':''}>&#8250;</button>`;
+  html+=`<button class="pagination-btn" onclick="renderPage(${totalPages})" ${page===totalPages?'disabled':''}>&#187;</button>`;
+  bar.innerHTML=html;
 }
 
 
@@ -2148,7 +2222,7 @@ async function loadContracts(){
   const list=document.getElementById('contracts-list');
   list.innerHTML='<p style="text-align:center;padding:20px;color:var(--txt2)">Caricamento...</p>';
   try{
-    let query='contratti?select=id,token,stato,cognome,nome,ragione_sociale,email,partita_iva,codice_fiscale,created_at,firmato_at,caricato_gestionale,created_by,tipo_contratto&order=created_at.desc&limit=50';
+    let query='contratti?select=id,token,stato,cognome,nome,ragione_sociale,email,partita_iva,codice_fiscale,created_at,firmato_at,caricato_gestionale,created_by,tipo_contratto&order=created_at.desc&limit=500';
     if(loggedUser&&loggedUser.ruolo!=='admin'){
       query+='&created_by=eq.'+loggedUser.id;
     }
@@ -2161,43 +2235,13 @@ async function loadContracts(){
     const userMap={};
     if(users&&users.length){users.forEach(u=>userMap[u.id]=`${u.nome||''} ${u.cognome||''}`.trim());}
     
-    list.innerHTML=c.map(x=>{
-      const createdByName=userMap[x.created_by]||'N/D';
-      const st=x.stato||'bozza';const bc=st==='firmato'?'signed':st==='inviato'?'sent':'empty';
-      const bt=st==='firmato'?'Firmato':st==='inviato'?'Inviato':'Bozza';
-      const d=new Date(x.created_at).toLocaleDateString('it-IT');
-      const anno=new Date(x.created_at).getFullYear();
-      const url=BASE_URL+'?firma='+x.token;
-      const hasDoc=(st==='firmato');
-      const gest=x.caricato_gestionale;
-      const gestClass=gest?'background:#d4edda;color:#155724':'background:#fff3cd;color:#856404';
-      const gestText=gest?'\u2713 Caricato':'\u25CF Da caricare';
-      const gestValue=gest?'caricato':'da-caricare';
-      const canEdit=(st==='bozza'||st==='inviato'); // Can edit if not yet signed
-      return `<div class="contract-item" data-id="${x.id}" data-nome="${(x.cognome||'')+' '+(x.nome||'')+' '+(x.ragione_sociale||'')}" data-email="${x.email||''}" data-tipo="${x.tipo_contratto||'adesione_2025'}" data-anno="${anno}" data-stato="${st}" data-proprietario="${createdByName}" data-gestionale="${gestValue}">
-        <input type="checkbox" class="contract-cb" value="${x.id}" onchange="updateExportBtn()" style="width:16px;height:16px;accent-color:var(--cna);flex-shrink:0">
-        <div class="contract-info">
-          <h4>${x.cognome||''} ${x.nome||''} - ${x.ragione_sociale||'N/D'}</h4>
-          <p>${x.email||''} · ${d} · <span class="status-badge ${bc}">${bt}</span> · <span style="font-size:10px;color:var(--txt2)">Proprietario: ${createdByName}</span></p>
-        </div>
-        <div class="contract-actions">
-          ${st==='firmato'?`<span style="padding:3px 8px;border-radius:10px;font-size:10px;font-weight:600;${gestClass};white-space:nowrap">${gestText}</span><select onchange="toggleGestionale('${x.id}',this.value==='1')" style="font-size:10px;padding:2px 4px;border:1px solid var(--brd);border-radius:4px"><option value="0" ${!gest?'selected':''}>Da caricare</option><option value="1" ${gest?'selected':''}>Caricato</option></select>`:''}
-          ${canEdit?`<button class="btn btn-sm btn-outline" onclick="editContract('${x.id}')" title="Modifica contratto">&#x270F; Modifica</button>`:''}
-          ${st==='bozza'?`<button class="btn btn-sm btn-warning" onclick="sendFromList('${x.id}','${x.token}','${x.email||''}')">Invia</button><button class="btn btn-sm" onclick="sendWhatsAppFromList('${x.id}')" style="background:#25D366;color:#fff;font-size:10px" title="Invia su WhatsApp">&#x1F4AC; WA</button>`:''}
-          ${st==='inviato'?`<button class="btn btn-sm btn-warning" onclick="sendFromList('${x.id}','${x.token}','${x.email||''}')">Invia di nuovo</button><button class="btn btn-sm" onclick="sendWhatsAppFromList('${x.id}')" style="background:#25D366;color:#fff;font-size:10px" title="Invia su WhatsApp">&#x1F4AC; WA</button>`:''}
-          ${st==='firmato'?`<button class="btn btn-sm btn-success" onclick="dlSigned('${x.id}')">PDF</button>`:''}
-          ${st==='firmato'?`<button class="btn btn-sm" onclick="resetFirma('${x.id}')" style="background:#dc3545;color:#fff;font-size:10px" title="Annulla firma e reinvia">&#x1F504; Reset</button>`:''}
-          ${hasDoc?`<button class="btn btn-sm btn-outline" onclick="viewDocSide('${x.id}','fronte')" title="Vedi fronte documento">📸 Fronte</button><button class="btn btn-sm btn-outline" onclick="viewDocSide('${x.id}','retro')" title="Vedi retro documento">📸 Retro</button>`:''}
-          <button class="btn btn-sm btn-outline" onclick="cpLink('${url}')" title="Copia link">Link</button>
-        </div>
-      </div>`;
-    }).join('');
-    
+    window._userMap=userMap;
+    window._filteredData=c;
     // Populate proprietario filter
     const proprietari=[...new Set(Object.values(userMap))].sort();
     const filterProp=document.getElementById('filter-proprietario');
     filterProp.innerHTML='<option value="">Tutti i proprietari</option>'+proprietari.map(p=>`<option value="${p}">${p}</option>`).join('');
-    
+    filterContracts(true);
     updateStats(); // Update footer statistics
   }catch(e){list.innerHTML='<p style="color:var(--err);text-align:center;padding:20px">'+e.message+'</p>';}
 }
