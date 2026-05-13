@@ -169,6 +169,13 @@ body{font-family:'Inter',sans-serif;background:var(--gray);color:var(--txt);line
   </div>
 </header>
 
+<!-- HERO TITLE ABOVE STATS -->
+<div id="dashboard-hero" style="display:none;padding:28px 24px 0 24px;max-width:1200px;margin:0 auto">
+  <div style="font-size:11px;font-weight:600;color:var(--txt2);text-transform:uppercase;letter-spacing:1.2px;margin-bottom:10px">DASHBOARD · OPERATORI</div>
+  <h2 style="font-size:28px;font-weight:700;color:var(--txt);margin:0 0 6px 0;font-family:'Inter',sans-serif;line-height:1.2">Gestisci contratti e <span style="color:var(--cna)">tesseramento</span><br>in un unico posto.</h2>
+  <p style="font-size:13px;color:var(--txt2);margin:0;line-height:1.6">Panoramica in tempo reale su moduli di adesione, firme in attesa e contratti caricati nel sistema CNA Roma.</p>
+</div>
+
 <!-- STATS BAR UNDER HEADER -->
 <div class="stats-bar-container">
   <div class="stats-bar">
@@ -283,11 +290,6 @@ body{font-family:'Inter',sans-serif;background:var(--gray);color:var(--txt);line
 
 <!-- TAB 4: CONTRATTI -->
 <div class="tab-page active" id="tab-4">
-  <div style="padding:40px 24px;border-bottom:1px solid var(--brd)">
-    <div style="font-size:12px;font-weight:600;color:var(--txt2);text-transform:uppercase;letter-spacing:1px;margin-bottom:16px">DASHBOARD · OPERATORI</div>
-    <h2 style="font-size:32px;font-weight:700;color:var(--txt);margin:0 0 4px 0;font-family:'Inter',sans-serif;line-height:1.2">Gestisci contratti<br>e <span style="color:var(--cna)">tesseramento</span> in un unico posto.</h2>
-    <p style="font-size:14px;color:var(--txt2);margin:12px 0 0 0;max-width:600px;line-height:1.6">Panoramica in tempo reale su moduli di adesione, firme in attesa e contratti caricati nel sistema CNA Roma.</p>
-  </div>
   <div class="form-card">
     <div class="form-card-header" style="justify-content:space-between;flex-wrap:wrap;gap:10px">
       <div style="display:flex;align-items:center;gap:10px"><span>&#x1F4C2;</span><h3>Dashboard Contratti</h3></div>
@@ -1380,6 +1382,8 @@ function switchTab(i){
     if(footer)footer.style.display='none';
     if(tabs)tabs.style.display='none';
   }
+  const hero=document.getElementById('dashboard-hero');
+  if(hero)hero.style.display=(i===4)?'block':'none';
   if(i===4)loadContracts();
 }
 
@@ -1589,6 +1593,7 @@ function initApp(){
   setupMirroring();['sig_dichiarante','sig_consenso','sig_inps','sig_sepa'].forEach(initSignaturePad);
   document.querySelectorAll('input').forEach(el=>el.addEventListener('input',updateStatus));updateStatus();
   const today=new Date().toISOString().slice(0,10);['data_adesione','data_dichiarazione','data_consenso','data_inps','data_sepa'].forEach(id=>{const el=document.getElementById(id);if(el&&!el.value)el.value=today;});  loadCodiciAteco();
+  const hero=document.getElementById('dashboard-hero');if(hero)hero.style.display='block';
   loadContracts(); // Auto-load dashboard
 }
 
