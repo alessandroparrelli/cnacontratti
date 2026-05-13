@@ -194,14 +194,23 @@ body.dark-mode .contract-item{background:linear-gradient(135deg,#1a2332 0%,#1620
 .firma-content .form-card{border-radius:var(--rl);margin-bottom:16px}
 
 /* FULLSCREEN SIGNATURE for mobile/tablet */
-.sig-fullscreen{position:fixed;inset:0;z-index:999;background:var(--bg2);display:none;flex-direction:column;overflow:hidden}
+.sig-fullscreen{position:fixed;inset:0;z-index:999;background:#fff;display:none;flex-direction:column;overflow:hidden}
 .sig-fullscreen.active{display:flex}
-.sig-fullscreen-header{background:var(--cna);color:#fff;padding:8px 16px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0}
-.sig-fullscreen-header h3{font-size:14px;font-weight:600}
+.sig-fullscreen-header{background:var(--cna);color:#fff;padding:12px 20px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0;box-shadow:0 2px 8px rgba(0,0,0,0.15)}
+.sig-fullscreen-header h3{font-size:16px;font-weight:700;letter-spacing:0.3px}
+.sig-fullscreen-header .close-btn{background:rgba(255,255,255,0.2);border:none;color:#fff;font-size:32px;width:44px;height:44px;border-radius:8px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:0.2s;line-height:1;padding:0}
+.sig-fullscreen-header .close-btn:hover{background:rgba(255,255,255,0.3);transform:scale(1.05)}
 .sig-direction-hint{background:#fff3cd;border-bottom:2px solid #ffc107;padding:6px 12px;font-size:12px;font-weight:600;color:#856404;text-align:center;flex-shrink:0}
-.sig-fullscreen-body{flex:1;display:flex;flex-direction:column;padding:8px;min-height:0;overflow:hidden}
-.sig-fullscreen-body canvas{width:100%;height:100%;background:#fafafa;border:2px solid var(--brd);border-radius:var(--r);cursor:crosshair;touch-action:none}
-.sig-fullscreen-footer{padding:8px 16px;display:flex;gap:10px;justify-content:center;border-top:1px solid var(--brd);flex-shrink:0;background:var(--bg2)}
+.sig-fullscreen-body{flex:1;display:flex;flex-direction:column;padding:12px;min-height:0;overflow:hidden;background:#f5f5f5}
+.sig-fullscreen-body canvas{width:100%;height:100%;background:#fff;border:3px solid var(--cna);border-radius:12px;cursor:crosshair;touch-action:none;box-shadow:0 4px 20px rgba(0,0,0,0.1)}
+.sig-fullscreen-footer{padding:12px 20px;display:flex;gap:12px;justify-content:center;border-top:2px solid var(--brd);flex-shrink:0;background:#fff}
+
+@media(orientation:landscape){
+.sig-fullscreen-header{padding:8px 20px}
+.sig-fullscreen-header h3{font-size:14px}
+.sig-fullscreen-body{padding:8px}
+.sig-fullscreen-footer{padding:8px 20px}
+}
 
 @media(max-width:768px){
   .form-row.c2,.form-row.c3,.form-row.c4,.form-row.c21,.form-row.c211,.form-row.cf{grid-template-columns:1fr}
@@ -920,7 +929,7 @@ body.dark-mode .contract-item{background:linear-gradient(135deg,#1a2332 0%,#1620
 
 <!-- FULLSCREEN SIGNATURE OVERLAY -->
 <div class="sig-fullscreen" id="sig-fullscreen">
-  <div class="sig-fullscreen-header"><h3>✍️ Firma qui</h3><button class="close-btn" onclick="closeSigFullscreen()" style="color:#fff;font-size:28px">&times;</button></div>
+  <div class="sig-fullscreen-header"><h3>✍️ Firma qui</h3><button class="close-btn" onclick="closeSigFullscreen()">&times;</button></div>
   <div class="sig-direction-hint">📱 Gira il telefono in ORIZZONTALE per avere piu spazio &nbsp;|&nbsp; ⬅️ Firma da sinistra verso destra ➡️</div>
   <div class="sig-fullscreen-body"><canvas id="sig-fullscreen-canvas"></canvas></div>
   <div class="sig-fullscreen-footer">
@@ -2248,23 +2257,137 @@ function setupMirroring(){
 
 const sigPads={};
 function initSignaturePad(id){
-  const c=document.getElementById(id);if(!c)return;const ctx=c.getContext('2d');
-  const dpr=window.devicePixelRatio||1;
-  if(!c.width||c.width<10){const r=c.getBoundingClientRect();c.width=Math.round(r.width*dpr);c.height=Math.round(r.height*dpr);ctx.scale(dpr,dpr);}
-  let d=false,lx=0,ly=0,lt=0,pts=[],pbuf=[];
-  const SMOOTH=0.7,MINP=0.3,MAXP=2.2,DECIM=2;
-  const gp=e=>{const r=c.getBoundingClientRect();const t=e.touches?e.touches[0]:e;return{x:t.clientX-r.left,y:t.clientY-r.top};};
-  const calcVel=(x1,y1,x2,y2,dt)=>{if(dt===0)return 0;const dx=x2-x1,dy=y2-y1,dist=Math.sqrt(dx*dx+dy*dy);return Math.min(1,dist/dt/500);};
-  const calcPress=(v)=>Math.max(MINP,Math.min(MAXP,MAXP-(v*MAXP*0.8)));
-  const interp=(p0,p1,p2,p3,t)=>{const v0=(p2-p0)*0.5,v1=(p3-p1)*0.5,t2=t*t,t3=t2*t;return(2*p1-2*p2+v0+v1)*t3+(-3*p1+3*p2-2*v0-v1)*t2+v0*t+p1;};
-  const smooth=(ps)=>{if(ps.length<4)return ps;const sm=[];for(let i=1;i<ps.length-2;i++){for(let t=0;t<1;t+=0.25){const x=interp(ps[i-1].x,ps[i].x,ps[i+1].x,ps[i+2].x,t),y=interp(ps[i-1].y,ps[i].y,ps[i+1].y,ps[i+2].y,t),p=ps[i].p+(ps[i+1].p-ps[i].p)*t;sm.push({x,y,p});}}return sm;};
-  const drawPt=(x,y,p,px,py,pp)=>{const w=p*2.5,pw=pp*2.5;const g=ctx.createLinearGradient(px||x,py||y,x,y);g.addColorStop(0,`rgba(0,61,115,${pp*0.8})`);g.addColorStop(1,`rgba(0,61,115,${p*0.8})`);ctx.strokeStyle=g;ctx.lineWidth=(w+pw)/2;ctx.lineCap='round';ctx.lineJoin='round';if(px!==undefined){ctx.beginPath();ctx.moveTo(px,py);ctx.lineTo(x,y);ctx.stroke();}else{ctx.beginPath();ctx.arc(x,y,w/2,0,Math.PI*2);ctx.fillStyle=`rgba(0,61,115,${p*0.8})`;ctx.fill();}};
-  const drawSmooth=(sps)=>{for(let i=0;i<sps.length-1;i++){const p=sps[i];drawPt(p.x,p.y,p.p,sps[i-1]?.x,sps[i-1]?.y,sps[i-1]?.p);}};
-  const start=e=>{e.preventDefault();const p=gp(e);lx=p.x;ly=p.y;lt=Date.now();d=true;pts=[];pbuf=[];pts.push({x:lx,y:ly,p:1});};
-  const draw=e=>{if(!d)return;e.preventDefault();const p=gp(e);const now=Date.now(),dt=Math.max(1,now-lt),v=calcVel(lx,ly,p.x,p.y,dt),pr=calcPress(v);if(pts.length%DECIM===0||Math.hypot(p.x-lx,p.y-ly)>10){pts.push({x:p.x,y:p.y,p:pr});pbuf.push(pr);if(pbuf.length>3){pbuf.shift();const ap=pbuf.reduce((a,b)=>a+b)/pbuf.length;if(pts.length>1)pts[pts.length-1].p=SMOOTH*ap+(1-SMOOTH)*pts[pts.length-1].p;}if(pts.length>1){const cur=pts[pts.length-1],prv=pts[pts.length-2];drawPt(cur.x,cur.y,cur.p,prv.x,prv.y,prv.p);}}lx=p.x;ly=p.y;lt=now;sigPads[id]=true;};
-  const stop=()=>{d=false;};
-  c.addEventListener('mousedown',start);c.addEventListener('mousemove',draw);c.addEventListener('mouseup',stop);c.addEventListener('mouseleave',stop);
-  c.addEventListener('touchstart',start,{passive:false});c.addEventListener('touchmove',draw,{passive:false});c.addEventListener('touchend',stop);
+  const c=document.getElementById(id);if(!c)return;
+  const ctx=c.getContext('2d',{willReadFrequently:true});
+  // Canvas dimensions already set by resizeSigCanvas or parent - don't override
+  let d=false,lx=0,ly=0,lt=0,pts=[];
+  const MIN_DIST=2,SMOOTH_FACTOR=0.15,MIN_WIDTH=1.5,MAX_WIDTH=3.5,VEL_FILTER=0.3;
+  
+  const getPos=e=>{
+    const r=c.getBoundingClientRect();
+    const t=e.touches?e.touches[0]:e;
+    const scaleX=c.width/r.width;
+    const scaleY=c.height/r.height;
+    return{x:(t.clientX-r.left)*scaleX,y:(t.clientY-r.top)*scaleY};
+  };
+  
+  const calcVel=(p1,p2,dt)=>{
+    if(!dt||dt<1)return 0;
+    const dx=p2.x-p1.x,dy=p2.y-p1.y;
+    return Math.sqrt(dx*dx+dy*dy)/dt;
+  };
+  
+  const calcWidth=(vel)=>{
+    const norm=Math.min(vel/1000,1);
+    return MAX_WIDTH-(norm*(MAX_WIDTH-MIN_WIDTH));
+  };
+  
+  const drawSegment=(p1,p2)=>{
+    if(!p1||!p2)return;
+    const dx=p2.x-p1.x,dy=p2.y-p1.y,dist=Math.sqrt(dx*dx+dy*dy);
+    if(dist<MIN_DIST)return;
+    
+    const w1=p1.w||MIN_WIDTH,w2=p2.w||MIN_WIDTH;
+    const angle=Math.atan2(dy,dx);
+    
+    ctx.save();
+    ctx.beginPath();
+    
+    // Draw as filled polygon for smooth variable width
+    const ox1=-Math.sin(angle)*w1/2,oy1=Math.cos(angle)*w1/2;
+    const ox2=-Math.sin(angle)*w2/2,oy2=Math.cos(angle)*w2/2;
+    
+    ctx.moveTo(p1.x+ox1,p1.y+oy1);
+    ctx.lineTo(p2.x+ox2,p2.y+oy2);
+    ctx.lineTo(p2.x-ox2,p2.y-oy2);
+    ctx.lineTo(p1.x-ox1,p1.y-oy1);
+    ctx.closePath();
+    
+    ctx.fillStyle='rgba(0,61,115,0.95)';
+    ctx.fill();
+    
+    // Add end caps
+    ctx.beginPath();
+    ctx.arc(p1.x,p1.y,w1/2,0,Math.PI*2);
+    ctx.arc(p2.x,p2.y,w2/2,0,Math.PI*2);
+    ctx.fill();
+    ctx.restore();
+  };
+  
+  const smoothPoint=(pts,idx)=>{
+    if(idx<1||idx>=pts.length-1)return pts[idx];
+    const prev=pts[idx-1],curr=pts[idx],next=pts[idx+1];
+    return{
+      x:curr.x*0.7+prev.x*0.15+next.x*0.15,
+      y:curr.y*0.7+prev.y*0.15+next.y*0.15,
+      w:curr.w
+    };
+  };
+  
+  const start=e=>{
+    e.preventDefault();
+    const p=getPos(e);
+    p.t=Date.now();
+    p.w=MAX_WIDTH;
+    lx=p.x;ly=p.y;lt=p.t;
+    d=true;
+    pts=[p];
+    sigPads[id]=true;
+  };
+  
+  const move=e=>{
+    if(!d)return;
+    e.preventDefault();
+    const p=getPos(e);
+    const now=Date.now();
+    const dt=now-lt;
+    
+    if(Math.abs(p.x-lx)<MIN_DIST&&Math.abs(p.y-ly)<MIN_DIST)return;
+    
+    const vel=calcVel({x:lx,y:ly},p,dt);
+    p.w=calcWidth(vel);
+    p.t=now;
+    
+    // Smooth width transition
+    if(pts.length>0){
+      const lastW=pts[pts.length-1].w;
+      p.w=lastW+(p.w-lastW)*VEL_FILTER;
+    }
+    
+    pts.push(p);
+    
+    // Draw segment immediately
+    if(pts.length>1){
+      const p1=pts[pts.length-2];
+      const p2=pts[pts.length-1];
+      drawSegment(p1,p2);
+    }
+    
+    lx=p.x;ly=p.y;lt=now;
+  };
+  
+  const stop=e=>{
+    if(!d)return;
+    d=false;
+    
+    // Apply final smoothing pass
+    if(pts.length>3){
+      ctx.clearRect(0,0,c.width,c.height);
+      const smoothed=pts.map((p,i)=>smoothPoint(pts,i));
+      for(let i=1;i<smoothed.length;i++){
+        drawSegment(smoothed[i-1],smoothed[i]);
+      }
+    }
+  };
+  
+  c.addEventListener('mousedown',start);
+  c.addEventListener('mousemove',move);
+  c.addEventListener('mouseup',stop);
+  c.addEventListener('mouseleave',stop);
+  c.addEventListener('touchstart',start,{passive:false});
+  c.addEventListener('touchmove',move,{passive:false});
+  c.addEventListener('touchend',stop);
+  c.addEventListener('touchcancel',stop);
 }
 function clearSignature(id){const c=document.getElementById(id);if(!c)return;c.getContext('2d').clearRect(0,0,c.width,c.height);sigPads[id]=false;}
 function getSignatureDataUrl(id){const c=document.getElementById(id);if(!c||!sigPads[id])return null;return c.toDataURL('image/png');}
