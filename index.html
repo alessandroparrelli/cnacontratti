@@ -232,17 +232,17 @@ body.dark-mode .contract-header-bar{background:var(--cna)!important}
 @media(max-width:768px){
   .form-row.c2,.form-row.c3,.form-row.c4,.form-row.c21,.form-row.c211,.form-row.cf{grid-template-columns:1fr}
   .tab-btn{padding:12px 14px;font-size:13px}
-  .header-inner{padding:10px 14px;gap:10px}
-  .header-text h1{font-size:16px}
-  .header-logo img{height:36px}
-  .header-user{font-size:11px;padding:5px 10px}
-  .header-actions{gap:6px}
-  .stats-bar{gap:8px;padding:0 12px;grid-template-columns:repeat(4,1fr)}
-  .stat-mini-box{padding:10px 10px 8px 10px}
-  .stat-mini-num{font-size:22px}
-  .stat-mini-label{font-size:8px;letter-spacing:0.02em}
-  .stat-mini-icon{width:26px;height:26px}
-  .stat-mini-icon svg{width:13px;height:13px}
+  .header-inner{padding:10px 14px;gap:8px;flex-wrap:nowrap}
+  .header-text h1{font-size:15px}
+  .header-logo img{height:34px}
+  .header-user{font-size:11px;padding:5px 8px}
+  .header-actions{gap:6px;flex-shrink:0}
+  .stats-bar{gap:10px;padding:0 12px;grid-template-columns:repeat(2,1fr)}
+  .stat-mini-box{padding:14px 14px 12px 14px}
+  .stat-mini-num{font-size:36px}
+  .stat-mini-label{font-size:10px;letter-spacing:0.03em}
+  .stat-mini-icon{width:30px;height:30px}
+  .stat-mini-icon svg{width:15px;height:15px}
   .main-content{padding:0 12px 100px;margin:12px auto}
   .form-card-body{padding:14px}
   .footer-inner{flex-direction:column;text-align:center}
@@ -255,10 +255,10 @@ body.dark-mode .contract-header-bar{background:var(--cna)!important}
   .btn-sm{padding:5px 10px;font-size:11px}
 }
 @media(max-width:480px){
-  .header-inner{flex-wrap:wrap;justify-content:center;text-align:center}
-  .header-actions{width:100%;justify-content:center;margin-left:0}
-  .stat-mini-box{padding:8px 8px 6px 8px}
-  .stat-mini-num{font-size:20px}
+  .header-inner{flex-wrap:nowrap;justify-content:flex-start}
+  .header-actions{flex-shrink:0}
+  .stat-mini-box{padding:12px 10px 10px 10px}
+  .stat-mini-num{font-size:32px}
   .tabs-inner{padding:0 12px}
 }
 @media print{body{display:none}}
@@ -313,7 +313,7 @@ body.dark-mode .contract-header-bar{background:var(--cna)!important}
 <!-- HERO TITLE -->
 <div style="padding:24px 24px 0 24px;font-family:'Inter',sans-serif">
   <p style="font-size:11px;font-weight:600;color:#6b7a8d;text-transform:uppercase;letter-spacing:1.2px;margin:0 0 8px 0">DASHBOARD · OPERATORI</p>
-  <h2 style="font-size:26px;font-weight:700;color:#1a2332;margin:0 0 6px 0;line-height:1.2">Gestisci contratti e <span style="color:#005CA9">tesseramento</span> in un unico posto.</h2>
+  <h2 style="font-size:36px;font-weight:800;color:#1a2332;margin:0 0 6px 0;line-height:1.15;letter-spacing:-0.02em">Gestisci contratti e <span style="color:#005CA9">tesseramento</span> in un unico posto.</h2>
   <p style="font-size:13px;color:#6b7a8d;margin:0 0 20px 0;line-height:1.5">Panoramica in tempo reale su moduli di adesione, firme in attesa e contratti caricati nel sistema CNA Roma.</p>
 </div>
 
