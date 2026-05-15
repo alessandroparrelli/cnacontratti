@@ -4164,10 +4164,18 @@ async function embedSigs(doc,pages,data){
       const raw=b64.split(',')[1];
       const imgBytes=Uint8Array.from(atob(raw),c=>c.charCodeAt(0));
       let img;
-      // Prova PNG poi JPEG
       try{img=await doc.embedPng(imgBytes);}catch(e1){
         try{img=await doc.embedJpg(imgBytes);}catch(e2){
-          console.warn('Embed fallito per entrambi i formati');return;
+          // Fallback: converti su canvas e ri-esporta come PNG opaco
+          try{
+            const bmp=await createImageBitmap(new Blob([imgBytes]));
+            const cv=document.createElement('canvas');cv.width=bmp.width;cv.height=bmp.height;
+            const ctx=cv.getContext('2d');ctx.drawImage(bmp,0,0);
+            const dataUrl=cv.toDataURL('image/png');
+            const raw2=dataUrl.split(',')[1];
+            const bytes2=Uint8Array.from(atob(raw2),c=>c.charCodeAt(0));
+            img=await doc.embedPng(bytes2);
+          }catch(e3){console.warn('Sig embed failed all attempts');return;}
         }
       }
       const natW=img.width;const natH=img.height;
@@ -4176,9 +4184,8 @@ async function embedSigs(doc,pages,data){
       const drawW=natW*scale;const drawH=natH*scale;
       const offsetX=(boxW-drawW)/2;const offsetY=(boxH-drawH)/2;
       pages[pos[0]].drawImage(img,{x:pos[1]+offsetX,y:pos[2]+offsetY,width:drawW,height:drawH});
-    }catch(e){console.warn('Sig embed:',e);}
+    }catch(e){console.warn('Sig embed error:',e);}
   };
-  // If client signature exists, apply it to ALL 5 positions
   if(data.firma_cliente_path){
     await es(data.firma_cliente_path,SIG_POS.consenso);
     await es(data.firma_cliente_path,SIG_POS.dichiarazione);
@@ -4186,7 +4193,6 @@ async function embedSigs(doc,pages,data){
     await es(data.firma_cliente_path,SIG_POS.inps);
     await es(data.firma_cliente_path,SIG_POS.sepa);
   }else{
-    // Otherwise use individual signatures from form
     await es(data.firma_consenso_base64,SIG_POS.consenso);
     await es(data.firma_consenso_base64,SIG_POS.dichiarazione);
     await es(data.firma_consenso_base64,SIG_POS.privacy);
@@ -4519,27 +4525,52 @@ async function editContract(id){
   try{
     const d=await sb(`contratti?id=eq.${id}&select=*`);
     if(!d||!d[0]){showToast('Contratto non trovato','error');return;}
-    const contract=d[0];
-    
-    // Load all fields into the form
-    Object.keys(contract).forEach(key=>{
-      const el=document.getElementById(key);
-      if(el&&contract[key]!==null){
-        if(el.type==='radio'){
-          const radio=document.querySelector(`input[name="${key}"][value="${contract[key]}"]`);
-          if(radio)radio.checked=true;
-        }else if(el.type==='checkbox'){
-          el.checked=!!contract[key];
-        }else{
-          el.value=contract[key];
-        }
-      }
-    });
-    
-    // Set currentContractId for saving updates
+    const c=d[0];
+
+    // Helper per settare un campo per ID
+    const sv=(formId,val)=>{const el=document.getElementById(formId);if(el&&val!=null)el.value=val;};
+    const sc=(name,val)=>{const r=document.querySelector(`input[name="${name}"][value="${val}"]`);if(r)r.checked=true;};
+    const scb=(formId,val)=>{const el=document.getElementById(formId);if(el)el.checked=!!val;};
+
+    // Dati anagrafici
+    sv('cognome',c.cognome);sv('nome',c.nome);
+    sv('cf',c.codice_fiscale);sv('data_nascita',c.nato_il);
+    sv('nato_a',c.luogo_nascita);sv('prov_nascita',c.prov_nascita);sv('stato_nascita',c.stato_nascita);
+    sv('residente_in',c.residente_indirizzo);sv('comune_res',c.residente_comune);
+    sv('cap_res',c.residente_cap);sv('prov_res',c.residente_prov);sv('stato_res',c.stato_residenza);
+    sv('telefono',c.telefono);sv('cellulare',c.cellulare);sv('email',c.email);
+
+    // Dati aziendali
+    sv('ragione_sociale',c.ragione_sociale);sv('piva',c.partita_iva);
+    sv('ateco',c.attivita_svolta);sv('pec',c.pec);
+    sv('sede_attivita',c.sede_attivita_indirizzo);
+    sv('comune_att',c.sede_attivita_comune);sv('cap_att',c.sede_attivita_cap);sv('prov_att',c.sede_attivita_prov);
+    sv('cod_inail',c.codice_inail_ditta);sv('cod_inail_pat',c.cod_inail_pat);
+    sv('documento_id',c.documento_identita);
+
+    // Qualità (checkbox)
+    scb('tipo_a',c.qualita_artigiano);scb('tipo_c',c.qualita_commerciante);
+    scb('tipo_p',c.qualita_piccola_impresa);scb('tipo_v',c.qualita_varie);
+
+    // Quote e pagamento
+    sv('quota_1_anno',c.quota_primo_anno_importo!=null?String(c.quota_primo_anno_importo).replace('.',','):'');
+    sv('data_adesione',c.quota_primo_anno_data);
+    sv('modalita_pagamento_sel',c.quota_primo_anno_modalita);
+    sv('quota_inps',c.quota_anni_successivi_importo!=null?String(c.quota_anni_successivi_importo).replace('.',','):'');
+    sv('quota_diretto',c.quota_diretto_importo!=null?String(c.quota_diretto_importo).replace('.',','):'');
+    sv('iban_ditta',c.iban_ditta);sv('banca_agenzia',c.banca_agenzia);
+    sv('modalita_pagamento',c.modalita_pagamento);
+
+    // Altri campi
+    sv('raccolto_da',c.raccolta_da);sv('motivo_iscrizione',c.motivo_iscrizione);
+    sv('cod_inps',c.cod_inps);sv('qualita_inps',c.qualita_inps);
+    sv('id_mandato',c.sepa_identificativo_mandato);
+    sv('luogo_sepa',c.luogo_sottoscrizione_sepa);
+    sv('data_inps',c.data_delega_inps);sv('data_sepa',c.data_sottoscrizione_sepa);
+    sv('data_consenso',c.data_consenso);sv('data_dichiarazione',c.data_dichiarante);
+    scb('sepa_b2b',c.sepa_b2b_checkbox);scb('sepa_core',c.sepa_core_checkbox);
+
     currentContractId=id;
-    
-    // Switch to form view
     switchTab(0);
     showToast('Contratto caricato per modifica','success');
   }catch(e){console.error('editContract:',e);showToast('Errore: '+e.message,'error');}
@@ -4789,7 +4820,11 @@ function switchTab(i){
     if(footer)footer.style.display='none';
     if(tabs)tabs.style.display='block';
   }
-  if(i===4)loadContracts();
+  if(i===4){loadContracts();
+    // Auto-refresh contratti ogni 60s quando il tab è attivo
+    if(window._dashRefresh)clearInterval(window._dashRefresh);
+    window._dashRefresh=setInterval(()=>{if(document.getElementById('tab-4').classList.contains('active'))loadContracts();},60000);
+  }else{if(window._dashRefresh){clearInterval(window._dashRefresh);window._dashRefresh=null;}}
 }
 
 function newContract(){
