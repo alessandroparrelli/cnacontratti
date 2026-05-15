@@ -203,9 +203,10 @@ body.dark-mode .contract-header-bar{background:var(--cna)!important}
 
 /* FIRMA PAGE - FULLSCREEN RESPONSIVE */
 .firma-page{min-height:100vh;background:var(--gray)}
-.firma-header{text-align:center;padding:24px 20px;background:linear-gradient(135deg,var(--cna),var(--cna-dk));color:#fff}
-.firma-header img{height:80px;margin-bottom:12px}
-.firma-header h1{font-size:20px;margin-bottom:4px}.firma-header p{opacity:.85;font-size:14px}
+.firma-header{text-align:center;padding:32px 24px 24px;background:#fff;color:var(--txt)}
+.firma-header img{height:72px;margin-bottom:20px;display:block;margin-left:auto;margin-right:auto}
+.firma-header h1{font-family:'Inter',sans-serif;font-size:32px;font-weight:800;color:#005CA9;margin-bottom:10px;line-height:1.2;letter-spacing:-0.5px}
+.firma-header p{font-family:'Inter',sans-serif;font-size:15px;font-weight:700;color:#1a2332;line-height:1.5;max-width:520px;margin:0 auto}
 .firma-content{max-width:700px;margin:0 auto;padding:20px}
 .firma-content .form-card{border-radius:var(--rl);margin-bottom:16px}
 
@@ -3744,7 +3745,7 @@ async function checkSigningMode(){
   const appC=document.getElementById('app-container');if(appC)appC.style.display='none';
   // Create firma page container
   const firmaDiv=document.createElement('div');firmaDiv.className='firma-page';
-  firmaDiv.innerHTML=`<div class="firma-header"><img src="https://festivaldellelibrerie.it/wp-content/uploads/2024/11/logo-cna-colore.svg" alt="CNA"><h1>CNA Roma</h1><p>Firma Contratto di Adesione</p></div><div class="firma-content"><p style="text-align:center;padding:40px;color:var(--txt2)">Caricamento contratto...</p></div>`;
+  firmaDiv.innerHTML=`<div class="firma-header"><img src="https://festivaldellelibrerie.it/wp-content/uploads/2024/11/logo-cna-colore.svg" alt="CNA"><h1>CNA di Roma</h1><p>In questa pagina potrai firmare, scaricare e salvare i moduli di adesione alla nostra Confederazione</p></div><div class="firma-content"><p style="text-align:center;padding:40px;color:var(--txt2)">Caricamento contratto...</p></div>`;
   document.body.insertBefore(firmaDiv,document.getElementById('sig-fullscreen'));
   try{
     const c=await sb(`contratti?token=eq.${token}&select=*`);
