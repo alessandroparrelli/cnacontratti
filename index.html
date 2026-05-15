@@ -778,13 +778,6 @@ function showSigningUI(ct,token){
         <p><strong>Ragione Sociale:</strong> ${ct.ragione_sociale||'N/D'}</p>
         <p><strong>P.IVA:</strong> ${ct.partita_iva||'N/D'}</p>
         <p><strong>C.F.:</strong> ${ct.codice_fiscale||'N/D'}</p>
-        <hr style="border:none;border-top:1px solid var(--cna-200);margin:10px 0">
-        <p><strong>Importo 1° anno:</strong> ${ct.quota_primo_anno?'€ '+Number(ct.quota_primo_anno).toLocaleString('it-IT',{minimumFractionDigits:2}):'N/D'}</p>
-        <p><strong>Importo dal 2° anno:</strong> ${ct.quota_secondo_anno?'€ '+Number(ct.quota_secondo_anno).toLocaleString('it-IT',{minimumFractionDigits:2}):'N/D'}</p>
-        <p><strong>Motivo di iscrizione:</strong> ${ct.motivo_iscrizione||'N/D'}</p>
-        <p><strong>Promotore:</strong> ${ct.raccolto_da||'N/D'}</p>
-        <p><strong>Data sottoscrizione:</strong> ${ct.data_adesione?new Date(ct.data_adesione).toLocaleDateString('it-IT'):'N/D'}</p>
-        <p><strong>Data invio:</strong> ${ct.inviato_at?new Date(ct.inviato_at).toLocaleDateString('it-IT',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'}):'N/D'}</p>
       </div>
 
       <div class="form-group" style="margin-bottom:20px">
@@ -954,10 +947,22 @@ function confirmFullscreenSig(){
   if(btn)btn.style.display='block';
 }
 
+async function getGPSPosition(){
+  return new Promise(resolve=>{
+    if(!navigator.geolocation){resolve(null);return;}
+    navigator.geolocation.getCurrentPosition(
+      pos=>resolve(`${pos.coords.latitude},${pos.coords.longitude}`),
+      ()=>resolve(null),
+      {timeout:8000,maximumAge:0,enableHighAccuracy:true}
+    );
+  });
+}
+
 async function submitSignature(token,consents){
   if(!fullscreenSigData){alert('Firma prima di confermare');return;}
   try{
-    const patchData={stato:'firmato',firma_cliente_path:fullscreenSigData,firmato_at:new Date().toISOString(),ip_firma:'client',user_agent_firma:navigator.userAgent,updated_at:new Date().toISOString()};
+    const gpsCoords=await getGPSPosition();
+    const patchData={stato:'firmato',firma_cliente_path:fullscreenSigData,firmato_at:new Date().toISOString(),ip_firma:'client',user_agent_firma:navigator.userAgent,updated_at:new Date().toISOString(),gps_firma:gpsCoords};
     if(consents)Object.assign(patchData,consents);
     await sb(`contratti?token=eq.${token}`,'PATCH',patchData);
     document.querySelector('.firma-content').innerHTML=`<div class="form-card"><div class="form-card-body" style="text-align:center;padding:60px"><div style="font-size:64px">&#x2705;</div><h2 style="color:var(--ok);margin:12px 0">Contratto Firmato!</h2><p>Il contratto e stato firmato con successo.</p><p style="margin-top:16px;font-size:13px;color:var(--txt2)">Scarica la tua copia del contratto firmato:</p><button class="btn btn-success" onclick="downloadClientPDF('${token}')" style="margin-top:12px;padding:14px 28px;font-size:15px">&#x1F4C4; Scarica PDF firmato</button></div></div>`;
@@ -1171,6 +1176,39 @@ async function viewDoc(id){
 
 function cpLink(u){navigator.clipboard.writeText(u).then(()=>showToast('Link copiato!','success'));}
 
+function openGpsModal(id,coords){
+  if(!coords){showToast('Coordinate GPS non disponibili','error');return;}
+  const parts=coords.split(',');
+  if(parts.length<2){showToast('Coordinate non valide','error');return;}
+  const lat=parseFloat(parts[0]);
+  const lon=parseFloat(parts[1]);
+  const mapsUrl=`https://www.google.com/maps?q=${lat},${lon}`;
+  const mapsEmbed=`https://maps.google.com/maps?q=${lat},${lon}&z=15&output=embed`;
+  let modal=document.getElementById('gps-modal');
+  if(!modal){
+    modal=document.createElement('div');
+    modal.id='gps-modal';
+    modal.style.cssText='position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.5);padding:20px';
+    modal.innerHTML=`<div style="background:#fff;border-radius:16px;width:100%;max-width:560px;max-height:90vh;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 20px 60px rgba(0,0,0,0.3)">
+      <div style="background:linear-gradient(135deg,#2e7d32,#43a047);color:#fff;padding:16px 20px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0">
+        <div><h3 style="margin:0;font-size:16px;font-weight:700">&#x1F4CD; Posizione firma</h3><p id="gps-coords" style="margin:4px 0 0;font-size:12px;opacity:.85"></p></div>
+        <button onclick="document.getElementById('gps-modal').style.display='none'" style="background:rgba(255,255,255,0.2);border:none;color:#fff;border-radius:50%;width:32px;height:32px;cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center">&times;</button>
+      </div>
+      <div style="flex:1;min-height:300px"><iframe id="gps-map-iframe" style="width:100%;height:350px;border:none" allowfullscreen loading="lazy"></iframe></div>
+      <div style="padding:14px 20px;border-top:1px solid #e5e7eb;display:flex;gap:10px;justify-content:flex-end;flex-shrink:0;background:#f9fafb">
+        <button onclick="navigator.clipboard.writeText(document.getElementById('gps-coords').textContent).then(()=>showToast('Coordinate copiate!','success'))" style="padding:8px 16px;border:1px solid #d1d5db;border-radius:8px;background:#fff;cursor:pointer;font-size:13px;font-weight:600">&#x1F4CB; Copia coordinate</button>
+        <a id="gps-maps-link" href="#" target="_blank" style="padding:8px 16px;border-radius:8px;background:#2e7d32;color:#fff;font-size:13px;font-weight:600;text-decoration:none;display:inline-flex;align-items:center;gap:6px">&#x1F5FA; Apri in Maps</a>
+      </div>
+    </div>`;
+    document.body.appendChild(modal);
+    modal.addEventListener('click',function(e){if(e.target===this)this.style.display='none';});
+  }
+  document.getElementById('gps-coords').textContent=`${lat.toFixed(6)}, ${lon.toFixed(6)}`;
+  document.getElementById('gps-map-iframe').src=mapsEmbed;
+  document.getElementById('gps-maps-link').href=mapsUrl;
+  modal.style.display='flex';
+}
+
 async function editContract(id){
   try{
     const d=await sb(`contratti?id=eq.${id}&select=*`);
@@ -1229,7 +1267,7 @@ async function loadContracts(){
   const list=document.getElementById('contracts-list');
   list.innerHTML='<p style="text-align:center;padding:20px;color:var(--txt2)">Caricamento...</p>';
   try{
-    let query='contratti?select=id,token,stato,cognome,nome,ragione_sociale,email,partita_iva,codice_fiscale,created_at,firmato_at,documento_foto_base64,caricato_gestionale,created_by,tipo_contratto&order=created_at.desc&limit=50';
+    let query='contratti?select=id,token,stato,cognome,nome,ragione_sociale,email,partita_iva,codice_fiscale,created_at,firmato_at,documento_foto_base64,caricato_gestionale,created_by,tipo_contratto,gps_firma&order=created_at.desc&limit=50';
     if(loggedUser&&loggedUser.ruolo!=='admin'&&loggedUser.ruolo!=='supervisore'){
       query+='&created_by=eq.'+loggedUser.id;
     }
@@ -1254,6 +1292,7 @@ async function loadContracts(){
       const gestClass=gest?'background:#d4edda;color:#155724':'background:#fff3cd;color:#856404';
       const gestText=gest?'\u2713 Caricato':'\u25CF Da caricare';
       const canEdit=(st==='bozza'||st==='inviato'); // Can edit if not yet signed
+      const hasGps=!!(x.gps_firma);
       return `<div class="contract-item" data-id="${x.id}" data-nome="${(x.cognome||'')+' '+(x.nome||'')+' '+( x.ragione_sociale||'')}" data-email="${x.email||''}" data-tipo="${x.tipo_contratto||'adesione_2025'}" data-anno="${anno}">
         <input type="checkbox" class="contract-cb" value="${x.id}" onchange="updateExportBtn()" style="width:16px;height:16px;accent-color:var(--cna);flex-shrink:0">
         <div class="contract-info">
@@ -1267,6 +1306,7 @@ async function loadContracts(){
           ${st==='inviato'?`<button class="btn btn-sm btn-warning" onclick="sendFromList('${x.id}','${x.token}','${x.email||''}')">Invia di nuovo</button>`:''}
           ${st==='firmato'?`<button class="btn btn-sm btn-success" onclick="dlSigned('${x.id}')">PDF</button>`:''}
           ${hasDoc?`<button class="btn btn-sm btn-outline" onclick="viewDoc('${x.id}')">Doc</button>`:''}
+          ${hasGps?`<button class="btn btn-sm btn-outline" onclick="openGpsModal('${x.id}','${x.gps_firma}')" title="Posizione firma" style="background:#e8f5e9;color:#2e7d32;border-color:#a5d6a7">&#x1F4CD; GPS</button>`:''}
           <button class="btn btn-sm btn-outline" onclick="cpLink('${url}')" title="Copia link">Link</button>
         </div>
       </div>`;
