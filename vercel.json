@@ -1,6 +1,10 @@
 {
   "buildCommand": "echo done",
   "outputDirectory": ".",
+  "rewrites": [
+    { "source": "/api/(.*)", "destination": "/api/$1" },
+    { "source": "/((?!api/).*)", "destination": "/index.html" }
+  ],
   "headers": [
     {
       "source": "/manifest.json",
