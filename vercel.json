@@ -1,7 +1,4 @@
 {
-  "routes": [
-    { "src": "/(.*)", "dest": "/index.html" }
-  ],
   "headers": [
     {
       "source": "/manifest.json",
@@ -26,6 +23,12 @@
       "headers": [
         { "key": "Content-Type", "value": "image/svg+xml" }
       ]
+    }
+  ],
+  "rewrites": [
+    {
+      "source": "/((?!.*\\.(ico|png|svg|json|js|css|woff|woff2|ttf|eot|webp|jpg|jpeg|gif)).*)",
+      "destination": "/index.html"
     }
   ]
 }
