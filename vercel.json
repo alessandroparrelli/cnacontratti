@@ -1,10 +1,6 @@
 {
   "buildCommand": "echo done",
   "outputDirectory": ".",
-  "routes": [
-    { "src": "/api/(.*)", "dest": "/api/$1" },
-    { "src": "/(.*)", "dest": "/index.html" }
-  ],
   "headers": [
     {
       "source": "/manifest.json",
