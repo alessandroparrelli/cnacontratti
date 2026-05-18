@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- Build: v8.2 - 1777608647 - Changelog completo -->
+<!-- Build: v8.3 - 1747563600 - Icone PWA, font header, fix deploy -->
 <html lang="it">
 <head>
 <meta charset="UTF-8">
@@ -2586,7 +2586,7 @@ var qrcode = function() {
     <div class="form-group"><label>Email</label><input type="text" id="login-email" placeholder="email@esempio.com" autocomplete="username" required></div>
     <div class="form-group"><label>Password</label><input type="password" id="login-password" placeholder="••••••••" autocomplete="current-password" required></div>
     <button class="login-btn" onclick="doLogin()">Accedi</button>
-    <p style="text-align:center;font-size:11px;color:var(--txt2);margin-top:20px">Signature v8.2</p>
+    <p style="text-align:center;font-size:11px;color:var(--txt2);margin-top:20px">Signature v8.3</p>
     <p style="text-align:center;font-size:10px;color:var(--txt2);margin-top:4px">&copy; 2026 CNA Roma - Confederazione Nazionale dell'Artigianato</p>
   </div>
 </div>
@@ -2804,7 +2804,7 @@ var qrcode = function() {
 
 <!-- APP FOOTER -->
 <footer id="app-footer" style="display:none;margin-top:auto;border-top:1px solid var(--brd);padding:28px 24px;text-align:center;background:var(--bg2)">
-  <p style="font-family:'Inter',sans-serif;font-size:13px;font-weight:700;color:var(--txt2);letter-spacing:0.12em;text-transform:uppercase;margin:0 0 8px 0">Signature V8.2 &middot; CNA Roma</p>
+  <p style="font-family:'Inter',sans-serif;font-size:13px;font-weight:700;color:var(--txt2);letter-spacing:0.12em;text-transform:uppercase;margin:0 0 8px 0">Signature V8.3 &middot; CNA Roma</p>
   <p style="font-family:'Inter',sans-serif;font-size:12px;font-weight:600;color:var(--txt2);letter-spacing:0.05em;margin:0">&copy; CNA Roma &middot; Sistema gestione contratti</p>
 </footer>
 
@@ -2956,7 +2956,18 @@ Cordiali saluti, CNA Roma</div>
   <div class="modal-body" style="max-height:70vh;overflow-y:auto">
     
     <div class="changelog-entry">
-      <h3>v8.1 - 1 Maggio 2026 - VERSIONE STABILE 🎯</h3>
+      <h3>v8.3 - 18 Maggio 2026 ✅ ATTUALE</h3>
+        <ul>
+          <li><strong>Icone PWA:</strong> favicon multi-size (16/32/48px), apple-touch-icon (180px), icon-192, icon-512 dal logo SVG ufficiale CNA</li>
+          <li><strong>manifest.json:</strong> PWA installabile su Android e iOS con icona CNA</li>
+          <li><strong>Header:</strong> font "Signature" aggiornato a Black 900, 22px (allineato a Dashboard)</li>
+          <li><strong>Fix deploy:</strong> vercel.json corretto — file statici (icone, manifest) ora serviti correttamente</li>
+        </ul>
+        <h3>v8.2 - Aprile/Maggio 2026</h3>
+        <ul>
+          <li><strong>Changelog completo:</strong> versione stabile con tutte le feature precedenti</li>
+        </ul>
+        <h3>v8.1 - 1 Maggio 2026 - VERSIONE STABILE 🎯</h3>
       <ul>
         <li><strong>Ripristino versione stabile:</strong> rimossa libreria esterna che causava errori</li>
         <li><strong>Firma PDF ottimizzata:</strong> dimensione 275x68px (via di mezzo perfetta)</li>
