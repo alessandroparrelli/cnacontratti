@@ -4091,10 +4091,7 @@ function confirmFullscreenSig(){
 async function submitSignature(token,consents){
   if(!fullscreenSigData){alert('Firma prima di confermare');return;}
   try{
-    // Comprimi la firma come PNG trasparente (max 600px larghezza)
     const sigPng=await compressPng(fullscreenSigData,600);
-    
-    // Step 1: Salva prima i dati base (senza immagini) per evitare timeout
     const gpsCoords=await getGPSPosition();
     const baseData={stato:'firmato',firmato_at:new Date().toISOString(),ip_firma:'client',user_agent_firma:navigator.userAgent,updated_at:new Date().toISOString(),gps_firma:gpsCoords};
     if(consents){
@@ -4106,22 +4103,59 @@ async function submitSignature(token,consents){
       baseData.documento_foto_tipo=consents.documento_foto_tipo;
     }
     await sb(`contratti?token=eq.${token}`,'PATCH',baseData);
-    
-    // Step 2: Salva la firma (PNG trasparente)
     await sb(`contratti?token=eq.${token}`,'PATCH',{firma_cliente_path:sigPng});
-    
-    // Step 3: Salva foto documento fronte (se esiste)
     if(consents&&consents.documento_foto_base64){
       await sb(`contratti?token=eq.${token}`,'PATCH',{documento_foto_base64:consents.documento_foto_base64});
     }
-    
-    // Step 4: Salva foto documento retro (se esiste)
     if(consents&&consents.documento_retro_base64){
       await sb(`contratti?token=eq.${token}`,'PATCH',{documento_retro_base64:consents.documento_retro_base64});
     }
-    
+
+    // Mostra conferma
     document.querySelector('.firma-content').innerHTML=`<div class="form-card"><div class="form-card-body" style="text-align:center;padding:60px"><div style="font-size:64px">&#x2705;</div><h2 style="color:var(--ok);margin:12px 0">Contratto Firmato!</h2><p>Il contratto e stato firmato con successo.</p><p style="margin-top:16px;font-size:13px;color:var(--txt2)">Scarica la tua copia del contratto firmato:</p><button class="btn btn-success" onclick="downloadClientPDF('${token}')" style="margin-top:12px;padding:14px 28px;font-size:15px">&#x1F4C4; Scarica PDF firmato</button></div></div>`;
+
+    // Step 5: Invia 3 email via Resend (in background, non blocca UI)
+    sendPostFirmaEmails(token,consents).catch(e=>console.warn('Email post-firma:',e.message));
+
   }catch(e){alert('Errore: '+e.message);}
+}
+
+async function sendPostFirmaEmails(token,consents){
+  try{
+    // Recupera contratto completo + email operatore
+    const rows=await sb(`contratti?token=eq.${token}&select=*,cna_users(email)`);
+    if(!rows||!rows[0])return;
+    const ct=rows[0];
+    const operatoreEmail=ct.cna_users?.email||null;
+
+    // Genera PDF firmato come base64
+    let pdfBase64=null;
+    try{
+      const {PDFDocument}=PDFLib;
+      const bytes=Uint8Array.from(atob(PDF_B64),ch=>ch.charCodeAt(0));
+      const doc=await PDFDocument.load(bytes,{ignoreEncryption:true});
+      const form=doc.getForm();
+      const pages=doc.getPages();
+      fillPDF(form,ct);
+      await embedSigs(doc,pages,ct);
+      try{form.flatten();}catch(fe){console.warn('Flatten:',fe);}
+      const pdfBytes=await doc.save();
+      pdfBase64=btoa(String.fromCharCode(...new Uint8Array(pdfBytes)));
+    }catch(pdfErr){console.warn('PDF gen per email:',pdfErr.message);}
+
+    const payload={
+      type:'post_firma',
+      contratto:ct,
+      operatoreEmail,
+      pdfBase64,
+      docFronte:ct.documento_foto_base64||null,
+      docRetro:ct.documento_retro_base64||null
+    };
+
+    const res=await fetch('/api/send-email',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
+    const data=await res.json();
+    console.log('Email post-firma:',data.results);
+  }catch(e){console.warn('sendPostFirmaEmails error:',e.message);}
 }
 
 async function downloadClientPDF(token){
