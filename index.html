@@ -4986,6 +4986,7 @@ async function sendPostFirmaEmails(token){
     const rows=await sb(`contratti?token=eq.${token}&select=*`);
     if(!rows||!rows[0])throw new Error('Contratto non trovato');
     const ct=rows[0];
+
     // Genera PDF firmato
     let pdfBase64=null;
     try{
@@ -4998,14 +4999,24 @@ async function sendPostFirmaEmails(token){
       const pdfBytes=await doc.save();
       pdfBase64=btoa(String.fromCharCode(...new Uint8Array(pdfBytes)));
     }catch(pdfErr){console.warn('PDF gen:',pdfErr.message);}
-    // Controlla dimensione payload (limite ~4MB per Edge Function)
-    const docFronte=ct.documento_foto_base64||null;
-    const docRetro=ct.documento_retro_base64||null;
-    const payloadSize=(pdfBase64?.length||0)+(docFronte?.length||0)+(docRetro?.length||0);
-    console.log('Payload size (chars):', payloadSize);
-    // Se troppo grande, manda senza allegati
-    const useDocs=payloadSize<3500000;
-    if(!useDocs) console.warn('Payload troppo grande, invio senza allegati');
+
+    // Comprimi foto documento per email (max 900px, qualità 0.55 → ~100-150KB ciascuna)
+    let docFronte=null,docRetro=null;
+    if(ct.documento_foto_base64){
+      try{docFronte=await compressImage(ct.documento_foto_base64,900,0.55);}
+      catch(e){docFronte=ct.documento_foto_base64;}
+    }
+    if(ct.documento_retro_base64){
+      try{docRetro=await compressImage(ct.documento_retro_base64,900,0.55);}
+      catch(e){docRetro=ct.documento_retro_base64;}
+    }
+
+    // Log dimensioni finali
+    const pdfSize=Math.round((pdfBase64?.length||0)/1024);
+    const fronteSize=Math.round((docFronte?.length||0)/1024);
+    const retroSize=Math.round((docRetro?.length||0)/1024);
+    console.log(`Payload: PDF ${pdfSize}KB | Fronte ${fronteSize}KB | Retro ${retroSize}KB | Tot ~${pdfSize+fronteSize+retroSize}KB`);
+
     const res=await fetch('https://ohahuqlfzqckaevaffbt.supabase.co/functions/v1/send-email',{
       method:'POST',
       headers:{'Content-Type':'application/json'},
@@ -5013,9 +5024,9 @@ async function sendPostFirmaEmails(token){
         type:'post_firma',
         token,
         contratto:ct,
-        pdfBase64: useDocs?pdfBase64:null,
-        docFronte: useDocs?docFronte:null,
-        docRetro: useDocs?docRetro:null
+        pdfBase64,
+        docFronte,
+        docRetro
       })
     });
     if(!res.ok) throw new Error(`Edge Function HTTP ${res.status}`);
@@ -5024,7 +5035,7 @@ async function sendPostFirmaEmails(token){
     console.log('Email post-firma OK:', data.results);
   }catch(e){
     console.error('sendPostFirmaEmails error:',e.message);
-    throw e; // rilancia per mostrare il toast
+    throw e;
   }
 }
 
