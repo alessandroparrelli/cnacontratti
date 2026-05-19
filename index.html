@@ -3154,11 +3154,29 @@ Cordiali saluti, CNA Roma</div>
               <button class="ql-blockquote"></button>
               <button class="ql-clean"></button>
               <button id="et-btn-table" title="Inserisci tabella" style="width:auto;padding:0 6px;font-size:11px;font-weight:600" onclick="etInsertTable()">⊞ Tabella</button>
-              <button title="Colore sfondo cella" style="width:auto;padding:0 6px;font-size:11px;font-weight:600" onclick="etCellColor()">🎨 Cella</button>
-              <button title="Interlinea" style="width:auto;padding:0 6px;font-size:11px;font-weight:600" onclick="etLineHeight()">↕ Interlinea</button>
+              <button title="Colore sfondo cella/testo" style="width:auto;padding:0 6px;font-size:11px;font-weight:600" onclick="etCellColor()">🎨 Sfondo</button>
+              <button title="Interlinea" style="width:auto;padding:0 6px;font-size:11px;font-weight:600" onclick="document.getElementById('et-format-panel').style.display=document.getElementById('et-format-panel').style.display==='none'?'flex':'none'">↕ Formato</button>
             </span>
           </div>
           <div id="et-quill-editor" style="min-height:300px;font-size:10pt"></div>
+          <!-- Pannello formattazione avanzata -->
+          <div id="et-format-panel" style="display:none;flex-wrap:wrap;gap:6px;padding:8px 10px;background:#f8fafc;border-top:1px solid #e5e7eb;align-items:center">
+            <span style="font-size:11px;font-weight:600;color:#555;white-space:nowrap">Interlinea:</span>
+            <button onclick="etApplyLineHeight('1')" style="padding:2px 8px;font-size:11px;border:1px solid #d1d5db;border-radius:4px;cursor:pointer;background:#fff">Singola</button>
+            <button onclick="etApplyLineHeight('1.2')" style="padding:2px 8px;font-size:11px;border:1px solid #d1d5db;border-radius:4px;cursor:pointer;background:#fff">1.2</button>
+            <button onclick="etApplyLineHeight('1.5')" style="padding:2px 8px;font-size:11px;border:1px solid #d1d5db;border-radius:4px;cursor:pointer;background:#fff">1.5</button>
+            <button onclick="etApplyLineHeight('1.8')" style="padding:2px 8px;font-size:11px;border:1px solid #d1d5db;border-radius:4px;cursor:pointer;background:#fff">1.8</button>
+            <button onclick="etApplyLineHeight('2')" style="padding:2px 8px;font-size:11px;border:1px solid #d1d5db;border-radius:4px;cursor:pointer;background:#fff">Doppia</button>
+            <span style="margin:0 4px;color:#ccc">|</span>
+            <span style="font-size:11px;font-weight:600;color:#555;white-space:nowrap">Spazio §:</span>
+            <button onclick="etParaSpacing('0','0')" style="padding:2px 8px;font-size:11px;border:1px solid #d1d5db;border-radius:4px;cursor:pointer;background:#fff">Nessuno</button>
+            <button onclick="etParaSpacing('4px','4px')" style="padding:2px 8px;font-size:11px;border:1px solid #d1d5db;border-radius:4px;cursor:pointer;background:#fff">Piccolo</button>
+            <button onclick="etParaSpacing('8px','8px')" style="padding:2px 8px;font-size:11px;border:1px solid #d1d5db;border-radius:4px;cursor:pointer;background:#fff">Normale</button>
+            <button onclick="etParaSpacing('14px','14px')" style="padding:2px 8px;font-size:11px;border:1px solid #d1d5db;border-radius:4px;cursor:pointer;background:#fff">Grande</button>
+            <span style="margin:0 4px;color:#ccc">|</span>
+            <span style="font-size:11px;font-weight:600;color:#555;white-space:nowrap">A capo:</span>
+            <button onclick="etInsertBr()" style="padding:2px 8px;font-size:11px;border:1px solid #005CA9;border-radius:4px;cursor:pointer;background:#e8f0fe;color:#005CA9" title="Inserisce interruzione di riga senza spazio (come Shift+Enter)">↵ Senza spazio</button>
+          </div>
         </div>
         <div id="et-img-resize-bar" style="display:none;background:#f0f9ff;border:1px solid #bae6fd;border-radius:6px;padding:8px 12px;margin-top:6px;font-size:12px;align-items:center;gap:10px">
           <span style="color:#0369a1">🖼️ Larghezza:</span>
@@ -3788,16 +3806,72 @@ function etCellColor(){
   updateEmailPreview();
 }
 
-function etLineHeight(){
+function etCellColor(){
   if(!etQuill)return;
-  const val=prompt('Interlinea (es. 1, 1.5, 2, 2.5):','1.6');
-  if(!val)return;
+  const color=prompt('Colore sfondo (es. #ffff00, #e8f4fd, yellow):','#fffde7');
+  if(!color)return;
   const range=etQuill.getSelection();
-  const idx=range?range.index:0;
-  const len=range&&range.length>0?range.length:etQuill.getLength();
-  // Applica line-height come attributo inline tramite formatText
-  etQuill.formatLine(idx,len,'lineHeight',val);
+  if(range&&range.length>0){
+    etQuill.formatText(range.index,range.length,'background',color);
+  }else{
+    etQuill.format('background',color);
+  }
   updateEmailPreview();
+}
+
+function etApplyLineHeight(val){
+  if(!etQuill)return;
+  const range=etQuill.getSelection();
+  // Applica stile direttamente agli elementi <p> nel DOM
+  const editor=etQuill.root;
+  if(range&&range.length>0){
+    // Seleziona solo le righe nel range
+    const [startLine]=etQuill.getLine(range.index);
+    const [endLine]=etQuill.getLine(range.index+range.length);
+    let node=startLine&&startLine.domNode;
+    while(node){
+      if(node.style!==undefined) node.style.lineHeight=val;
+      if(node===endLine.domNode) break;
+      node=node.nextSibling;
+    }
+  }else{
+    // Applica a tutti i paragrafi
+    editor.querySelectorAll('p,li,h1,h2,h3').forEach(el=>el.style.lineHeight=val);
+  }
+  updateEmailPreview();
+}
+
+function etParaSpacing(top,bottom){
+  if(!etQuill)return;
+  const range=etQuill.getSelection();
+  const editor=etQuill.root;
+  if(range&&range.length>0){
+    const [startLine]=etQuill.getLine(range.index);
+    const [endLine]=etQuill.getLine(range.index+range.length);
+    let node=startLine&&startLine.domNode;
+    while(node){
+      if(node.style!==undefined){node.style.marginTop=top;node.style.marginBottom=bottom;}
+      if(node===endLine.domNode) break;
+      node=node.nextSibling;
+    }
+  }else{
+    editor.querySelectorAll('p,li,h1,h2,h3').forEach(el=>{el.style.marginTop=top;el.style.marginBottom=bottom;});
+  }
+  updateEmailPreview();
+}
+
+function etInsertBr(){
+  if(!etQuill)return;
+  // Shift+Enter programmatico = inserisce \n senza nuovo paragrafo
+  const range=etQuill.getSelection(true);
+  etQuill.insertText(range.index,'\n','user');
+  etQuill.setSelection(range.index+1,'silent');
+  updateEmailPreview();
+}
+
+function etLineHeight(){
+  // Mantenuta per retrocompatibilità
+  document.getElementById('et-format-panel').style.display='flex';
 }
 
 function etInsertTable(){
