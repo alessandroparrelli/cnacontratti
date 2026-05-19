@@ -3624,8 +3624,7 @@ async function openEmailTemplates(){
     etQuill.on('text-change',()=>updateEmailPreview());
     setupQuillImgClick();
     // Aspetta che Quill sia pronto prima di caricare il template
-    setTimeout(()=>loadEmailTemplate('send_link'), 100);
-  } else {
+    setTimeout(()=>loadEmailTemplate('send_link'), 100);  } else {
     await loadEmailTemplate('send_link');
   }
 }
@@ -3638,20 +3637,24 @@ async function loadEmailTemplate(id){
     const rows=await sb(`email_templates?id=eq.${id}&select=subject,html_body`);
     if(rows&&rows[0]){
       document.getElementById('et-subject').value=rows[0].subject||'';
-      const html=rows[0].html_body||'<p><br></p>';
-      if(etQuill){
-        // Imposta direttamente innerHTML per preservare stili inline
-        etQuill.root.innerHTML=html;
-        // Forza aggiornamento interno di Quill
-        etQuill.update('silent');
-        // Se dopo l'aggiornamento l'editor risulta vuoto, riprova dopo un tick
-        if(etQuill.root.innerHTML==='<p><br></p>'&&html!=='<p><br></p>'){
-          setTimeout(()=>{etQuill.root.innerHTML=html;etQuill.update('silent');updateEmailPreview();},50);
-        }
+      const html=rows[0].html_body||'';
+      if(etQuill&&html){
+        etSetHtml(html);
       }
       updateEmailPreview();
     }
   }catch(e){showToast('Errore caricamento template','error');}
+}
+
+function etSetHtml(html){
+  if(!etQuill||!html)return;
+  // Disabilita temporaneamente l'editor per evitare che Quill resetti il contenuto
+  etQuill.disable();
+  etQuill.root.innerHTML=html;
+  etQuill.enable();
+  // Posiziona cursore alla fine
+  try{etQuill.setSelection(etQuill.getLength(),0,'silent');}catch(e){}
+  updateEmailPreview();
 }
 
 function switchEmailTab(id,btn){
