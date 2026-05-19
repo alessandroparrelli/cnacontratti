@@ -4365,10 +4365,11 @@ async function confirmSendAuto(){
 
 async function sendPostFirmaEmails(token){
   try{
-    const rows=await sb(`contratti?token=eq.${token}&select=*,cna_users(email)`);
+    // Recupera contratto (senza join cna_users, non accessibile da anon)
+    const rows=await sb(`contratti?token=eq.${token}&select=*`);
     if(!rows||!rows[0])return;
     const ct=rows[0];
-    const operatoreEmail=ct.cna_users?.email||null;
+    // Genera PDF firmato
     let pdfBase64=null;
     try{
       const{PDFDocument}=PDFLib;
@@ -4380,12 +4381,21 @@ async function sendPostFirmaEmails(token){
       const pdfBytes=await doc.save();
       pdfBase64=btoa(String.fromCharCode(...new Uint8Array(pdfBytes)));
     }catch(pdfErr){console.warn('PDF gen:',pdfErr.message);}
-    await fetch('https://ohahuqlfzqckaevaffbt.supabase.co/functions/v1/send-email',{
+    // Manda token alla Edge Function — recupera email operatore internamente
+    const res=await fetch('https://ohahuqlfzqckaevaffbt.supabase.co/functions/v1/send-email',{
       method:'POST',
       headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({type:'post_firma',contratto:ct,operatoreEmail,pdfBase64,docFronte:ct.documento_foto_base64||null,docRetro:ct.documento_retro_base64||null})
+      body:JSON.stringify({
+        type:'post_firma',
+        token,
+        contratto:ct,
+        pdfBase64,
+        docFronte:ct.documento_foto_base64||null,
+        docRetro:ct.documento_retro_base64||null
+      })
     });
-    console.log('Email post-firma inviate');
+    const data=await res.json();
+    console.log('Email post-firma:',data);
   }catch(e){console.warn('sendPostFirmaEmails:',e.message);}
 }
 
