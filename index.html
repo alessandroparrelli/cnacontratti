@@ -4756,7 +4756,10 @@ async function submitSignature(token,consents){
     }
     
     document.querySelector('.firma-content').innerHTML=`<div class="form-card"><div class="form-card-body" style="text-align:center;padding:60px"><div style="font-size:64px">&#x2705;</div><h2 style="color:var(--ok);margin:12px 0">Contratto Firmato!</h2><p>Il contratto e stato firmato con successo.</p><p style="margin-top:16px;font-size:13px;color:var(--txt2)">Scarica la tua copia del contratto firmato:</p><button class="btn btn-success" onclick="downloadClientPDF('${token}')" style="margin-top:12px;padding:14px 28px;font-size:15px">&#x1F4C4; Scarica PDF firmato</button></div></div>`;
-    sendPostFirmaEmails(token).catch(e=>console.warn('Email post-firma:',e.message));
+    sendPostFirmaEmails(token).catch(e=>{
+      console.warn('Email post-firma:',e.message);
+      showToast('Avviso: email post-firma non inviate ('+e.message+')','error');
+    });
   }catch(e){alert('Errore: '+e.message);}
 }
 
@@ -4981,7 +4984,7 @@ async function confirmSendAuto(){
 async function sendPostFirmaEmails(token){
   try{
     const rows=await sb(`contratti?token=eq.${token}&select=*`);
-    if(!rows||!rows[0])return;
+    if(!rows||!rows[0])throw new Error('Contratto non trovato');
     const ct=rows[0];
     // Genera PDF firmato
     let pdfBase64=null;
@@ -4995,7 +4998,14 @@ async function sendPostFirmaEmails(token){
       const pdfBytes=await doc.save();
       pdfBase64=btoa(String.fromCharCode(...new Uint8Array(pdfBytes)));
     }catch(pdfErr){console.warn('PDF gen:',pdfErr.message);}
-    // Manda token alla Edge Function — recupera email operatore internamente
+    // Controlla dimensione payload (limite ~4MB per Edge Function)
+    const docFronte=ct.documento_foto_base64||null;
+    const docRetro=ct.documento_retro_base64||null;
+    const payloadSize=(pdfBase64?.length||0)+(docFronte?.length||0)+(docRetro?.length||0);
+    console.log('Payload size (chars):', payloadSize);
+    // Se troppo grande, manda senza allegati
+    const useDocs=payloadSize<3500000;
+    if(!useDocs) console.warn('Payload troppo grande, invio senza allegati');
     const res=await fetch('https://ohahuqlfzqckaevaffbt.supabase.co/functions/v1/send-email',{
       method:'POST',
       headers:{'Content-Type':'application/json'},
@@ -5003,14 +5013,19 @@ async function sendPostFirmaEmails(token){
         type:'post_firma',
         token,
         contratto:ct,
-        pdfBase64,
-        docFronte:ct.documento_foto_base64||null,
-        docRetro:ct.documento_retro_base64||null
+        pdfBase64: useDocs?pdfBase64:null,
+        docFronte: useDocs?docFronte:null,
+        docRetro: useDocs?docRetro:null
       })
     });
+    if(!res.ok) throw new Error(`Edge Function HTTP ${res.status}`);
     const data=await res.json();
-    console.log('Email post-firma:',data);
-  }catch(e){console.warn('sendPostFirmaEmails:',e.message);}
+    if(!data.success) throw new Error(JSON.stringify(data));
+    console.log('Email post-firma OK:', data.results);
+  }catch(e){
+    console.error('sendPostFirmaEmails error:',e.message);
+    throw e; // rilancia per mostrare il toast
+  }
 }
 
 async function sendViaWhatsApp(){
