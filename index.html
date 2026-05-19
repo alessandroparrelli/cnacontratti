@@ -4756,10 +4756,13 @@ async function submitSignature(token,consents){
     }
     
     document.querySelector('.firma-content').innerHTML=`<div class="form-card"><div class="form-card-body" style="text-align:center;padding:60px"><div style="font-size:64px">&#x2705;</div><h2 style="color:var(--ok);margin:12px 0">Contratto Firmato!</h2><p>Il contratto e stato firmato con successo.</p><p style="margin-top:16px;font-size:13px;color:var(--txt2)">Scarica la tua copia del contratto firmato:</p><button class="btn btn-success" onclick="downloadClientPDF('${token}')" style="margin-top:12px;padding:14px 28px;font-size:15px">&#x1F4C4; Scarica PDF firmato</button></div></div>`;
-    sendPostFirmaEmails(token).catch(e=>{
-      console.warn('Email post-firma:',e.message);
-      showToast('Avviso: email post-firma non inviate ('+e.message+')','error');
-    });
+    // Invia email in background - non blocca l'UI
+    try{
+      await sendPostFirmaEmails(token);
+    }catch(emailErr){
+      console.error('Email post-firma fallite:',emailErr.message);
+      // Non mostrare alert - la firma è avvenuta con successo
+    }
   }catch(e){alert('Errore: '+e.message);}
 }
 
