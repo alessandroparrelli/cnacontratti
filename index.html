@@ -4563,6 +4563,14 @@ function confirmFullscreenSig(){
 
 async function submitSignature(token,consents){
   if(!fullscreenSigData){alert('Firma prima di confermare');return;}
+  // Previeni doppio invio
+  const submitBtn=document.getElementById('submit-sig-btn');
+  if(submitBtn){
+    if(submitBtn.dataset.submitting==='1')return;
+    submitBtn.dataset.submitting='1';
+    submitBtn.disabled=true;
+    submitBtn.textContent='⏳ Invio in corso...';
+  }
   try{
     // Comprimi la firma come PNG trasparente (max 600px larghezza)
     const sigPng=await compressPng(fullscreenSigData,600);
@@ -4821,9 +4829,6 @@ async function sendPostFirmaEmails(token){
     const rows=await sb(`contratti?token=eq.${token}&select=*`);
     if(!rows||!rows[0])return;
     const ct=rows[0];
-    // Invia solo se non già inviate (evita doppio invio su reset+rifirma)
-    if(ct.email_post_firma_inviata){console.log('Email post-firma già inviate, skip');return;}
-    await sb(`contratti?token=eq.${token}`,'PATCH',{email_post_firma_inviata:true});
     // Genera PDF firmato
     let pdfBase64=null;
     try{
