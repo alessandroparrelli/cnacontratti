@@ -2972,29 +2972,47 @@ Cordiali saluti, CNA Roma</div>
       <div id="et-quill-container" style="margin-top:4px;border:1px solid #d1d5db;border-radius:6px;overflow:hidden;background:#fff">
         <div id="et-quill-toolbar">
           <span class="ql-formats">
+            <select class="ql-header">
+              <option selected>Normale</option>
+              <option value="1">Titolo 1</option>
+              <option value="2">Titolo 2</option>
+              <option value="3">Titolo 3</option>
+            </select>
+          </span>
+          <span class="ql-formats">
             <button class="ql-bold"></button>
             <button class="ql-italic"></button>
             <button class="ql-underline"></button>
-          </span>
-          <span class="ql-formats">
-            <button class="ql-link"></button>
-            <button class="ql-list" value="ordered"></button>
-            <button class="ql-list" value="bullet"></button>
+            <button class="ql-strike"></button>
           </span>
           <span class="ql-formats">
             <select class="ql-color"></select>
             <select class="ql-background"></select>
           </span>
           <span class="ql-formats">
+            <select class="ql-align"></select>
+          </span>
+          <span class="ql-formats">
+            <button class="ql-list" value="ordered"></button>
+            <button class="ql-list" value="bullet"></button>
+            <button class="ql-indent" value="-1"></button>
+            <button class="ql-indent" value="+1"></button>
+          </span>
+          <span class="ql-formats">
+            <button class="ql-link"></button>
+            <button class="ql-image" title="Inserisci immagine da URL"></button>
+          </span>
+          <span class="ql-formats">
             <select class="ql-size">
               <option value="small">Piccolo</option>
               <option selected>Normale</option>
               <option value="large">Grande</option>
+              <option value="huge">Molto grande</option>
             </select>
           </span>
           <span class="ql-formats">
+            <button class="ql-blockquote"></button>
             <button class="ql-clean"></button>
-            <button class="ql-image" title="Inserisci immagine da URL"></button>
           </span>
         </div>
         <div id="et-quill-editor" style="min-height:220px;font-size:10pt"></div>
@@ -3576,7 +3594,7 @@ function checkAdminForLogs(){
 const ET_VARS={
   send_link:['{{cognome}}','{{nome}}','{{link_firma}}'],
   post_firma_cliente:['{{cognome}}','{{nome}}','{{data_firma}}'],
-  post_firma_interno:['{{cognome}}','{{nome}}','{{data_firma}}','{{email}}','{{ragione_sociale}}','{{partita_iva}}','{{raccolta_da}}']
+  post_firma_interno:['{{cognome}}','{{nome}}','{{data_firma}}','{{email}}','{{ragione_sociale}}','{{partita_iva}}','{{raccolta_da}}','{{attivita_svolta}}','{{sede_attivita_comune}}','{{sede_attivita_indirizzo}}','{{sede_attivita_prov}}','{{pec}}','{{telefono}}','{{cellulare}}','{{motivo_iscrizione}}','{{quota_primo_anno}}','{{quota_anni_successivi}}','{{modalita_pagamento}}','{{codice_fiscale}}']
 };
 let currentEtId='send_link';
 let etQuill=null;
@@ -3612,13 +3630,15 @@ async function openEmailTemplates(){
 async function loadEmailTemplate(id){
   currentEtId=id;
   const vars=ET_VARS[id]||[];
-  document.getElementById('et-vars-box').innerHTML='<strong>Variabili disponibili:</strong> '+vars.map(v=>`<code style="background:#e0f2fe;padding:1px 5px;border-radius:4px;margin:0 2px">${v}</code>`).join(' ');
+  document.getElementById('et-vars-box').innerHTML='<strong>Variabili disponibili:</strong> '+vars.map(v=>`<code style="background:#e0f2fe;padding:1px 5px;border-radius:4px;margin:0 2px;cursor:pointer" onclick="insertEtVar('${v}')">${v}</code>`).join(' ');
   try{
     const rows=await sb(`email_templates?id=eq.${id}&select=subject,html_body`);
     if(rows&&rows[0]){
       document.getElementById('et-subject').value=rows[0].subject||'';
       if(etQuill){
-        etQuill.clipboard.dangerouslyPasteHTML(rows[0].html_body||'');
+        // Inserisce direttamente nel DOM per preservare stili inline
+        etQuill.root.innerHTML=rows[0].html_body||'<p><br></p>';
+        etQuill.update();
       }
       updateEmailPreview();
     }
@@ -3644,12 +3664,25 @@ function updateEmailPreview(){
     .replace(/\{\{email\}\}/g,'mario.rossi@email.it')
     .replace(/\{\{ragione_sociale\}\}/g,'Rossi SRL')
     .replace(/\{\{partita_iva\}\}/g,'12345678901')
-    .replace(/\{\{raccolta_da\}\}/g,'Alessandro Parrelli');
+    .replace(/\{\{raccolta_da\}\}/g,'Alessandro Parrelli')
+    .replace(/\{\{attivita_svolta\}\}/g,'Idraulico (43.22.01)')
+    .replace(/\{\{sede_attivita_comune\}\}/g,'Roma')
+    .replace(/\{\{sede_attivita_indirizzo\}\}/g,'Via Roma 1')
+    .replace(/\{\{sede_attivita_prov\}\}/g,'RM')
+    .replace(/\{\{pec\}\}/g,'rossi@pec.it')
+    .replace(/\{\{telefono\}\}/g,'06 1234567')
+    .replace(/\{\{cellulare\}\}/g,'333 1234567')
+    .replace(/\{\{motivo_iscrizione\}\}/g,'Assistenza fiscale')
+    .replace(/\{\{quota_primo_anno\}\}/g,'150,00')
+    .replace(/\{\{quota_anni_successivi\}\}/g,'120,00')
+    .replace(/\{\{modalita_pagamento\}\}/g,'Bonifico')
+    .replace(/\{\{codice_fiscale\}\}/g,'RSSMRA80A01H501Z');
   document.getElementById('et-preview').innerHTML=preview;
 }
 
 async function saveEmailTemplate(){
   const subject=document.getElementById('et-subject').value.trim();
+  // Usa innerHTML del DOM per preservare stili inline (es. dimensioni immagini)
   const html_body=etQuill?etQuill.root.innerHTML:'';
   if(!subject||!html_body||html_body==='<p><br></p>'){showToast('Oggetto e corpo sono obbligatori','error');return;}
   const btn=document.getElementById('et-save-btn');
@@ -3659,6 +3692,13 @@ async function saveEmailTemplate(){
     showToast('Template salvato!','success');
   }catch(e){showToast('Errore salvataggio: '+e.message,'error');}
   finally{btn.disabled=false;btn.textContent='\uD83D\uDCBE Salva Template';}
+}
+
+function insertEtVar(varName){
+  if(!etQuill)return;
+  const range=etQuill.getSelection(true);
+  etQuill.insertText(range?range.index:etQuill.getLength()-1,varName);
+  updateEmailPreview();
 }
 
 let etSelectedImg=null;
