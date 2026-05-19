@@ -2610,6 +2610,7 @@ var qrcode = function() {
         <div id="hamburger-menu" style="display:none;position:absolute;top:48px;right:0;background:#fff;border:1px solid rgba(0,92,169,0.15);border-radius:12px;box-shadow:0 8px 30px rgba(0,0,0,0.12);min-width:180px;z-index:300;overflow:hidden">
           <button onclick="openChangelog();toggleHamburger()" style="display:flex;align-items:center;gap:10px;width:100%;padding:12px 16px;border:none;background:none;cursor:pointer;font-size:13px;font-weight:600;color:#005CA9;font-family:inherit;border-bottom:1px solid rgba(0,92,169,0.08)">&#x1F4CB; Versioni</button>
           <button id="btn-logs" onclick="openLogsModal();toggleHamburger()" style="display:none;align-items:center;gap:10px;width:100%;padding:12px 16px;border:none;background:none;cursor:pointer;font-size:13px;font-weight:600;color:#005CA9;font-family:inherit;border-bottom:1px solid rgba(0,92,169,0.08)">&#x1F4DC; Log</button>
+          <button id="btn-email-templates" onclick="openEmailTemplates();toggleHamburger()" style="display:none;align-items:center;gap:10px;width:100%;padding:12px 16px;border:none;background:none;cursor:pointer;font-size:13px;font-weight:600;color:#005CA9;font-family:inherit;border-bottom:1px solid rgba(0,92,169,0.08)">✉️ Template Email</button>
           <button onclick="toggleDarkMode();toggleHamburger()" style="display:flex;align-items:center;gap:10px;width:100%;padding:12px 16px;border:none;background:none;cursor:pointer;font-size:13px;font-weight:600;color:#555;font-family:inherit;border-bottom:1px solid rgba(0,92,169,0.08)"><span id="dm-label">🌙 Dark mode</span></button>
           <button onclick="doLogout()" style="display:flex;align-items:center;gap:10px;width:100%;padding:12px 16px;border:none;background:none;cursor:pointer;font-size:13px;font-weight:600;color:#dc3545;font-family:inherit">&#x2192; Esci</button>
         </div>
@@ -2929,6 +2930,39 @@ Cordiali saluti, CNA Roma</div>
   <div class="modal-footer" style="justify-content:flex-start">
     <button class="btn btn-outline" onclick="closeModal('modal-email')">✖ Chiudi</button>
     <a id="mailto-link" href="#" style="display:none"></a>
+  </div>
+</div></div>
+
+<!-- MODAL: Email Templates -->
+<div class="modal-overlay" id="modal-email-templates" style="display:none"><div class="modal" style="max-width:780px;width:95vw">
+  <div class="modal-header"><h2>✉️ Template Email</h2><button class="close-btn" onclick="closeModal('modal-email-templates')">&times;</button></div>
+  <div class="modal-body" style="padding:20px;max-height:85vh;overflow-y:auto">
+    <!-- Tabs template -->
+    <div style="display:flex;gap:8px;margin-bottom:20px;border-bottom:2px solid #e5e7eb;padding-bottom:0">
+      <button class="et-tab active" onclick="switchEmailTab('send_link',this)" style="padding:8px 16px;border:none;background:none;cursor:pointer;font-size:13px;font-weight:600;color:#005CA9;border-bottom:2px solid #005CA9;margin-bottom:-2px;font-family:inherit">Invio Link Firma</button>
+      <button class="et-tab" onclick="switchEmailTab('post_firma_cliente',this)" style="padding:8px 16px;border:none;background:none;cursor:pointer;font-size:13px;font-weight:600;color:#888;border-bottom:2px solid transparent;margin-bottom:-2px;font-family:inherit">Conferma Cliente</button>
+      <button class="et-tab" onclick="switchEmailTab('post_firma_interno',this)" style="padding:8px 16px;border:none;background:none;cursor:pointer;font-size:13px;font-weight:600;color:#888;border-bottom:2px solid transparent;margin-bottom:-2px;font-family:inherit">Notifica Interna</button>
+    </div>
+    <!-- Variabili disponibili -->
+    <div id="et-vars-box" style="background:#f0f9ff;border:1px solid #bae6fd;border-radius:8px;padding:10px 14px;margin-bottom:16px;font-size:11px;color:#0369a1;line-height:2"></div>
+    <!-- Editor -->
+    <div class="form-group" style="margin-bottom:12px">
+      <label style="font-size:12px;font-weight:600;color:#374151">Oggetto</label>
+      <input type="text" id="et-subject" style="margin-top:4px;font-size:13px" placeholder="Oggetto email">
+    </div>
+    <div class="form-group" style="margin-bottom:12px">
+      <label style="font-size:12px;font-weight:600;color:#374151">Corpo HTML</label>
+      <textarea id="et-body" rows="14" style="margin-top:4px;font-size:12px;font-family:monospace;resize:vertical;width:100%;box-sizing:border-box;border:1px solid #d1d5db;border-radius:6px;padding:10px" oninput="updateEmailPreview()"></textarea>
+    </div>
+    <!-- Anteprima -->
+    <div style="margin-bottom:4px">
+      <label style="font-size:12px;font-weight:600;color:#374151">Anteprima</label>
+      <div id="et-preview" style="margin-top:6px;border:1px solid #e5e7eb;border-radius:8px;padding:16px;background:#fff;min-height:80px;font-size:10pt"></div>
+    </div>
+  </div>
+  <div class="modal-footer" style="justify-content:space-between">
+    <button class="btn btn-outline" onclick="closeModal('modal-email-templates')">Chiudi</button>
+    <button class="btn btn-primary" onclick="saveEmailTemplate()" id="et-save-btn">&#x1F4BE; Salva Template</button>
   </div>
 </div></div>
 
@@ -3479,12 +3513,78 @@ function checkAdminForLogs(){
   if(!loggedUser)return;
   const btn=document.getElementById('btn-logs');
   if(!btn)return;
-  // Mostra per tutti gli utenti (o solo admin se preferisci)
   if(loggedUser.ruolo==='admin'||loggedUser.ruolo==='operatore'){
     btn.style.display='inline-flex';
   }
+  const btnTpl=document.getElementById('btn-email-templates');
+  if(btnTpl&&loggedUser.ruolo==='admin') btnTpl.style.display='inline-flex';
 }
 
+
+const ET_VARS={
+  send_link:['{{cognome}}','{{nome}}','{{link_firma}}'],
+  post_firma_cliente:['{{cognome}}','{{nome}}','{{data_firma}}'],
+  post_firma_interno:['{{cognome}}','{{nome}}','{{data_firma}}','{{email}}','{{ragione_sociale}}','{{partita_iva}}','{{raccolta_da}}']
+};
+let currentEtId='send_link';
+
+async function openEmailTemplates(){
+  if(!loggedUser||loggedUser.ruolo!=='admin'){showToast('Solo gli admin possono modificare i template','error');return;}
+  document.getElementById('modal-email-templates').style.display='flex';
+  await loadEmailTemplate('send_link');
+}
+
+async function loadEmailTemplate(id){
+  currentEtId=id;
+  // Variabili disponibili
+  const vars=ET_VARS[id]||[];
+  document.getElementById('et-vars-box').innerHTML='<strong>Variabili disponibili:</strong> '+vars.map(v=>`<code style="background:#e0f2fe;padding:1px 5px;border-radius:4px;margin:0 2px">${v}</code>`).join(' ');
+  // Carica da Supabase
+  try{
+    const rows=await sb(`email_templates?id=eq.${id}&select=subject,html_body`);
+    if(rows&&rows[0]){
+      document.getElementById('et-subject').value=rows[0].subject||'';
+      document.getElementById('et-body').value=rows[0].html_body||'';
+      updateEmailPreview();
+    }
+  }catch(e){showToast('Errore caricamento template','error');}
+}
+
+function switchEmailTab(id,btn){
+  currentEtId=id;
+  document.querySelectorAll('.et-tab').forEach(b=>{
+    b.style.color='#888';b.style.borderBottomColor='transparent';
+  });
+  btn.style.color='#005CA9';btn.style.borderBottomColor='#005CA9';
+  loadEmailTemplate(id);
+}
+
+function updateEmailPreview(){
+  const html=document.getElementById('et-body').value;
+  const preview=html
+    .replace(/\{\{cognome\}\}/g,'Rossi')
+    .replace(/\{\{nome\}\}/g,'Mario')
+    .replace(/\{\{link_firma\}\}/g,'https://cnacontratti.vercel.app?firma=ESEMPIO')
+    .replace(/\{\{data_firma\}\}/g,new Date().toLocaleDateString('it-IT'))
+    .replace(/\{\{email\}\}/g,'mario.rossi@email.it')
+    .replace(/\{\{ragione_sociale\}\}/g,'Rossi SRL')
+    .replace(/\{\{partita_iva\}\}/g,'12345678901')
+    .replace(/\{\{raccolta_da\}\}/g,'Alessandro Parrelli');
+  document.getElementById('et-preview').innerHTML=preview;
+}
+
+async function saveEmailTemplate(){
+  const subject=document.getElementById('et-subject').value.trim();
+  const html_body=document.getElementById('et-body').value.trim();
+  if(!subject||!html_body){showToast('Oggetto e corpo sono obbligatori','error');return;}
+  const btn=document.getElementById('et-save-btn');
+  btn.disabled=true;btn.textContent='Salvataggio...';
+  try{
+    await sb(`email_templates?id=eq.${currentEtId}`,'PATCH',{subject,html_body,updated_at:new Date().toISOString()});
+    showToast('Template salvato!','success');
+  }catch(e){showToast('Errore salvataggio: '+e.message,'error');}
+  finally{btn.disabled=false;btn.textContent='\uD83D\uDCBE Salva Template';}
+}
 
 function openLogsModal(){
   console.log("📜 openLogsModal chiamata!");
@@ -4340,17 +4440,14 @@ async function confirmSendAuto(){
     const contracts=await sb(`contratti?id=eq.${currentContractId}&select=token,cognome,nome`);
     if(!contracts||!contracts[0]){showToast('Contratto non trovato','error');return;}
     const token=contracts[0].token;
-    const url=BASE_URL+'?firma='+token;
     const cognome=contracts[0].cognome||'';
     const nome=contracts[0].nome||'';
+    const link_firma=BASE_URL+'?firma='+token;
     await sb(`contratti?id=eq.${currentContractId}`,'PATCH',{stato:'inviato',inviato_at:new Date().toISOString(),email_inviata:true});
-    const subj='Completa l\'adesione alla CNA di Roma';
-    const htmlBody=`<div style="font-family:Arial,sans-serif;font-size:10pt;color:#000;line-height:1.6"><p>Gentile ${cognome} ${nome},</p><p>La preghiamo di firmare il contratto di adesione CNA Roma tramite il link in questa email.</p><p>Cordiali saluti,<br>CNA Roma</p><p style="margin:20px 0;font-size:12pt"><a href="${url}" style="color:#005CA9;text-decoration:underline;font-weight:bold">Clicca qui per visualizzare e firmare il contratto</a></p><p style="font-size:9pt;color:#666">Se il link non funziona, copia e incolla questo indirizzo nel browser:<br><a href="${url}" style="color:#005CA9">${url}</a></p><br><img src="https://festivaldellelibrerie.it/wp-content/uploads/2024/11/logo-cna-colore.svg" alt="CNA Roma" style="height:45px;width:auto;display:block;margin-bottom:8px"><div style="font-size:10pt"><strong style="color:#005CA9">CNA Roma</strong><br><span style="font-size:9pt">Via Cristoforo Colombo 283A - 00147 - Roma<br>Tel: 06/570151 | <a href="mailto:info@cnaroma.it" style="color:#005CA9">info@cnaroma.it</a> | <a href="http://cnaroma.it" style="color:#005CA9">cnaroma.it</a></span></div></div>`;
-    const plainBody=`Gentile ${cognome} ${nome},\n\nLa preghiamo di firmare il contratto di adesione CNA Roma:\n${url}\n\nCordiali saluti,\nCNA Roma\n06/570151 | info@cnaroma.it`;
     const res=await fetch('https://ohahuqlfzqckaevaffbt.supabase.co/functions/v1/send-email',{
       method:'POST',
       headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({type:'send_link',to:email,subject:subj,html:htmlBody,text:plainBody})
+      body:JSON.stringify({type:'send_link',to:email,cognome,nome,link_firma})
     });
     const data=await res.json();
     if(res.ok&&data.id){
