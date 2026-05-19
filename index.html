@@ -3623,12 +3623,10 @@ async function openEmailTemplates(){
     });
     etQuill.on('text-change',()=>updateEmailPreview());
     setupQuillImgClick();
-    // Aspetta che Quill sia pronto prima di caricare il template
-    setTimeout(()=>loadEmailTemplate('send_link'), 100);  } else {
-    await loadEmailTemplate('send_link');
   }
+  // Usa sempre setTimeout per garantire che Quill sia pronto
+  setTimeout(()=>loadEmailTemplate('send_link'),150);
 }
-
 async function loadEmailTemplate(id){
   currentEtId=id;
   const vars=ET_VARS[id]||[];
@@ -3663,7 +3661,7 @@ function switchEmailTab(id,btn){
     b.style.color='#888';b.style.borderBottomColor='transparent';
   });
   btn.style.color='#005CA9';btn.style.borderBottomColor='#005CA9';
-  loadEmailTemplate(id);
+  setTimeout(()=>loadEmailTemplate(id),50);
 }
 
 function updateEmailPreview(){
