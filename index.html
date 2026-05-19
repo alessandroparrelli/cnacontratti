@@ -3160,22 +3160,51 @@ Cordiali saluti, CNA Roma</div>
           </div>
           <div id="et-quill-editor" style="min-height:300px;font-size:10pt"></div>
           <!-- Pannello formattazione avanzata -->
-          <div id="et-format-panel" style="display:none;flex-wrap:wrap;gap:6px;padding:8px 10px;background:#f8fafc;border-top:1px solid #e5e7eb;align-items:center">
-            <span style="font-size:11px;font-weight:600;color:#555;white-space:nowrap">Interlinea:</span>
-            <button onclick="etApplyLineHeight('1')" style="padding:2px 8px;font-size:11px;border:1px solid #d1d5db;border-radius:4px;cursor:pointer;background:#fff">Singola</button>
-            <button onclick="etApplyLineHeight('1.2')" style="padding:2px 8px;font-size:11px;border:1px solid #d1d5db;border-radius:4px;cursor:pointer;background:#fff">1.2</button>
-            <button onclick="etApplyLineHeight('1.5')" style="padding:2px 8px;font-size:11px;border:1px solid #d1d5db;border-radius:4px;cursor:pointer;background:#fff">1.5</button>
-            <button onclick="etApplyLineHeight('1.8')" style="padding:2px 8px;font-size:11px;border:1px solid #d1d5db;border-radius:4px;cursor:pointer;background:#fff">1.8</button>
-            <button onclick="etApplyLineHeight('2')" style="padding:2px 8px;font-size:11px;border:1px solid #d1d5db;border-radius:4px;cursor:pointer;background:#fff">Doppia</button>
-            <span style="margin:0 4px;color:#ccc">|</span>
-            <span style="font-size:11px;font-weight:600;color:#555;white-space:nowrap">Spazio §:</span>
-            <button onclick="etParaSpacing('0','0')" style="padding:2px 8px;font-size:11px;border:1px solid #d1d5db;border-radius:4px;cursor:pointer;background:#fff">Nessuno</button>
-            <button onclick="etParaSpacing('4px','4px')" style="padding:2px 8px;font-size:11px;border:1px solid #d1d5db;border-radius:4px;cursor:pointer;background:#fff">Piccolo</button>
-            <button onclick="etParaSpacing('8px','8px')" style="padding:2px 8px;font-size:11px;border:1px solid #d1d5db;border-radius:4px;cursor:pointer;background:#fff">Normale</button>
-            <button onclick="etParaSpacing('14px','14px')" style="padding:2px 8px;font-size:11px;border:1px solid #d1d5db;border-radius:4px;cursor:pointer;background:#fff">Grande</button>
-            <span style="margin:0 4px;color:#ccc">|</span>
-            <span style="font-size:11px;font-weight:600;color:#555;white-space:nowrap">A capo:</span>
-            <button onclick="etInsertBr()" style="padding:2px 8px;font-size:11px;border:1px solid #005CA9;border-radius:4px;cursor:pointer;background:#e8f0fe;color:#005CA9" title="Inserisce interruzione di riga senza spazio (come Shift+Enter)">↵ Senza spazio</button>
+          <div id="et-format-panel" style="display:none;flex-wrap:wrap;gap:6px;padding:10px;background:#f8fafc;border-top:1px solid #e5e7eb;align-items:center">
+            <div style="width:100%;display:flex;flex-wrap:wrap;gap:6px;align-items:center;padding-bottom:6px;border-bottom:1px solid #e5e7eb;margin-bottom:4px">
+              <span style="font-size:11px;font-weight:700;color:#374151;white-space:nowrap">Interlinea:</span>
+              <button onclick="etApplyLineHeight('1')" style="padding:2px 8px;font-size:11px;border:1px solid #d1d5db;border-radius:4px;cursor:pointer;background:#fff">1</button>
+              <button onclick="etApplyLineHeight('1.2')" style="padding:2px 8px;font-size:11px;border:1px solid #d1d5db;border-radius:4px;cursor:pointer;background:#fff">1.2</button>
+              <button onclick="etApplyLineHeight('1.5')" style="padding:2px 8px;font-size:11px;border:1px solid #d1d5db;border-radius:4px;cursor:pointer;background:#fff">1.5</button>
+              <button onclick="etApplyLineHeight('1.8')" style="padding:2px 8px;font-size:11px;border:1px solid #d1d5db;border-radius:4px;cursor:pointer;background:#fff">1.8</button>
+              <button onclick="etApplyLineHeight('2')" style="padding:2px 8px;font-size:11px;border:1px solid #d1d5db;border-radius:4px;cursor:pointer;background:#fff">2</button>
+              <button onclick="etApplyLineHeight('2.5')" style="padding:2px 8px;font-size:11px;border:1px solid #d1d5db;border-radius:4px;cursor:pointer;background:#fff">2.5</button>
+            </div>
+            <div style="width:100%;display:flex;flex-wrap:wrap;gap:6px;align-items:center;padding-bottom:6px;border-bottom:1px solid #e5e7eb;margin-bottom:4px">
+              <span style="font-size:11px;font-weight:700;color:#374151;white-space:nowrap">Spazio §:</span>
+              <button onclick="etParaSpacing('0','0')" style="padding:2px 8px;font-size:11px;border:1px solid #d1d5db;border-radius:4px;cursor:pointer;background:#fff">Nessuno</button>
+              <button onclick="etParaSpacing('4px','4px')" style="padding:2px 8px;font-size:11px;border:1px solid #d1d5db;border-radius:4px;cursor:pointer;background:#fff">Piccolo</button>
+              <button onclick="etParaSpacing('8px','8px')" style="padding:2px 8px;font-size:11px;border:1px solid #d1d5db;border-radius:4px;cursor:pointer;background:#fff">Normale</button>
+              <button onclick="etParaSpacing('14px','14px')" style="padding:2px 8px;font-size:11px;border:1px solid #d1d5db;border-radius:4px;cursor:pointer;background:#fff">Grande</button>
+              <span style="margin:0 4px;color:#ccc">|</span>
+              <span style="font-size:11px;font-weight:700;color:#374151;white-space:nowrap">Spaziatura lettere:</span>
+              <button onclick="etLetterSpacing('normal')" style="padding:2px 8px;font-size:11px;border:1px solid #d1d5db;border-radius:4px;cursor:pointer;background:#fff">Normale</button>
+              <button onclick="etLetterSpacing('1px')" style="padding:2px 8px;font-size:11px;border:1px solid #d1d5db;border-radius:4px;cursor:pointer;background:#fff">+1px</button>
+              <button onclick="etLetterSpacing('2px')" style="padding:2px 8px;font-size:11px;border:1px solid #d1d5db;border-radius:4px;cursor:pointer;background:#fff">+2px</button>
+              <button onclick="etLetterSpacing('-1px')" style="padding:2px 8px;font-size:11px;border:1px solid #d1d5db;border-radius:4px;cursor:pointer;background:#fff">-1px</button>
+            </div>
+            <div style="width:100%;display:flex;flex-wrap:wrap;gap:6px;align-items:center;padding-bottom:6px;border-bottom:1px solid #e5e7eb;margin-bottom:4px">
+              <span style="font-size:11px;font-weight:700;color:#374151;white-space:nowrap">Dim. carattere:</span>
+              <button onclick="etFontSize('8px')" style="padding:2px 8px;font-size:11px;border:1px solid #d1d5db;border-radius:4px;cursor:pointer;background:#fff">8</button>
+              <button onclick="etFontSize('10px')" style="padding:2px 8px;font-size:11px;border:1px solid #d1d5db;border-radius:4px;cursor:pointer;background:#fff">10</button>
+              <button onclick="etFontSize('12px')" style="padding:2px 8px;font-size:11px;border:1px solid #d1d5db;border-radius:4px;cursor:pointer;background:#fff">12</button>
+              <button onclick="etFontSize('14px')" style="padding:2px 8px;font-size:11px;border:1px solid #d1d5db;border-radius:4px;cursor:pointer;background:#fff">14</button>
+              <button onclick="etFontSize('16px')" style="padding:2px 8px;font-size:11px;border:1px solid #d1d5db;border-radius:4px;cursor:pointer;background:#fff">16</button>
+              <button onclick="etFontSize('18px')" style="padding:2px 8px;font-size:11px;border:1px solid #d1d5db;border-radius:4px;cursor:pointer;background:#fff">18</button>
+              <button onclick="etFontSize('20px')" style="padding:2px 8px;font-size:11px;border:1px solid #d1d5db;border-radius:4px;cursor:pointer;background:#fff">20</button>
+              <button onclick="etFontSize('24px')" style="padding:2px 8px;font-size:11px;border:1px solid #d1d5db;border-radius:4px;cursor:pointer;background:#fff">24</button>
+              <button onclick="etFontSize('30px')" style="padding:2px 8px;font-size:11px;border:1px solid #d1d5db;border-radius:4px;cursor:pointer;background:#fff">30</button>
+            </div>
+            <div style="width:100%;display:flex;flex-wrap:wrap;gap:6px;align-items:center">
+              <span style="font-size:11px;font-weight:700;color:#374151;white-space:nowrap">↵ A capo:</span>
+              <button onclick="etInsertBr()" style="padding:2px 10px;font-size:11px;border:1px solid #005CA9;border-radius:4px;cursor:pointer;background:#e8f0fe;color:#005CA9">Senza spazio (Shift+↵)</button>
+              <span style="margin:0 4px;color:#ccc">|</span>
+              <span style="font-size:11px;font-weight:700;color:#374151;white-space:nowrap">Bordo tabella:</span>
+              <button onclick="etTableBorder('#cccccc','1px')" style="padding:2px 8px;font-size:11px;border:1px solid #d1d5db;border-radius:4px;cursor:pointer;background:#fff">Grigio</button>
+              <button onclick="etTableBorder('#005CA9','1px')" style="padding:2px 8px;font-size:11px;border:1px solid #005CA9;border-radius:4px;cursor:pointer;background:#e8f0fe;color:#005CA9">Blu</button>
+              <button onclick="etTableBorder('#000000','1px')" style="padding:2px 8px;font-size:11px;border:1px solid #000;border-radius:4px;cursor:pointer;background:#fff">Nero</button>
+              <button onclick="etTableBorder('transparent','0')" style="padding:2px 8px;font-size:11px;border:1px solid #d1d5db;border-radius:4px;cursor:pointer;background:#fff">Nessuno</button>
+            </div>
           </div>
         </div>
         <div id="et-img-resize-bar" style="display:none;background:#f0f9ff;border:1px solid #bae6fd;border-radius:6px;padding:8px 12px;margin-top:6px;font-size:12px;align-items:center;gap:10px">
@@ -3857,6 +3886,54 @@ function etParaSpacing(top,bottom){
   }else{
     editor.querySelectorAll('p,li,h1,h2,h3').forEach(el=>{el.style.marginTop=top;el.style.marginBottom=bottom;});
   }
+  updateEmailPreview();
+}
+
+function etFontSize(size){
+  if(!etQuill)return;
+  const range=etQuill.getSelection();
+  if(range&&range.length>0){
+    etQuill.formatText(range.index,range.length,'size',false);
+    // Applica font-size inline
+    const [leaf]=etQuill.getLeaf(range.index);
+    if(leaf&&leaf.domNode){
+      etQuill.formatText(range.index,range.length,'color',etQuill.getFormat(range).color||false);
+    }
+    // Usa execCommand come fallback affidabile
+    document.execCommand('fontSize',false,'7');
+    etQuill.root.querySelectorAll('font[size="7"]').forEach(el=>{
+      el.removeAttribute('size');
+      el.style.fontSize=size;
+    });
+  }else{
+    etQuill.format('size',size);
+  }
+  updateEmailPreview();
+}
+
+function etLetterSpacing(val){
+  if(!etQuill)return;
+  const range=etQuill.getSelection();
+  const editor=etQuill.root;
+  if(range&&range.length>0){
+    const sel=window.getSelection();
+    if(sel&&sel.rangeCount){
+      const span=document.createElement('span');
+      span.style.letterSpacing=val;
+      try{sel.getRangeAt(0).surroundContents(span);}catch(e){}
+    }
+  }else{
+    editor.querySelectorAll('p,li,h1,h2,h3,span').forEach(el=>el.style.letterSpacing=val);
+  }
+  updateEmailPreview();
+}
+
+function etTableBorder(color,width){
+  if(!etQuill)return;
+  etQuill.root.querySelectorAll('table,td,th').forEach(el=>{
+    el.style.border=width==='0'?'none':`${width} solid ${color}`;
+    el.style.borderCollapse='collapse';
+  });
   updateEmailPreview();
 }
 
@@ -4645,6 +4722,9 @@ async function submitSignature(token,consents){
     submitBtn.disabled=true;
     submitBtn.textContent='⏳ Invio in corso...';
   }
+  // Reset cache GPS per garantire rilevamento fresco ad ogni firma
+  _gpsCoordsResult=null;
+  _gpsPromise=null;
   try{
     // Comprimi la firma come PNG trasparente (max 600px larghezza)
     const sigPng=await compressPng(fullscreenSigData,600);
