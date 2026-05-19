@@ -2951,90 +2951,101 @@ Cordiali saluti, CNA Roma</div>
 </div></div>
 
 <!-- MODAL: Email Templates -->
-<div class="modal-overlay" id="modal-email-templates" style="display:none"><div class="modal" style="max-width:780px;width:95vw">
-  <div class="modal-header"><h2>✉️ Template Email</h2><button class="close-btn" onclick="document.getElementById('modal-email-templates').style.display='none'">&times;</button></div>
-  <div class="modal-body" style="padding:20px;max-height:85vh;overflow-y:auto">
-    <!-- Tabs template -->
-    <div style="display:flex;gap:8px;margin-bottom:20px;border-bottom:2px solid #e5e7eb;padding-bottom:0">
-      <button class="et-tab active" onclick="switchEmailTab('send_link',this)" style="padding:8px 16px;border:none;background:none;cursor:pointer;font-size:13px;font-weight:600;color:#005CA9;border-bottom:2px solid #005CA9;margin-bottom:-2px;font-family:inherit">Invio Link Firma</button>
-      <button class="et-tab" onclick="switchEmailTab('post_firma_cliente',this)" style="padding:8px 16px;border:none;background:none;cursor:pointer;font-size:13px;font-weight:600;color:#888;border-bottom:2px solid transparent;margin-bottom:-2px;font-family:inherit">Conferma Cliente</button>
-      <button class="et-tab" onclick="switchEmailTab('post_firma_interno',this)" style="padding:8px 16px;border:none;background:none;cursor:pointer;font-size:13px;font-weight:600;color:#888;border-bottom:2px solid transparent;margin-bottom:-2px;font-family:inherit">Notifica Interna</button>
+<div id="modal-email-templates" style="display:none;position:fixed;inset:0;z-index:2000;background:var(--bg,#f5f7fa);flex-direction:column">
+  <!-- Header -->
+  <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 24px;background:#fff;border-bottom:2px solid #e5e7eb;flex-shrink:0">
+    <div style="display:flex;align-items:center;gap:16px">
+      <h2 style="margin:0;font-size:17px;font-weight:700;color:#005CA9;font-family:inherit">✉️ Template Email</h2>
+      <div style="display:flex;gap:0;border-bottom:none">
+        <button class="et-tab active" onclick="switchEmailTab('send_link',this)" style="padding:6px 16px;border:1px solid #005CA9;border-radius:6px 0 0 6px;background:#005CA9;color:#fff;cursor:pointer;font-size:12px;font-weight:600;font-family:inherit">Invio Link Firma</button>
+        <button class="et-tab" onclick="switchEmailTab('post_firma_cliente',this)" style="padding:6px 16px;border:1px solid #005CA9;border-left:none;background:#fff;color:#005CA9;cursor:pointer;font-size:12px;font-weight:600;font-family:inherit">Conferma Cliente</button>
+        <button class="et-tab" onclick="switchEmailTab('post_firma_interno',this)" style="padding:6px 16px;border:1px solid #005CA9;border-left:none;border-radius:0 6px 6px 0;background:#fff;color:#005CA9;cursor:pointer;font-size:12px;font-weight:600;font-family:inherit">Notifica Interna</button>
+      </div>
     </div>
-    <!-- Variabili disponibili -->
-    <div id="et-vars-box" style="background:#f0f9ff;border:1px solid #bae6fd;border-radius:8px;padding:10px 14px;margin-bottom:16px;font-size:11px;color:#0369a1;line-height:2"></div>
-    <!-- Editor -->
-    <div class="form-group" style="margin-bottom:12px">
-      <label style="font-size:12px;font-weight:600;color:#374151">Oggetto</label>
-      <input type="text" id="et-subject" style="margin-top:4px;font-size:13px" placeholder="Oggetto email">
+    <div style="display:flex;gap:10px;align-items:center">
+      <button class="btn btn-primary" onclick="saveEmailTemplate()" id="et-save-btn">💾 Salva</button>
+      <button onclick="document.getElementById('modal-email-templates').style.display='none'" style="background:none;border:none;font-size:26px;cursor:pointer;color:#888;line-height:1;padding:0 4px">&times;</button>
     </div>
-    <div class="form-group" style="margin-bottom:12px">
-      <label style="font-size:12px;font-weight:600;color:#374151">Corpo Email</label>
-      <div id="et-quill-container" style="margin-top:4px;border:1px solid #d1d5db;border-radius:6px;overflow:hidden;background:#fff">
-        <div id="et-quill-toolbar">
-          <span class="ql-formats">
-            <select class="ql-header">
-              <option selected>Normale</option>
-              <option value="1">Titolo 1</option>
-              <option value="2">Titolo 2</option>
-              <option value="3">Titolo 3</option>
-            </select>
-          </span>
-          <span class="ql-formats">
-            <button class="ql-bold"></button>
-            <button class="ql-italic"></button>
-            <button class="ql-underline"></button>
-            <button class="ql-strike"></button>
-          </span>
-          <span class="ql-formats">
-            <select class="ql-color"></select>
-            <select class="ql-background"></select>
-          </span>
-          <span class="ql-formats">
-            <select class="ql-align"></select>
-          </span>
-          <span class="ql-formats">
-            <button class="ql-list" value="ordered"></button>
-            <button class="ql-list" value="bullet"></button>
-            <button class="ql-indent" value="-1"></button>
-            <button class="ql-indent" value="+1"></button>
-          </span>
-          <span class="ql-formats">
-            <button class="ql-link"></button>
-            <button class="ql-image" title="Inserisci immagine da URL"></button>
-          </span>
-          <span class="ql-formats">
-            <select class="ql-size">
-              <option value="small">Piccolo</option>
-              <option selected>Normale</option>
-              <option value="large">Grande</option>
-              <option value="huge">Molto grande</option>
-            </select>
-          </span>
-          <span class="ql-formats">
-            <button class="ql-blockquote"></button>
-            <button class="ql-clean"></button>
-          </span>
+  </div>
+  <!-- Body: editor + sidebar -->
+  <div style="flex:1;overflow:hidden;display:flex;gap:0">
+    <!-- Editor column -->
+    <div style="flex:1;overflow-y:auto;padding:20px;display:flex;flex-direction:column;gap:12px">
+      <div class="form-group">
+        <label style="font-size:11px;font-weight:700;color:#374151;text-transform:uppercase;letter-spacing:.5px">Oggetto</label>
+        <input type="text" id="et-subject" style="margin-top:4px;font-size:13px" placeholder="Oggetto email">
+      </div>
+      <div class="form-group" style="flex:1;display:flex;flex-direction:column">
+        <label style="font-size:11px;font-weight:700;color:#374151;text-transform:uppercase;letter-spacing:.5px">Corpo Email</label>
+        <div id="et-quill-container" style="margin-top:4px;border:1px solid #d1d5db;border-radius:6px;overflow:hidden;background:#fff;flex:1;display:flex;flex-direction:column">
+          <div id="et-quill-toolbar">
+            <span class="ql-formats">
+              <select class="ql-header">
+                <option selected>Normale</option>
+                <option value="1">Titolo 1</option>
+                <option value="2">Titolo 2</option>
+                <option value="3">Titolo 3</option>
+              </select>
+            </span>
+            <span class="ql-formats">
+              <button class="ql-bold"></button>
+              <button class="ql-italic"></button>
+              <button class="ql-underline"></button>
+              <button class="ql-strike"></button>
+            </span>
+            <span class="ql-formats">
+              <select class="ql-color"></select>
+              <select class="ql-background"></select>
+            </span>
+            <span class="ql-formats">
+              <select class="ql-align"></select>
+            </span>
+            <span class="ql-formats">
+              <button class="ql-list" value="ordered"></button>
+              <button class="ql-list" value="bullet"></button>
+              <button class="ql-indent" value="-1"></button>
+              <button class="ql-indent" value="+1"></button>
+            </span>
+            <span class="ql-formats">
+              <button class="ql-link"></button>
+              <button class="ql-image" title="Inserisci immagine da URL"></button>
+            </span>
+            <span class="ql-formats">
+              <select class="ql-size">
+                <option value="small">Piccolo</option>
+                <option selected>Normale</option>
+                <option value="large">Grande</option>
+                <option value="huge">Molto grande</option>
+              </select>
+            </span>
+            <span class="ql-formats">
+              <button class="ql-blockquote"></button>
+              <button class="ql-clean"></button>
+            </span>
+          </div>
+          <div id="et-quill-editor" style="flex:1;min-height:300px;font-size:10pt"></div>
         </div>
-        <div id="et-quill-editor" style="min-height:220px;font-size:10pt"></div>
-      </div>
-      <div id="et-img-resize-bar" style="display:none;background:#f0f9ff;border:1px solid #bae6fd;border-radius:6px;padding:8px 12px;margin-top:6px;font-size:12px;align-items:center;gap:10px">
-        <span style="color:#0369a1">🖼️ Larghezza immagine:</span>
-        <input type="text" id="et-img-width" placeholder="es. 200px o 50%" style="width:100px;padding:3px 6px;border:1px solid #bae6fd;border-radius:4px;font-size:12px">
-        <button onclick="applyImgResize()" style="padding:3px 10px;background:#005CA9;color:#fff;border:none;border-radius:4px;cursor:pointer;font-size:12px">Applica</button>
-        <button onclick="removeImgResize()" style="padding:3px 10px;background:#dc2626;color:#fff;border:none;border-radius:4px;cursor:pointer;font-size:12px">Rimuovi immagine</button>
+        <div id="et-img-resize-bar" style="display:none;background:#f0f9ff;border:1px solid #bae6fd;border-radius:6px;padding:8px 12px;margin-top:6px;font-size:12px;align-items:center;gap:10px">
+          <span style="color:#0369a1">🖼️ Larghezza:</span>
+          <input type="text" id="et-img-width" placeholder="es. 200px o 50%" style="width:100px;padding:3px 6px;border:1px solid #bae6fd;border-radius:4px;font-size:12px">
+          <button onclick="applyImgResize()" style="padding:3px 10px;background:#005CA9;color:#fff;border:none;border-radius:4px;cursor:pointer;font-size:12px">Applica</button>
+          <button onclick="removeImgResize()" style="padding:3px 10px;background:#dc2626;color:#fff;border:none;border-radius:4px;cursor:pointer;font-size:12px">Rimuovi</button>
+        </div>
       </div>
     </div>
-    <!-- Anteprima -->
-    <div style="margin-bottom:4px">
-      <label style="font-size:12px;font-weight:600;color:#374151">Anteprima</label>
-      <div id="et-preview" style="margin-top:6px;border:1px solid #e5e7eb;border-radius:8px;padding:16px;background:#fff;min-height:80px;font-size:10pt"></div>
+    <!-- Sidebar: variabili + anteprima -->
+    <div style="width:320px;flex-shrink:0;border-left:1px solid #e5e7eb;overflow-y:auto;padding:20px;display:flex;flex-direction:column;gap:16px;background:#fafafa">
+      <div>
+        <label style="font-size:11px;font-weight:700;color:#374151;text-transform:uppercase;letter-spacing:.5px;display:block;margin-bottom:8px">Variabili <span style="font-weight:400;color:#888;font-size:10px">(click per inserire)</span></label>
+        <div id="et-vars-box" style="font-size:11px;color:#0369a1;line-height:2.4"></div>
+      </div>
+      <div style="flex:1;display:flex;flex-direction:column">
+        <label style="font-size:11px;font-weight:700;color:#374151;text-transform:uppercase;letter-spacing:.5px;display:block;margin-bottom:8px">Anteprima</label>
+        <div id="et-preview" style="flex:1;border:1px solid #e5e7eb;border-radius:8px;padding:14px;background:#fff;font-size:9.5pt;min-height:200px"></div>
+      </div>
     </div>
   </div>
-  <div class="modal-footer" style="justify-content:space-between">
-    <button class="btn btn-outline" onclick="document.getElementById('modal-email-templates').style.display='none'">Chiudi</button>
-    <button class="btn btn-primary" onclick="saveEmailTemplate()" id="et-save-btn">&#x1F4BE; Salva Template</button>
-  </div>
-</div></div>
+</div>
 
 <!-- MODAL: Profile -->
 <div class="modal-overlay" id="modal-profile"><div class="modal">
@@ -3646,21 +3657,26 @@ async function loadEmailTemplate(id){
 
 function etSetHtml(html){
   if(!etQuill||!html)return;
-  // Disabilita temporaneamente l'editor per evitare che Quill resetti il contenuto
-  etQuill.disable();
-  etQuill.root.innerHTML=html;
-  etQuill.enable();
-  // Posiziona cursore alla fine
-  try{etQuill.setSelection(etQuill.getLength(),0,'silent');}catch(e){}
-  updateEmailPreview();
+  // Doppio requestAnimationFrame: garantisce che Quill abbia completato
+  // il suo MutationObserver prima che impostiamo innerHTML
+  requestAnimationFrame(()=>{
+    requestAnimationFrame(()=>{
+      etQuill.root.innerHTML=html;
+      // Notifica Quill che il contenuto è cambiato senza triggerare il reset
+      etQuill.history.clear();
+      updateEmailPreview();
+    });
+  });
 }
 
 function switchEmailTab(id,btn){
   currentEtId=id;
   document.querySelectorAll('.et-tab').forEach(b=>{
-    b.style.color='#888';b.style.borderBottomColor='transparent';
+    b.style.background='#fff';
+    b.style.color='#005CA9';
   });
-  btn.style.color='#005CA9';btn.style.borderBottomColor='#005CA9';
+  btn.style.background='#005CA9';
+  btn.style.color='#fff';
   setTimeout(()=>loadEmailTemplate(id),50);
 }
 
