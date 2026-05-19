@@ -2851,6 +2851,23 @@ var qrcode = function() {
       <button class="btn btn-warning" onclick="confirmSend()" style="width:100%;margin-top:10px;font-size:13px;padding:10px">📧 Apri Client Email</button>
     </div>
 
+    <!-- SEZIONE INVIO AUTOMATICO -->
+    <div style="background:#f0fdf4;border:1.5px solid #16a34a;border-radius:10px;padding:16px;margin-bottom:14px">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+        <span style="font-size:22px">🚀</span>
+        <div>
+          <div style="font-size:14px;font-weight:700;color:#16a34a">Invio Automatico</div>
+          <div style="font-size:11px;color:#555">Invia direttamente senza aprire il client di posta</div>
+        </div>
+      </div>
+      <div style="background:#fff;border:1px solid #bbf7d0;border-radius:6px;padding:10px;margin-bottom:10px;font-size:11px;color:#166534;line-height:1.6">
+        ✅ L'email viene inviata direttamente al cliente con il link di firma.<br>
+        ✅ Nessuna operazione manuale richiesta.<br>
+        ✅ Usa l'email già inserita nella sezione sopra.
+      </div>
+      <button class="btn" onclick="confirmSendAuto()" id="btn-send-auto" style="width:100%;margin-top:4px;font-size:13px;padding:10px;background:#16a34a;color:#fff;border:none;border-radius:6px;cursor:pointer;font-weight:600">✉️ Invia Email Automaticamente</button>
+    </div>
+
     <!-- SEZIONE WHATSAPP -->
     <div style="background:#e7f8ee;border:1.5px solid #25D366;border-radius:10px;padding:16px;margin-bottom:14px">
       <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
@@ -4121,6 +4138,7 @@ async function submitSignature(token,consents){
     }
     
     document.querySelector('.firma-content').innerHTML=`<div class="form-card"><div class="form-card-body" style="text-align:center;padding:60px"><div style="font-size:64px">&#x2705;</div><h2 style="color:var(--ok);margin:12px 0">Contratto Firmato!</h2><p>Il contratto e stato firmato con successo.</p><p style="margin-top:16px;font-size:13px;color:var(--txt2)">Scarica la tua copia del contratto firmato:</p><button class="btn btn-success" onclick="downloadClientPDF('${token}')" style="margin-top:12px;padding:14px 28px;font-size:15px">&#x1F4C4; Scarica PDF firmato</button></div></div>`;
+    sendPostFirmaEmails(token).catch(e=>console.warn('Email post-firma:',e.message));
   }catch(e){alert('Errore: '+e.message);}
 }
 
@@ -4310,6 +4328,65 @@ async function confirmSend(){
 
     showToast('Client email aperto! Email HTML copiata - incolla con Ctrl+V','success');
   }catch(e){console.error('confirmSend:',e);showToast('Errore: '+e.message,'error');}
+}
+
+async function confirmSendAuto(){
+  const email=document.getElementById('send-email').value.trim();
+  if(!email){showToast('Inserisci email nella sezione Email sopra','error');return;}
+  const btn=document.getElementById('btn-send-auto');
+  const origTxt=btn?btn.textContent:'';
+  if(btn){btn.disabled=true;btn.textContent='⏳ Invio in corso...';}
+  try{
+    const contracts=await sb(`contratti?id=eq.${currentContractId}&select=token,cognome,nome`);
+    if(!contracts||!contracts[0]){showToast('Contratto non trovato','error');return;}
+    const token=contracts[0].token;
+    const url=BASE_URL+'?firma='+token;
+    const cognome=contracts[0].cognome||'';
+    const nome=contracts[0].nome||'';
+    await sb(`contratti?id=eq.${currentContractId}`,'PATCH',{stato:'inviato',inviato_at:new Date().toISOString(),email_inviata:true});
+    const subj='Completa l\'adesione alla CNA di Roma';
+    const htmlBody=`<div style="font-family:Arial,sans-serif;font-size:10pt;color:#000;line-height:1.6"><p>Gentile ${cognome} ${nome},</p><p>La preghiamo di firmare il contratto di adesione CNA Roma tramite il link in questa email.</p><p>Cordiali saluti,<br>CNA Roma</p><p style="margin:20px 0;font-size:12pt"><a href="${url}" style="color:#005CA9;text-decoration:underline;font-weight:bold">Clicca qui per visualizzare e firmare il contratto</a></p><p style="font-size:9pt;color:#666">Se il link non funziona, copia e incolla questo indirizzo nel browser:<br><a href="${url}" style="color:#005CA9">${url}</a></p><br><img src="https://festivaldellelibrerie.it/wp-content/uploads/2024/11/logo-cna-colore.svg" alt="CNA Roma" style="height:45px;width:auto;display:block;margin-bottom:8px"><div style="font-size:10pt"><strong style="color:#005CA9">CNA Roma</strong><br><span style="font-size:9pt">Via Cristoforo Colombo 283A - 00147 - Roma<br>Tel: 06/570151 | <a href="mailto:info@cnaroma.it" style="color:#005CA9">info@cnaroma.it</a> | <a href="http://cnaroma.it" style="color:#005CA9">cnaroma.it</a></span></div></div>`;
+    const plainBody=`Gentile ${cognome} ${nome},\n\nLa preghiamo di firmare il contratto di adesione CNA Roma:\n${url}\n\nCordiali saluti,\nCNA Roma\n06/570151 | info@cnaroma.it`;
+    const res=await fetch('https://ohahuqlfzqckaevaffbt.supabase.co/functions/v1/send-email',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({type:'send_link',to:email,subject:subj,html:htmlBody,text:plainBody})
+    });
+    const data=await res.json();
+    if(res.ok&&data.id){
+      closeModal('modal-email');
+      showToast('Email inviata a '+email,'success');
+    }else{
+      throw new Error(data.message||data.error||'Errore invio email');
+    }
+  }catch(e){console.error('confirmSendAuto:',e);showToast('Errore: '+e.message,'error');}
+  finally{if(btn){btn.disabled=false;btn.textContent=origTxt;}}
+}
+
+async function sendPostFirmaEmails(token){
+  try{
+    const rows=await sb(`contratti?token=eq.${token}&select=*,cna_users(email)`);
+    if(!rows||!rows[0])return;
+    const ct=rows[0];
+    const operatoreEmail=ct.cna_users?.email||null;
+    let pdfBase64=null;
+    try{
+      const{PDFDocument}=PDFLib;
+      const bytes=Uint8Array.from(atob(PDF_B64),ch=>ch.charCodeAt(0));
+      const doc=await PDFDocument.load(bytes,{ignoreEncryption:true});
+      const form=doc.getForm();const pages=doc.getPages();
+      fillPDF(form,ct);await embedSigs(doc,pages,ct);
+      try{form.flatten();}catch(fe){}
+      const pdfBytes=await doc.save();
+      pdfBase64=btoa(String.fromCharCode(...new Uint8Array(pdfBytes)));
+    }catch(pdfErr){console.warn('PDF gen:',pdfErr.message);}
+    await fetch('https://ohahuqlfzqckaevaffbt.supabase.co/functions/v1/send-email',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({type:'post_firma',contratto:ct,operatoreEmail,pdfBase64,docFronte:ct.documento_foto_base64||null,docRetro:ct.documento_retro_base64||null})
+    });
+    console.log('Email post-firma inviate');
+  }catch(e){console.warn('sendPostFirmaEmails:',e.message);}
 }
 
 async function sendViaWhatsApp(){
