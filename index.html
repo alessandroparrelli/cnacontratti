@@ -2975,9 +2975,9 @@ Cordiali saluti, CNA Roma</div>
         <label style="font-size:11px;font-weight:700;color:#374151;text-transform:uppercase;letter-spacing:.5px">Oggetto</label>
         <input type="text" id="et-subject" style="margin-top:4px;font-size:13px" placeholder="Oggetto email">
       </div>
-      <div class="form-group" style="flex:1;display:flex;flex-direction:column">
+      <div class="form-group" style="display:flex;flex-direction:column">
         <label style="font-size:11px;font-weight:700;color:#374151;text-transform:uppercase;letter-spacing:.5px">Corpo Email</label>
-        <div id="et-quill-container" style="margin-top:4px;border:1px solid #d1d5db;border-radius:6px;overflow:hidden;background:#fff;flex:1;display:flex;flex-direction:column">
+        <div id="et-quill-container" style="margin-top:4px;border:1px solid #d1d5db;border-radius:6px;overflow:hidden;background:#fff;display:flex;flex-direction:column">
           <div id="et-quill-toolbar">
             <span class="ql-formats">
               <select class="ql-header">
@@ -3023,7 +3023,7 @@ Cordiali saluti, CNA Roma</div>
               <button class="ql-clean"></button>
             </span>
           </div>
-          <div id="et-quill-editor" style="flex:1;min-height:300px;font-size:10pt"></div>
+          <div id="et-quill-editor" style="min-height:300px;font-size:10pt"></div>
         </div>
         <!-- Textarea HTML per Notifica Interna (ha tabelle non supportate da Quill) -->
         <textarea id="et-html-textarea" rows="18" style="display:none;margin-top:4px;font-size:12px;font-family:monospace;resize:vertical;width:100%;box-sizing:border-box;border:1px solid #d1d5db;border-radius:6px;padding:10px;min-height:300px" oninput="updateEmailPreview()"></textarea>
@@ -3034,17 +3034,16 @@ Cordiali saluti, CNA Roma</div>
           <button onclick="removeImgResize()" style="padding:3px 10px;background:#dc2626;color:#fff;border:none;border-radius:4px;cursor:pointer;font-size:12px">Rimuovi</button>
         </div>
       </div>
-    </div>
-    <!-- Sidebar: variabili + anteprima -->
-    <div style="width:320px;flex-shrink:0;border-left:1px solid #e5e7eb;overflow-y:auto;padding:20px;display:flex;flex-direction:column;gap:16px;background:#fafafa">
+      <!-- Anteprima sotto l'editor -->
       <div>
-        <label style="font-size:11px;font-weight:700;color:#374151;text-transform:uppercase;letter-spacing:.5px;display:block;margin-bottom:8px">Variabili <span style="font-weight:400;color:#888;font-size:10px">(click per inserire)</span></label>
-        <div id="et-vars-box" style="font-size:11px;color:#0369a1;line-height:2.4"></div>
-      </div>
-      <div style="flex:1;display:flex;flex-direction:column">
         <label style="font-size:11px;font-weight:700;color:#374151;text-transform:uppercase;letter-spacing:.5px;display:block;margin-bottom:8px">Anteprima</label>
-        <div id="et-preview" style="flex:1;border:1px solid #e5e7eb;border-radius:8px;padding:14px;background:#fff;font-size:9.5pt;min-height:200px"></div>
+        <div id="et-preview" style="border:1px solid #e5e7eb;border-radius:8px;padding:16px;background:#fff;font-size:9.5pt;min-height:120px"></div>
       </div>
+    </div>
+    <!-- Sidebar: solo variabili -->
+    <div style="width:260px;flex-shrink:0;border-left:1px solid #e5e7eb;overflow-y:auto;padding:20px;background:#fafafa">
+      <label style="font-size:11px;font-weight:700;color:#374151;text-transform:uppercase;letter-spacing:.5px;display:block;margin-bottom:8px">Variabili <span style="font-weight:400;color:#888;font-size:10px">(click per inserire)</span></label>
+      <div id="et-vars-box" style="font-size:11px;color:#0369a1;line-height:2.4"></div>
     </div>
   </div>
 </div>
