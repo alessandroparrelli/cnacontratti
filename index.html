@@ -2816,7 +2816,10 @@ table.quill-better-table {
     <div class="form-group">
       <label>Raccolto da</label>
       <input type="text" id="raccolto_da" class="form-input" readonly style="background:var(--input-bg);opacity:0.7;cursor:not-allowed">
-    </div></div>
+    <div class="form-group">
+      <label>Tipo contratto</label>
+      <select id="tipo_contratto_sel" style="padding:10px 12px;border:1px solid var(--brd);border-radius:8px;font-size:14px;background:var(--input-bg);color:var(--txt);width:100%"><option value="tesseramento">Tesseramento</option></select>
+    </div></div></div>
   </div></div>
   <div class="form-card"><div class="form-card-header"><span>&#x1F3E2;</span><h3>Dati Aziendali</h3></div><div class="form-card-body">
     <div class="form-row c21"><div class="form-group required"><label>Ragione Sociale</label><input type="text" id="ragione_sociale" placeholder=" " required></div><div class="form-group required"><label>Partita IVA</label><input type="text" id="piva" maxlength="11" placeholder=" " style="letter-spacing:1px;font-family:monospace" required></div></div>
@@ -2902,7 +2905,7 @@ table.quill-better-table {
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
             <select id="filter-tipo" onchange="filterContracts()" style="padding:7px 10px;border:1px solid var(--brd);border-radius:6px;font-size:13px;background:#fff;color:var(--txt)">
               <option value="">Tutti i tipi</option>
-              <option value="adesione_2025">Tesseramento</option>
+              <option value="tesseramento">Tesseramento</option>
             </select>
             <select id="filter-stato" onchange="filterContracts()" style="padding:7px 10px;border:1px solid var(--brd);border-radius:6px;font-size:13px;background:#fff;color:var(--txt)">
               <option value="">Tutti gli stati</option>
@@ -4885,7 +4888,7 @@ function collectFormData(){
   const c=id=>(document.getElementById(id)||{}).checked||false;
   const r=name=>{const el=document.querySelector(`input[name="${name}"]:checked`);return el?el.value:'';};
   const mods=[];if(c('mod_rid'))mods.push('RID');if(c('mod_riba'))mods.push('RIBA');if(c('mod_rd'))mods.push('R.D.');if(c('mod_sepa'))mods.push('Bonifico Sepa');if(c('mod_altro'))mods.push('Altro');
-  return{cognome:v('cognome'),nome:v('nome'),codice_fiscale:v('cf').toUpperCase(),nato_il:v('data_nascita')||null,luogo_nascita:v('nato_a'),prov_nascita:v('prov_nascita').toUpperCase(),stato_nascita:v('stato_nascita'),residente_comune:v('comune_res'),residente_indirizzo:v('residente_in'),residente_cap:v('cap_res'),residente_prov:v('prov_res').toUpperCase(),stato_residenza:v('stato_res'),telefono:v('telefono'),cellulare:v('cellulare'),email:v('email'),ragione_sociale:v('ragione_sociale'),partita_iva:v('piva'),qualita_artigiano:c('tipo_a'),qualita_commerciante:c('tipo_c'),qualita_piccola_impresa:c('tipo_p'),qualita_varie:c('tipo_v'),attivita_svolta:v('ateco'),pec:v('pec'),sede_attivita_indirizzo:v('sede_attivita'),sede_attivita_cap:v('cap_att'),sede_attivita_comune:v('comune_att'),sede_attivita_prov:v('prov_att').toUpperCase(),codice_inail_ditta:v('cod_inail'),cod_inail_pat:v('cod_inail_pat'),documento_identita:v('documento_id'),raccolta_da:v('raccolto_da'),motivo_iscrizione:v('motivo_iscrizione'),quota_primo_anno_importo:parseFloat(v('quota_1_anno').replace(',','.'))||null,quota_primo_anno_data:v('data_adesione')||null,quota_primo_anno_modalita:v('modalita_pagamento_sel'),quota_anni_successivi_importo:parseFloat(v('quota_inps').replace(',','.'))||null,cod_inps:v('cod_inps'),quota_diretto_importo:parseFloat(v('quota_diretto').replace(',','.'))||null,modalita_pagamento:mods.join(', '),iban_ditta:v('iban_ditta').toUpperCase(),data_dichiarante:v('data_dichiarazione')||null,firma_dichiarante_base64:getSignatureDataUrl('sig_dichiarante'),data_consenso:v('data_consenso')||null,firma_consenso_base64:getSignatureDataUrl('sig_consenso'),consenso_trattamento_generale:r('consent_a')==='consente',consenso_trattamento_inps_inail:r('consent_b')==='consente',consenso_art9:r('consent_art9')==='consenso',consenso_sistema_cna:r('consent_sistema')==='consenso',consenso_web_social:r('consent_web')==='consenso',qualita_inps:v('qualita_inps'),data_delega_inps:v('data_inps')||null,firma_delega_inps_base64:getSignatureDataUrl('sig_inps'),sepa_identificativo_mandato:v('id_mandato'),sepa_b2b_checkbox:c('sepa_b2b'),sepa_core_checkbox:c('sepa_core'),data_sottoscrizione_sepa:v('data_sepa')||null,luogo_sottoscrizione_sepa:v('luogo_sepa'),banca_agenzia:v('banca_agenzia'),firma_sepa_base64:getSignatureDataUrl('sig_sepa'),stato:'bozza',created_by:loggedUser?loggedUser.id:null};
+  return{cognome:v('cognome'),nome:v('nome'),codice_fiscale:v('cf').toUpperCase(),nato_il:v('data_nascita')||null,luogo_nascita:v('nato_a'),prov_nascita:v('prov_nascita').toUpperCase(),stato_nascita:v('stato_nascita'),residente_comune:v('comune_res'),residente_indirizzo:v('residente_in'),residente_cap:v('cap_res'),residente_prov:v('prov_res').toUpperCase(),stato_residenza:v('stato_res'),telefono:v('telefono'),cellulare:v('cellulare'),email:v('email'),ragione_sociale:v('ragione_sociale'),partita_iva:v('piva'),qualita_artigiano:c('tipo_a'),qualita_commerciante:c('tipo_c'),qualita_piccola_impresa:c('tipo_p'),qualita_varie:c('tipo_v'),attivita_svolta:v('ateco'),pec:v('pec'),sede_attivita_indirizzo:v('sede_attivita'),sede_attivita_cap:v('cap_att'),sede_attivita_comune:v('comune_att'),sede_attivita_prov:v('prov_att').toUpperCase(),codice_inail_ditta:v('cod_inail'),cod_inail_pat:v('cod_inail_pat'),documento_identita:v('documento_id'),raccolta_da:v('raccolto_da'),motivo_iscrizione:v('motivo_iscrizione'),quota_primo_anno_importo:parseFloat(v('quota_1_anno').replace(',','.'))||null,quota_primo_anno_data:v('data_adesione')||null,quota_primo_anno_modalita:v('modalita_pagamento_sel'),quota_anni_successivi_importo:parseFloat(v('quota_inps').replace(',','.'))||null,cod_inps:v('cod_inps'),quota_diretto_importo:parseFloat(v('quota_diretto').replace(',','.'))||null,modalita_pagamento:mods.join(', '),iban_ditta:v('iban_ditta').toUpperCase(),data_dichiarante:v('data_dichiarazione')||null,firma_dichiarante_base64:getSignatureDataUrl('sig_dichiarante'),data_consenso:v('data_consenso')||null,firma_consenso_base64:getSignatureDataUrl('sig_consenso'),consenso_trattamento_generale:r('consent_a')==='consente',consenso_trattamento_inps_inail:r('consent_b')==='consente',consenso_art9:r('consent_art9')==='consenso',consenso_sistema_cna:r('consent_sistema')==='consenso',consenso_web_social:r('consent_web')==='consenso',qualita_inps:v('qualita_inps'),data_delega_inps:v('data_inps')||null,firma_delega_inps_base64:getSignatureDataUrl('sig_inps'),sepa_identificativo_mandato:v('id_mandato'),sepa_b2b_checkbox:c('sepa_b2b'),sepa_core_checkbox:c('sepa_core'),data_sottoscrizione_sepa:v('data_sepa')||null,luogo_sottoscrizione_sepa:v('luogo_sepa'),banca_agenzia:v('banca_agenzia'),firma_sepa_base64:getSignatureDataUrl('sig_sepa'),tipo_contratto:(document.getElementById('tipo_contratto_sel')?document.getElementById('tipo_contratto_sel').value:'tesseramento')||'tesseramento',stato:'bozza',created_by:loggedUser?loggedUser.id:null};
 }
 
 async function saveToSupabase(){
@@ -5301,7 +5304,7 @@ async function editContract(id){
     sv('modalita_pagamento',c.modalita_pagamento);
 
     // Altri campi
-    sv('raccolto_da',c.raccolta_da);sv('motivo_iscrizione',c.motivo_iscrizione);
+    sv('raccolto_da',c.raccolta_da);sv('motivo_iscrizione',c.motivo_iscrizione);const tcSel=document.getElementById('tipo_contratto_sel');if(tcSel&&c.tipo_contratto)tcSel.value=c.tipo_contratto;
     sv('cod_inps',c.cod_inps);sv('qualita_inps',c.qualita_inps);
     sv('id_mandato',c.sepa_identificativo_mandato);
     sv('luogo_sepa',c.luogo_sottoscrizione_sepa);
@@ -5352,7 +5355,7 @@ function filterContracts(resetPage){
     const yr=new Date(x.created_at).getFullYear().toString();
     const propName=window._userMap?window._userMap[x.created_by]||'':'';
     const gestVal=x.caricato_gestionale?'caricato':'da-caricare';
-    const tipoVal=x.tipo_contratto||'adesione_2025';
+    const tipoVal=x.tipo_contratto||'tesseramento';
     return (!search||(nome.includes(search)||email.includes(search)))
       &&(!tipo||tipoVal===tipo)
       &&(!stato||st===stato)
@@ -5389,11 +5392,11 @@ function renderPage(page){
     const gestValue=gest?'caricato':'da-caricare';
     const hasGps=!!(x.gps_firma);
     const canEdit=(st==='bozza'||st==='inviato');
-    return `<div class="contract-item" data-id="${x.id}" data-nome="${(x.cognome||'')+' '+(x.nome||'')+' '+(x.ragione_sociale||'')}" data-email="${x.email||''}" data-tipo="${x.tipo_contratto||'adesione_2025'}" data-anno="${anno}" data-stato="${st}" data-proprietario="${createdByName}" data-gestionale="${gestValue}">
+    return `<div class="contract-item" data-id="${x.id}" data-nome="${(x.cognome||'')+' '+(x.nome||'')+' '+(x.ragione_sociale||'')}" data-email="${x.email||''}" data-tipo="${x.tipo_contratto||'tesseramento'}" data-anno="${anno}" data-stato="${st}" data-proprietario="${createdByName}" data-gestionale="${gestValue}">
         <input type="checkbox" class="contract-cb" value="${x.id}" onchange="updateExportBtn()" style="width:16px;height:16px;accent-color:var(--cna);flex-shrink:0">
         <div class="contract-info">
           <h4>${x.cognome||''} ${x.nome||''} - ${x.ragione_sociale||'N/D'}</h4>
-          <p>${x.email||''} · ${d} · <span class="status-badge ${bc}">${bt}</span> · <span style="font-size:10px;color:var(--txt2)">Proprietario: ${createdByName}</span></p>
+          <p>${x.email||''} · ${d} · <span class="status-badge ${bc}">${bt}</span> · <span style="font-size:10px;padding:2px 7px;border-radius:10px;background:var(--cna-light,#e3f0fa);color:var(--cna);font-weight:600">${getTipoLabel(tipoVal)}</span> · <span style="font-size:10px;color:var(--txt2)">Proprietario: ${createdByName}</span></p>
         </div>
         <div class="contract-actions">
           ${st==='firmato'?`<span style="padding:3px 8px;border-radius:10px;font-size:10px;font-weight:600;${gestClass};white-space:nowrap">${gestText}</span><select onchange="toggleGestionale('${x.id}',this.value==='1')" style="font-size:10px;padding:2px 4px;border:1px solid var(--brd);border-radius:4px"><option value="0" ${!gest?'selected':''}>Da caricare</option><option value="1" ${gest?'selected':''}>Caricato</option></select>`:''}
@@ -5904,7 +5907,7 @@ function initApp(){
   document.querySelectorAll('input,select').forEach(el=>el.addEventListener('input',updateStatus));document.querySelectorAll('select').forEach(el=>el.addEventListener('change',updateStatus));updateStatus();
   const today=new Date().toISOString().slice(0,10);['data_adesione','data_dichiarazione','data_consenso','data_inps','data_sepa'].forEach(id=>{const el=document.getElementById(id);if(el&&!el.value)el.value=today;});  loadCodiciAteco();
   initCurrencyFields();
-  loadContracts(); // Auto-load dashboard
+  loadTipiContratto().then(()=>loadContracts()); // Auto-load dopo tipi
   const appFooter=document.getElementById('app-footer');if(appFooter)appFooter.style.display='block';
 }
 
