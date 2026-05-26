@@ -2952,13 +2952,13 @@ table.quill-better-table {
 </footer>
 
 <div class="footer-actions" id="footer-form-actions" style="display:none"><div class="footer-inner">
-  <button class="btn btn-outline" onclick="tornaAllaHome()" style="gap:6px;display:flex;align-items:center"><span style="font-size:15px">&#x2190;</span> Home</button>
   <span id="status-indicator" class="status-badge empty">Non compilato</span>
-  <div style="display:flex;gap:8px;flex-wrap:wrap">
+  <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
     <button class="btn btn-outline" onclick="previewPDF()">Anteprima</button>
     <button class="btn btn-primary" onclick="saveToSupabase()">Salva</button>
     <button class="btn btn-warning" onclick="saveAndSend()">Salva e Invia</button>
     <button class="btn btn-success" onclick="generatePDF()">Scarica PDF</button>
+    <button class="btn btn-outline" onclick="tornaAllaHome()" style="display:flex;align-items:center;gap:6px">&#x1F3E0; Torna alla home</button>
   </div>
 </div></div>
 
@@ -3745,24 +3745,16 @@ function closeNuovoContrattoModal(){
 function tornaAllaHome(){
   const hasDati=document.getElementById('cognome')&&document.getElementById('cognome').value.trim().length>0;
   if(!hasDati){switchTab(4);return;}
-  const modal=document.getElementById('modal-torna-home');
-  if(modal)modal.style.display='flex';
-}
-function chiudiTornaHome(){
-  const modal=document.getElementById('modal-torna-home');
-  if(modal)modal.style.display='none';
-}
-function tornaHomeSalva(){
-  chiudiTornaHome();
-  saveToSupabase().then(()=>switchTab(4)).catch(()=>switchTab(4));
-}
-function tornaHomeScarta(){
-  chiudiTornaHome();
-  currentContractId=null;
-  document.querySelectorAll('input[type="text"],input[type="email"],input[type="tel"],input[type="date"]').forEach(el=>{if(!el.readOnly)el.value='';});
-  ['sig_dichiarante','sig_consenso','sig_inps','sig_sepa'].forEach(clearSignature);
-  switchTab(4);
-  showToast('Dati scartati');
+  const scelta=confirm('Vuoi salvare i dati inseriti prima di tornare alla home?\n\nOK = Salva in bozza\nAnnulla = Elimina i dati');
+  if(scelta){
+    saveToSupabase().then(()=>switchTab(4)).catch(()=>switchTab(4));
+  }else{
+    currentContractId=null;
+    document.querySelectorAll('input[type="text"],input[type="email"],input[type="tel"],input[type="date"]').forEach(el=>{if(!el.readOnly)el.value='';});
+    ['sig_dichiarante','sig_consenso','sig_inps','sig_sepa'].forEach(clearSignature);
+    switchTab(4);
+    showToast('Dati eliminati');
+  }
 }
 
 // === DARK MODE ===
