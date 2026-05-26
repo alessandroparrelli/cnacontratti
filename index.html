@@ -5445,7 +5445,7 @@ function renderPage(page){
         <input type="checkbox" class="contract-cb" value="${x.id}" onchange="updateExportBtn()" style="width:16px;height:16px;accent-color:var(--cna);flex-shrink:0">
         <div class="contract-info">
           <h4>${x.cognome||''} ${x.nome||''} - ${x.ragione_sociale||'N/D'}</h4>
-          <p>${x.email||''} · ${d} · <span class="status-badge ${bc}">${bt}</span> · <span style="font-size:10px;padding:2px 7px;border-radius:10px;background:var(--cna-light,#e3f0fa);color:var(--cna);font-weight:600">${getTipoLabel(tipoVal)}</span> · <span style="font-size:10px;color:var(--txt2)">Proprietario: ${createdByName}</span></p>
+          <p>${x.email||''} · ${d} · <span class="status-badge ${bc}">${bt}</span> · <span style="font-size:10px;padding:2px 7px;border-radius:10px;background:var(--cna-light,#e3f0fa);color:var(--cna);font-weight:600">${getTipoLabel(x.tipo_contratto||'tesseramento')}</span> · <span style="font-size:10px;color:var(--txt2)">Proprietario: ${createdByName}</span></p>
         </div>
         <div class="contract-actions">
           ${st==='firmato'?`<span style="padding:3px 8px;border-radius:10px;font-size:10px;font-weight:600;${gestClass};white-space:nowrap">${gestText}</span><select onchange="toggleGestionale('${x.id}',this.value==='1')" style="font-size:10px;padding:2px 4px;border:1px solid var(--brd);border-radius:4px"><option value="0" ${!gest?'selected':''}>Da caricare</option><option value="1" ${gest?'selected':''}>Caricato</option></select>`:''}
