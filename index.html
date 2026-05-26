@@ -4098,40 +4098,57 @@ async function apriDettaglioImpresa(piva, cf){
     document.getElementById('modal-email').textContent=emailDisp;
     document.getElementById('modal-sede').textContent=sedeDisp;
 
-    // ── SEZIONE 1: DIRETTI (stato associativo, viola) ──
-    if(diretti.length){
-      document.getElementById('modal-diretti-count').textContent=diretti.length;
+    // ── SEZIONE 1: STATO ASSOCIATIVO (viola) ──
+    // Unisce: diretti + contrattiservizio dove tipocontratto = 'ISCRITTO' (→ Tesseramento)
+    const iscritti = (servizi||[]).filter(s=>(s.tipocontratto||'').toUpperCase()==='ISCRITTO');
+    const serviziAltri = (servizi||[]).filter(s=>(s.tipocontratto||'').toUpperCase()!=='ISCRITTO');
+
+    const statoAssociativoItems = [
+      ...diretti.map(d=>({
+        tipo: d.servizio||'—',
+        raggruppamento: (d.raggruppamento||'').replace(/,\s*$/,'').trim()||'—',
+        dataStr: d.datastipula?new Date(d.datastipula).toLocaleDateString('it-IT'):'—',
+        extra: '',
+        importoStr: (()=>{const n=parseFloat(d.importo);return !isNaN(n)&&n>0?'&euro; '+n.toLocaleString('it-IT',{minimumFractionDigits:2}):'—';})()
+      })),
+      ...iscritti.map(s=>({
+        tipo: 'Tesseramento',
+        raggruppamento: (s.raggruppamento||'').replace(/,\s*$/,'').trim()||'—',
+        dataStr: s.datastipulacontratto?new Date(s.datastipulacontratto).toLocaleDateString('it-IT'):'—',
+        extra: s.nomeconsulente||'',
+        importoStr: '—'
+      }))
+    ];
+
+    if(statoAssociativoItems.length){
+      document.getElementById('modal-diretti-count').textContent=statoAssociativoItems.length;
       document.getElementById('modal-diretti-section').style.display='block';
       const dLista=document.getElementById('modal-diretti-lista');
       dLista.innerHTML='';
-      diretti.forEach(d=>{
-        const dataStr=d.datastipula?new Date(d.datastipula).toLocaleDateString('it-IT'):'—';
-        const impNum=parseFloat(d.importo);
-        const importoStr=!isNaN(impNum)&&impNum>0?'&euro; '+impNum.toLocaleString('it-IT',{minimumFractionDigits:2}):'—';
-        const raggruppamento=(d.raggruppamento||'').replace(/,\s*$/,'').trim()||'—';
+      statoAssociativoItems.forEach(item=>{
         const row=document.createElement('div');
         row.style.cssText='background:#f5f3ff;border:1.5px solid #ddd6fe;border-radius:10px;padding:12px 16px';
         row.innerHTML=
           '<div style="display:grid;grid-template-columns:2fr 1fr 1fr;gap:10px;align-items:start">'+
             '<div><div style="font-size:10px;font-weight:700;color:#7c3aed;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:3px">Tipo</div>'+
-              '<div style="font-size:14px;color:#3b0764;font-weight:700">'+_escH(d.servizio||'—')+'</div>'+
-              '<div style="font-size:11px;color:#6d28d9;margin-top:3px">'+_escH(raggruppamento)+'</div></div>'+
+              '<div style="font-size:14px;color:#3b0764;font-weight:700">'+_escH(item.tipo)+'</div>'+
+              '<div style="font-size:11px;color:#6d28d9;margin-top:2px">'+_escH(item.raggruppamento)+(item.extra?' &mdash; '+_escH(item.extra):'')+'</div></div>'+
             '<div><div style="font-size:10px;font-weight:700;color:#7c3aed;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:3px">Data stipula</div>'+
-              '<div style="font-size:13px;color:#3b0764">'+dataStr+'</div></div>'+
+              '<div style="font-size:13px;color:#3b0764">'+item.dataStr+'</div></div>'+
             '<div><div style="font-size:10px;font-weight:700;color:#7c3aed;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:3px">Importo</div>'+
-              '<div style="font-size:13px;color:#3b0764;font-weight:700">'+importoStr+'</div></div>'+
+              '<div style="font-size:13px;color:#3b0764;font-weight:700">'+item.importoStr+'</div></div>'+
           '</div>';
         dLista.appendChild(row);
       });
     }
 
-    // ── SEZIONE 2: CONTRATTISERVIZIO (blu scuro) ──
-    if(servizi.length){
-      document.getElementById('modal-servizi-count').textContent=servizi.length;
+    // ── SEZIONE 2: CONTRATTI SERVIZIO (blu, escluso ISCRITTO già in Stato Associativo) ──
+    if(serviziAltri.length){
+      document.getElementById('modal-servizi-count').textContent=serviziAltri.length;
       document.getElementById('modal-servizi-section').style.display='block';
       const sLista=document.getElementById('modal-servizi-lista');
       sLista.innerHTML='';
-      servizi.forEach(s=>{
+      serviziAltri.forEach(s=>{
         const dataStr=s.datastipulacontratto?new Date(s.datastipulacontratto).toLocaleDateString('it-IT'):'—';
         const raggruppamento=(s.raggruppamento||'').replace(/,\s*$/,'').trim()||'—';
         const consulente=s.nomeconsulente||'—';
