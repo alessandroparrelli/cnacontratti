@@ -2894,17 +2894,25 @@ table.quill-better-table {
           <div id="modal-sede" style="font-size:14px;color:var(--txt)"></div>
         </div>
       </div>
-      <!-- SEZIONE DIRETTI (legacy CNA) — mostrata prima -->
+      <!-- SEZIONE DIRETTI: tesseramento/stato associativo -->
       <div id="modal-diretti-section" style="display:none;margin-bottom:20px">
         <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
           <div style="width:8px;height:8px;background:#7c3aed;border-radius:50%;flex-shrink:0"></div>
-          <div style="font-size:12px;font-weight:700;color:#7c3aed;text-transform:uppercase;letter-spacing:0.06em">Servizi Iscritti</div>
+          <div style="font-size:12px;font-weight:700;color:#7c3aed;text-transform:uppercase;letter-spacing:0.06em">Stato Associativo</div>
           <span id="modal-diretti-count" style="background:#7c3aed;color:#fff;border-radius:999px;padding:2px 10px;font-size:11px;font-weight:700"></span>
-          <span style="font-size:10px;color:var(--txt2);font-weight:500">Tesseramento CNA legacy</span>
         </div>
         <div id="modal-diretti-lista" style="display:flex;flex-direction:column;gap:8px"></div>
       </div>
-      <!-- SEZIONE CONTRATTI DIGITALI -->
+      <!-- SEZIONE CONTRATTISERVIZIO: contratti di servizio attivi -->
+      <div id="modal-servizi-section" style="display:none;margin-bottom:20px">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+          <div style="width:8px;height:8px;background:#0369a1;border-radius:50%;flex-shrink:0"></div>
+          <div style="font-size:12px;font-weight:700;color:#0369a1;text-transform:uppercase;letter-spacing:0.06em">Contratti Servizio Attivi</div>
+          <span id="modal-servizi-count" style="background:#0369a1;color:#fff;border-radius:999px;padding:2px 10px;font-size:11px;font-weight:700"></span>
+        </div>
+        <div id="modal-servizi-lista" style="display:flex;flex-direction:column;gap:8px"></div>
+      </div>
+      <!-- SEZIONE CONTRATTI DIGITALI Signature -->
       <div id="modal-contratti-section">
         <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
           <div style="width:8px;height:8px;background:var(--cna);border-radius:50%;flex-shrink:0"></div>
@@ -4014,60 +4022,71 @@ async function apriDettaglioImpresa(piva, cf){
   modal.style.display='flex';
   document.getElementById('modal-contratti-lista').innerHTML='<div style="text-align:center;padding:20px;color:var(--txt2)">Caricamento...</div>';
   document.getElementById('modal-diretti-lista').innerHTML='';
+  document.getElementById('modal-servizi-lista').innerHTML='';
   document.getElementById('modal-diretti-section').style.display='none';
+  document.getElementById('modal-servizi-section').style.display='none';
 
   try{
     const hdrs={'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Accept':'application/json'};
 
-    // ── 1. ANAGRAFICHE: dati anagrafici master ──
+    // 1. ANAGRAFICHE: dati master
     const aOrs=[];
     if(piva) aOrs.push('partitaiva.eq.'+piva);
     if(cf)   aOrs.push('codicefiscale.eq.'+cf);
     const aParam=aOrs.length===1?aOrs[0]:'or=('+aOrs.join(',')+')';
     const urlA=SB_URL+'/rest/v1/Anagrafiche?'+aParam+'&select=ragionesociale,cognometitolare,nometitolare,telefono,cellulare,email,indirizzo,comune,provincia,codicefiscale,partitaiva&limit=1';
 
-    // ── 2. DIRETTI: servizi iscritti attivi ──
+    // 2. DIRETTI: tesseramento / stato associativo
     const dOrs=[];
     if(piva) dOrs.push('partitaiva.eq.'+piva);
     if(cf)   dOrs.push('"Cliente".ilike.*'+cf+'*');
     const dParam=dOrs.length===1?dOrs[0]:'or=('+dOrs.join(',')+')';
-    const urlD=SB_URL+'/rest/v1/diretti?'+dParam+'&datadisdetta=is.null&select=servizio,datastipula,raggruppamento,importo,"Ragione Sociale/Denominazione","Codice Fiscale",partitaiva&order=datastipula.desc';
+    const urlD=SB_URL+'/rest/v1/diretti?'+dParam+'&datadisdetta=is.null&select=servizio,datastipula,raggruppamento,importo&order=datastipula.desc';
 
-    // ── 3. CONTRATTI Signature: contratti digitali (info aggiuntiva) ──
+    // 3. CONTRATTISERVIZIO: contratti di servizio attivi (ISCRITTO, SICUREZZA, PAGHE, ecc.)
+    // cerca nel campo "cliente" che contiene "codice ragione_sociale piva cf"
+    const sOrs=[];
+    if(piva) sOrs.push('cliente.ilike.*'+piva+'*');
+    if(cf)   sOrs.push('cliente.ilike.*'+cf+'*');
+    const sParam=sOrs.length===1?sOrs[0]:'or=('+sOrs.join(',')+')';
+    const urlS=SB_URL+'/rest/v1/contrattiservizio?'+sParam+'&datadisdetta=is.null&select=tipocontratto,datastipulacontratto,raggruppamento,sedeerogazione,nomeconsulente&order=datastipulacontratto.desc';
+
+    // 4. CONTRATTI Signature digitali
     const cOrs=[];
     if(piva) cOrs.push('partita_iva.eq.'+piva);
     if(cf)   cOrs.push('codice_fiscale.eq.'+cf);
     const cParam=cOrs.length===1?cOrs[0]:'or=('+cOrs.join(',')+')';
-    const urlC=SB_URL+'/rest/v1/contratti?'+cParam+'&select=id,tipo_contratto,quota_primo_anno_importo,quota_primo_anno_data,raccolta_da,raccolto_da,stato,created_at&order=created_at.desc';
+    const urlC=SB_URL+'/rest/v1/contratti?'+cParam+'&select=tipo_contratto,quota_primo_anno_importo,quota_primo_anno_data,raccolta_da,raccolto_da,stato,created_at&order=created_at.desc';
 
-    const [rA,rD,rC]=await Promise.all([
+    const [rA,rD,rS,rC]=await Promise.all([
       fetch(urlA,{headers:hdrs}),
       fetch(urlD,{headers:hdrs}),
+      fetch(urlS,{headers:hdrs}),
       fetch(urlC,{headers:hdrs})
     ]);
     const anag     = rA.ok ? await rA.json() : [];
     const diretti  = rD.ok ? await rD.json() : [];
+    const servizi  = rS.ok ? await rS.json() : [];
     const contratti= rC.ok ? await rC.json() : [];
 
-    if(!anag.length&&!diretti.length&&!contratti.length){
+    if(!anag.length&&!diretti.length&&!servizi.length&&!contratti.length){
       closeDettaglioImpresa(); showToast('Nessun dato trovato'); return;
     }
 
-    // ── Popola anagrafica (priorità: Anagrafiche > diretti) ──
+    // Anagrafica
     let ragSoc='—', titolare='—', pivaDisp=piva||'', cfDisp=cf||'';
     let telDisp='—', emailDisp='—', sedeDisp='—';
-
     if(anag.length){
       const a=anag[0];
-      ragSoc    = a.ragionesociale||'—';
-      titolare  = [a.cognometitolare,a.nometitolare].filter(Boolean).join(' ')||'—';
-      pivaDisp  = a.partitaiva||piva||'';
-      cfDisp    = a.codicefiscale||cf||'';
-      telDisp   = [a.telefono,a.cellulare].filter(Boolean).join(' / ')||'—';
-      emailDisp = a.email||'—';
-      sedeDisp  = [a.indirizzo,a.comune,a.provincia].filter(Boolean).join(', ')||'—';
-    } else if(diretti.length){
-      ragSoc = diretti[0]['Ragione Sociale/Denominazione']||'—';
+      ragSoc   =a.ragionesociale||'—';
+      titolare =[a.cognometitolare,a.nometitolare].filter(Boolean).join(' ')||'—';
+      pivaDisp =a.partitaiva||piva||'';
+      cfDisp   =a.codicefiscale||cf||'';
+      telDisp  =[a.telefono,a.cellulare].filter(Boolean).join(' / ')||'—';
+      emailDisp=a.email||'—';
+      sedeDisp =[a.indirizzo,a.comune,a.provincia].filter(Boolean).join(', ')||'—';
+    } else if(diretti.length||servizi.length){
+      ragSoc=piva||cf||'—';
     }
 
     document.getElementById('modal-impresa-nome').textContent=ragSoc;
@@ -4079,67 +4098,86 @@ async function apriDettaglioImpresa(piva, cf){
     document.getElementById('modal-email').textContent=emailDisp;
     document.getElementById('modal-sede').textContent=sedeDisp;
 
-    // ── DIRETTI (sezione viola, prima) ──
+    // ── SEZIONE 1: DIRETTI (stato associativo, viola) ──
     if(diretti.length){
       document.getElementById('modal-diretti-count').textContent=diretti.length;
       document.getElementById('modal-diretti-section').style.display='block';
       const dLista=document.getElementById('modal-diretti-lista');
       dLista.innerHTML='';
       diretti.forEach(d=>{
-        const servizio=d.servizio||'—';
-        const raggruppamento=(d.raggruppamento||'').replace(/,\s*$/,'').trim()||'—';
         const dataStr=d.datastipula?new Date(d.datastipula).toLocaleDateString('it-IT'):'—';
         const impNum=parseFloat(d.importo);
         const importoStr=!isNaN(impNum)&&impNum>0?'&euro; '+impNum.toLocaleString('it-IT',{minimumFractionDigits:2}):'—';
+        const raggruppamento=(d.raggruppamento||'').replace(/,\s*$/,'').trim()||'—';
         const row=document.createElement('div');
-        row.style.cssText='background:#f5f3ff;border:1.5px solid #ddd6fe;border-radius:10px;padding:14px 16px';
+        row.style.cssText='background:#f5f3ff;border:1.5px solid #ddd6fe;border-radius:10px;padding:12px 16px';
         row.innerHTML=
-          '<div style="display:grid;grid-template-columns:2fr 1fr 1fr;gap:12px;align-items:center">'+
-            '<div>'+
-              '<div style="font-size:10px;font-weight:700;color:#7c3aed;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:3px">Servizio</div>'+
-              '<div style="font-size:14px;color:#3b0764;font-weight:700">'+_escH(servizio)+'</div>'+
-              '<div style="font-size:11px;color:#6d28d9;margin-top:3px"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:inline;vertical-align:-1px;margin-right:3px"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>'+_escH(raggruppamento)+'</div>'+
-            '</div>'+
-            '<div>'+
-              '<div style="font-size:10px;font-weight:700;color:#7c3aed;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:3px">Data stipula</div>'+
-              '<div style="font-size:13px;color:#3b0764">'+dataStr+'</div>'+
-            '</div>'+
-            '<div>'+
-              '<div style="font-size:10px;font-weight:700;color:#7c3aed;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:3px">Importo</div>'+
-              '<div style="font-size:14px;color:#3b0764;font-weight:700">'+importoStr+'</div>'+
-            '</div>'+
+          '<div style="display:grid;grid-template-columns:2fr 1fr 1fr;gap:10px;align-items:start">'+
+            '<div><div style="font-size:10px;font-weight:700;color:#7c3aed;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:3px">Tipo</div>'+
+              '<div style="font-size:14px;color:#3b0764;font-weight:700">'+_escH(d.servizio||'—')+'</div>'+
+              '<div style="font-size:11px;color:#6d28d9;margin-top:3px">'+_escH(raggruppamento)+'</div></div>'+
+            '<div><div style="font-size:10px;font-weight:700;color:#7c3aed;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:3px">Data stipula</div>'+
+              '<div style="font-size:13px;color:#3b0764">'+dataStr+'</div></div>'+
+            '<div><div style="font-size:10px;font-weight:700;color:#7c3aed;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:3px">Importo</div>'+
+              '<div style="font-size:13px;color:#3b0764;font-weight:700">'+importoStr+'</div></div>'+
           '</div>';
         dLista.appendChild(row);
       });
     }
 
-    // ── CONTRATTI DIGITALI (sezione blu, dopo) ──
+    // ── SEZIONE 2: CONTRATTISERVIZIO (blu scuro) ──
+    if(servizi.length){
+      document.getElementById('modal-servizi-count').textContent=servizi.length;
+      document.getElementById('modal-servizi-section').style.display='block';
+      const sLista=document.getElementById('modal-servizi-lista');
+      sLista.innerHTML='';
+      servizi.forEach(s=>{
+        const dataStr=s.datastipulacontratto?new Date(s.datastipulacontratto).toLocaleDateString('it-IT'):'—';
+        const raggruppamento=(s.raggruppamento||'').replace(/,\s*$/,'').trim()||'—';
+        const consulente=s.nomeconsulente||'—';
+        const sede=(s.sedeerogazione||'').replace(/^\d+\s*-\s*/,'').trim()||'—';
+        const row=document.createElement('div');
+        row.style.cssText='background:#eff6ff;border:1.5px solid #bfdbfe;border-radius:10px;padding:12px 16px';
+        row.innerHTML=
+          '<div style="display:grid;grid-template-columns:2fr 1fr;gap:10px;align-items:start">'+
+            '<div><div style="font-size:10px;font-weight:700;color:#0369a1;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:3px">Contratto</div>'+
+              '<div style="font-size:14px;color:#1e3a5f;font-weight:700">'+_escH(s.tipocontratto||'—')+'</div>'+
+              '<div style="font-size:11px;color:#0369a1;margin-top:3px">'+_escH(raggruppamento)+' &mdash; '+_escH(sede)+'</div></div>'+
+            '<div><div style="font-size:10px;font-weight:700;color:#0369a1;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:3px">Data stipula</div>'+
+              '<div style="font-size:13px;color:#1e3a5f">'+dataStr+'</div>'+
+              '<div style="font-size:11px;color:#0369a1;margin-top:3px">'+_escH(consulente)+'</div></div>'+
+          '</div>';
+        sLista.appendChild(row);
+      });
+    }
+
+    // ── SEZIONE 3: CONTRATTI DIGITALI Signature ──
     document.getElementById('modal-contratti-count').textContent=contratti.length;
     const lista=document.getElementById('modal-contratti-lista');
     lista.innerHTML='';
     if(!contratti.length){
       lista.innerHTML='<div style="text-align:center;padding:14px;color:var(--txt2);font-size:13px;background:var(--cna-50);border-radius:8px">Nessun contratto digitale presente</div>';
     } else {
-      contratti.forEach(c=>{
-        const statoColor=c.stato==='firmato'?'#059669':c.stato==='inviato'?'#d97706':'#6b7280';
-        const statoLabel=c.stato==='firmato'?'&#x2713; Firmato':c.stato==='inviato'?'&#x23F3; Inviato':'&#x1F4DD; Bozza';
-        const dataStr=c.quota_primo_anno_data?new Date(c.quota_primo_anno_data).toLocaleDateString('it-IT'):(c.created_at?new Date(c.created_at).toLocaleDateString('it-IT'):'—');
-        const importo=c.quota_primo_anno_importo?'&euro; '+parseFloat(c.quota_primo_anno_importo).toLocaleString('it-IT',{minimumFractionDigits:2}):'—';
-        const tipo=(c.tipo_contratto||'tesseramento').replace(/_/g,' ').replace(/\b\w/g,l=>l.toUpperCase());
-        const raccoltoDa=c.raccolta_da||c.raccolto_da||'';
+      contratti.forEach(ct=>{
+        const statoColor=ct.stato==='firmato'?'#059669':ct.stato==='inviato'?'#d97706':'#6b7280';
+        const statoLabel=ct.stato==='firmato'?'&#x2713; Firmato':ct.stato==='inviato'?'&#x23F3; Inviato':'&#x1F4DD; Bozza';
+        const dataStr=ct.quota_primo_anno_data?new Date(ct.quota_primo_anno_data).toLocaleDateString('it-IT'):(ct.created_at?new Date(ct.created_at).toLocaleDateString('it-IT'):'—');
+        const importo=ct.quota_primo_anno_importo?'&euro; '+parseFloat(ct.quota_primo_anno_importo).toLocaleString('it-IT',{minimumFractionDigits:2}):'—';
+        const tipo=(ct.tipo_contratto||'tesseramento').replace(/_/g,' ').replace(/\b\w/g,l=>l.toUpperCase());
+        const raccoltoDa=ct.raccolta_da||ct.raccolto_da||'';
         const row=document.createElement('div');
-        row.style.cssText='background:var(--cna-50);border:1px solid var(--brd);border-radius:10px;padding:14px 16px';
+        row.style.cssText='background:var(--cna-50);border:1px solid var(--brd);border-radius:10px;padding:12px 16px';
         row.innerHTML=
-          '<div style="display:grid;grid-template-columns:2fr 1fr 1fr auto;gap:12px;align-items:center">'+
+          '<div style="display:grid;grid-template-columns:2fr 1fr 1fr auto;gap:10px;align-items:center">'+
             '<div><div style="font-size:10px;font-weight:700;color:var(--cna);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:3px">Tipo</div>'+
               '<div style="font-size:14px;color:var(--txt);font-weight:700">'+_escH(tipo)+'</div></div>'+
             '<div><div style="font-size:10px;font-weight:700;color:var(--cna);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:3px">Data</div>'+
               '<div style="font-size:13px;color:var(--txt)">'+dataStr+'</div></div>'+
             '<div><div style="font-size:10px;font-weight:700;color:var(--cna);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:3px">Importo</div>'+
-              '<div style="font-size:14px;color:var(--txt);font-weight:700">'+importo+'</div></div>'+
-            '<span style="background:'+statoColor+'22;color:'+statoColor+';font-size:11px;font-weight:700;padding:4px 12px;border-radius:999px;white-space:nowrap">'+statoLabel+'</span>'+
+              '<div style="font-size:13px;color:var(--txt);font-weight:700">'+importo+'</div></div>'+
+            '<span style="background:'+statoColor+'22;color:'+statoColor+';font-size:11px;font-weight:700;padding:4px 10px;border-radius:999px;white-space:nowrap">'+statoLabel+'</span>'+
           '</div>'+
-          (raccoltoDa?'<div style="margin-top:8px;padding-top:8px;border-top:1px solid var(--brd);font-size:11px;color:var(--txt2)">Raccolto da: <strong>'+_escH(raccoltoDa)+'</strong></div>':'');
+          (raccoltoDa?'<div style="margin-top:8px;padding-top:6px;border-top:1px solid var(--brd);font-size:11px;color:var(--txt2)">Raccolto da: <strong>'+_escH(raccoltoDa)+'</strong></div>':'');
         lista.appendChild(row);
       });
     }
