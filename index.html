@@ -3908,20 +3908,19 @@ async function eseguiRicercaImprese(){
     if(ragione.length>=2) ors.push('ragione_sociale.ilike.*'+ragione.replace(/[%_]/g,'')+'*');
     const orParam='or=('+ors.join(',')+')';
     const selF='id,cognome,nome,codice_fiscale,partita_iva,ragione_sociale';
-    const urlC=SB_URL+'/rest/v1/cna_contratti?'+orParam+'&data_disdetta=is.null&select='+selF+'&limit=100&order=ragione_sociale.asc,cognome.asc';
+    const urlC=SB_URL+'/rest/v1/contratti?'+orParam+'&select='+selF+'&limit=100&order=ragione_sociale.asc,cognome.asc';
 
-    // Query 2: diretti (legacy) — partitaiva bigint: usa ilike su cast testuale tramite campo Cliente
-    // "Ragione Sociale/Denominazione" per nome/cognome/ragione; partitaiva per PIVA; "Codice Fiscale" per CF
+    // Query 2: diretti legacy — "Cliente" contiene tutto (codice, ragione sociale, piva, cf)
     const dOrs=[];
     const esc=s=>s.replace(/[%_]/g,'');
-    if(piva.length>=2)    dOrs.push('partitaiva.eq.'+esc(piva));       // bigint: match esatto sulla PIVA
-    if(cf.length>=2)      dOrs.push('"Codice Fiscale".ilike.*'+esc(cf)+'*');
-    if(cognome.length>=2) dOrs.push('"Ragione Sociale/Denominazione".ilike.*'+esc(cognome)+'*');
-    if(nome.length>=2)    dOrs.push('"Ragione Sociale/Denominazione".ilike.*'+esc(nome)+'*');
-    if(ragione.length>=2) dOrs.push('"Ragione Sociale/Denominazione".ilike.*'+esc(ragione)+'*');
+    if(piva.length>=2)    dOrs.push('partitaiva.eq.'+esc(piva));
+    if(cf.length>=2)      dOrs.push('"Cliente".ilike.*'+esc(cf)+'*');
+    if(cognome.length>=2) dOrs.push('"Cliente".ilike.*'+esc(cognome)+'*');
+    if(nome.length>=2)    dOrs.push('"Cliente".ilike.*'+esc(nome)+'*');
+    if(ragione.length>=2) dOrs.push('"Cliente".ilike.*'+esc(ragione)+'*');
     const dParam='or=('+dOrs.join(',')+')';
-    const dSel='"Ragione Sociale/Denominazione",partitaiva,"Codice Fiscale"';
-    const urlD=SB_URL+'/rest/v1/diretti?'+dParam+'&datadisdetta=is.null&select='+encodeURIComponent(dSel)+'&limit=100';
+    // Select * per evitare problemi con nomi colonna con spazi
+    const urlD=SB_URL+'/rest/v1/diretti?'+dParam+'&datadisdetta=is.null&select=*&limit=100';
 
     const [rC,rD]=await Promise.all([fetch(urlC,{headers:hdrs}),fetch(urlD,{headers:hdrs})]);
     if(!rC.ok){const t=await rC.text();statusEl.textContent='Errore DB: '+rC.status;console.error(t);return;}
@@ -4020,16 +4019,15 @@ async function apriDettaglioImpresa(piva, cf){
     if(cf)   ors.push('codice_fiscale.eq.'+cf);
     if(ors.length===0){closeDettaglioImpresa();return;}
     const orParam=ors.length===1?ors[0]:'or=('+ors.join(',')+')';
-    const flds='id,cognome,nome,codice_fiscale,partita_iva,ragione_sociale,email,telefono,cellulare,pec,sede_attivita_indirizzo,sede_attivita_comune,sede_attivita_prov,tipo_contratto,anno,quota_primo_anno_importo,quota_primo_anno_data,raccolta_da,stato,data_disdetta,created_at';
-    const urlC=SB_URL+'/rest/v1/cna_contratti?'+orParam+'&data_disdetta=is.null&select='+flds+'&order=created_at.desc';
+    const flds='id,cognome,nome,codice_fiscale,partita_iva,ragione_sociale,email,telefono,cellulare,pec,sede_attivita_indirizzo,sede_attivita_comune,sede_attivita_prov,tipo_contratto,quota_primo_anno_importo,quota_primo_anno_data,raccolta_da,raccolto_da,stato,created_at';
+    const urlC=SB_URL+'/rest/v1/contratti?'+orParam+'&select='+flds+'&order=created_at.desc';
 
-    // 2. Diretti legacy — partitaiva è bigint, CF è testo
+    // 2. Diretti legacy — cerca per PIVA (bigint exact) o per CF dentro campo Cliente
     const dOrs=[];
     if(piva) dOrs.push('partitaiva.eq.'+piva);
-    if(cf)   dOrs.push('"Codice Fiscale".eq.'+cf);
+    if(cf)   dOrs.push('"Cliente".ilike.*'+cf+'*');
     const dParam=dOrs.length===1?dOrs[0]:'or=('+dOrs.join(',')+')';
-    const dFlds='servizio,datastipula,datadisdetta,raggruppamento,importo,"Ragione Sociale/Denominazione","Codice Fiscale",partitaiva';
-    const urlD=SB_URL+'/rest/v1/diretti?'+dParam+'&datadisdetta=is.null&select='+encodeURIComponent(dFlds)+'&order=datastipula.desc';
+    const urlD=SB_URL+'/rest/v1/diretti?'+dParam+'&datadisdetta=is.null&select=*&order=datastipula.desc';
 
     const [rC,rD]=await Promise.all([fetch(urlC,{headers:hdrs}),fetch(urlD,{headers:hdrs})]);
     const contratti=await rC.json();
@@ -4113,14 +4111,13 @@ async function apriDettaglioImpresa(piva, cf){
         const dataStr=c.quota_primo_anno_data?new Date(c.quota_primo_anno_data).toLocaleDateString('it-IT'):(c.created_at?new Date(c.created_at).toLocaleDateString('it-IT'):'—');
         const importo=c.quota_primo_anno_importo?'&euro; '+parseFloat(c.quota_primo_anno_importo).toLocaleString('it-IT',{minimumFractionDigits:2}):'—';
         const tipo=(c.tipo_contratto||'tesseramento').replace(/_/g,' ').replace(/\b\w/g,l=>l.toUpperCase());
-        const anno=c.anno||'';
-        const raccoltoDa=c.raccolta_da||'';
+        const raccoltoDa=c.raccolta_da||c.raccolto_da||'';
         const row=document.createElement('div');
         row.style.cssText='background:var(--cna-50);border:1px solid var(--brd);border-radius:10px;padding:14px 16px';
         row.innerHTML=
           '<div style="display:grid;grid-template-columns:2fr 1fr 1fr auto;gap:12px;align-items:center">'+
             '<div><div style="font-size:10px;font-weight:700;color:var(--cna);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:3px">Tipo / Anno</div>'+
-              '<div style="font-size:14px;color:var(--txt);font-weight:700">'+_escH(tipo)+(anno?' '+anno:'')+'</div></div>'+
+              '<div style="font-size:14px;color:var(--txt);font-weight:700">'+_escH(tipo)+'</div></div>'+
             '<div><div style="font-size:10px;font-weight:700;color:var(--cna);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:3px">Data stipula</div>'+
               '<div style="font-size:13px;color:var(--txt)">'+dataStr+'</div></div>'+
             '<div><div style="font-size:10px;font-weight:700;color:var(--cna);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:3px">Importo</div>'+
