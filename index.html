@@ -276,17 +276,28 @@ body.dark-mode #app-footer{background:#161b22;border-color:#30363d}
   #tab-4 .stats-bar-container{padding:12px 0 0 0!important}
 }
 @media(max-width:480px){
-  .header-inner{flex-wrap:nowrap;justify-content:flex-start}
-  .header-actions{flex-shrink:0}
+  .header-inner{flex-wrap:nowrap;justify-content:flex-start;padding:10px 12px;gap:8px}
+  .header-actions{flex-shrink:0;gap:6px}
+  /* Nasconde il badge utente nell'header su mobile — va nel drawer */
+  #logged-user{display:none!important}
+  /* Logo più piccolo */
+  .header-logo img{height:30px!important}
+  /* Titolo */
+  .header-text h1{font-size:18px!important}
+  .header-text{padding-left:10px!important}
   .stat-mini-box{padding:12px 10px 10px 10px}
   .stat-mini-num{font-size:32px}
-  .tabs-inner{padding:0 12px}
+  .tabs-inner{padding:0 8px}
+  .tab-btn{padding:10px 12px;font-size:12px}
   /* Ricerca: un campo per riga */
   #ri-inputs-top{grid-template-columns:1fr!important}
   #ri-inputs-bot{grid-template-columns:1fr!important}
   /* Sezione ricerca padding ridotto */
-  #tab-5 .form-card{margin:12px 0 0 0!important}
-  #tab-5 .form-card-body{padding:14px 14px!important}
+  #tab-5 .form-card{margin:10px 0 0 0!important}
+  #tab-5 .form-card-body{padding:12px!important}
+  /* main content padding ridotto */
+  .main-content{padding:0 0 100px!important;margin:0!important}
+  #tab-5,#tab-4{padding:0 12px}
 }
 /* Modal anagrafica responsive */
 @media(max-width:600px){
@@ -2753,7 +2764,7 @@ table.quill-better-table {
     <div class="header-logo"><img src="https://raw.githubusercontent.com/alessandroparrelli/fileappoggio/17b50df8f22632eb360e1da944d997289a598012/NUOVO-LOGO-CNA-ROMA-SOLO-ROMA.png" alt="CNA Roma" style="height:42px;width:auto"></div>
     <div class="header-text" style="padding-left:18px;border-left:1px solid rgba(226,232,240,0.9)"><h1 style="font-size:22px;font-weight:900;color:#000000;letter-spacing:-0.02em;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','San Francisco',Helvetica,Arial,sans-serif;margin:0">Signature</h1></div>
     <div class="header-actions">
-      <span class="header-user" id="logged-user" onclick="openProfile()"></span>
+      <span class="header-user" id="logged-user" onclick="openProfile()" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:140px"></span>
       <!-- HAMBURGER BTN -->
       <button id="hamburger-btn" onclick="toggleHamburger()" style="display:flex;flex-direction:column;justify-content:center;align-items:center;gap:5px;width:40px;height:40px;background:rgba(0,92,169,0.07);border:1px solid rgba(0,92,169,0.15);border-radius:10px;cursor:pointer;padding:8px;flex-shrink:0">
         <span style="display:block;width:18px;height:2px;background:#005CA9;border-radius:2px;transition:.3s"></span>
@@ -2768,12 +2779,16 @@ table.quill-better-table {
 <div id="drawer-overlay" onclick="toggleHamburger()" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:900;transition:opacity 0.25s"></div>
 <div id="hamburger-menu" style="position:fixed;top:0;right:0;height:100%;width:280px;max-width:85vw;background:var(--bg2);box-shadow:-8px 0 40px rgba(0,0,0,0.18);z-index:901;transform:translateX(100%);transition:transform 0.28s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column;overflow-y:auto">
   <!-- Header drawer -->
-  <div style="background:var(--cna);padding:20px 20px 16px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0">
-    <div>
-      <div style="font-size:16px;font-weight:800;color:#fff;letter-spacing:-0.01em">Signature</div>
-      <div id="drawer-username" style="font-size:12px;color:rgba(255,255,255,0.75);margin-top:2px"></div>
+  <div style="background:var(--cna);padding:24px 20px 20px;display:flex;align-items:flex-start;justify-content:space-between;flex-shrink:0">
+    <div style="display:flex;align-items:center;gap:14px;min-width:0">
+      <div style="width:46px;height:46px;border-radius:50%;background:rgba(255,255,255,0.2);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:20px;font-weight:700;color:#fff" id="drawer-avatar">A</div>
+      <div style="min-width:0">
+        <div id="drawer-username" style="font-size:15px;font-weight:700;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis"></div>
+        <div id="drawer-role" style="font-size:11px;color:rgba(255,255,255,0.65);margin-top:2px;text-transform:capitalize"></div>
+        <div style="font-size:10px;color:rgba(255,255,255,0.5);margin-top:1px;letter-spacing:0.05em">CNA ROMA · SIGNATURE</div>
+      </div>
     </div>
-    <button onclick="toggleHamburger()" style="background:rgba(255,255,255,0.15);border:none;color:#fff;width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center;line-height:1">&times;</button>
+    <button onclick="toggleHamburger()" style="background:rgba(255,255,255,0.15);border:none;color:#fff;width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center;line-height:1;flex-shrink:0">&times;</button>
   </div>
   <!-- Voci menu -->
   <div style="flex:1;padding:12px 0">
@@ -5945,7 +5960,17 @@ function toggleHamburger(){
     // Popola nome utente nel drawer
     const lu=document.getElementById('logged-user');
     const du=document.getElementById('drawer-username');
-    if(du&&lu)du.textContent=lu.textContent;
+    if(du&&lu) du.textContent=lu.textContent;
+    // Popola ruolo
+    if(window.loggedUser){
+      const dr=document.getElementById('drawer-role');
+      if(dr) dr.textContent=loggedUser.ruolo||'';
+      const av=document.getElementById('drawer-avatar');
+      if(av){
+        const n=(loggedUser.nome||'?').charAt(0).toUpperCase();
+        av.textContent=n;
+      }
+    }
     drawer.style.transform='translateX(0)';
     overlay.style.display='block';
     document.body.style.overflow='hidden';
