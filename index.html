@@ -3873,86 +3873,99 @@ async function loadTipiContratto(){
 
 // ===== RICERCA IMPRESE =====
 let _ricercaTimeout = null;
-
-function ricercaImprese(){
-  // Mantenuto per compatibilità — la ricerca parte solo col tasto Cerca o Enter
-}
+function ricercaImprese(){}
 
 async function eseguiRicercaImprese(){
-  const piva    = (document.getElementById('ri-piva')?.value || '').trim();
-  const cf      = (document.getElementById('ri-cf')?.value || '').trim().toUpperCase();
-  const cognome = (document.getElementById('ri-cognome')?.value || '').trim();
-  const nome    = (document.getElementById('ri-nome')?.value || '').trim();
-  const ragione = (document.getElementById('ri-ragione')?.value || '').trim();
+  const piva    = (document.getElementById('ri-piva')?.value||'').trim();
+  const cf      = (document.getElementById('ri-cf')?.value||'').trim().toUpperCase();
+  const cognome = (document.getElementById('ri-cognome')?.value||'').trim();
+  const nome    = (document.getElementById('ri-nome')?.value||'').trim();
+  const ragione = (document.getElementById('ri-ragione')?.value||'').trim();
 
-  const statusEl   = document.getElementById('ri-status');
-  const risultatiEl= document.getElementById('ri-risultati');
-  const listaEl    = document.getElementById('ri-lista');
+  const statusEl    = document.getElementById('ri-status');
+  const risultatiEl = document.getElementById('ri-risultati');
+  const listaEl     = document.getElementById('ri-lista');
 
-  const haInput = piva.length>=2 || cf.length>=2 || cognome.length>=2 || nome.length>=2 || ragione.length>=2;
-  if(!haInput){ statusEl.textContent='Inserisci almeno un criterio di ricerca (min. 2 caratteri)'; statusEl.style.color='#d97706'; return; }
+  const haInput = piva.length>=2||cf.length>=2||cognome.length>=2||nome.length>=2||ragione.length>=2;
+  if(!haInput){ statusEl.textContent='Inserisci almeno un criterio (min. 2 caratteri)'; statusEl.style.color='#d97706'; return; }
 
   statusEl.textContent='Ricerca in corso...'; statusEl.style.color='var(--txt2)';
-  risultatiEl.style.display='none';
-  listaEl.innerHTML='';
+  risultatiEl.style.display='none'; listaEl.innerHTML='';
 
   try{
     const hdrs={'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Accept':'application/json'};
-
-    // Query 1: cna_contratti (contratti digitali)
-    const ors=[];
-    if(piva.length>=2)    ors.push('partita_iva.ilike.*'+piva.replace(/[%_]/g,'')+'*');
-    if(cf.length>=2)      ors.push('codice_fiscale.ilike.*'+cf.replace(/[%_]/g,'')+'*');
-    if(cognome.length>=2) ors.push('cognome.ilike.*'+cognome.replace(/[%_]/g,'')+'*');
-    if(nome.length>=2)    ors.push('nome.ilike.*'+nome.replace(/[%_]/g,'')+'*');
-    if(ragione.length>=2) ors.push('ragione_sociale.ilike.*'+ragione.replace(/[%_]/g,'')+'*');
-    const orParam='or=('+ors.join(',')+')';
-    const selF='id,cognome,nome,codice_fiscale,partita_iva,ragione_sociale';
-    const urlC=SB_URL+'/rest/v1/contratti?'+orParam+'&select='+selF+'&limit=100&order=ragione_sociale.asc,cognome.asc';
-
-    // Query 2: diretti legacy — "Cliente" contiene tutto (codice, ragione sociale, piva, cf)
-    const dOrs=[];
     const esc=s=>s.replace(/[%_]/g,'');
+
+    // ── 1. DIRETTI: chi ha servizi attivi (datadisdetta IS NULL) ──
+    // Cerca per PIVA (bigint exact) o testo nel campo Cliente (contiene tutto)
+    const dOrs=[];
     if(piva.length>=2)    dOrs.push('partitaiva.eq.'+esc(piva));
     if(cf.length>=2)      dOrs.push('"Cliente".ilike.*'+esc(cf)+'*');
     if(cognome.length>=2) dOrs.push('"Cliente".ilike.*'+esc(cognome)+'*');
     if(nome.length>=2)    dOrs.push('"Cliente".ilike.*'+esc(nome)+'*');
     if(ragione.length>=2) dOrs.push('"Cliente".ilike.*'+esc(ragione)+'*');
     const dParam='or=('+dOrs.join(',')+')';
-    // Select * per evitare problemi con nomi colonna con spazi
-    const urlD=SB_URL+'/rest/v1/diretti?'+dParam+'&datadisdetta=is.null&select=*&limit=100';
+    const urlD=SB_URL+'/rest/v1/diretti?'+dParam+'&datadisdetta=is.null&select=partitaiva,"Codice Fiscale","Ragione Sociale/Denominazione","Cliente"&limit=200';
 
-    const [rC,rD]=await Promise.all([fetch(urlC,{headers:hdrs}),fetch(urlD,{headers:hdrs})]);
-    if(!rC.ok){const t=await rC.text();statusEl.textContent='Errore DB: '+rC.status;console.error(t);return;}
-    const contratti=await rC.json();
-    const diretti=rD.ok?await rD.json():[];
+    // ── 2. ANAGRAFICHE: fonte dati per nome/ragione sociale ──
+    const aOrs=[];
+    if(piva.length>=2)    aOrs.push('partitaiva.eq.'+esc(piva));
+    if(cf.length>=2)      aOrs.push('codicefiscale.ilike.*'+esc(cf)+'*');
+    if(cognome.length>=2) aOrs.push('cognometitolare.ilike.*'+esc(cognome)+'*');
+    if(nome.length>=2)    aOrs.push('nometitolare.ilike.*'+esc(nome)+'*');
+    if(ragione.length>=2) aOrs.push('ragionesociale.ilike.*'+esc(ragione)+'*');
+    const aParam='or=('+aOrs.join(',')+')';
+    const urlA=SB_URL+'/rest/v1/Anagrafiche?'+aParam+'&select=partitaiva,codicefiscale,ragionesociale,cognometitolare,nometitolare&limit=200';
 
-    // Mappa unificata per soggetto: key = "piva|cf"
-    const mappa=new Map(); // key -> {piva, cf, ragSoc, titolare, fonte:'contratto'|'diretti'|'entrambi'}
+    const [rD,rA]=await Promise.all([fetch(urlD,{headers:hdrs}),fetch(urlA,{headers:hdrs})]);
 
-    contratti.forEach(r=>{
-      const k=(r.partita_iva||'')+'|'+(r.codice_fiscale||'');
+    if(!rD.ok){ const t=await rD.text(); statusEl.textContent='Errore diretti: '+rD.status; console.error(t); return; }
+    if(!rA.ok){ const t=await rA.text(); statusEl.textContent='Errore anagrafiche: '+rA.status; console.error(t); return; }
+
+    const diretti   = await rD.json();
+    const anagrafiche = await rA.json();
+
+    // ── Mappa unificata per soggetto (key = piva|cf) ──
+    // Solo chi appare in DIRETTI ha un "contratto attivo"
+    const mappa = new Map();
+
+    // Prima popola da diretti (fonte autoritative per contratti attivi)
+    (diretti||[]).forEach(d=>{
+      const pStr = d.partitaiva ? String(d.partitaiva) : '';
+      const cfStr = d['Codice Fiscale']||'';
+      const k = (pStr||cfStr)+'|'+(cfStr||pStr);
       if(!mappa.has(k)){
-        const tit=[r.cognome,r.nome].filter(Boolean).join(' ');
-        mappa.set(k,{piva:r.partita_iva||'',cf:r.codice_fiscale||'',ragSoc:r.ragione_sociale||tit||'—',titolare:tit,fonte:'contratto'});
+        mappa.set(k,{
+          piva: pStr,
+          cf:   cfStr,
+          ragSoc: d['Ragione Sociale/Denominazione']||'—',
+          titolare: '',
+          fonte: 'diretti'
+        });
       }
     });
-    diretti.forEach(d=>{
-      const pStr=d.partitaiva?String(d.partitaiva):'';
-      const cfStr=d['Codice Fiscale']||'';
-      const k=pStr+'|'+cfStr;
+
+    // Poi cerca in Anagrafiche (fonte dati più ricca) e incrocia
+    (anagrafiche||[]).forEach(a=>{
+      const pStr = a.partitaiva||'';
+      const cfStr = a.codicefiscale||'';
+      const k = (pStr||cfStr)+'|'+(cfStr||pStr);
+      const tit = [a.cognometitolare,a.nometitolare].filter(Boolean).join(' ');
       if(mappa.has(k)){
-        mappa.get(k).fonte='entrambi';
-      } else {
-        mappa.set(k,{piva:pStr,cf:cfStr,ragSoc:d['Ragione Sociale/Denominazione']||'—',titolare:'',fonte:'diretti'});
+        // Già in diretti — arricchisce con dati anagrafici
+        const r = mappa.get(k);
+        if(a.ragionesociale) r.ragSoc = a.ragionesociale;
+        if(tit) r.titolare = tit;
       }
+      // Non aggiungiamo chi è solo in Anagrafiche ma non in diretti
+      // (non ha contratti attivi CNA legacy)
     });
 
     if(mappa.size===0){
-      statusEl.textContent='Nessun risultato trovato'; statusEl.style.color='#059669';
+      statusEl.textContent='Nessun risultato'; statusEl.style.color='#059669';
       listaEl.innerHTML='<div style="text-align:center;padding:24px;background:#f0fdf4;border-radius:10px;border:1.5px dashed #86efac">'+
         '<div style="font-size:28px;margin-bottom:8px">&#x2705;</div>'+
-        '<div style="font-weight:700;color:#065f46;margin-bottom:4px">Nessun contratto o iscrizione trovata</div>'+
+        '<div style="font-weight:700;color:#065f46;margin-bottom:4px">Nessun contratto attivo trovato</div>'+
         '<div style="font-size:13px;color:#047857">Puoi procedere con la creazione di un nuovo contratto</div>'+
         '</div>';
       risultatiEl.style.display='block'; return;
@@ -3962,19 +3975,9 @@ async function eseguiRicercaImprese(){
     statusEl.style.color='var(--txt2)';
 
     mappa.forEach(imp=>{
-      const badge = imp.fonte==='entrambi'
-        ? '<div style="display:flex;flex-direction:column;gap:3px;align-items:flex-end">'+
-            '<span style="background:rgba(220,38,38,0.1);color:#dc2626;font-size:11px;font-weight:700;padding:3px 10px;border-radius:999px;white-space:nowrap">&#x26A0; Contratto digitale</span>'+
-            '<span style="background:rgba(124,58,237,0.1);color:#7c3aed;font-size:11px;font-weight:700;padding:3px 10px;border-radius:999px;white-space:nowrap">&#x26A0; Iscritto legacy</span>'+
-          '</div>'
-        : imp.fonte==='diretti'
-          ? '<span style="background:rgba(124,58,237,0.1);color:#7c3aed;font-size:11px;font-weight:700;padding:4px 12px;border-radius:999px;white-space:nowrap">&#x26A0; Iscritto legacy</span>'
-          : '<span style="background:rgba(220,38,38,0.1);color:#dc2626;font-size:11px;font-weight:700;padding:4px 12px;border-radius:999px;white-space:nowrap">&#x26A0; Contratto digitale</span>';
-
       const sub=[];
       if(imp.piva) sub.push('P.IVA: '+imp.piva);
       if(imp.cf)   sub.push('CF: '+imp.cf);
-
       const card=document.createElement('div');
       card.style.cssText='display:flex;align-items:center;justify-content:space-between;padding:14px 18px;background:var(--bg2);border:1.5px solid var(--brd);border-radius:10px;cursor:pointer;transition:all 0.15s ease;gap:12px';
       card.onmouseenter=()=>{card.style.borderColor='#005CA9';card.style.background='var(--cna-50)';card.style.transform='translateY(-1px)';card.style.boxShadow='0 4px 12px rgba(0,92,169,0.12)';};
@@ -3982,15 +3985,18 @@ async function eseguiRicercaImprese(){
       card.onclick=()=>apriDettaglioImpresa(imp.piva, imp.cf);
       card.innerHTML=
         '<div style="display:flex;align-items:center;gap:12px;min-width:0;flex:1">'+
-          '<div style="width:40px;height:40px;background:rgba(0,92,169,0.08);border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#005CA9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></div>'+
+          '<div style="width:40px;height:40px;background:rgba(0,92,169,0.08);border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0">'+
+            '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#005CA9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>'+
+          '</div>'+
           '<div style="min-width:0">'+
             '<div style="font-weight:700;font-size:14px;color:var(--txt);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+_escH(imp.ragSoc)+
-              (imp.titolare&&imp.ragSoc.toLowerCase()!==imp.titolare.toLowerCase()?'<span style="font-weight:400;color:var(--txt2)"> &mdash; '+_escH(imp.titolare)+'</span>':'')+
+              (imp.titolare?'<span style="font-weight:400;color:var(--txt2)"> &mdash; '+_escH(imp.titolare)+'</span>':'')+
             '</div>'+
             (sub.length?'<div style="font-size:11px;color:var(--txt2);margin-top:2px;font-family:monospace">'+sub.join(' &nbsp;|&nbsp; ')+'</div>':'')+
           '</div>'+
         '</div>'+
-        '<div style="display:flex;align-items:center;gap:8px;flex-shrink:0">'+badge+
+        '<div style="display:flex;align-items:center;gap:8px;flex-shrink:0">'+
+          '<span style="background:rgba(124,58,237,0.1);color:#7c3aed;font-size:11px;font-weight:700;padding:4px 12px;border-radius:999px;white-space:nowrap">&#x26A0; Iscritto CNA</span>'+
           '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--txt2)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>'+
         '</div>';
       listaEl.appendChild(card);
@@ -3998,7 +4004,7 @@ async function eseguiRicercaImprese(){
     risultatiEl.style.display='block';
 
   }catch(e){
-    console.error('Ricerca imprese exception',e);
+    console.error('Ricerca imprese:',e);
     statusEl.textContent='Errore: '+e.message; statusEl.style.color='#dc2626';
   }
 }
@@ -4013,86 +4019,68 @@ async function apriDettaglioImpresa(piva, cf){
   try{
     const hdrs={'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Accept':'application/json'};
 
-    // 1. Contratti digitali
-    const ors=[];
-    if(piva) ors.push('partita_iva.eq.'+piva);
-    if(cf)   ors.push('codice_fiscale.eq.'+cf);
-    if(ors.length===0){closeDettaglioImpresa();return;}
-    const orParam=ors.length===1?ors[0]:'or=('+ors.join(',')+')';
-    const flds='id,cognome,nome,codice_fiscale,partita_iva,ragione_sociale,email,telefono,cellulare,pec,sede_attivita_indirizzo,sede_attivita_comune,sede_attivita_prov,tipo_contratto,quota_primo_anno_importo,quota_primo_anno_data,raccolta_da,raccolto_da,stato,created_at';
-    const urlC=SB_URL+'/rest/v1/contratti?'+orParam+'&select='+flds+'&order=created_at.desc';
-
-    // 2. Diretti legacy
-    const dOrs=[];
-    if(piva) dOrs.push('partitaiva.eq.'+piva);
-    if(cf)   dOrs.push('"Cliente".ilike.*'+cf+'*');
-    const dParam=dOrs.length===1?dOrs[0]:'or=('+dOrs.join(',')+')';
-    const urlD=SB_URL+'/rest/v1/diretti?'+dParam+'&datadisdetta=is.null&select=*&order=datastipula.desc';
-
-    // 3. Anagrafiche CRM — fonte principale per dati anagrafici
+    // ── 1. ANAGRAFICHE: dati anagrafici master ──
     const aOrs=[];
     if(piva) aOrs.push('partitaiva.eq.'+piva);
     if(cf)   aOrs.push('codicefiscale.eq.'+cf);
     const aParam=aOrs.length===1?aOrs[0]:'or=('+aOrs.join(',')+')';
-    const aFlds='ragionesociale,cognometitolare,nometitolare,telefono,cellulare,email,indirizzo,comune,provincia,codicefiscale,partitaiva';
-    const urlA=SB_URL+'/rest/v1/Anagrafiche?'+aParam+'&select='+aFlds+'&limit=1';
+    const urlA=SB_URL+'/rest/v1/Anagrafiche?'+aParam+'&select=ragionesociale,cognometitolare,nometitolare,telefono,cellulare,email,indirizzo,comune,provincia,codicefiscale,partitaiva&limit=1';
 
-    const [rC,rD,rA]=await Promise.all([
-      fetch(urlC,{headers:hdrs}),
+    // ── 2. DIRETTI: servizi iscritti attivi ──
+    const dOrs=[];
+    if(piva) dOrs.push('partitaiva.eq.'+piva);
+    if(cf)   dOrs.push('"Cliente".ilike.*'+cf+'*');
+    const dParam=dOrs.length===1?dOrs[0]:'or=('+dOrs.join(',')+')';
+    const urlD=SB_URL+'/rest/v1/diretti?'+dParam+'&datadisdetta=is.null&select=servizio,datastipula,raggruppamento,importo,"Ragione Sociale/Denominazione","Codice Fiscale",partitaiva&order=datastipula.desc';
+
+    // ── 3. CONTRATTI Signature: contratti digitali (info aggiuntiva) ──
+    const cOrs=[];
+    if(piva) cOrs.push('partita_iva.eq.'+piva);
+    if(cf)   cOrs.push('codice_fiscale.eq.'+cf);
+    const cParam=cOrs.length===1?cOrs[0]:'or=('+cOrs.join(',')+')';
+    const urlC=SB_URL+'/rest/v1/contratti?'+cParam+'&select=id,tipo_contratto,quota_primo_anno_importo,quota_primo_anno_data,raccolta_da,raccolto_da,stato,created_at&order=created_at.desc';
+
+    const [rA,rD,rC]=await Promise.all([
+      fetch(urlA,{headers:hdrs}),
       fetch(urlD,{headers:hdrs}),
-      fetch(urlA,{headers:hdrs})
+      fetch(urlC,{headers:hdrs})
     ]);
-    const contratti=await rC.json();
-    const diretti=rD.ok?await rD.json():[];
-    const anagrafiche=rA.ok?await rA.json():[];
+    const anag     = rA.ok ? await rA.json() : [];
+    const diretti  = rD.ok ? await rD.json() : [];
+    const contratti= rC.ok ? await rC.json() : [];
 
-    if((!contratti||!contratti.length)&&(!diretti||!diretti.length)&&(!anagrafiche||!anagrafiche.length)){
-      closeDettaglioImpresa();showToast('Nessun dato trovato');return;
+    if(!anag.length&&!diretti.length&&!contratti.length){
+      closeDettaglioImpresa(); showToast('Nessun dato trovato'); return;
     }
 
-    // Anagrafica: priorità 1=Anagrafiche CRM, 2=contratti digitali, 3=diretti
-    let ragSoc='—',titolare='—',pivaDisp='',cfDisp='',telDisp='—',emailDisp='—',sedeDisp='—';
+    // ── Popola anagrafica (priorità: Anagrafiche > diretti) ──
+    let ragSoc='—', titolare='—', pivaDisp=piva||'', cfDisp=cf||'';
+    let telDisp='—', emailDisp='—', sedeDisp='—';
 
-    if(anagrafiche&&anagrafiche.length){
-      const a=anagrafiche[0];
-      ragSoc=a.ragionesociale||'—';
-      const tit=[a.cognometitolare,a.nometitolare].filter(Boolean).join(' ');
-      titolare=tit||'—';
-      pivaDisp=a.partitaiva||'';
-      cfDisp=a.codicefiscale||'';
-      telDisp=[a.telefono,a.cellulare].filter(Boolean).join(' / ')||'—';
-      emailDisp=a.email||'—';
-      sedeDisp=[a.indirizzo,a.comune,a.provincia].filter(Boolean).join(', ')||'—';
-    }
-    if(contratti&&contratti.length){
-      const p=contratti[0];
-      // Contratti digitali completano/sovrascrivono se più recenti
-      if(!pivaDisp) pivaDisp=p.partita_iva||'';
-      if(!cfDisp)   cfDisp=p.codice_fiscale||'';
-      if(ragSoc==='—') ragSoc=p.ragione_sociale||[p.cognome,p.nome].filter(Boolean).join(' ')||'—';
-      if(titolare==='—'){ const t=[p.cognome,p.nome].filter(Boolean).join(' '); if(t) titolare=t; }
-      if(telDisp==='—') telDisp=[p.telefono,p.cellulare].filter(Boolean).join(' / ')||'—';
-      if(emailDisp==='—') emailDisp=[p.email,p.pec?'PEC: '+p.pec:''].filter(Boolean).join('  ·  ')||'—';
-      if(sedeDisp==='—') sedeDisp=[p.sede_attivita_indirizzo,p.sede_attivita_comune,p.sede_attivita_prov].filter(Boolean).join(', ')||'—';
-    }
-    if(diretti&&diretti.length&&ragSoc==='—'){
-      const d=diretti[0];
-      ragSoc=d['Ragione Sociale/Denominazione']||'—';
-      if(!pivaDisp) pivaDisp=d.partitaiva?String(d.partitaiva):'';
-      if(!cfDisp)   cfDisp=d['Codice Fiscale']||'';
+    if(anag.length){
+      const a=anag[0];
+      ragSoc    = a.ragionesociale||'—';
+      titolare  = [a.cognometitolare,a.nometitolare].filter(Boolean).join(' ')||'—';
+      pivaDisp  = a.partitaiva||piva||'';
+      cfDisp    = a.codicefiscale||cf||'';
+      telDisp   = [a.telefono,a.cellulare].filter(Boolean).join(' / ')||'—';
+      emailDisp = a.email||'—';
+      sedeDisp  = [a.indirizzo,a.comune,a.provincia].filter(Boolean).join(', ')||'—';
+    } else if(diretti.length){
+      ragSoc = diretti[0]['Ragione Sociale/Denominazione']||'—';
     }
 
     document.getElementById('modal-impresa-nome').textContent=ragSoc;
     document.getElementById('modal-impresa-piva').textContent=
       (pivaDisp?'P.IVA '+pivaDisp:'')+(pivaDisp&&cfDisp?'   ':'')+(cfDisp?'CF '+cfDisp:'');
-    document.getElementById('modal-titolare').textContent=titolare||'—';
+    document.getElementById('modal-titolare').textContent=titolare;
     document.getElementById('modal-cf').textContent=cfDisp||'—';
     document.getElementById('modal-tel').textContent=telDisp;
     document.getElementById('modal-email').textContent=emailDisp;
     document.getElementById('modal-sede').textContent=sedeDisp;
 
-    // === DIRETTI (in cima) ===
-    if(diretti&&diretti.length){
+    // ── DIRETTI (sezione viola, prima) ──
+    if(diretti.length){
       document.getElementById('modal-diretti-count').textContent=diretti.length;
       document.getElementById('modal-diretti-section').style.display='block';
       const dLista=document.getElementById('modal-diretti-lista');
@@ -4101,7 +4089,7 @@ async function apriDettaglioImpresa(piva, cf){
         const servizio=d.servizio||'—';
         const raggruppamento=(d.raggruppamento||'').replace(/,\s*$/,'').trim()||'—';
         const dataStr=d.datastipula?new Date(d.datastipula).toLocaleDateString('it-IT'):'—';
-        const impNum=d.importo?parseFloat(d.importo):NaN;
+        const impNum=parseFloat(d.importo);
         const importoStr=!isNaN(impNum)&&impNum>0?'&euro; '+impNum.toLocaleString('it-IT',{minimumFractionDigits:2}):'—';
         const row=document.createElement('div');
         row.style.cssText='background:#f5f3ff;border:1.5px solid #ddd6fe;border-radius:10px;padding:14px 16px';
@@ -4110,7 +4098,7 @@ async function apriDettaglioImpresa(piva, cf){
             '<div>'+
               '<div style="font-size:10px;font-weight:700;color:#7c3aed;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:3px">Servizio</div>'+
               '<div style="font-size:14px;color:#3b0764;font-weight:700">'+_escH(servizio)+'</div>'+
-              '<div style="font-size:11px;color:#6d28d9;margin-top:3px">&#x1F4CD; '+_escH(raggruppamento)+'</div>'+
+              '<div style="font-size:11px;color:#6d28d9;margin-top:3px"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:inline;vertical-align:-1px;margin-right:3px"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>'+_escH(raggruppamento)+'</div>'+
             '</div>'+
             '<div>'+
               '<div style="font-size:10px;font-weight:700;color:#7c3aed;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:3px">Data stipula</div>'+
@@ -4125,11 +4113,11 @@ async function apriDettaglioImpresa(piva, cf){
       });
     }
 
-    // === CONTRATTI DIGITALI (sotto) ===
-    document.getElementById('modal-contratti-count').textContent=(contratti&&contratti.length)||0;
+    // ── CONTRATTI DIGITALI (sezione blu, dopo) ──
+    document.getElementById('modal-contratti-count').textContent=contratti.length;
     const lista=document.getElementById('modal-contratti-lista');
     lista.innerHTML='';
-    if(!contratti||!contratti.length){
+    if(!contratti.length){
       lista.innerHTML='<div style="text-align:center;padding:14px;color:var(--txt2);font-size:13px;background:var(--cna-50);border-radius:8px">Nessun contratto digitale presente</div>';
     } else {
       contratti.forEach(c=>{
@@ -4143,9 +4131,9 @@ async function apriDettaglioImpresa(piva, cf){
         row.style.cssText='background:var(--cna-50);border:1px solid var(--brd);border-radius:10px;padding:14px 16px';
         row.innerHTML=
           '<div style="display:grid;grid-template-columns:2fr 1fr 1fr auto;gap:12px;align-items:center">'+
-            '<div><div style="font-size:10px;font-weight:700;color:var(--cna);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:3px">Tipo / Anno</div>'+
+            '<div><div style="font-size:10px;font-weight:700;color:var(--cna);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:3px">Tipo</div>'+
               '<div style="font-size:14px;color:var(--txt);font-weight:700">'+_escH(tipo)+'</div></div>'+
-            '<div><div style="font-size:10px;font-weight:700;color:var(--cna);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:3px">Data stipula</div>'+
+            '<div><div style="font-size:10px;font-weight:700;color:var(--cna);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:3px">Data</div>'+
               '<div style="font-size:13px;color:var(--txt)">'+dataStr+'</div></div>'+
             '<div><div style="font-size:10px;font-weight:700;color:var(--cna);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:3px">Importo</div>'+
               '<div style="font-size:14px;color:var(--txt);font-weight:700">'+importo+'</div></div>'+
@@ -4155,7 +4143,7 @@ async function apriDettaglioImpresa(piva, cf){
         lista.appendChild(row);
       });
     }
-  }catch(e){console.error('Dettaglio impresa',e);showToast('Errore caricamento','error');}
+  }catch(e){console.error('Dettaglio impresa:',e);showToast('Errore caricamento','error');}
 }
 
 function closeDettaglioImpresa(){
