@@ -2952,6 +2952,7 @@ table.quill-better-table {
 </footer>
 
 <div class="footer-actions" id="footer-form-actions" style="display:none"><div class="footer-inner">
+  <button class="btn btn-outline" onclick="tornaAllaHome()" style="gap:6px;display:flex;align-items:center"><span style="font-size:15px">&#x2190;</span> Home</button>
   <span id="status-indicator" class="status-badge empty">Non compilato</span>
   <div style="display:flex;gap:8px;flex-wrap:wrap">
     <button class="btn btn-outline" onclick="previewPDF()">Anteprima</button>
@@ -3721,7 +3722,6 @@ async function loadTipiContratto(){
 function openNuovoContrattoModal(){
   const tipi=Object.values(tipiContrattoMap);
   if(tipi.length===0){newContract('tesseramento');return;}
-  if(tipi.length===1){newContract(tipi[0].id);return;}
   const m=document.getElementById('modal-nuovo-contratto');
   if(!m)return;
   const list=document.getElementById('ncm-list');
@@ -3740,6 +3740,29 @@ function openNuovoContrattoModal(){
 function closeNuovoContrattoModal(){
   const m=document.getElementById('modal-nuovo-contratto');
   if(m)m.style.display='none';
+}
+
+function tornaAllaHome(){
+  const hasDati=document.getElementById('cognome')&&document.getElementById('cognome').value.trim().length>0;
+  if(!hasDati){switchTab(4);return;}
+  const modal=document.getElementById('modal-torna-home');
+  if(modal)modal.style.display='flex';
+}
+function chiudiTornaHome(){
+  const modal=document.getElementById('modal-torna-home');
+  if(modal)modal.style.display='none';
+}
+function tornaHomeSalva(){
+  chiudiTornaHome();
+  saveToSupabase().then(()=>switchTab(4)).catch(()=>switchTab(4));
+}
+function tornaHomeScarta(){
+  chiudiTornaHome();
+  currentContractId=null;
+  document.querySelectorAll('input[type="text"],input[type="email"],input[type="tel"],input[type="date"]').forEach(el=>{if(!el.readOnly)el.value='';});
+  ['sig_dichiarante','sig_consenso','sig_inps','sig_sepa'].forEach(clearSignature);
+  switchTab(4);
+  showToast('Dati scartati');
 }
 
 // === DARK MODE ===
@@ -5975,6 +5998,23 @@ document.addEventListener('DOMContentLoaded',async()=>{
 
 </div>
 
+
+
+<!-- MODAL TORNA ALLA HOME -->
+<div id="modal-torna-home" class="modal-overlay" style="display:none;align-items:center;justify-content:center" onclick="if(event.target.id==='modal-torna-home')chiudiTornaHome()">
+  <div style="background:var(--card);border-radius:16px;padding:32px;width:90%;max-width:420px;box-shadow:0 20px 60px rgba(0,0,0,0.3)">
+    <div style="text-align:center;margin-bottom:20px">
+      <div style="font-size:36px;margin-bottom:12px">&#x1F3E0;</div>
+      <h3 style="margin:0 0 8px;font-size:18px;font-weight:700;color:var(--txt)">Torna alla home</h3>
+      <p style="margin:0;font-size:14px;color:var(--txt2)">Hai dati non salvati. Cosa vuoi fare?</p>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:10px">
+      <button onclick="tornaHomeSalva()" class="btn btn-primary" style="width:100%;padding:12px;font-size:15px">&#x1F4BE; Salva e torna alla home</button>
+      <button onclick="tornaHomeScarta()" class="btn btn-outline" style="width:100%;padding:12px;font-size:15px;color:#dc3545;border-color:#dc3545">&#x1F5D1; Scarta e torna alla home</button>
+      <button onclick="chiudiTornaHome()" class="btn btn-outline" style="width:100%;padding:12px;font-size:14px">Annulla</button>
+    </div>
+  </div>
+</div>
 
 <!-- MODAL NUOVO CONTRATTO -->
 <div id="modal-nuovo-contratto" class="modal-overlay" style="display:none;align-items:center;justify-content:center" onclick="if(event.target.id==='modal-nuovo-contratto')closeNuovoContrattoModal()">
