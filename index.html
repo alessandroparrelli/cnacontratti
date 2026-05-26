@@ -4022,37 +4022,64 @@ async function apriDettaglioImpresa(piva, cf){
     const flds='id,cognome,nome,codice_fiscale,partita_iva,ragione_sociale,email,telefono,cellulare,pec,sede_attivita_indirizzo,sede_attivita_comune,sede_attivita_prov,tipo_contratto,quota_primo_anno_importo,quota_primo_anno_data,raccolta_da,raccolto_da,stato,created_at';
     const urlC=SB_URL+'/rest/v1/contratti?'+orParam+'&select='+flds+'&order=created_at.desc';
 
-    // 2. Diretti legacy — cerca per PIVA (bigint exact) o per CF dentro campo Cliente
+    // 2. Diretti legacy
     const dOrs=[];
     if(piva) dOrs.push('partitaiva.eq.'+piva);
     if(cf)   dOrs.push('"Cliente".ilike.*'+cf+'*');
     const dParam=dOrs.length===1?dOrs[0]:'or=('+dOrs.join(',')+')';
     const urlD=SB_URL+'/rest/v1/diretti?'+dParam+'&datadisdetta=is.null&select=*&order=datastipula.desc';
 
-    const [rC,rD]=await Promise.all([fetch(urlC,{headers:hdrs}),fetch(urlD,{headers:hdrs})]);
+    // 3. Anagrafiche CRM — fonte principale per dati anagrafici
+    const aOrs=[];
+    if(piva) aOrs.push('partitaiva.eq.'+piva);
+    if(cf)   aOrs.push('codicefiscale.eq.'+cf);
+    const aParam=aOrs.length===1?aOrs[0]:'or=('+aOrs.join(',')+')';
+    const aFlds='ragionesociale,cognometitolare,nometitolare,telefono,cellulare,email,indirizzo,comune,provincia,codicefiscale,partitaiva';
+    const urlA=SB_URL+'/rest/v1/Anagrafiche?'+aParam+'&select='+aFlds+'&limit=1';
+
+    const [rC,rD,rA]=await Promise.all([
+      fetch(urlC,{headers:hdrs}),
+      fetch(urlD,{headers:hdrs}),
+      fetch(urlA,{headers:hdrs})
+    ]);
     const contratti=await rC.json();
     const diretti=rD.ok?await rD.json():[];
+    const anagrafiche=rA.ok?await rA.json():[];
 
-    if((!contratti||!contratti.length)&&(!diretti||!diretti.length)){
+    if((!contratti||!contratti.length)&&(!diretti||!diretti.length)&&(!anagrafiche||!anagrafiche.length)){
       closeDettaglioImpresa();showToast('Nessun dato trovato');return;
     }
 
-    // Anagrafica: priorità contratti digitali, fallback diretti
+    // Anagrafica: priorità 1=Anagrafiche CRM, 2=contratti digitali, 3=diretti
     let ragSoc='—',titolare='—',pivaDisp='',cfDisp='',telDisp='—',emailDisp='—',sedeDisp='—';
+
+    if(anagrafiche&&anagrafiche.length){
+      const a=anagrafiche[0];
+      ragSoc=a.ragionesociale||'—';
+      const tit=[a.cognometitolare,a.nometitolare].filter(Boolean).join(' ');
+      titolare=tit||'—';
+      pivaDisp=a.partitaiva||'';
+      cfDisp=a.codicefiscale||'';
+      telDisp=[a.telefono,a.cellulare].filter(Boolean).join(' / ')||'—';
+      emailDisp=a.email||'—';
+      sedeDisp=[a.indirizzo,a.comune,a.provincia].filter(Boolean).join(', ')||'—';
+    }
     if(contratti&&contratti.length){
       const p=contratti[0];
-      titolare=[p.cognome,p.nome].filter(Boolean).join(' ');
-      ragSoc=p.ragione_sociale||titolare||'—';
-      pivaDisp=p.partita_iva||'';
-      cfDisp=p.codice_fiscale||'';
-      telDisp=[p.telefono,p.cellulare].filter(Boolean).join(' / ')||'—';
-      emailDisp=[p.email,p.pec?'PEC: '+p.pec:''].filter(Boolean).join('  ·  ')||'—';
-      sedeDisp=[p.sede_attivita_indirizzo,p.sede_attivita_comune,p.sede_attivita_prov].filter(Boolean).join(', ')||'—';
-    } else if(diretti&&diretti.length){
+      // Contratti digitali completano/sovrascrivono se più recenti
+      if(!pivaDisp) pivaDisp=p.partita_iva||'';
+      if(!cfDisp)   cfDisp=p.codice_fiscale||'';
+      if(ragSoc==='—') ragSoc=p.ragione_sociale||[p.cognome,p.nome].filter(Boolean).join(' ')||'—';
+      if(titolare==='—'){ const t=[p.cognome,p.nome].filter(Boolean).join(' '); if(t) titolare=t; }
+      if(telDisp==='—') telDisp=[p.telefono,p.cellulare].filter(Boolean).join(' / ')||'—';
+      if(emailDisp==='—') emailDisp=[p.email,p.pec?'PEC: '+p.pec:''].filter(Boolean).join('  ·  ')||'—';
+      if(sedeDisp==='—') sedeDisp=[p.sede_attivita_indirizzo,p.sede_attivita_comune,p.sede_attivita_prov].filter(Boolean).join(', ')||'—';
+    }
+    if(diretti&&diretti.length&&ragSoc==='—'){
       const d=diretti[0];
       ragSoc=d['Ragione Sociale/Denominazione']||'—';
-      pivaDisp=d.partitaiva?String(d.partitaiva):'';
-      cfDisp=d['Codice Fiscale']||'';
+      if(!pivaDisp) pivaDisp=d.partitaiva?String(d.partitaiva):'';
+      if(!cfDisp)   cfDisp=d['Codice Fiscale']||'';
     }
 
     document.getElementById('modal-impresa-nome').textContent=ragSoc;
