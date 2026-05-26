@@ -2762,7 +2762,6 @@ table.quill-better-table {
 <nav class="tabs-bar" id="tabs-nav" style="display:none"><div class="tabs-inner">
   <button class="tab-btn active" onclick="switchTab(5)" data-tab="5">&#x1F3E0; Home</button>
   <button class="tab-btn" onclick="switchTab(4)" data-tab="4">&#x1F4C2; Contratti</button>
-  <button class="tab-btn" onclick="switchTab(0)" data-tab="0">&#x1F4CB; Modulo Adesione</button>
 </div></nav>
 
 <main class="main-content">
@@ -2822,25 +2821,25 @@ table.quill-better-table {
       <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:12px">
         <div class="form-group" style="margin:0">
           <label style="color:var(--cna);font-weight:700">Partita IVA</label>
-          <input type="text" id="ri-piva" placeholder="es. 01234567890" style="font-family:monospace;letter-spacing:1px;border:2px solid rgba(0,92,169,0.3);font-size:14px" oninput="ricercaImprese()" maxlength="11">
+          <input type="text" id="ri-piva" placeholder="es. 01234567890" onkeydown="if(event.key==='Enter')eseguiRicercaImprese()" style="font-family:monospace;letter-spacing:1px;border:2px solid rgba(0,92,169,0.3);font-size:14px" maxlength="11">
         </div>
         <div class="form-group" style="margin:0">
           <label style="color:var(--cna);font-weight:700">Codice Fiscale</label>
-          <input type="text" id="ri-cf" placeholder="es. RSSMRA80A01H501Z" style="font-family:monospace;letter-spacing:1px;text-transform:uppercase;border:2px solid rgba(0,92,169,0.3);font-size:14px" oninput="ricercaImprese()" maxlength="16">
+          <input type="text" id="ri-cf" placeholder="es. RSSMRA80A01H501Z" onkeydown="if(event.key==='Enter')eseguiRicercaImprese()" style="font-family:monospace;letter-spacing:1px;text-transform:uppercase;border:2px solid rgba(0,92,169,0.3);font-size:14px" maxlength="16">
         </div>
         <div class="form-group" style="margin:0">
           <label style="color:var(--cna);font-weight:700">Ragione Sociale</label>
-          <input type="text" id="ri-ragione" placeholder="es. Rossi SRL" style="border:2px solid rgba(0,92,169,0.3);font-size:14px" oninput="ricercaImprese()">
+          <input type="text" id="ri-ragione" placeholder="es. Rossi SRL" onkeydown="if(event.key==='Enter')eseguiRicercaImprese()" style="border:2px solid rgba(0,92,169,0.3);font-size:14px">
         </div>
       </div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px">
         <div class="form-group" style="margin:0">
           <label style="color:var(--cna);font-weight:700">Cognome</label>
-          <input type="text" id="ri-cognome" placeholder="es. Rossi" style="border:2px solid rgba(0,92,169,0.3);font-size:14px" oninput="ricercaImprese()">
+          <input type="text" id="ri-cognome" placeholder="es. Rossi" onkeydown="if(event.key==='Enter')eseguiRicercaImprese()" style="border:2px solid rgba(0,92,169,0.3);font-size:14px">
         </div>
         <div class="form-group" style="margin:0">
           <label style="color:var(--cna);font-weight:700">Nome</label>
-          <input type="text" id="ri-nome" placeholder="es. Mario" style="border:2px solid rgba(0,92,169,0.3);font-size:14px" oninput="ricercaImprese()">
+          <input type="text" id="ri-nome" placeholder="es. Mario" onkeydown="if(event.key==='Enter')eseguiRicercaImprese()" style="border:2px solid rgba(0,92,169,0.3);font-size:14px">
         </div>
       </div>
       <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
@@ -2895,11 +2894,25 @@ table.quill-better-table {
           <div id="modal-sede" style="font-size:14px;color:var(--txt)"></div>
         </div>
       </div>
-      <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
-        <div style="font-size:12px;font-weight:700;color:var(--cna-dk);text-transform:uppercase;letter-spacing:0.06em">Contratti Attivi</div>
-        <span id="modal-contratti-count" style="background:var(--cna);color:#fff;border-radius:999px;padding:2px 10px;font-size:11px;font-weight:700"></span>
+      <!-- SEZIONE DIRETTI (legacy CNA) — mostrata prima -->
+      <div id="modal-diretti-section" style="display:none;margin-bottom:20px">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+          <div style="width:8px;height:8px;background:#7c3aed;border-radius:50%;flex-shrink:0"></div>
+          <div style="font-size:12px;font-weight:700;color:#7c3aed;text-transform:uppercase;letter-spacing:0.06em">Servizi Iscritti</div>
+          <span id="modal-diretti-count" style="background:#7c3aed;color:#fff;border-radius:999px;padding:2px 10px;font-size:11px;font-weight:700"></span>
+          <span style="font-size:10px;color:var(--txt2);font-weight:500">Tesseramento CNA legacy</span>
+        </div>
+        <div id="modal-diretti-lista" style="display:flex;flex-direction:column;gap:8px"></div>
       </div>
-      <div id="modal-contratti-lista" style="display:flex;flex-direction:column;gap:8px"></div>
+      <!-- SEZIONE CONTRATTI DIGITALI -->
+      <div id="modal-contratti-section">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+          <div style="width:8px;height:8px;background:var(--cna);border-radius:50%;flex-shrink:0"></div>
+          <div style="font-size:12px;font-weight:700;color:var(--cna-dk);text-transform:uppercase;letter-spacing:0.06em">Contratti Digitali</div>
+          <span id="modal-contratti-count" style="background:var(--cna);color:#fff;border-radius:999px;padding:2px 10px;font-size:11px;font-weight:700"></span>
+        </div>
+        <div id="modal-contratti-lista" style="display:flex;flex-direction:column;gap:8px"></div>
+      </div>
     </div>
   </div>
 </div>
@@ -2984,7 +2997,40 @@ table.quill-better-table {
 </div><!-- end tab-0 -->
 <!-- TAB 4: CONTRATTI -->
 <div class="tab-page" id="tab-4">
-  <div class="form-card">
+  <!-- KPI Cards tab Contratti -->
+  <div class="stats-bar-container" style="padding:16px 0 0 0">
+    <div class="stats-bar">
+      <div class="stat-mini-box">
+        <div class="stat-mini-header">
+          <span class="stat-mini-label">Contratti creati</span>
+          <span class="stat-mini-icon" style="background:rgba(0,92,169,0.08)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#005CA9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg></span>
+        </div>
+        <span class="stat-mini-num" id="stat-totali-c">0</span>
+      </div>
+      <div class="stat-mini-box">
+        <div class="stat-mini-header">
+          <span class="stat-mini-label">In attesa di firma</span>
+          <span class="stat-mini-icon" style="background:rgba(249,115,22,0.08)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#F97316" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></span>
+        </div>
+        <span class="stat-mini-num" id="stat-attesa-c">0</span>
+      </div>
+      <div class="stat-mini-box">
+        <div class="stat-mini-header">
+          <span class="stat-mini-label">Da caricare</span>
+          <span class="stat-mini-icon" style="background:rgba(0,92,169,0.08)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#005CA9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 16 12 12 8 16"/><line x1="12" y1="12" x2="12" y2="21"/><path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"/></svg></span>
+        </div>
+        <span class="stat-mini-num" id="stat-da-caricare-c">0</span>
+      </div>
+      <div class="stat-mini-box">
+        <div class="stat-mini-header">
+          <span class="stat-mini-label">Caricati</span>
+          <span class="stat-mini-icon" style="background:rgba(16,185,129,0.08)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></span>
+        </div>
+        <span class="stat-mini-num" id="stat-caricati-c">0</span>
+      </div>
+    </div>
+  </div>
+  <div class="form-card" style="margin-top:16px">
     <div class="form-card-header" style="justify-content:space-between;flex-wrap:wrap;gap:10px">
       <div style="display:flex;align-items:center;gap:10px"><span>&#x1F4C2;</span><h3>Dashboard Contratti</h3></div>
       <button class="btn btn-primary" onclick="openNuovoContrattoModal()" style="font-size:14px;padding:10px 24px">&#x2795; Nuovo contratto</button>
@@ -3829,8 +3875,7 @@ async function loadTipiContratto(){
 let _ricercaTimeout = null;
 
 function ricercaImprese(){
-  clearTimeout(_ricercaTimeout);
-  _ricercaTimeout = setTimeout(eseguiRicercaImprese, 400);
+  // Mantenuto per compatibilità — la ricerca parte solo col tasto Cerca o Enter
 }
 
 async function eseguiRicercaImprese(){
@@ -3844,83 +3889,109 @@ async function eseguiRicercaImprese(){
   const risultatiEl= document.getElementById('ri-risultati');
   const listaEl    = document.getElementById('ri-lista');
 
-  // Almeno 2 caratteri in un campo
   const haInput = piva.length>=2 || cf.length>=2 || cognome.length>=2 || nome.length>=2 || ragione.length>=2;
-  if(!haInput){
-    risultatiEl.style.display='none';
-    statusEl.textContent='';
-    return;
-  }
+  if(!haInput){ statusEl.textContent='Inserisci almeno un criterio di ricerca (min. 2 caratteri)'; statusEl.style.color='#d97706'; return; }
 
-  statusEl.textContent='Ricerca in corso...';
+  statusEl.textContent='Ricerca in corso...'; statusEl.style.color='var(--txt2)';
   risultatiEl.style.display='none';
+  listaEl.innerHTML='';
 
   try{
-    // Costruisce query PostgREST con OR
-    // Sintassi corretta: campo=ilike.*valore*  (non ilike.*v* dentro or())
-    // Per OR multiplo su colonne diverse: or=(col1.ilike.*v*,col2.ilike.*v*)
-    const ors = [];
+    const hdrs={'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Accept':'application/json'};
+
+    // Query 1: cna_contratti (contratti digitali)
+    const ors=[];
     if(piva.length>=2)    ors.push('partita_iva.ilike.*'+piva.replace(/[%_]/g,'')+'*');
     if(cf.length>=2)      ors.push('codice_fiscale.ilike.*'+cf.replace(/[%_]/g,'')+'*');
     if(cognome.length>=2) ors.push('cognome.ilike.*'+cognome.replace(/[%_]/g,'')+'*');
     if(nome.length>=2)    ors.push('nome.ilike.*'+nome.replace(/[%_]/g,'')+'*');
     if(ragione.length>=2) ors.push('ragione_sociale.ilike.*'+ragione.replace(/[%_]/g,'')+'*');
+    const orParam='or=('+ors.join(',')+')';
+    const selF='id,cognome,nome,codice_fiscale,partita_iva,ragione_sociale';
+    const urlC=SB_URL+'/rest/v1/cna_contratti?'+orParam+'&data_disdetta=is.null&select='+selF+'&limit=100&order=ragione_sociale.asc,cognome.asc';
 
-    const orParam = 'or=('+ors.join(',')+')';
-    const selectF = 'id,cognome,nome,codice_fiscale,partita_iva,ragione_sociale,telefono,cellulare,email,pec,sede_attivita_indirizzo,sede_attivita_comune,sede_attivita_prov';
-    // data_disdetta is null = contratti attivi
-    const url = SB_URL+'/rest/v1/cna_contratti?'+orParam+'&data_disdetta=is.null&select='+selectF+'&limit=50&order=ragione_sociale.asc,cognome.asc';
+    // Query 2: diretti (legacy) — partitaiva bigint: usa ilike su cast testuale tramite campo Cliente
+    // "Ragione Sociale/Denominazione" per nome/cognome/ragione; partitaiva per PIVA; "Codice Fiscale" per CF
+    const dOrs=[];
+    const esc=s=>s.replace(/[%_]/g,'');
+    if(piva.length>=2)    dOrs.push('partitaiva.eq.'+esc(piva));       // bigint: match esatto sulla PIVA
+    if(cf.length>=2)      dOrs.push('"Codice Fiscale".ilike.*'+esc(cf)+'*');
+    if(cognome.length>=2) dOrs.push('"Ragione Sociale/Denominazione".ilike.*'+esc(cognome)+'*');
+    if(nome.length>=2)    dOrs.push('"Ragione Sociale/Denominazione".ilike.*'+esc(nome)+'*');
+    if(ragione.length>=2) dOrs.push('"Ragione Sociale/Denominazione".ilike.*'+esc(ragione)+'*');
+    const dParam='or=('+dOrs.join(',')+')';
+    const dSel='"Ragione Sociale/Denominazione",partitaiva,"Codice Fiscale"';
+    const urlD=SB_URL+'/rest/v1/diretti?'+dParam+'&datadisdetta=is.null&select='+encodeURIComponent(dSel)+'&limit=100';
 
-    const resp = await fetch(url, {headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Accept':'application/json'}});
-    if(!resp.ok){ const t=await resp.text(); console.error('Ricerca error',resp.status,t); statusEl.textContent='Errore: '+resp.status; return; }
-    const data = await resp.json();
+    const [rC,rD]=await Promise.all([fetch(urlC,{headers:hdrs}),fetch(urlD,{headers:hdrs})]);
+    if(!rC.ok){const t=await rC.text();statusEl.textContent='Errore DB: '+rC.status;console.error(t);return;}
+    const contratti=await rC.json();
+    const diretti=rD.ok?await rD.json():[];
 
-    // Deduplica: stesso soggetto = stessa P.IVA o stesso CF
-    const seenKeys = new Set();
-    const unique = [];
-    data.forEach(r=>{
-      const key = (r.partita_iva||'') + '|' + (r.codice_fiscale||'');
-      if(!seenKeys.has(key)){ seenKeys.add(key); unique.push(r); }
+    // Mappa unificata per soggetto: key = "piva|cf"
+    const mappa=new Map(); // key -> {piva, cf, ragSoc, titolare, fonte:'contratto'|'diretti'|'entrambi'}
+
+    contratti.forEach(r=>{
+      const k=(r.partita_iva||'')+'|'+(r.codice_fiscale||'');
+      if(!mappa.has(k)){
+        const tit=[r.cognome,r.nome].filter(Boolean).join(' ');
+        mappa.set(k,{piva:r.partita_iva||'',cf:r.codice_fiscale||'',ragSoc:r.ragione_sociale||tit||'—',titolare:tit,fonte:'contratto'});
+      }
+    });
+    diretti.forEach(d=>{
+      const pStr=d.partitaiva?String(d.partitaiva):'';
+      const cfStr=d['Codice Fiscale']||'';
+      const k=pStr+'|'+cfStr;
+      if(mappa.has(k)){
+        mappa.get(k).fonte='entrambi';
+      } else {
+        mappa.set(k,{piva:pStr,cf:cfStr,ragSoc:d['Ragione Sociale/Denominazione']||'—',titolare:'',fonte:'diretti'});
+      }
     });
 
-    if(unique.length===0){
-      statusEl.textContent='Nessun contratto attivo trovato';
-      listaEl.innerHTML='<div style="text-align:center;padding:24px;background:var(--cna-50);border-radius:10px;border:1.5px dashed rgba(0,92,169,0.3)">' +
-        '<div style="font-size:28px;margin-bottom:8px">&#x2705;</div>' +
-        '<div style="font-weight:600;color:var(--cna-dk);margin-bottom:4px">Nessun contratto attivo trovato</div>' +
-        '<div style="font-size:13px;color:var(--txt2)">Puoi procedere con la creazione di un nuovo contratto</div>' +
+    if(mappa.size===0){
+      statusEl.textContent='Nessun risultato trovato'; statusEl.style.color='#059669';
+      listaEl.innerHTML='<div style="text-align:center;padding:24px;background:#f0fdf4;border-radius:10px;border:1.5px dashed #86efac">'+
+        '<div style="font-size:28px;margin-bottom:8px">&#x2705;</div>'+
+        '<div style="font-weight:700;color:#065f46;margin-bottom:4px">Nessun contratto o iscrizione trovata</div>'+
+        '<div style="font-size:13px;color:#047857">Puoi procedere con la creazione di un nuovo contratto</div>'+
         '</div>';
-      risultatiEl.style.display='block';
-      return;
+      risultatiEl.style.display='block'; return;
     }
 
-    statusEl.textContent = unique.length + ' impres'+(unique.length===1?'a trovata':'e trovate')+' con contratti attivi';
-    listaEl.innerHTML='';
+    statusEl.textContent=mappa.size+' impres'+(mappa.size===1?'a trovata':'e trovate');
+    statusEl.style.color='var(--txt2)';
 
-    unique.forEach(imp=>{
-      const titolare=[imp.cognome,imp.nome].filter(Boolean).join(' ');
-      const ragSoc=imp.ragione_sociale||titolare||'—';
+    mappa.forEach(imp=>{
+      const badge = imp.fonte==='entrambi'
+        ? '<div style="display:flex;flex-direction:column;gap:3px;align-items:flex-end">'+
+            '<span style="background:rgba(220,38,38,0.1);color:#dc2626;font-size:11px;font-weight:700;padding:3px 10px;border-radius:999px;white-space:nowrap">&#x26A0; Contratto digitale</span>'+
+            '<span style="background:rgba(124,58,237,0.1);color:#7c3aed;font-size:11px;font-weight:700;padding:3px 10px;border-radius:999px;white-space:nowrap">&#x26A0; Iscritto legacy</span>'+
+          '</div>'
+        : imp.fonte==='diretti'
+          ? '<span style="background:rgba(124,58,237,0.1);color:#7c3aed;font-size:11px;font-weight:700;padding:4px 12px;border-radius:999px;white-space:nowrap">&#x26A0; Iscritto legacy</span>'
+          : '<span style="background:rgba(220,38,38,0.1);color:#dc2626;font-size:11px;font-weight:700;padding:4px 12px;border-radius:999px;white-space:nowrap">&#x26A0; Contratto digitale</span>';
+
       const sub=[];
-      if(imp.partita_iva) sub.push('P.IVA: '+imp.partita_iva);
-      if(imp.codice_fiscale) sub.push('CF: '+imp.codice_fiscale);
+      if(imp.piva) sub.push('P.IVA: '+imp.piva);
+      if(imp.cf)   sub.push('CF: '+imp.cf);
 
       const card=document.createElement('div');
       card.style.cssText='display:flex;align-items:center;justify-content:space-between;padding:14px 18px;background:var(--bg2);border:1.5px solid var(--brd);border-radius:10px;cursor:pointer;transition:all 0.15s ease;gap:12px';
       card.onmouseenter=()=>{card.style.borderColor='#005CA9';card.style.background='var(--cna-50)';card.style.transform='translateY(-1px)';card.style.boxShadow='0 4px 12px rgba(0,92,169,0.12)';};
       card.onmouseleave=()=>{card.style.borderColor='var(--brd)';card.style.background='var(--bg2)';card.style.transform='';card.style.boxShadow='';};
-      card.onclick=()=>apriDettaglioImpresa(imp.partita_iva||'', imp.codice_fiscale||'');
+      card.onclick=()=>apriDettaglioImpresa(imp.piva, imp.cf);
       card.innerHTML=
         '<div style="display:flex;align-items:center;gap:12px;min-width:0;flex:1">'+
-          '<div style="width:40px;height:40px;background:rgba(220,38,38,0.1);border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:18px">&#x1F3E2;</div>'+
+          '<div style="width:40px;height:40px;background:rgba(0,92,169,0.08);border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:18px">&#x1F3E2;</div>'+
           '<div style="min-width:0">'+
-            '<div style="font-weight:700;font-size:14px;color:var(--txt);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+_escH(ragSoc)+
-              (titolare&&ragSoc.toLowerCase()!==titolare.toLowerCase()?'<span style="font-weight:400;color:var(--txt2)"> &mdash; '+_escH(titolare)+'</span>':'')+
+            '<div style="font-weight:700;font-size:14px;color:var(--txt);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+_escH(imp.ragSoc)+
+              (imp.titolare&&imp.ragSoc.toLowerCase()!==imp.titolare.toLowerCase()?'<span style="font-weight:400;color:var(--txt2)"> &mdash; '+_escH(imp.titolare)+'</span>':'')+
             '</div>'+
             (sub.length?'<div style="font-size:11px;color:var(--txt2);margin-top:2px;font-family:monospace">'+sub.join(' &nbsp;|&nbsp; ')+'</div>':'')+
           '</div>'+
         '</div>'+
-        '<div style="display:flex;align-items:center;gap:8px;flex-shrink:0">'+
-          '<span style="background:rgba(220,38,38,0.1);color:#dc2626;font-size:11px;font-weight:700;padding:4px 12px;border-radius:999px;white-space:nowrap">&#x26A0; Contratto esistente</span>'+
+        '<div style="display:flex;align-items:center;gap:8px;flex-shrink:0">'+badge+
           '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--txt2)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>'+
         '</div>';
       listaEl.appendChild(card);
@@ -3929,7 +4000,7 @@ async function eseguiRicercaImprese(){
 
   }catch(e){
     console.error('Ricerca imprese exception',e);
-    statusEl.textContent='Errore: '+e.message;
+    statusEl.textContent='Errore: '+e.message; statusEl.style.color='#dc2626';
   }
 }
 
@@ -3937,62 +4008,129 @@ async function apriDettaglioImpresa(piva, cf){
   const modal=document.getElementById('modal-dettaglio-impresa');
   modal.style.display='flex';
   document.getElementById('modal-contratti-lista').innerHTML='<div style="text-align:center;padding:20px;color:var(--txt2)">Caricamento...</div>';
+  document.getElementById('modal-diretti-lista').innerHTML='';
+  document.getElementById('modal-diretti-section').style.display='none';
 
   try{
+    const hdrs={'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Accept':'application/json'};
+
+    // 1. Contratti digitali
     const ors=[];
     if(piva) ors.push('partita_iva.eq.'+piva);
     if(cf)   ors.push('codice_fiscale.eq.'+cf);
     if(ors.length===0){closeDettaglioImpresa();return;}
-
-    const orParam = ors.length===1 ? ors[0] : 'or=('+ors.join(',')+')';
+    const orParam=ors.length===1?ors[0]:'or=('+ors.join(',')+')';
     const flds='id,cognome,nome,codice_fiscale,partita_iva,ragione_sociale,email,telefono,cellulare,pec,sede_attivita_indirizzo,sede_attivita_comune,sede_attivita_prov,tipo_contratto,anno,quota_primo_anno_importo,quota_primo_anno_data,raccolta_da,stato,data_disdetta,created_at';
-    const url=SB_URL+'/rest/v1/cna_contratti?'+orParam+'&data_disdetta=is.null&select='+flds+'&order=created_at.desc';
+    const urlC=SB_URL+'/rest/v1/cna_contratti?'+orParam+'&data_disdetta=is.null&select='+flds+'&order=created_at.desc';
 
-    const resp=await fetch(url,{headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Accept':'application/json'}});
-    const data=await resp.json();
+    // 2. Diretti legacy — partitaiva è bigint, CF è testo
+    const dOrs=[];
+    if(piva) dOrs.push('partitaiva.eq.'+piva);
+    if(cf)   dOrs.push('"Codice Fiscale".eq.'+cf);
+    const dParam=dOrs.length===1?dOrs[0]:'or=('+dOrs.join(',')+')';
+    const dFlds='servizio,datastipula,datadisdetta,raggruppamento,importo,"Ragione Sociale/Denominazione","Codice Fiscale",partitaiva';
+    const urlD=SB_URL+'/rest/v1/diretti?'+dParam+'&datadisdetta=is.null&select='+encodeURIComponent(dFlds)+'&order=datastipula.desc';
 
-    if(!data||!data.length){closeDettaglioImpresa();showToast('Nessun dato trovato');return;}
+    const [rC,rD]=await Promise.all([fetch(urlC,{headers:hdrs}),fetch(urlD,{headers:hdrs})]);
+    const contratti=await rC.json();
+    const diretti=rD.ok?await rD.json():[];
 
-    const primo=data[0];
-    const titolare=[primo.cognome,primo.nome].filter(Boolean).join(' ');
-    const ragSoc=primo.ragione_sociale||titolare||'—';
+    if((!contratti||!contratti.length)&&(!diretti||!diretti.length)){
+      closeDettaglioImpresa();showToast('Nessun dato trovato');return;
+    }
+
+    // Anagrafica: priorità contratti digitali, fallback diretti
+    let ragSoc='—',titolare='—',pivaDisp='',cfDisp='',telDisp='—',emailDisp='—',sedeDisp='—';
+    if(contratti&&contratti.length){
+      const p=contratti[0];
+      titolare=[p.cognome,p.nome].filter(Boolean).join(' ');
+      ragSoc=p.ragione_sociale||titolare||'—';
+      pivaDisp=p.partita_iva||'';
+      cfDisp=p.codice_fiscale||'';
+      telDisp=[p.telefono,p.cellulare].filter(Boolean).join(' / ')||'—';
+      emailDisp=[p.email,p.pec?'PEC: '+p.pec:''].filter(Boolean).join('  ·  ')||'—';
+      sedeDisp=[p.sede_attivita_indirizzo,p.sede_attivita_comune,p.sede_attivita_prov].filter(Boolean).join(', ')||'—';
+    } else if(diretti&&diretti.length){
+      const d=diretti[0];
+      ragSoc=d['Ragione Sociale/Denominazione']||'—';
+      pivaDisp=d.partitaiva?String(d.partitaiva):'';
+      cfDisp=d['Codice Fiscale']||'';
+    }
 
     document.getElementById('modal-impresa-nome').textContent=ragSoc;
     document.getElementById('modal-impresa-piva').textContent=
-      (primo.partita_iva?'P.IVA '+primo.partita_iva:'')+(primo.partita_iva&&primo.codice_fiscale?'   ':'')+(primo.codice_fiscale?'CF '+primo.codice_fiscale:'');
+      (pivaDisp?'P.IVA '+pivaDisp:'')+(pivaDisp&&cfDisp?'   ':'')+(cfDisp?'CF '+cfDisp:'');
     document.getElementById('modal-titolare').textContent=titolare||'—';
-    document.getElementById('modal-cf').textContent=primo.codice_fiscale||'—';
-    document.getElementById('modal-tel').textContent=[primo.telefono,primo.cellulare].filter(Boolean).join(' / ')||'—';
-    document.getElementById('modal-email').textContent=[primo.email,primo.pec?'PEC: '+primo.pec:''].filter(Boolean).join('  ·  ')||'—';
-    const sede=[primo.sede_attivita_indirizzo,primo.sede_attivita_comune,primo.sede_attivita_prov].filter(Boolean).join(', ');
-    document.getElementById('modal-sede').textContent=sede||'—';
-    document.getElementById('modal-contratti-count').textContent=data.length;
+    document.getElementById('modal-cf').textContent=cfDisp||'—';
+    document.getElementById('modal-tel').textContent=telDisp;
+    document.getElementById('modal-email').textContent=emailDisp;
+    document.getElementById('modal-sede').textContent=sedeDisp;
 
+    // === DIRETTI (in cima) ===
+    if(diretti&&diretti.length){
+      document.getElementById('modal-diretti-count').textContent=diretti.length;
+      document.getElementById('modal-diretti-section').style.display='block';
+      const dLista=document.getElementById('modal-diretti-lista');
+      dLista.innerHTML='';
+      diretti.forEach(d=>{
+        const servizio=d.servizio||'—';
+        const raggruppamento=(d.raggruppamento||'').replace(/,\s*$/,'').trim()||'—';
+        const dataStr=d.datastipula?new Date(d.datastipula).toLocaleDateString('it-IT'):'—';
+        const impNum=d.importo?parseFloat(d.importo):NaN;
+        const importoStr=!isNaN(impNum)&&impNum>0?'&euro; '+impNum.toLocaleString('it-IT',{minimumFractionDigits:2}):'—';
+        const row=document.createElement('div');
+        row.style.cssText='background:#f5f3ff;border:1.5px solid #ddd6fe;border-radius:10px;padding:14px 16px';
+        row.innerHTML=
+          '<div style="display:grid;grid-template-columns:2fr 1fr 1fr;gap:12px;align-items:center">'+
+            '<div>'+
+              '<div style="font-size:10px;font-weight:700;color:#7c3aed;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:3px">Servizio</div>'+
+              '<div style="font-size:14px;color:#3b0764;font-weight:700">'+_escH(servizio)+'</div>'+
+              '<div style="font-size:11px;color:#6d28d9;margin-top:3px">&#x1F4CD; '+_escH(raggruppamento)+'</div>'+
+            '</div>'+
+            '<div>'+
+              '<div style="font-size:10px;font-weight:700;color:#7c3aed;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:3px">Data stipula</div>'+
+              '<div style="font-size:13px;color:#3b0764">'+dataStr+'</div>'+
+            '</div>'+
+            '<div>'+
+              '<div style="font-size:10px;font-weight:700;color:#7c3aed;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:3px">Importo</div>'+
+              '<div style="font-size:14px;color:#3b0764;font-weight:700">'+importoStr+'</div>'+
+            '</div>'+
+          '</div>';
+        dLista.appendChild(row);
+      });
+    }
+
+    // === CONTRATTI DIGITALI (sotto) ===
+    document.getElementById('modal-contratti-count').textContent=(contratti&&contratti.length)||0;
     const lista=document.getElementById('modal-contratti-lista');
     lista.innerHTML='';
-    data.forEach(c=>{
-      const statoColor=c.stato==='firmato'?'#059669':c.stato==='inviato'?'#d97706':'#6b7280';
-      const statoLabel=c.stato==='firmato'?'&#x2713; Firmato':c.stato==='inviato'?'&#x23F3; Inviato':'&#x1F4DD; Bozza';
-      const dataStr=c.quota_primo_anno_data?new Date(c.quota_primo_anno_data).toLocaleDateString('it-IT'):(c.created_at?new Date(c.created_at).toLocaleDateString('it-IT'):'—');
-      const importo=c.quota_primo_anno_importo?'&euro; '+parseFloat(c.quota_primo_anno_importo).toLocaleString('it-IT',{minimumFractionDigits:2}):'—';
-      const tipo=(c.tipo_contratto||'tesseramento').replace(/_/g,' ').replace(/\b\w/g,l=>l.toUpperCase());
-      const anno=c.anno||'';
-      const raccoltoDa=c.raccolta_da||'';
-      const row=document.createElement('div');
-      row.style.cssText='background:var(--cna-50);border:1px solid var(--brd);border-radius:10px;padding:14px 16px';
-      row.innerHTML=
-        '<div style="display:grid;grid-template-columns:2fr 1fr 1fr auto;gap:12px;align-items:center">'+
-          '<div><div style="font-size:10px;font-weight:700;color:var(--cna);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:3px">Tipo / Anno</div>'+
-            '<div style="font-size:14px;color:var(--txt);font-weight:700">'+_escH(tipo)+(anno?' '+anno:'')+'</div></div>'+
-          '<div><div style="font-size:10px;font-weight:700;color:var(--cna);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:3px">Data stipula</div>'+
-            '<div style="font-size:13px;color:var(--txt)">'+dataStr+'</div></div>'+
-          '<div><div style="font-size:10px;font-weight:700;color:var(--cna);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:3px">Importo</div>'+
-            '<div style="font-size:14px;color:var(--txt);font-weight:700">'+importo+'</div></div>'+
-          '<span style="background:'+statoColor+'22;color:'+statoColor+';font-size:11px;font-weight:700;padding:4px 12px;border-radius:999px;white-space:nowrap">'+statoLabel+'</span>'+
-        '</div>'+
-        (raccoltoDa?'<div style="margin-top:8px;padding-top:8px;border-top:1px solid var(--brd);font-size:11px;color:var(--txt2)">Raccolto da: <strong>'+_escH(raccoltoDa)+'</strong></div>':'');
-      lista.appendChild(row);
-    });
+    if(!contratti||!contratti.length){
+      lista.innerHTML='<div style="text-align:center;padding:14px;color:var(--txt2);font-size:13px;background:var(--cna-50);border-radius:8px">Nessun contratto digitale presente</div>';
+    } else {
+      contratti.forEach(c=>{
+        const statoColor=c.stato==='firmato'?'#059669':c.stato==='inviato'?'#d97706':'#6b7280';
+        const statoLabel=c.stato==='firmato'?'&#x2713; Firmato':c.stato==='inviato'?'&#x23F3; Inviato':'&#x1F4DD; Bozza';
+        const dataStr=c.quota_primo_anno_data?new Date(c.quota_primo_anno_data).toLocaleDateString('it-IT'):(c.created_at?new Date(c.created_at).toLocaleDateString('it-IT'):'—');
+        const importo=c.quota_primo_anno_importo?'&euro; '+parseFloat(c.quota_primo_anno_importo).toLocaleString('it-IT',{minimumFractionDigits:2}):'—';
+        const tipo=(c.tipo_contratto||'tesseramento').replace(/_/g,' ').replace(/\b\w/g,l=>l.toUpperCase());
+        const anno=c.anno||'';
+        const raccoltoDa=c.raccolta_da||'';
+        const row=document.createElement('div');
+        row.style.cssText='background:var(--cna-50);border:1px solid var(--brd);border-radius:10px;padding:14px 16px';
+        row.innerHTML=
+          '<div style="display:grid;grid-template-columns:2fr 1fr 1fr auto;gap:12px;align-items:center">'+
+            '<div><div style="font-size:10px;font-weight:700;color:var(--cna);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:3px">Tipo / Anno</div>'+
+              '<div style="font-size:14px;color:var(--txt);font-weight:700">'+_escH(tipo)+(anno?' '+anno:'')+'</div></div>'+
+            '<div><div style="font-size:10px;font-weight:700;color:var(--cna);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:3px">Data stipula</div>'+
+              '<div style="font-size:13px;color:var(--txt)">'+dataStr+'</div></div>'+
+            '<div><div style="font-size:10px;font-weight:700;color:var(--cna);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:3px">Importo</div>'+
+              '<div style="font-size:14px;color:var(--txt);font-weight:700">'+importo+'</div></div>'+
+            '<span style="background:'+statoColor+'22;color:'+statoColor+';font-size:11px;font-weight:700;padding:4px 12px;border-radius:999px;white-space:nowrap">'+statoLabel+'</span>'+
+          '</div>'+
+          (raccoltoDa?'<div style="margin-top:8px;padding-top:8px;border-top:1px solid var(--brd);font-size:11px;color:var(--txt2)">Raccolto da: <strong>'+_escH(raccoltoDa)+'</strong></div>':'');
+        lista.appendChild(row);
+      });
+    }
   }catch(e){console.error('Dettaglio impresa',e);showToast('Errore caricamento','error');}
 }
 
@@ -4718,6 +4856,11 @@ async function updateStats(){
     document.getElementById('stat-attesa').textContent=attesa;
     document.getElementById('stat-da-caricare').textContent=daCaricare;
     document.getElementById('stat-caricati').textContent=caricati;
+    // Aggiorna anche le KPI nel tab Contratti
+    const sc=document.getElementById('stat-totali-c');if(sc)sc.textContent=totali;
+    const sa=document.getElementById('stat-attesa-c');if(sa)sa.textContent=attesa;
+    const sd=document.getElementById('stat-da-caricare-c');if(sd)sd.textContent=daCaricare;
+    const sk=document.getElementById('stat-caricati-c');if(sk)sk.textContent=caricati;
   }catch(e){console.error('updateStats:',e);}
 }
 
