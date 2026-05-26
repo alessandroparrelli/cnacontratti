@@ -5649,7 +5649,7 @@ async function deleteSelected(){
   if(!loggedUser||loggedUser.ruolo!=='admin'){showToast('Solo gli admin possono eliminare','error');return;}
   const ids=Array.from(document.querySelectorAll('.contract-cb:checked')).map(cb=>cb.value);
   if(!ids.length){showToast('Seleziona almeno un contratto','error');return;}
-  if(!confirm('Sei sicuro di voler eliminare '+ids.length+' contratto/i?\\nQuesta operazione è irreversibile.'))return;
+  if(!confirm('Sei sicuro di voler eliminare '+ids.length+' contratto/i?\nQuesta operazione è irreversibile.'))return;
   if(!confirm('CONFERMA DEFINITIVA: eliminare '+ids.length+' contratto/i?'))return;
   try{
     for(const id of ids){await sb(`contratti?id=eq.${id}`,'DELETE');}
