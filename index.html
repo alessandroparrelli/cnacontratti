@@ -2951,7 +2951,7 @@ table.quill-better-table {
         </div>
         <div style="background:var(--cna-50);border-radius:10px;padding:12px 14px;border:1px solid var(--brd)">
           <div style="font-size:10px;font-weight:700;color:var(--cna);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:5px">Email / PEC</div>
-          <div id="modal-email" style="font-size:14px;color:var(--txt);word-break:break-all"></div>
+          <div id="contract-email-display" style="font-size:14px;color:var(--txt);word-break:break-all"></div>
         </div>
         <div style="background:var(--cna-50);border-radius:10px;padding:12px 14px;border:1px solid var(--brd);grid-column:1/-1">
           <div style="font-size:10px;font-weight:700;color:var(--cna);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:5px">Sede Attivit&agrave;</div>
@@ -4221,7 +4221,7 @@ async function apriDettaglioImpresa(piva, cf){
     document.getElementById('modal-titolare').textContent=titolare;
     document.getElementById('modal-cf').textContent=cfDisp||'—';
     document.getElementById('modal-tel').textContent=telDisp;
-    document.getElementById('modal-email').textContent=emailDisp;
+    document.getElementById('contract-email-display').textContent=emailDisp;
     document.getElementById('modal-sede').textContent=sedeDisp;
 
     // ── SEZIONE 1: STATO ASSOCIATIVO (viola) ──
@@ -6591,65 +6591,183 @@ function downloadQRCode(){
 function resetAll(){if(!confirm('Signature CNA Roma\n\nVuoi inserire un nuovo modulo di adesione?'))return;document.querySelectorAll('input[type="text"],input[type="email"],input[type="tel"],input[type="date"]').forEach(el=>{if(!el.readOnly)el.value='';});document.querySelectorAll('input[type="text"][readonly]').forEach(el=>el.value='');['sig_dichiarante','sig_consenso','sig_inps','sig_sepa'].forEach(clearSignature);currentContractId=null;updateStatus();showToast('Reset');}
 
 
-// === LOCATIONIQ AUTOCOMPLETE ===
+// === OPENSTREETMAP/NOMINATIM AUTOCOMPLETE ===
 
+// Cerca indirizzi con numeri civici (Nominatim)
+async function osmSearchAddress(query, countryCode='it'){
+  const url=`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(query)}&format=json&addressdetails=1&limit=6&countrycodes=${countryCode}&accept-language=it`;
+  const res=await fetch(url,{headers:{'Accept-Language':'it','User-Agent':'CNA-Roma-Moduli/1.0'}});
+  return res.json();
+}
 
-function initLocationIQAutocomplete(){
+// Cerca solo comuni (per campo "Nato/a a")
+async function osmSearchCity(query, countryCode='it'){
+  const url=`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(query)}&format=json&addressdetails=1&limit=6&countrycodes=${countryCode}&accept-language=it&featuretype=settlement`;
+  const res=await fetch(url,{headers:{'Accept-Language':'it','User-Agent':'CNA-Roma-Moduli/1.0'}});
+  return res.json();
+}
+
+function initOSMAutocomplete(){
+  // --- CAMPO NATO/A A (solo comuni) ---
   const natoInput=document.getElementById('nato_a');
-  const residenteInput=document.getElementById('residente_in');
-  
   if(natoInput){
     let natoTimeout;
     natoInput.addEventListener('input',function(){
       clearTimeout(natoTimeout);
       const query=this.value.trim();
-      if(query.length<3){
-        removeSuggestions('nato');
-        return;
-      }
+      if(query.length<3){removeSuggestions('nato');return;}
       natoTimeout=setTimeout(async()=>{
         try{
-          const url=`https://api.locationiq.com/v1/autocomplete?key=${LOCATIONIQ_TOKEN}&q=${encodeURIComponent(query)}&limit=5&dedupe=1&countrycodes=it&tag=place:city,place:town,place:village`;
-          const res=await fetch(url);
-          const data=await res.json();
-          if(data&&data.length>0){
-            showLocationSuggestions(data,natoInput,'nato');
-          }
-        }catch(e){
-          console.error('LocationIQ nato error:',e);
-        }
-      },300);
+          const data=await osmSearchCity(query);
+          if(data&&data.length>0) showOSMSuggestions(data,natoInput,'nato');
+        }catch(e){console.error('OSM nato error:',e);}
+      },400);
     });
   }
-  
+
+  // --- CAMPO RESIDENTE IN (via + civico) ---
+  const residenteInput=document.getElementById('residente_in');
   if(residenteInput){
     let resTimeout;
     residenteInput.addEventListener('input',function(){
       clearTimeout(resTimeout);
       const query=this.value.trim();
-      if(query.length<3){
-        removeSuggestions('residente');
-        return;
-      }
+      if(query.length<4){removeSuggestions('residente');return;}
       resTimeout=setTimeout(async()=>{
         try{
-          const url=`https://api.locationiq.com/v1/autocomplete?key=${LOCATIONIQ_TOKEN}&q=${encodeURIComponent(query)}&limit=5&dedupe=1&countrycodes=it`;
-          const res=await fetch(url);
-          const data=await res.json();
-          if(data&&data.length>0){
-            showLocationSuggestions(data,residenteInput,'residente');
-          }
-        }catch(e){
-          console.error('LocationIQ residente error:',e);
-        }
-      },300);
+          const data=await osmSearchAddress(query);
+          if(data&&data.length>0) showOSMSuggestions(data,residenteInput,'residente');
+        }catch(e){console.error('OSM residente error:',e);}
+      },400);
+    });
+  }
+
+  // --- CAMPO SEDE ATTIVITA (via + civico) ---
+  const sedeInput=document.getElementById('sede_attivita');
+  if(sedeInput){
+    let sedeTimeout;
+    sedeInput.addEventListener('input',function(){
+      clearTimeout(sedeTimeout);
+      const query=this.value.trim();
+      if(query.length<4){removeSuggestions('sede');return;}
+      sedeTimeout=setTimeout(async()=>{
+        try{
+          const data=await osmSearchAddress(query);
+          if(data&&data.length>0) showOSMSuggestions(data,sedeInput,'sede');
+        }catch(e){console.error('OSM sede error:',e);}
+      },400);
     });
   }
 }
 
-function removeSuggestions(type){
-  const existing=document.getElementById('suggestions-'+type);
-  if(existing)existing.remove();
+function showOSMSuggestions(data, input, type){
+  removeSuggestions(type);
+  const list=document.createElement('div');
+  list.id='suggestions-'+type;
+  list.style.cssText='position:fixed;background:#fff;border:1.5px solid var(--cna);border-radius:8px;max-height:280px;overflow-y:auto;z-index:99999;box-shadow:0 8px 24px rgba(0,92,169,0.18);min-width:320px;margin-top:2px;font-family:inherit';
+
+  data.forEach(item=>{
+    const addr=item.address||{};
+    const road=addr.road||addr.pedestrian||addr.path||addr.footway||'';
+    const houseNum=addr.house_number||'';
+    const city=addr.city||addr.town||addr.village||addr.municipality||addr.county||'';
+    const cap=addr.postcode||'';
+    const prov=addr.county||addr.state||'';
+    const provShort=prov.replace(/Provincia di |Province of /ig,'').substring(0,2).toUpperCase();
+    const country=addr.country||'Italia';
+
+    // Costruisce la riga via per ogni tipo
+    let via='';
+    let label='';
+    let sublabel='';
+
+    if(type==='nato'){
+      // Solo nome del comune
+      via=city||(item.display_name||'').split(',')[0];
+      label=via;
+      sublabel=item.display_name||'';
+    } else {
+      // Indirizzo completo con civico se disponibile
+      via=(road+(houseNum?' '+houseNum:'')).trim();
+      if(!via) via=(item.display_name||'').split(',')[0];
+      label=via||(item.display_name||'').split(',')[0];
+      sublabel=[city,cap,provShort].filter(Boolean).join(' - ');
+    }
+
+    if(!label) return;
+
+    const div=document.createElement('div');
+    div.style.cssText='padding:10px 14px;cursor:pointer;border-bottom:1px solid #eef0f4;transition:background 0.15s';
+    div.innerHTML=`<div style="font-weight:600;font-size:13px;color:var(--txt)">${label}</div><div style="font-size:11px;color:var(--txt2);margin-top:2px">${sublabel||item.display_name||''}</div>`;
+    div.onmouseover=()=>div.style.background='#f0f6ff';
+    div.onmouseout=()=>div.style.background='#fff';
+    div.onclick=()=>{
+      if(type==='nato'){
+        const natoEl=document.getElementById('nato_a');
+        if(natoEl) natoEl.value=city||(item.display_name||'').split(',')[0];
+        const provEl=document.getElementById('prov_nascita');
+        if(provEl) provEl.value=provShort;
+        const statoEl=document.getElementById('stato_nascita');
+        if(statoEl) statoEl.value=country;
+      } else if(type==='residente'){
+        const viaEl=document.getElementById('residente_in');
+        if(viaEl) viaEl.value=via;
+        const comEl=document.getElementById('comune_res');
+        if(comEl) comEl.value=city;
+        const capEl=document.getElementById('cap_res');
+        if(capEl) capEl.value=cap;
+        const provEl=document.getElementById('prov_res');
+        if(provEl) provEl.value=provShort;
+        const statoEl=document.getElementById('stato_res');
+        if(statoEl) statoEl.value=country;
+        // Mirror
+        document.querySelectorAll('.mirror-residente,.mirror-indirizzo-res').forEach(el=>el.value=via);
+      } else if(type==='sede'){
+        const viaEl=document.getElementById('sede_attivita');
+        if(viaEl) viaEl.value=via;
+        const comEl=document.getElementById('comune_att');
+        if(comEl) comEl.value=city;
+        const capEl=document.getElementById('cap_att');
+        if(capEl) capEl.value=cap;
+        const provEl=document.getElementById('prov_att');
+        if(provEl) provEl.value=provShort;
+        // Mirror
+        document.querySelectorAll('.mirror-sede-att').forEach(el=>el.value=via);
+        document.querySelectorAll('.mirror-comune-att').forEach(el=>el.value=city);
+        document.querySelectorAll('.mirror-prov-att').forEach(el=>el.value=provShort);
+        document.querySelectorAll('.mirror-cap-att').forEach(el=>el.value=cap);
+      }
+      // Trigger updateStatus
+      updateStatus();
+      removeSuggestions(type);
+    };
+    list.appendChild(div);
+  });
+
+  if(!list.children.length) return;
+
+  // Posiziona sotto il campo
+  const rect=input.getBoundingClientRect();
+  list.style.left=rect.left+'px';
+  list.style.top=(rect.bottom+window.scrollY+2)+'px';
+  list.style.width=Math.max(rect.width,320)+'px';
+  // Corregge se esce dallo schermo
+  document.body.appendChild(list);
+  const listRect=list.getBoundingClientRect();
+  if(listRect.right>window.innerWidth-8){
+    list.style.left=Math.max(8,window.innerWidth-listRect.width-8)+'px';
+  }
+
+  // Chiudi al click fuori
+  setTimeout(()=>{
+    const closeHandler=(e)=>{
+      if(!list.contains(e.target)&&e.target!==input){
+        removeSuggestions(type);
+        document.removeEventListener('click',closeHandler);
+      }
+    };
+    document.addEventListener('click',closeHandler);
+  },100);
 }
 
 function removeSuggestions(type){
@@ -6749,6 +6867,7 @@ function initCurrencyFields(){
 function loadStats(){updateStats();}
 function initApp(){
   setupMirroring();['sig_dichiarante','sig_consenso','sig_inps','sig_sepa'].forEach(initSignaturePad);
+  initOSMAutocomplete();
   document.querySelectorAll('input,select').forEach(el=>el.addEventListener('input',updateStatus));document.querySelectorAll('select').forEach(el=>el.addEventListener('change',updateStatus));updateStatus();
   const today=new Date().toISOString().slice(0,10);['data_adesione','data_dichiarazione','data_consenso','data_inps','data_sepa'].forEach(id=>{const el=document.getElementById(id);if(el&&!el.value)el.value=today;});  loadCodiciAteco();
   initCurrencyFields();
