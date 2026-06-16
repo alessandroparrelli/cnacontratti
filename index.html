@@ -5643,11 +5643,11 @@ async function previewContractPDF(token){
 
 // Signature positions: [page_index, x, y, width, height]
 const SIG_POS={
-  consenso:[0,280,38,275,68],       // Page 1
-  dichiarazione:[0,280,148,275,68], // Page 1
-  privacy:[1,212,0,275,68],         // Page 2
-  inps:[2,222,52,275,68],           // Page 3
-  sepa:[3,242,122,275,68]           // Page 4
+  consenso:[0,280,42,200,48],       // Page 1
+  dichiarazione:[0,280,152,200,48], // Page 1
+  privacy:[1,212,4,200,48],         // Page 2
+  inps:[2,222,56,200,48],           // Page 3
+  sepa:[3,242,126,200,48]           // Page 4
 };
 async function embedSigs(doc,pages,data){
   const es=async(b64,pos)=>{
@@ -6471,91 +6471,132 @@ const sigPads={};
 function initSignaturePad(id){
   const canvas=document.getElementById(id);
   if(!canvas)return;
-  const ctx=canvas.getContext('2d',{willReadFrequently:true});
-  
+
+  // Rimuovi vecchi listener clonanando il canvas
+  const newCanvas=canvas.cloneNode(true);
+  canvas.parentNode.replaceChild(newCanvas,canvas);
+  const c=newCanvas;
+  // Aggiorna riferimento nei sigPads
+  sigPads[id]=sigPads[id]||false;
+
+  const ctx=c.getContext('2d',{willReadFrequently:true});
+
+  // Impostazioni tratto: più sottile e realistico
+  const MIN_W=0.8;   // spessore minimo (tratto veloce)
+  const MAX_W=2.8;   // spessore massimo (tratto lento)
+  const SMOOTHING=0.18; // inerzia velocità (0=nessuna, 1=massima)
+  const COLOR='rgba(10,40,100,0.88)';
+
   let isDrawing=false;
-  let points=[];
-  let lastPoint=null;
-  let lastTime=0;
-  
+  let pts=[];          // buffer punti {x,y,time,w}
+  let lastVel=0;
+  let lastW=MAX_W;
+
   const getPoint=e=>{
-    const rect=canvas.getBoundingClientRect();
+    const rect=c.getBoundingClientRect();
     const touch=e.touches?e.touches[0]:e;
-    const x=touch.clientX-rect.left;
-    const y=touch.clientY-rect.top;
-    // Scale to canvas resolution
-    const scaleX=canvas.width/rect.width;
-    const scaleY=canvas.height/rect.height;
-    return{x:x*scaleX,y:y*scaleY,time:Date.now()};
+    const scaleX=c.width/rect.width;
+    const scaleY=c.height/rect.height;
+    return{
+      x:(touch.clientX-rect.left)*scaleX,
+      y:(touch.clientY-rect.top)*scaleY,
+      time:Date.now()
+    };
   };
-  
-  const calculateLineWidth=(velocity)=>{
-    const minWidth=1.8;
-    const maxWidth=4.5;
-    const normalized=Math.min(velocity/2000,1);
-    return maxWidth-(normalized*(maxWidth-minWidth));
+
+  const velToWidth=vel=>{
+    // Più veloce = più sottile (firma naturale)
+    const norm=Math.min(vel/1200,1);
+    return MAX_W-(norm*(MAX_W-MIN_W));
   };
-  
-  const drawLine=(p1,p2,width)=>{
+
+  // Disegna un segmento smussato con curva di Bézier quadratica
+  const drawSegment=(p1,p2,p3,w1,w2)=>{
+    // Punto medio per la curva
+    const mx=(p2.x+p3.x)/2;
+    const my=(p2.y+p3.y)/2;
+    const wMid=(w1+w2)/2;
+
     ctx.beginPath();
-    ctx.moveTo(p1.x,p1.y);
-    ctx.lineTo(p2.x,p2.y);
-    ctx.strokeStyle='rgba(0,61,115,0.9)';
-    ctx.lineWidth=width;
+    ctx.moveTo((p1.x+p2.x)/2,(p1.y+p2.y)/2);
+    ctx.quadraticCurveTo(p2.x,p2.y,mx,my);
+    ctx.strokeStyle=COLOR;
+    ctx.lineWidth=wMid;
     ctx.lineCap='round';
     ctx.lineJoin='round';
     ctx.stroke();
   };
-  
+
   const handleStart=e=>{
     e.preventDefault();
     isDrawing=true;
-    const point=getPoint(e);
-    points=[point];
-    lastPoint=point;
-    lastTime=point.time;
+    const pt=getPoint(e);
+    pts=[pt,pt]; // duplica per avere almeno 2 punti subito
+    lastVel=0;
+    lastW=MAX_W;
     sigPads[id]=true;
+    // Puntino iniziale
+    ctx.beginPath();
+    ctx.arc(pt.x,pt.y,lastW/2,0,Math.PI*2);
+    ctx.fillStyle=COLOR;
+    ctx.fill();
   };
-  
+
   const handleMove=e=>{
     if(!isDrawing)return;
     e.preventDefault();
-    
-    const point=getPoint(e);
-    const dt=point.time-lastTime;
-    
-    if(dt===0)return;
-    
-    const dx=point.x-lastPoint.x;
-    const dy=point.y-lastPoint.y;
-    const distance=Math.sqrt(dx*dx+dy*dy);
-    const velocity=distance/dt;
-    const lineWidth=calculateLineWidth(velocity);
-    
-    // Smoothing: average with last width
-    const avgWidth=points.length>0?(lineWidth+calculateLineWidth(distance/(dt||1)))/2:lineWidth;
-    
-    drawLine(lastPoint,point,avgWidth);
-    
-    points.push(point);
-    lastPoint=point;
-    lastTime=point.time;
+    const pt=getPoint(e);
+    const prev=pts[pts.length-1];
+    const dt=Math.max(pt.time-prev.time,1);
+    const dx=pt.x-prev.x;
+    const dy=pt.y-prev.y;
+    const dist=Math.sqrt(dx*dx+dy*dy);
+
+    // Filtra micro-movimenti per evitare rumore
+    if(dist<1.5)return;
+
+    const vel=dist/dt;
+    // Smoothing velocità (moving average)
+    const smoothVel=lastVel*(1-SMOOTHING)+vel*SMOOTHING;
+    lastVel=smoothVel;
+
+    const targetW=velToWidth(smoothVel);
+    // Transizione graduale dello spessore
+    const w=lastW*0.7+targetW*0.3;
+    lastW=w;
+
+    pts.push({...pt,w});
+
+    if(pts.length>=3){
+      const n=pts.length;
+      drawSegment(pts[n-3],pts[n-2],pts[n-1],pts[n-2].w||MAX_W,w);
+    }
   };
-  
+
   const handleEnd=e=>{
     if(!isDrawing)return;
     isDrawing=false;
+    // Chiudi l'ultimo segmento
+    if(pts.length>=2){
+      const n=pts.length;
+      const p=pts[n-1];
+      ctx.beginPath();
+      ctx.arc(p.x,p.y,(lastW||MIN_W)/2,0,Math.PI*2);
+      ctx.fillStyle=COLOR;
+      ctx.fill();
+    }
+    pts=[];
   };
-  
-  canvas.addEventListener('mousedown',handleStart);
-  canvas.addEventListener('mousemove',handleMove);
-  canvas.addEventListener('mouseup',handleEnd);
-  canvas.addEventListener('mouseleave',handleEnd);
-  
-  canvas.addEventListener('touchstart',handleStart,{passive:false});
-  canvas.addEventListener('touchmove',handleMove,{passive:false});
-  canvas.addEventListener('touchend',handleEnd);
-  canvas.addEventListener('touchcancel',handleEnd);
+
+  c.addEventListener('mousedown',handleStart);
+  c.addEventListener('mousemove',handleMove);
+  c.addEventListener('mouseup',handleEnd);
+  c.addEventListener('mouseleave',handleEnd);
+
+  c.addEventListener('touchstart',handleStart,{passive:false});
+  c.addEventListener('touchmove',handleMove,{passive:false});
+  c.addEventListener('touchend',handleEnd);
+  c.addEventListener('touchcancel',handleEnd);
 }
 function clearSignature(id){const c=document.getElementById(id);if(!c)return;c.getContext('2d').clearRect(0,0,c.width,c.height);sigPads[id]=false;}
 function getSignatureDataUrl(id){const c=document.getElementById(id);if(!c||!sigPads[id])return null;return c.toDataURL('image/png');}
