@@ -5470,16 +5470,27 @@ let fullscreenSigTarget=null,fullscreenSigToken=null,fullscreenSigData=null;
 function resizeSigCanvas(){
   const canvas=document.getElementById('sig-fullscreen-canvas');
   if(!canvas)return;
-  const rect=canvas.parentElement.getBoundingClientRect();
+  const parent=canvas.parentElement;
+  // Rimuovi dimensioni CSS fissate prima di misurare il layout naturale
+  canvas.style.width='';
+  canvas.style.height='';
   const dpr=window.devicePixelRatio||1;
-  // Salva firma esistente
+  // Usa offsetWidth/offsetHeight che riflettono il layout post-rotazione
+  const w=parent.offsetWidth||parent.getBoundingClientRect().width;
+  const h=parent.offsetHeight||parent.getBoundingClientRect().height;
+  // Salva firma esistente PRIMA di cambiare le dimensioni
   let oldData=null;
-  try{if(sigPads['sig-fullscreen-canvas'])oldData=canvas.toDataURL();}catch(e){}
-  canvas.width=Math.round(rect.width*dpr);
-  canvas.height=Math.round(rect.height*dpr);
-  canvas.style.width=rect.width+'px';
-  canvas.style.height=rect.height+'px';
-  // NO setTransform - lascia che initSignaturePad gestisca le coordinate
+  try{
+    if(sigPads['sig-fullscreen-canvas']&&canvas.width>0&&canvas.height>0){
+      oldData=canvas.toDataURL();
+    }
+  }catch(e){}
+  // Imposta dimensioni pixel del canvas
+  canvas.width=Math.round(w*dpr);
+  canvas.height=Math.round(h*dpr);
+  // CSS: occupa tutto il parent
+  canvas.style.width=w+'px';
+  canvas.style.height=h+'px';
   // Ripristina firma se c'era
   if(oldData){
     const ctx=canvas.getContext('2d');
@@ -5510,7 +5521,13 @@ function openFullscreenSig(targetId,token){
 window.addEventListener('resize',()=>{
   const overlay=document.getElementById('sig-fullscreen');
   if(overlay&&overlay.classList.contains('active')){
-    setTimeout(resizeSigCanvas,100);
+    clearTimeout(window._sigResizeTimer);
+    window._sigResizeTimer=setTimeout(()=>{
+      resizeSigCanvas();
+      // Reinizializza il pad dopo il resize per ricalcolare le coordinate
+      sigPads['sig-fullscreen-canvas']=false;
+      initSignaturePad('sig-fullscreen-canvas');
+    },200);
   }
 });
 
