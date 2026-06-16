@@ -5261,8 +5261,15 @@ function showSigningUI(ct,token){
         <p><strong>Data invio:</strong> ${ct.inviato_at?new Date(ct.inviato_at).toLocaleDateString('it-IT',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'}):'N/D'}</p>
       </div>
 
-      <div class="form-group" style="margin-bottom:20px">
-        <button class="btn btn-outline" onclick="previewContractPDF('${token}')" style="width:100%">&#x1F4C4; Visualizza contratto PDF</button>
+      <!-- PRESA VISIONE PDF - obbligatoria -->
+      <div style="background:#fff8e1;border:2px solid #f59e0b;border-radius:var(--r);padding:16px;margin-bottom:20px">
+        <p style="font-size:13px;font-weight:700;color:#92400e;margin-bottom:10px">&#x26A0;&#xFE0F; Prima di procedere devi visualizzare il modulo associativo</p>
+        <button class="btn btn-outline" id="btn-view-pdf" onclick="openPdfAndTrack('${token}')" style="width:100%;border-color:#f59e0b;color:#92400e">&#x1F4C4; Apri e visualizza il contratto PDF</button>
+        <div id="pdf-opened-badge" style="display:none;margin-top:10px;color:#16a34a;font-size:13px;font-weight:600">&#x2705; Documento aperto</div>
+        <label id="presa-visione-label" style="display:none;margin-top:12px;align-items:flex-start;gap:10px;cursor:pointer;font-size:13px">
+          <input type="checkbox" id="presa_visione" style="width:20px;height:20px;accent-color:var(--cna);flex-shrink:0;margin-top:2px" onchange="checkSignReady()">
+          <span><strong>Dichiaro di aver preso visione del modulo associativo CNA Roma</strong> allegato e di averne compreso il contenuto.</span>
+        </label>
       </div>
 
       <!-- PRIVACY / CONSENSI -->
@@ -5360,7 +5367,8 @@ function showSigningUI(ct,token){
       <div class="form-group" style="margin-bottom:20px">
         <label style="font-size:14px;font-weight:700;color:var(--cna-dk)">FIRMA</label>
         <p style="font-size:12px;color:var(--txt2);margin-bottom:10px">Tocca il pulsante per aprire il pannello firma a tutto schermo.<br><strong>Apponi la firma leggendo il testo da sinistra verso destra.</strong></p>
-        <button class="btn btn-primary" onclick="openFullscreenSig('sig_cliente_target','${token}')" style="width:100%;padding:20px;font-size:18px" id="btn-open-sig"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:-2px;margin-right:6px"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg> Apri pannello firma</button>
+        <button class="btn btn-primary" onclick="openFullscreenSig('sig_cliente_target','${token}')" style="width:100%;padding:20px;font-size:18px;opacity:0.45;pointer-events:none" id="btn-open-sig" disabled><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:-2px;margin-right:6px"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg> Apri pannello firma</button>
+        <p id="sig-locked-msg" style="font-size:11px;color:#f59e0b;text-align:center;margin-top:6px;font-weight:600">&#x1F512; Visualizza il contratto e spunta la presa visione per sbloccare la firma</p>
         <canvas id="sig_cliente_target" style="display:none"></canvas>
       </div>
       <div id="sig-preview" style="display:none;margin-bottom:20px;text-align:center">
@@ -5370,6 +5378,37 @@ function showSigningUI(ct,token){
       <button id="submit-sig-btn" class="btn btn-success" onclick="submitClientSignature('${token}')" style="width:100%;padding:16px;font-size:16px;display:none">Conferma e Invia Firma</button>
       <p style="font-size:11px;color:var(--txt2);text-align:center;margin-top:16px">Firmando accetti i termini del contratto di adesione CNA Roma. IP e data verranno registrati.</p>
     </div></div>`;
+}
+
+let pdfViewedByClient=false;
+
+function openPdfAndTrack(token){
+  previewContractPDF(token);
+  // Traccia apertura
+  pdfViewedByClient=true;
+  const badge=document.getElementById('pdf-opened-badge');
+  const label=document.getElementById('presa-visione-label');
+  const viewBtn=document.getElementById('btn-view-pdf');
+  if(badge){badge.style.display='block';}
+  if(label){label.style.display='flex';}
+  if(viewBtn){
+    viewBtn.style.borderColor='#16a34a';
+    viewBtn.style.color='#16a34a';
+    viewBtn.innerHTML='&#x1F4C4; Riapri contratto PDF';
+  }
+  checkSignReady();
+}
+
+function checkSignReady(){
+  const pv=document.getElementById('presa_visione');
+  const btn=document.getElementById('btn-open-sig');
+  const msg=document.getElementById('sig-locked-msg');
+  if(!btn)return;
+  const ready=pdfViewedByClient&&pv&&pv.checked;
+  btn.disabled=!ready;
+  btn.style.opacity=ready?'1':'0.45';
+  btn.style.pointerEvents=ready?'auto':'none';
+  if(msg)msg.style.display=ready?'none':'block';
 }
 
 let clientDocBase64=null,clientDocType=null;
@@ -5458,6 +5497,7 @@ function submitClientSignature(token){
     consenso_art9:document.getElementById('privacy_c')?document.getElementById('privacy_c').checked:false,
     consenso_sistema_cna:document.getElementById('privacy_d')?document.getElementById('privacy_d').checked:false,
     consenso_web_social:document.getElementById('privacy_e')?document.getElementById('privacy_e').checked:false,
+    presa_visione_documento:pdfViewedByClient&&(document.getElementById('presa_visione')?document.getElementById('presa_visione').checked:false),
     documento_foto_base64:clientDocFronte,
     documento_retro_base64:clientDocRetro,
     documento_foto_tipo:clientDocType
