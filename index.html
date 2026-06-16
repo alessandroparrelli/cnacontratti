@@ -5706,8 +5706,8 @@ function fillPDF(form,data){
   sf('comune attivita',data.sede_attivita_comune);sf('prov attivita',data.sede_attivita_prov);
   sf('PROMOTORE',data.raccolta_da);sf('MOTIVO ISCRIZIONE',data.motivo_iscrizione);
   sf('quota 1 anno',data.quota_primo_anno_importo?String(data.quota_primo_anno_importo):'');
-  sf('data adesione',fmtD(data.quota_primo_anno_data));sf('quota inps',data.quota_anni_successivi_importo?String(data.quota_anni_successivi_importo):'');
-  sf('quota secondo anno',data.quota_diretto_importo?String(data.quota_diretto_importo):'');
+  sf('data adesione',fmtD(data.quota_primo_anno_data));sf('quota inps',data.quota_diretto_importo?String(data.quota_diretto_importo):'');
+  sf('quota secondo anno',data.quota_anni_successivi_importo?String(data.quota_anni_successivi_importo):'');
   sf('iban ditta',data.iban_ditta);sf('cognome e nome',(data.cognome||'')+' '+(data.nome||''));
   sf('data adesione 2',fmtD(data.data_dichiarante||data.quota_primo_anno_data));
   sf('IBAN',data.iban_ditta);sf('Luogo',data.luogo_sottoscrizione_sepa||'Roma');
