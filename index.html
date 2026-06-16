@@ -5438,7 +5438,9 @@ function compressPng(dataUrl,maxW){
       const cv=document.createElement('canvas');
       cv.width=w;cv.height=h;
       const ctx=cv.getContext('2d');
-      // NON riempire lo sfondo - mantieni trasparenza
+      // Sfondo bianco esplicito: evita firma sbiadita/scolorita nel PDF
+      ctx.fillStyle='#ffffff';
+      ctx.fillRect(0,0,w,h);
       ctx.drawImage(img,0,0,w,h);
       resolve(cv.toDataURL('image/png'));
     };
@@ -5683,11 +5685,11 @@ async function previewContractPDF(token){
 
 // Signature positions: [page_index, x, y, width, height]
 const SIG_POS={
-  consenso:[0,280,42,200,48],       // Page 1
-  dichiarazione:[0,280,152,200,48], // Page 1
-  privacy:[1,212,4,200,48],         // Page 2
-  inps:[2,222,56,200,48],           // Page 3
-  sepa:[3,242,126,200,48]           // Page 4
+  consenso:[0,362.0,182.8,211.5,37.9],       // Page 1 - Signature5
+  dichiarazione:[0,362.6,65.1,208.9,38.5],   // Page 1 - Signature6
+  privacy:[1,189.2,24.4,173.6,42.5],         // Page 2 - Signature7
+  inps:[2,353.5,78.2,184.7,51.0],            // Page 3 - Signature8
+  sepa:[3,327.9,147.0,224.6,55.6]            // Page 4 - Signature9
 };
 async function embedSigs(doc,pages,data){
   const es=async(b64,pos)=>{
@@ -5712,8 +5714,10 @@ async function embedSigs(doc,pages,data){
       }
       const natW=img.width;const natH=img.height;
       const boxW=pos[3];const boxH=pos[4];
-      const scale=Math.min(boxW/natW,boxH/natH);
+      // Scala mantenendo proporzioni, max 85% del box per margine
+      const scale=Math.min((boxW*0.92)/natW,(boxH*0.92)/natH);
       const drawW=natW*scale;const drawH=natH*scale;
+      // Centra perfettamente nel box
       const offsetX=(boxW-drawW)/2;const offsetY=(boxH-drawH)/2;
       pages[pos[0]].drawImage(img,{x:pos[1]+offsetX,y:pos[2]+offsetY,width:drawW,height:drawH});
     }catch(e){console.warn('Sig embed error:',e);}
@@ -6522,10 +6526,10 @@ function initSignaturePad(id){
   const ctx=c.getContext('2d',{willReadFrequently:true});
 
   // Impostazioni tratto: più sottile e realistico
-  const MIN_W=0.8;   // spessore minimo (tratto veloce)
-  const MAX_W=2.8;   // spessore massimo (tratto lento)
+  const MIN_W=1.2;   // spessore minimo (tratto veloce)
+  const MAX_W=3.5;   // spessore massimo (tratto lento)
   const SMOOTHING=0.18; // inerzia velocità (0=nessuna, 1=massima)
-  const COLOR='rgba(10,40,100,0.88)';
+  const COLOR='rgb(10,40,120)';  // Colore pieno opaco - nessun alpha per evitare sbiadimento nel PDF
 
   let isDrawing=false;
   let pts=[];          // buffer punti {x,y,time,w}
@@ -6639,7 +6643,18 @@ function initSignaturePad(id){
   c.addEventListener('touchcancel',handleEnd);
 }
 function clearSignature(id){const c=document.getElementById(id);if(!c)return;c.getContext('2d').clearRect(0,0,c.width,c.height);sigPads[id]=false;}
-function getSignatureDataUrl(id){const c=document.getElementById(id);if(!c||!sigPads[id])return null;return c.toDataURL('image/png');}
+function getSignatureDataUrl(id){
+  const c=document.getElementById(id);
+  if(!c||!sigPads[id])return null;
+  // Esporta con sfondo bianco per nitidezza nel PDF
+  const cv=document.createElement('canvas');
+  cv.width=c.width;cv.height=c.height;
+  const ctx=cv.getContext('2d');
+  ctx.fillStyle='#ffffff';
+  ctx.fillRect(0,0,cv.width,cv.height);
+  ctx.drawImage(c,0,0);
+  return cv.toDataURL('image/png');
+}
 
 function updateStatus(){const req=['cognome','nome','cf','data_nascita','nato_a','prov_nascita','residente_in','comune_res','cap_res','prov_res','telefono','cellulare','email','ragione_sociale','piva','ateco','pec','sede_attivita','comune_att','cap_att','prov_att','motivo_iscrizione','quota_1_anno','data_adesione','quota_inps','quota_diretto','iban_ditta'];const f=req.filter(id=>{const el=document.getElementById(id);return el&&el.value&&el.value.trim().length>0;}).length;const ind=document.getElementById('status-indicator');if(f===req.length){ind.className='status-badge filled';ind.textContent='Compilato';}else{ind.className='status-badge empty';ind.textContent=f+'/'+req.length+' obbligatori';}}
 function showToast(msg,type=''){const t=document.getElementById('toast');if(!t)return;t.textContent=msg;t.className='toast show '+type;setTimeout(()=>t.className='toast',3500);}
