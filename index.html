@@ -5772,6 +5772,8 @@ function collectFormData(){
 
 async function saveToSupabase(){
   try{
+    const validationErrors=validateContractForm();
+    if(validationErrors.length>0){showToast(validationErrors[0],'error');return;}
     showToast('Salvataggio...');const data=collectFormData();
     if(currentContractId){data.updated_at=new Date().toISOString();await sb(`contratti?id=eq.${currentContractId}`,'PATCH',data);showToast('Aggiornato!','success');}
     else{const r=await sb('contratti','POST',data);if(r&&r.length){currentContractId=r[0].id;showToast('Salvato! ID: '+currentContractId.slice(0,8),'success');}};updateStatus();
@@ -6642,6 +6644,27 @@ function initSignaturePad(id){
 function clearSignature(id){const c=document.getElementById(id);if(!c)return;c.getContext('2d').clearRect(0,0,c.width,c.height);sigPads[id]=false;}
 function getSignatureDataUrl(id){const c=document.getElementById(id);if(!c||!sigPads[id])return null;return c.toDataURL('image/png');}
 
+function validateContractForm(){
+  const errors=[];
+  const v=id=>(document.getElementById(id)?.value||'').trim();
+  // Partita IVA: esattamente 11 cifre
+  const piva=v('piva');
+  if(piva&&!/^\d{11}$/.test(piva)) errors.push('Partita IVA non valida (deve avere esattamente 11 cifre)');
+  // Codice fiscale: formato standard italiano
+  const cf=v('cf').toUpperCase();
+  if(cf&&!/^[A-Z]{6}[0-9LMNPQRSTUV]{2}[ABCDEHLMPRST]{1}[0-9LMNPQRSTUV]{2}[A-Z]{1}[0-9LMNPQRSTUV]{3}[A-Z]{1}$/.test(cf)) errors.push('Codice Fiscale non valido (formato non corretto)');
+  // Cellulare: numero mobile italiano
+  const cell=v('cellulare').replace(/\s/g,'');
+  if(cell&&!/^(\+39)?3[0-9]{8,9}$/.test(cell)) errors.push('Cellulare non valido (deve essere un numero mobile, es. 333 1234567)');
+  // Email
+  const email=v('email');
+  if(email&&!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) errors.push('Email non valida');
+  // IBAN ditta: formato IBAN italiano (IT + 25 caratteri alfanumerici)
+  const iban=v('iban_ditta').replace(/\s/g,'').toUpperCase();
+  if(iban&&!/^IT[0-9]{2}[A-Z0-9]{23}$/.test(iban)) errors.push('IBAN Ditta non valido (formato atteso: IT + 2 cifre + 23 caratteri, es. IT60X0542811101000000123456)');
+  return errors;
+}
+
 function updateStatus(){const req=['cognome','nome','cf','data_nascita','nato_a','prov_nascita','residente_in','comune_res','cap_res','prov_res','telefono','cellulare','email','ragione_sociale','piva','ateco','pec','sede_attivita','comune_att','cap_att','prov_att','motivo_iscrizione','quota_1_anno','data_adesione','quota_inps','quota_diretto','iban_ditta'];const f=req.filter(id=>{const el=document.getElementById(id);return el&&el.value&&el.value.trim().length>0;}).length;const ind=document.getElementById('status-indicator');if(f===req.length){ind.className='status-badge filled';ind.textContent='Compilato';}else{ind.className='status-badge empty';ind.textContent=f+'/'+req.length+' obbligatori';}}
 function showToast(msg,type=''){const t=document.getElementById('toast');if(!t)return;t.textContent=msg;t.className='toast show '+type;setTimeout(()=>t.className='toast',3500);}
 function openModal(id){
@@ -6772,7 +6795,9 @@ function showOSMSuggestions(data, input, type){
     const city=addr.city||addr.town||addr.village||addr.municipality||addr.county||'';
     const cap=addr.postcode||'';
     const prov=addr.county||addr.state||'';
-    const provShort=prov.replace(/Provincia di |Province of /ig,'').substring(0,2).toUpperCase();
+    // Mappa province metropolitane italiane (Nominatim restituisce nomi estesi)
+    const _metroMap={'Città Metropolitana di Roma Capitale':'RM','Città Metropolitana di Milano':'MI','Città Metropolitana di Napoli':'NA','Città Metropolitana di Torino':'TO','Città Metropolitana di Palermo':'PA','Città Metropolitana di Genova':'GE','Città Metropolitana di Bologna':'BO','Città Metropolitana di Firenze':'FI','Città Metropolitana di Bari':'BA','Città Metropolitana di Catania':'CT','Città Metropolitana di Venezia':'VE','Città Metropolitana di Messina':'ME','Città Metropolitana di Verona':'VR','Città Metropolitana di Padova':'PD','Città Metropolitana di Trieste':'TS','Città Metropolitana di Cagliari':'CA','Città Metropolitana di Reggio Calabria':'RC','Città Metropolitana di Reggio di Calabria':'RC'};
+    const provShort=_metroMap[prov]||prov.replace(/Città Metropolitana di |Provincia di |Province of /ig,'').substring(0,2).toUpperCase();
     const country=addr.country||'Italia';
 
     // Costruisce la riga via per ogni tipo
