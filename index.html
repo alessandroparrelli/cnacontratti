@@ -6795,9 +6795,10 @@ function showOSMSuggestions(data, input, type){
     const city=addr.city||addr.town||addr.village||addr.municipality||addr.county||'';
     const cap=addr.postcode||'';
     const prov=addr.county||addr.state||'';
-    // Mappa province metropolitane italiane (Nominatim restituisce nomi estesi)
-    const _metroMap={'Città Metropolitana di Roma Capitale':'RM','Città Metropolitana di Milano':'MI','Città Metropolitana di Napoli':'NA','Città Metropolitana di Torino':'TO','Città Metropolitana di Palermo':'PA','Città Metropolitana di Genova':'GE','Città Metropolitana di Bologna':'BO','Città Metropolitana di Firenze':'FI','Città Metropolitana di Bari':'BA','Città Metropolitana di Catania':'CT','Città Metropolitana di Venezia':'VE','Città Metropolitana di Messina':'ME','Città Metropolitana di Verona':'VR','Città Metropolitana di Padova':'PD','Città Metropolitana di Trieste':'TS','Città Metropolitana di Cagliari':'CA','Città Metropolitana di Reggio Calabria':'RC','Città Metropolitana di Reggio di Calabria':'RC'};
-    const provShort=_metroMap[prov]||prov.replace(/Città Metropolitana di |Provincia di |Province of /ig,'').substring(0,2).toUpperCase();
+    // Usa ISO3166-2-lvl6 come fonte primaria (es. "IT-RM" -> "RM"), fallback su county/state
+    const _iso6=addr['ISO3166-2-lvl6']||addr['iso3166-2-lvl6']||'';
+    const _metroMap={'Città Metropolitana di Roma Capitale':'RM','Roma Capitale':'RM','Città Metropolitana di Milano':'MI','Città Metropolitana di Napoli':'NA','Città Metropolitana di Torino':'TO','Città Metropolitana di Palermo':'PA','Città Metropolitana di Genova':'GE','Città Metropolitana di Bologna':'BO','Città Metropolitana di Firenze':'FI','Città Metropolitana di Bari':'BA','Città Metropolitana di Catania':'CT','Città Metropolitana di Venezia':'VE','Città Metropolitana di Messina':'ME','Città Metropolitana di Verona':'VR','Città Metropolitana di Padova':'PD','Città Metropolitana di Trieste':'TS','Città Metropolitana di Cagliari':'CA','Città Metropolitana di Reggio Calabria':'RC','Città Metropolitana di Reggio di Calabria':'RC'};
+    const provShort=_iso6?_iso6.replace('IT-',''):(_metroMap[prov]||prov.replace(/Città Metropolitana di |Provincia di |Province of /ig,'').substring(0,2).toUpperCase());
     const country=addr.country||'Italia';
 
     // Costruisce la riga via per ogni tipo
@@ -6812,7 +6813,14 @@ function showOSMSuggestions(data, input, type){
       sublabel=item.display_name||'';
     } else {
       // Indirizzo completo con civico se disponibile
-      via=(road+(houseNum?' '+houseNum:'')).trim();
+      // Se Nominatim non restituisce house_number, proviamo a estrarlo dall'input corrente
+      let civico=houseNum;
+      if(!civico&&road){
+        const _inputVal=(input.value||'').trim();
+        const _civMatch=_inputVal.match(new RegExp(road.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+'\\s+(\\d+[a-zA-Z]?)','i'));
+        if(_civMatch) civico=_civMatch[1];
+      }
+      via=(road+(civico?' '+civico:'')).trim();
       if(!via) via=(item.display_name||'').split(',')[0];
       label=via||(item.display_name||'').split(',')[0];
       sublabel=[city,cap,provShort].filter(Boolean).join(' - ');
