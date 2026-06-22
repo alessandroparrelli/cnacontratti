@@ -4160,7 +4160,7 @@ async function apriDettaglioImpresa(piva, cf){
     if(piva) aOrs.push('partitaiva.eq.'+piva);
     if(cf)   aOrs.push('codicefiscale.eq.'+cf);
     const aParam=aOrs.length===1?aOrs[0]:'or=('+aOrs.join(',')+')';
-    const urlA=SB_URL+'/rest/v1/Anagrafiche?'+aParam+'&select=ragionesociale,cognometitolare,nometitolare,telefono,cellulare,email,indirizzo,comune,provincia,codicefiscale,partitaiva&limit=1';
+    const urlA=SB_URL+'/rest/v1/Anagrafiche?'+aParam+'&select=ragionesociale,cognometitolare,nometitolare,telefono,cellulare,email,indirizzo,comune,provincia,codicefiscale,partitaiva,codiceanagrafica&limit=1';
 
     // 2. DIRETTI: tesseramento / stato associativo
     const dOrs=[];
@@ -4194,6 +4194,15 @@ async function apriDettaglioImpresa(piva, cf){
     const diretti  = rD.ok ? await rD.json() : [];
     const servizi  = rS.ok ? await rS.json() : [];
     const contratti= rC.ok ? await rC.json() : [];
+
+    // 5. INCASSI — fetch separato dopo aver ricavato codiceanagrafica da Anagrafiche
+    let incassi = [];
+    const codiceAna = anag.length ? (anag[0].codiceanagrafica||'') : '';
+    if(codiceAna){
+      const urlI=SB_URL+'/rest/v1/incassi?codice_cliente=eq.'+encodeURIComponent(codiceAna)+'&order=data_pagamento.desc';
+      const rI=await fetch(urlI,{headers:hdrs});
+      incassi = rI.ok ? await rI.json() : [];
+    }
 
     if(!anag.length&&!diretti.length&&!servizi.length&&!contratti.length){
       closeDettaglioImpresa(); showToast('Nessun dato trovato'); return;
@@ -4324,6 +4333,70 @@ async function apriDettaglioImpresa(piva, cf){
         lista.appendChild(row);
       });
     }
+    // ── SEZIONE 4: PAGAMENTI (da tabella incassi) ──
+    (function renderIncassi(){
+      function normDoc(doc){
+        if(!doc)return '—';
+        var s=doc.replace(/\s*Protocollo\s+n\.\s+\d+\s+del\s+\d{2}\/\d{2}\/\d{4}/i,'').trim();
+        return s.charAt(0).toUpperCase()+s.slice(1);
+      }
+      function fmtDate(s){
+        if(!s)return '—';
+        var d=new Date(s);
+        if(isNaN(d))return s;
+        return ('0'+d.getDate()).slice(-2)+'/'
+              +('0'+(d.getMonth()+1)).slice(-2)+'/'
+              +d.getFullYear();
+      }
+      if(!incassi||!incassi.length)return;
+      // Raggruppa per anno
+      var byAnno={};
+      incassi.forEach(function(p){
+        var y=p.anno||new Date(p.data_pagamento).getFullYear()||'—';
+        if(!byAnno[y])byAnno[y]=[];
+        byAnno[y].push(p);
+      });
+      var anni=Object.keys(byAnno).sort(function(a,b){return b-a;});
+      var html='<div style="margin-top:14px">'
+              +'<div style="font-size:11px;font-weight:700;color:#0369a1;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:10px">'
+              +'&#x1F4B3; Pagamenti ('+incassi.length+')</div>';
+      anni.forEach(function(anno){
+        var pags=byAnno[anno];
+        var totAnno=pags.reduce(function(s,p){return s+(parseFloat(p.avere)||0);},0);
+        html+='<div style="margin-bottom:12px;border:1.5px solid #bfdbfe;border-radius:10px;overflow:hidden">'
+             +'<div style="display:flex;justify-content:space-between;align-items:center;'
+             +'background:linear-gradient(135deg,#1d4ed8,#1e40af);color:white;'
+             +'padding:8px 14px;font-size:13px;font-weight:600;">'
+             +'<span>&#x1F4C5; Anno '+anno+'</span>'
+             +'<span style="background:rgba(255,255,255,.18);padding:2px 8px;border-radius:20px;">'
+             +'&euro;'+totAnno.toFixed(2).replace('.',',')+'</span></div>'
+             +'<table style="width:100%;border-collapse:collapse;">'
+             +'<tr>'
+             +'<th style="font-size:11px;color:#64748b;padding:6px 12px;text-align:left;border-bottom:1px solid #e2e8f0;">Data</th>'
+             +'<th style="font-size:11px;color:#64748b;padding:6px 12px;text-align:left;border-bottom:1px solid #e2e8f0;">Importo</th>'
+             +'<th style="font-size:11px;color:#64748b;padding:6px 12px;text-align:left;border-bottom:1px solid #e2e8f0;">Documento</th>'
+             +'</tr>';
+        pags.forEach(function(p){
+          var importo=parseFloat(p.avere)||0;
+          html+='<tr style="border-bottom:1px solid #f1f5f9">'
+               +'<td style="padding:7px 12px;font-size:13px;color:#374151">'+fmtDate(p.data_pagamento)+'</td>'
+               +'<td style="padding:7px 12px;font-size:13px;font-weight:700;color:#16a34a;white-space:nowrap">'
+               +'&euro;'+importo.toFixed(2).replace('.',',')+'</td>'
+               +'<td style="padding:7px 12px;font-size:12px;color:#64748b">'+normDoc(p.documento)+'</td>'
+               +'</tr>';
+        });
+        html+='</table></div>';
+      });
+      html+='</div>';
+      // Inserisce dopo la sezione contratti digitali
+      var lista=document.getElementById('modal-contratti-lista');
+      if(lista&&lista.parentNode){
+        var div=document.createElement('div');
+        div.innerHTML=html;
+        lista.parentNode.appendChild(div);
+      }
+    })();
+
   }catch(e){console.error('Dettaglio impresa:',e);showToast('Errore caricamento','error');}
 }
 
