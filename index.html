@@ -3223,16 +3223,32 @@ table.quill-better-table {
   <div class="modal-header"><h2>📤 Invia Contratto al Cliente</h2><button class="close-btn" onclick="closeModal('modal-email')">&times;</button></div>
   <div class="modal-body" style="padding:20px;max-height:80vh;overflow-y:auto">
 
-    <!-- SEZIONE EMAIL -->
+    <!-- SEZIONE INVIO AUTOMATICO (PRIMO) -->
+    <div style="background:#f0fdf4;border:1.5px solid #16a34a;border-radius:10px;padding:16px;margin-bottom:14px">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+        <span style="font-size:22px">🚀</span>
+        <div>
+          <div style="font-size:14px;font-weight:700;color:#16a34a">Invio Automatico</div>
+          <div style="font-size:11px;color:#555">Invia direttamente senza aprire il client di posta</div>
+        </div>
+      </div>
+      <div class="form-group" style="margin-bottom:8px"><label style="font-size:12px;font-weight:600">Email destinatario</label><input type="email" id="send-email" required style="margin-top:4px"></div>
+      <div style="background:#fff;border:1px solid #bbf7d0;border-radius:6px;padding:10px;margin-bottom:10px;font-size:11px;color:#166534;line-height:1.6">
+        ✅ L'email viene inviata direttamente al cliente con il link di firma.<br>
+        ✅ Nessuna operazione manuale richiesta.
+      </div>
+      <button class="btn" onclick="confirmSendAuto()" id="btn-send-auto" style="width:100%;margin-top:4px;font-size:13px;padding:10px;background:#16a34a;color:#fff;border:none;border-radius:6px;cursor:pointer;font-weight:600">✉️ Invia Email Automaticamente</button>
+    </div>
+
+    <!-- SEZIONE EMAIL CLIENT -->
     <div style="background:#e8f4fd;border:1.5px solid #005CA9;border-radius:10px;padding:16px;margin-bottom:14px">
       <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
         <span style="font-size:22px">📧</span>
         <div>
-          <div style="font-size:14px;font-weight:700;color:#005CA9">Invia via Email</div>
+          <div style="font-size:14px;font-weight:700;color:#005CA9">Invia via Client Email</div>
           <div style="font-size:11px;color:#555">Apre il client di posta con il messaggio precompilato e link firma</div>
         </div>
       </div>
-      <div class="form-group" style="margin-bottom:8px"><label style="font-size:12px;font-weight:600">Email destinatario</label><input type="email" id="send-email" required style="margin-top:4px"></div>
       <input type="hidden" id="send-message" value="">
       <div style="background:#fff;border:1px solid #cce4f7;border-radius:6px;padding:10px;margin-top:6px">
         <div style="font-size:10px;font-weight:600;color:#888;text-transform:uppercase;letter-spacing:.4px;margin-bottom:6px">Anteprima email</div>
@@ -3248,23 +3264,6 @@ table.quill-better-table {
         <div style="font-size:11px;color:#856404;line-height:1.5"><strong>Dopo l'apertura del client di posta</strong> incolla con <strong>Ctrl+V</strong> per avere la formattazione completa con logo e link cliccabile. Il testo HTML viene copiato automaticamente negli appunti.</div>
       </div>
       <button class="btn btn-warning" onclick="confirmSend()" style="width:100%;margin-top:10px;font-size:13px;padding:10px">📧 Apri Client Email</button>
-    </div>
-
-    <!-- SEZIONE INVIO AUTOMATICO -->
-    <div style="background:#f0fdf4;border:1.5px solid #16a34a;border-radius:10px;padding:16px;margin-bottom:14px">
-      <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
-        <span style="font-size:22px">🚀</span>
-        <div>
-          <div style="font-size:14px;font-weight:700;color:#16a34a">Invio Automatico</div>
-          <div style="font-size:11px;color:#555">Invia direttamente senza aprire il client di posta</div>
-        </div>
-      </div>
-      <div style="background:#fff;border:1px solid #bbf7d0;border-radius:6px;padding:10px;margin-bottom:10px;font-size:11px;color:#166534;line-height:1.6">
-        ✅ L'email viene inviata direttamente al cliente con il link di firma.<br>
-        ✅ Nessuna operazione manuale richiesta.<br>
-        ✅ Usa l'email già inserita nella sezione sopra.
-      </div>
-      <button class="btn" onclick="confirmSendAuto()" id="btn-send-auto" style="width:100%;margin-top:4px;font-size:13px;padding:10px;background:#16a34a;color:#fff;border:none;border-radius:6px;cursor:pointer;font-weight:600">✉️ Invia Email Automaticamente</button>
     </div>
 
     <!-- SEZIONE WHATSAPP -->
@@ -6054,22 +6053,27 @@ async function confirmSend(){
 
 async function confirmSendAuto(){
   const email=document.getElementById('send-email').value.trim();
-  if(!email){showToast('Inserisci email nella sezione Email sopra','error');return;}
+  if(!email){showToast('Inserisci email destinatario','error');return;}
   const btn=document.getElementById('btn-send-auto');
   const origTxt=btn?btn.textContent:'';
   if(btn){btn.disabled=true;btn.textContent='⏳ Invio in corso...';}
   try{
-    const contracts=await sb(`contratti?id=eq.${currentContractId}&select=token,cognome,nome`);
+    const contracts=await sb(`contratti?id=eq.${currentContractId}&select=token,cognome,nome,ragione_sociale,partita_iva,codice_fiscale,attivita_svolta,sede_attivita_comune,sede_attivita_indirizzo,sede_attivita_prov,email,pec,telefono,cellulare,motivo_iscrizione,quota_primo_anno_importo,quota_anni_successivi_importo,modalita_pagamento,raccolta_da`);
     if(!contracts||!contracts[0]){showToast('Contratto non trovato','error');return;}
-    const token=contracts[0].token;
-    const cognome=contracts[0].cognome||'';
-    const nome=contracts[0].nome||'';
-    const link_firma=BASE_URL+'?firma='+token;
+    const c=contracts[0];
+    const link_firma=BASE_URL+'?firma='+c.token;
     await sb(`contratti?id=eq.${currentContractId}`,'PATCH',{stato:'inviato',inviato_at:new Date().toISOString(),email_inviata:true});
     const res=await fetch('https://ohahuqlfzqckaevaffbt.supabase.co/functions/v1/send-email',{
       method:'POST',
       headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({type:'send_link',to:email,cognome,nome,link_firma})
+      body:JSON.stringify({type:'send_link',to:email,cognome:c.cognome||'',nome:c.nome||'',link_firma,
+        ragione_sociale:c.ragione_sociale||'',partita_iva:c.partita_iva||'',codice_fiscale:c.codice_fiscale||'',
+        attivita_svolta:c.attivita_svolta||'',sede_attivita_comune:c.sede_attivita_comune||'',
+        sede_attivita_indirizzo:c.sede_attivita_indirizzo||'',sede_attivita_prov:c.sede_attivita_prov||'',
+        pec:c.pec||'',telefono:c.telefono||'',cellulare:c.cellulare||'',
+        motivo_iscrizione:c.motivo_iscrizione||'',quota_primo_anno:c.quota_primo_anno_importo||'',
+        quota_anni_successivi:c.quota_anni_successivi_importo||'',modalita_pagamento:c.modalita_pagamento||'',
+        raccolta_da:c.raccolta_da||''})
     });
     const data=await res.json();
     if(res.ok&&data.id){
