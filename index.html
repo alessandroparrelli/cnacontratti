@@ -3418,11 +3418,13 @@ Cordiali saluti, CNA Roma</div>
   <!-- Header -->
   <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 24px;background:#fff;border-bottom:2px solid #e5e7eb;flex-shrink:0">
     <div style="display:flex;align-items:center;gap:16px">
-      <h2 style="margin:0;font-size:17px;font-weight:700;color:#005CA9;font-family:inherit">✉️ Template Email</h2>
+      <h2 style="margin:0;font-size:17px;font-weight:700;color:#005CA9;font-family:inherit">✉️ Template Email & SMS</h2>
       <div style="display:flex;gap:0;border-bottom:none">
         <button class="et-tab active" onclick="switchEmailTab('send_link',this)" style="padding:6px 16px;border:1px solid #005CA9;border-radius:6px 0 0 6px;background:#005CA9;color:#fff;cursor:pointer;font-size:12px;font-weight:600;font-family:inherit">Invio Link Firma</button>
         <button class="et-tab" onclick="switchEmailTab('post_firma_cliente',this)" style="padding:6px 16px;border:1px solid #005CA9;border-left:none;background:#fff;color:#005CA9;cursor:pointer;font-size:12px;font-weight:600;font-family:inherit">Conferma Cliente</button>
-        <button class="et-tab" onclick="switchEmailTab('post_firma_interno',this)" style="padding:6px 16px;border:1px solid #005CA9;border-left:none;border-radius:0 6px 6px 0;background:#fff;color:#005CA9;cursor:pointer;font-size:12px;font-weight:600;font-family:inherit">Notifica Interna</button>
+        <button class="et-tab" onclick="switchEmailTab('post_firma_interno',this)" style="padding:6px 16px;border:1px solid #005CA9;border-left:none;background:#fff;color:#005CA9;cursor:pointer;font-size:12px;font-weight:600;font-family:inherit">Notifica Interna</button>
+        <button class="et-tab" onclick="switchToSmsTab('sms_send_link',this)" style="padding:6px 16px;border:1px solid #f97316;border-left:none;background:#fff;color:#f97316;cursor:pointer;font-size:12px;font-weight:600;font-family:inherit">📱 SMS Link</button>
+        <button class="et-tab" onclick="switchToSmsTab('sms_post_firma',this)" style="padding:6px 16px;border:1px solid #f97316;border-left:none;border-radius:0 6px 6px 0;background:#fff;color:#f97316;cursor:pointer;font-size:12px;font-weight:600;font-family:inherit">📱 SMS Post-Firma</button>
       </div>
     </div>
     <div style="display:flex;gap:10px;align-items:center">
@@ -3557,9 +3559,34 @@ Cordiali saluti, CNA Roma</div>
         </div>
       </div>
       <!-- Anteprima sotto l'editor -->
-      <div>
+      <div id="et-email-preview-wrap">
         <label style="font-size:11px;font-weight:700;color:#374151;text-transform:uppercase;letter-spacing:.5px;display:block;margin-bottom:8px">Anteprima</label>
         <div id="et-preview" style="border:1px solid #e5e7eb;border-radius:8px;padding:16px;background:#fff;font-size:9.5pt;min-height:120px"></div>
+      </div>
+      <!-- SMS Template Editor (hidden by default) -->
+      <div id="sms-template-panel" style="display:none;flex-direction:column;gap:14px;padding:4px 0">
+        <div style="background:#fff7ed;border:1.5px solid #f97316;border-radius:10px;padding:16px">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px">
+            <span style="font-size:22px">📱</span>
+            <div>
+              <div style="font-size:14px;font-weight:700;color:#ea580c">Template SMS</div>
+              <div style="font-size:11px;color:#555">Modifica il testo del messaggio SMS. Max ~160 caratteri per SMS singolo.</div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label style="font-size:11px;font-weight:700;color:#374151;text-transform:uppercase;letter-spacing:.5px">Testo SMS</label>
+            <textarea id="sms-tpl-body" rows="5" oninput="updateSmsPreview()" style="margin-top:4px;font-size:13px;width:100%;border:1px solid #d1d5db;border-radius:6px;padding:10px;font-family:inherit;resize:vertical" placeholder="Testo del messaggio SMS..."></textarea>
+            <div style="display:flex;justify-content:space-between;margin-top:4px">
+              <span style="font-size:10px;color:#888">Caratteri: <span id="sms-char-count">0</span>/160</span>
+              <span style="font-size:10px;color:#888">Mittente: CNAROMA</span>
+            </div>
+          </div>
+          <div style="background:#fff;border:1px solid #fed7aa;border-radius:6px;padding:10px;margin-top:8px">
+            <div style="font-size:10px;font-weight:600;color:#888;text-transform:uppercase;letter-spacing:.4px;margin-bottom:4px">Anteprima SMS</div>
+            <div id="sms-preview" style="font-size:12px;color:#000;line-height:1.5;white-space:pre-line;font-family:monospace;background:#f0fdf4;padding:8px;border-radius:4px;border:1px dashed #86efac"></div>
+          </div>
+          <button onclick="saveSmsTemplate()" id="sms-save-btn" style="margin-top:12px;width:100%;padding:10px;background:#f97316;color:#fff;border:none;border-radius:6px;cursor:pointer;font-weight:600;font-size:13px">💾 Salva Template SMS</button>
+        </div>
       </div>
     </div>
     <!-- Sidebar: solo variabili -->
@@ -4957,11 +4984,69 @@ function switchEmailTab(id,btn){
   currentEtId=id;
   document.querySelectorAll('.et-tab').forEach(b=>{
     b.style.background='#fff';
-    b.style.color='#005CA9';
+    b.style.color=b.style.borderColor||'#005CA9';
   });
   btn.style.background='#005CA9';
   btn.style.color='#fff';
+  // Show email editor, hide SMS
+  document.getElementById('et-quill-container').parentElement.style.display='';
+  document.getElementById('et-subject').parentElement.style.display='';
+  document.getElementById('et-email-preview-wrap').style.display='';
+  document.getElementById('sms-template-panel').style.display='none';
+  document.getElementById('et-save-btn').style.display='';
   setTimeout(()=>loadEmailTemplate(id),50);
+}
+
+let currentSmsId='';
+function switchToSmsTab(id,btn){
+  currentSmsId=id.replace('sms_','');
+  document.querySelectorAll('.et-tab').forEach(b=>{
+    b.style.background='#fff';
+    b.style.color=b.style.borderColor||'#005CA9';
+  });
+  btn.style.background='#f97316';
+  btn.style.color='#fff';
+  // Hide email editor, show SMS
+  document.getElementById('et-quill-container').parentElement.style.display='none';
+  document.getElementById('et-subject').parentElement.style.display='none';
+  document.getElementById('et-email-preview-wrap').style.display='none';
+  document.getElementById('sms-template-panel').style.display='flex';
+  document.getElementById('et-save-btn').style.display='none';
+  loadSmsTemplate(currentSmsId);
+}
+
+async function loadSmsTemplate(id){
+  try{
+    const data=await sb(`sms_templates?id=eq.${id}&select=body`);
+    const body=(data&&data[0])?data[0].body:'';
+    document.getElementById('sms-tpl-body').value=body;
+    updateSmsPreview();
+  }catch(e){console.error('loadSmsTemplate:',e);}
+}
+
+function updateSmsPreview(){
+  const body=document.getElementById('sms-tpl-body').value;
+  document.getElementById('sms-char-count').textContent=body.length;
+  document.getElementById('sms-char-count').style.color=body.length>160?'#dc2626':'#888';
+  const preview=body
+    .replace(/\{\{cognome\}\}/g,'Rossi')
+    .replace(/\{\{nome\}\}/g,'Mario')
+    .replace(/\{\{link_firma\}\}/g,'https://cnacontratti.vercel.app?firma=ESEMPIO')
+    .replace(/\{\{data_firma\}\}/g,new Date().toLocaleDateString('it-IT'))
+    .replace(/\{\{cellulare\}\}/g,'333 1234567');
+  document.getElementById('sms-preview').textContent=preview;
+}
+
+async function saveSmsTemplate(){
+  const body=document.getElementById('sms-tpl-body').value.trim();
+  if(!body){showToast('Testo SMS obbligatorio','error');return;}
+  const btn=document.getElementById('sms-save-btn');
+  btn.disabled=true;btn.textContent='Salvataggio...';
+  try{
+    await sb(`sms_templates?id=eq.${currentSmsId}`,'PATCH',{body,updated_at:new Date().toISOString()});
+    showToast('Template SMS salvato!','success');
+  }catch(e){showToast('Errore: '+e.message,'error');}
+  finally{btn.disabled=false;btn.textContent='💾 Salva Template SMS';}
 }
 
 function updateEmailPreview(){
@@ -6065,7 +6150,10 @@ async function sendViaSMS(){
     const cellulare=c.cellulare;
     if(!cellulare||cellulare.trim()===''){showToast('Numero cellulare non presente nel contratto','error');return;}
     const url=BASE_URL+'?firma='+c.token;
-    const messaggio=`Gentile ${c.cognome||''} ${c.nome||''}, la preghiamo di firmare il contratto CNA Roma: ${url}`;
+    // Load SMS template from DB
+    let smsTplData=await sb('sms_templates?id=eq.send_link&select=body');
+    let messaggio=(smsTplData&&smsTplData[0])?smsTplData[0].body:`Gentile {{cognome}} {{nome}}, la preghiamo di firmare il contratto CNA Roma: {{link_firma}}`;
+    messaggio=messaggio.replace(/\{\{cognome\}\}/g,c.cognome||'').replace(/\{\{nome\}\}/g,c.nome||'').replace(/\{\{link_firma\}\}/g,url).replace(/\{\{cellulare\}\}/g,cellulare);
     const res=await fetch('https://ohahuqlfzqckaevaffbt.supabase.co/functions/v1/invia-sms',{
       method:'POST',
       headers:{'Content-Type':'application/json'},
