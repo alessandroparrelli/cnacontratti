@@ -4769,7 +4769,7 @@ async function openEmailTemplates(){
   if(!loggedUser||loggedUser.ruolo!=='admin'){showToast('Solo gli admin possono modificare i template','error');return;}
   document.getElementById('modal-email-templates').style.display='flex';
   if(!etQuill&&typeof Quill!=='undefined'){
-    if(typeof QuillBetterTable!=='undefined') Quill.register({'modules/better-table':QuillBetterTable},true);
+    try{if(typeof QuillBetterTable!=='undefined') Quill.register({'modules/better-table':QuillBetterTable},true);}catch(e){console.warn('quill-better-table init:',e.message);}
     const Font=Quill.import('formats/font');
     Font.whitelist=['serif','monospace'];
     Quill.register(Font,true);
