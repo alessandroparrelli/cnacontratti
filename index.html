@@ -3202,9 +3202,12 @@ table.quill-better-table {
 </main>
 
 <!-- APP FOOTER -->
-<footer id="app-footer" style="display:none;margin-top:auto;border-top:1px solid var(--brd);padding:28px 24px;text-align:center;background:var(--bg2)">
-  <p style="font-family:'Inter',sans-serif;font-size:13px;font-weight:700;color:var(--txt2);letter-spacing:0.12em;text-transform:uppercase;margin:0 0 8px 0">Signature V8.3 &middot; CNA Roma</p>
-  <p style="font-family:'Inter',sans-serif;font-size:12px;font-weight:600;color:var(--txt2);letter-spacing:0.05em;margin:0">&copy; CNA Roma &middot; Sistema gestione contratti</p>
+<footer id="app-footer" style="display:none;margin-top:auto;border-top:1px solid var(--brd);padding:20px 24px;text-align:center;background:var(--bg2)">
+  <div style="display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:6px">
+    <img src="https://raw.githubusercontent.com/alessandroparrelli/fileappoggio/17b50df8f22632eb360e1da944d997289a598012/NUOVO-LOGO-CNA-ROMA-SOLO-ROMA.png" alt="CNA Roma" style="height:28px;object-fit:contain;opacity:0.7">
+    <span style="font-family:'Inter',sans-serif;font-size:15px;font-weight:700;color:#374151;letter-spacing:0.04em">Signature</span>
+  </div>
+  <p style="font-family:'Inter',sans-serif;font-size:11px;font-weight:500;color:#6b7280;letter-spacing:0.03em;margin:0">&copy; 2026 CNA Roma &middot; Sistema gestione contratti</p>
 </footer>
 
 <div class="footer-actions" id="footer-form-actions" style="display:none"><div class="footer-inner">
@@ -3982,6 +3985,13 @@ Cordiali saluti, CNA Roma</div>
       </ul>
     </div>
 
+    <div class="changelog-entry">
+      <h3>v9.16 - 31 Agosto 2026</h3>
+      <ul>
+        <li><strong>Footer aggiornato</strong>: logo CNA Roma + nome "Signature" in grigio scuro, copyright 2026</li>
+        <li><strong>Fix bug OTP SMS</strong>: le edge function <code>genera-otp</code> e <code>verifica-otp</code> usavano la chiave di servizio errata per connettersi al DB CNA_Tesseramento. Corrette per usare la chiave corretta del progetto principale</li>
+      </ul>
+    </div>
     <div class="changelog-entry">
       <h3>v9.15 - 31 Agosto 2026</h3>
       <ul>
