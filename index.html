@@ -6181,7 +6181,7 @@ async function sendViaSMS(){
         messaggio,
         mittente:'CNAROMA',
         contratto_id:c.id,
-        inviato_da:currentUser?.email||null
+        inviato_da:loggedUser?.email||null
       })
     });
     const data=await res.json();
@@ -6292,7 +6292,7 @@ async function sendSmsFromList(id){
     messaggio=messaggio.replace(/\{\{cognome\}\}/g,c.cognome||'').replace(/\{\{nome\}\}/g,c.nome||'').replace(/\{\{link_firma\}\}/g,url).replace(/\{\{cellulare\}\}/g,c.cellulare);
     const res=await fetch('https://ohahuqlfzqckaevaffbt.supabase.co/functions/v1/invia-sms',{
       method:'POST',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({destinatari:[{telefono:c.cellulare,cognome:c.cognome,nome:c.nome}],messaggio,mittente:'CNAROMA',contratto_id:c.id,inviato_da:currentUser?.email||null})
+      body:JSON.stringify({destinatari:[{telefono:c.cellulare,cognome:c.cognome,nome:c.nome}],messaggio,mittente:'CNAROMA',contratto_id:c.id,inviato_da:loggedUser?.email||null})
     });
     const data=await res.json();
     if(data.successo){
