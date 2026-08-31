@@ -3982,6 +3982,19 @@ Cordiali saluti, CNA Roma</div>
     </div>
 
     <div class="changelog-entry">
+      <h3>v9.14 - 31 Agosto 2026</h3>
+      <ul>
+        <li><strong>OTP SMS per verifica identità firmatario (Soluzione A — FEA)</strong></li>
+        <li>Nuovo step obbligatorio prima della firma: verifica identità tramite codice OTP inviato via SMS al cellulare del contratto</li>
+        <li>Nuova Edge Function <code>genera-otp</code>: genera codice a 6 cifre, lo salva in <code>otp_contratti</code> e lo invia via Infobip. Anti-flood: 1 OTP ogni 60 secondi</li>
+        <li>Nuova Edge Function <code>verifica-otp</code>: verifica codice (max 5 tentativi), marca come usato, aggiorna audit su <code>contratti</code> (<code>otp_verificato_at</code>, <code>otp_cellulare_usato</code>)</li>
+        <li>UI: input a 6 celle con auto-focus, auto-submit all'ultima cifra, countdown 10 minuti, pulsante reinvia (disponibile dopo 60s), blocco OTP dopo 5 errori</li>
+        <li>Il pulsante firma rimane bloccato fino a OTP verificato correttamente</li>
+        <li>Nuova tabella DB <code>otp_contratti</code> con RLS per ruolo anon</li>
+      </ul>
+    </div>
+
+    <div class="changelog-entry">
       <h3>v3.9 - 26 Aprile 2026</h3>
       <ul>
         <li>Fix posizione firma INPS (pagina 3): alzata per miglior allineamento</li>
@@ -5576,6 +5589,48 @@ function showSigningUI(ct,token){
         </div>
       </div>
 
+      <!-- VERIFICA OTP -->
+      <div id="otp-block" style="display:none;margin-bottom:20px">
+        <div style="background:#f0f9ff;border:2px solid #0ea5e9;border-radius:var(--r);padding:16px">
+          <p style="font-size:14px;font-weight:700;color:#0c4a6e;margin-bottom:4px">&#x1F4F1; Verifica identità via SMS</p>
+          <p style="font-size:12px;color:#0369a1;margin-bottom:14px">Per firmare digitalmente il contratto devi verificare la tua identità tramite un codice OTP inviato al tuo cellulare.</p>
+          <!-- Stato: non ancora inviato -->
+          <div id="otp-send-area">
+            <button class="btn btn-primary" onclick="inviaOTP('${token}')" id="btn-invia-otp" style="width:100%;font-size:15px;padding:14px">
+              &#x1F4E8; Invia codice OTP al mio cellulare
+            </button>
+            <p id="otp-send-info" style="font-size:11px;color:var(--txt2);text-align:center;margin-top:6px">Riceverai un SMS con il codice di 6 cifre valido per 10 minuti</p>
+          </div>
+          <!-- Stato: OTP inviato - inserisci codice -->
+          <div id="otp-input-area" style="display:none">
+            <p id="otp-sent-info" style="font-size:12px;color:#0369a1;font-weight:600;margin-bottom:12px;text-align:center"></p>
+            <div style="display:flex;gap:8px;justify-content:center;margin-bottom:14px">
+              <input id="otp-digit-0" type="tel" maxlength="1" inputmode="numeric" pattern="[0-9]" style="width:44px;height:52px;text-align:center;font-size:22px;font-weight:700;border:2px solid var(--brd);border-radius:var(--r);background:var(--input-bg);color:var(--txt)" oninput="otpDigitInput(this,0)" onkeydown="otpDigitKey(event,0)">
+              <input id="otp-digit-1" type="tel" maxlength="1" inputmode="numeric" pattern="[0-9]" style="width:44px;height:52px;text-align:center;font-size:22px;font-weight:700;border:2px solid var(--brd);border-radius:var(--r);background:var(--input-bg);color:var(--txt)" oninput="otpDigitInput(this,1)" onkeydown="otpDigitKey(event,1)">
+              <input id="otp-digit-2" type="tel" maxlength="1" inputmode="numeric" pattern="[0-9]" style="width:44px;height:52px;text-align:center;font-size:22px;font-weight:700;border:2px solid var(--brd);border-radius:var(--r);background:var(--input-bg);color:var(--txt)" oninput="otpDigitInput(this,2)" onkeydown="otpDigitKey(event,2)">
+              <input id="otp-digit-3" type="tel" maxlength="1" inputmode="numeric" pattern="[0-9]" style="width:44px;height:52px;text-align:center;font-size:22px;font-weight:700;border:2px solid var(--brd);border-radius:var(--r);background:var(--input-bg);color:var(--txt)" oninput="otpDigitInput(this,3)" onkeydown="otpDigitKey(event,3)">
+              <input id="otp-digit-4" type="tel" maxlength="1" inputmode="numeric" pattern="[0-9]" style="width:44px;height:52px;text-align:center;font-size:22px;font-weight:700;border:2px solid var(--brd);border-radius:var(--r);background:var(--input-bg);color:var(--txt)" oninput="otpDigitInput(this,4)" onkeydown="otpDigitKey(event,4)">
+              <input id="otp-digit-5" type="tel" maxlength="1" inputmode="numeric" pattern="[0-9]" style="width:44px;height:52px;text-align:center;font-size:22px;font-weight:700;border:2px solid var(--brd);border-radius:var(--r);background:var(--input-bg);color:var(--txt)" oninput="otpDigitInput(this,5)" onkeydown="otpDigitKey(event,5)">
+            </div>
+            <button class="btn btn-success" onclick="verificaOTP('${token}')" id="btn-verifica-otp" style="width:100%;font-size:15px;padding:14px;margin-bottom:10px">
+              &#x2705; Verifica codice OTP
+            </button>
+            <div style="text-align:center">
+              <button id="btn-reinvia-otp" onclick="inviaOTP('${token}',true)" style="background:none;border:none;color:#0369a1;font-size:12px;cursor:pointer;text-decoration:underline;padding:4px">
+                &#x1F504; Non hai ricevuto il codice? Rinvia OTP
+              </button>
+              <p id="otp-countdown" style="font-size:11px;color:var(--txt2);margin-top:4px"></p>
+            </div>
+            <p id="otp-error-msg" style="display:none;font-size:12px;color:var(--err);font-weight:600;text-align:center;margin-top:8px;padding:8px;background:#fef2f2;border-radius:var(--r)"></p>
+          </div>
+          <!-- Stato: OTP verificato -->
+          <div id="otp-verified-area" style="display:none;text-align:center;padding:8px">
+            <p style="font-size:15px;font-weight:700;color:#16a34a">&#x2705; Identità verificata con successo</p>
+            <p style="font-size:12px;color:var(--txt2);margin-top:4px">Puoi procedere con la firma del contratto</p>
+          </div>
+        </div>
+      </div>
+
       <!-- FIRMA -->
       <div class="form-group" style="margin-bottom:20px">
         <label style="font-size:14px;font-weight:700;color:var(--cna-dk)">FIRMA</label>
@@ -5616,12 +5671,187 @@ function checkSignReady(){
   const pv=document.getElementById('presa_visione');
   const btn=document.getElementById('btn-open-sig');
   const msg=document.getElementById('sig-locked-msg');
+  const otpBlock=document.getElementById('otp-block');
   if(!btn)return;
-  const ready=pdfViewedByClient&&pv&&pv.checked;
+  const pdfOk=pdfViewedByClient&&pv&&pv.checked;
+  // Mostra blocco OTP solo quando PDF visto e presa visione spuntata
+  if(otpBlock){
+    otpBlock.style.display=pdfOk?'block':'none';
+  }
+  // Il pulsante firma si sblocca solo dopo OTP verificato
+  const ready=pdfOk&&otpVerificato;
   btn.disabled=!ready;
   btn.style.opacity=ready?'1':'0.45';
   btn.style.pointerEvents=ready?'auto':'none';
-  if(msg)msg.style.display=ready?'none':'block';
+  if(msg){
+    if(!pdfOk){msg.textContent='🔒 Visualizza il contratto e spunta la presa visione per procedere';msg.style.display='block';}
+    else if(!otpVerificato){msg.textContent='🔒 Verifica la tua identità tramite OTP SMS per sbloccare la firma';msg.style.display='block';}
+    else{msg.style.display='none';}
+  }
+}
+
+// ---- Stato OTP ----
+let otpVerificato=false;
+let otpCountdownInterval=null;
+
+async function inviaOTP(tokenContratto,forzaReinvio=false){
+  const btn=document.getElementById('btn-invia-otp')||document.getElementById('btn-reinvia-otp');
+  if(btn){btn.disabled=true;}
+  const sendInfo=document.getElementById('otp-send-info');
+  if(sendInfo)sendInfo.textContent='Invio OTP in corso...';
+  try{
+    const resp=await fetch('https://yqdzciuykqhnnstghbeq.supabase.co/functions/v1/genera-otp',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','apikey':'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlxZHpjaXV5a3Foam5zdGdoYmVxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDI2NjY0OTUsImV4cCI6MjA1ODI0MjQ5NX0.RbFbMJrB4c6LBbJKfANOxFWODe9dVfTVHOBshHYS8e4'},
+      body:JSON.stringify({token_contratto:tokenContratto})
+    });
+    const data=await resp.json();
+    if(!resp.ok){
+      const errMsg=data.error||'Errore invio OTP';
+      if(sendInfo)sendInfo.textContent=errMsg;
+      if(btn){btn.disabled=false;}
+      alert(errMsg);
+      return;
+    }
+    // OTP inviato - mostra area input
+    const sendArea=document.getElementById('otp-send-area');
+    const inputArea=document.getElementById('otp-input-area');
+    const sentInfo=document.getElementById('otp-sent-info');
+    if(sendArea)sendArea.style.display='none';
+    if(inputArea)inputArea.style.display='block';
+    if(sentInfo)sentInfo.textContent=`SMS inviato a ${data.cellulare_oscurato} — inserisci il codice di 6 cifre`;
+    // Focus primo campo
+    const d0=document.getElementById('otp-digit-0');
+    if(d0)setTimeout(()=>d0.focus(),100);
+    // Countdown 10 minuti
+    avviaCountdownOtp(10*60);
+  }catch(e){
+    const errMsg='Errore connessione: '+e.message;
+    if(sendInfo)sendInfo.textContent=errMsg;
+    if(btn){btn.disabled=false;}
+  }
+}
+
+async function verificaOTP(tokenContratto){
+  const digits=[0,1,2,3,4,5].map(i=>{
+    const el=document.getElementById('otp-digit-'+i);
+    return el?el.value.trim():'';
+  });
+  const codice=digits.join('');
+  if(codice.length!==6||!/^\d{6}$/.test(codice)){
+    const errEl=document.getElementById('otp-error-msg');
+    if(errEl){errEl.textContent='Inserisci tutti e 6 i numeri del codice OTP.';errEl.style.display='block';}
+    return;
+  }
+  const btn=document.getElementById('btn-verifica-otp');
+  if(btn){btn.disabled=true;btn.textContent='Verifica in corso...';}
+  const errEl=document.getElementById('otp-error-msg');
+  if(errEl)errEl.style.display='none';
+  try{
+    const resp=await fetch('https://yqdzciuykqhnnstghbeq.supabase.co/functions/v1/verifica-otp',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','apikey':'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlxZHpjaXV5a3Foam5zdGdoYmVxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDI2NjY0OTUsImV4cCI6MjA1ODI0MjQ5NX0.RbFbMJrB4c6LBbJKfANOxFWODe9dVfTVHOBshHYS8e4'},
+      body:JSON.stringify({token_contratto:tokenContratto,codice})
+    });
+    const data=await resp.json();
+    if(!resp.ok){
+      if(errEl){errEl.textContent=data.error||'Codice OTP non corretto';errEl.style.display='block';}
+      if(btn){btn.disabled=false;btn.textContent='✅ Verifica codice OTP';}
+      // Evidenzia campi in rosso
+      for(let i=0;i<6;i++){
+        const el=document.getElementById('otp-digit-'+i);
+        if(el)el.style.borderColor='var(--err)';
+      }
+      if(data.bloccato){
+        // Nascondi input, mostra pulsante reinvio
+        const inputArea=document.getElementById('otp-input-area');
+        const sendArea=document.getElementById('otp-send-area');
+        if(inputArea)inputArea.style.display='none';
+        if(sendArea){
+          sendArea.style.display='block';
+          const sendInfo=document.getElementById('otp-send-info');
+          if(sendInfo)sendInfo.textContent='OTP bloccato per troppi tentativi. Richiedi un nuovo codice.';
+          const btnInvia=document.getElementById('btn-invia-otp');
+          if(btnInvia)btnInvia.disabled=false;
+        }
+      }
+      return;
+    }
+    // OTP VERIFICATO!
+    otpVerificato=true;
+    if(otpCountdownInterval)clearInterval(otpCountdownInterval);
+    // Mostra area verified
+    const inputArea=document.getElementById('otp-input-area');
+    const verifiedArea=document.getElementById('otp-verified-area');
+    if(inputArea)inputArea.style.display='none';
+    if(verifiedArea)verifiedArea.style.display='block';
+    // Sblocca firma
+    checkSignReady();
+  }catch(e){
+    if(errEl){errEl.textContent='Errore connessione: '+e.message;errEl.style.display='block';}
+    if(btn){btn.disabled=false;btn.textContent='✅ Verifica codice OTP';}
+  }
+}
+
+function otpDigitInput(el,idx){
+  // Accetta solo numeri
+  el.value=el.value.replace(/\D/g,'').slice(-1);
+  if(el.value&&idx<5){
+    const next=document.getElementById('otp-digit-'+(idx+1));
+    if(next)next.focus();
+  }
+  // Ripristina colore bordo
+  el.style.borderColor='var(--brd)';
+  const errEl=document.getElementById('otp-error-msg');
+  if(errEl)errEl.style.display='none';
+  // Auto-submit se tutte le cifre inserite
+  if(idx===5&&el.value){
+    const allFull=[0,1,2,3,4,5].every(i=>{
+      const d=document.getElementById('otp-digit-'+i);
+      return d&&d.value.trim().length===1;
+    });
+    if(allFull){
+      // Recupera token dal pulsante verifica (attributo onclick)
+      const btnV=document.getElementById('btn-verifica-otp');
+      if(btnV){btnV.click();}
+    }
+  }
+}
+
+function otpDigitKey(e,idx){
+  if(e.key==='Backspace'&&!document.getElementById('otp-digit-'+idx).value&&idx>0){
+    const prev=document.getElementById('otp-digit-'+(idx-1));
+    if(prev){prev.value='';prev.focus();}
+  }
+  if(e.key==='Enter'){
+    const btnV=document.getElementById('btn-verifica-otp');
+    if(btnV)btnV.click();
+  }
+}
+
+function avviaCountdownOtp(secondi){
+  if(otpCountdownInterval)clearInterval(otpCountdownInterval);
+  const el=document.getElementById('otp-countdown');
+  const btnReinvia=document.getElementById('btn-reinvia-otp');
+  if(btnReinvia)btnReinvia.style.display='none';
+  let rimasti=secondi;
+  function aggiorna(){
+    if(!el)return;
+    if(rimasti<=0){
+      clearInterval(otpCountdownInterval);
+      el.textContent='Codice scaduto.';
+      if(btnReinvia)btnReinvia.style.display='inline-block';
+      return;
+    }
+    const m=Math.floor(rimasti/60);
+    const s=rimasti%60;
+    el.textContent=`Codice valido per ${m}:${String(s).padStart(2,'0')}`;
+    // Mostra reinvio dopo 60 secondi
+    if(secondi-rimasti>=60&&btnReinvia)btnReinvia.style.display='inline-block';
+    rimasti--;
+  }
+  aggiorna();
+  otpCountdownInterval=setInterval(aggiorna,1000);
 }
 
 let clientDocBase64=null,clientDocType=null;
