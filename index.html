@@ -6216,6 +6216,8 @@ function fillPDF(form,data){
   sf('data adesione 2',fmtD(data.data_dichiarante||data.quota_primo_anno_data));
   sf('IBAN',data.iban_ditta);sf('Luogo',data.luogo_sottoscrizione_sepa||'Roma');
   sf('cod inps',data.cod_inps);
+  sf('tipo documento',data.tipo_documento);sf('numero documento',data.numero_documento);
+  sf('documento identita',data.documento_identita||([data.tipo_documento,data.numero_documento].filter(Boolean).join(' n. ')));
   // Checkboxes
   try{if(data.modalita_pagamento&&data.modalita_pagamento.includes('RID'))form.getCheckBox('rid').check();}catch(e){}
   try{if(data.modalita_pagamento&&data.modalita_pagamento.includes('RIBA'))form.getCheckBox('riba').check();}catch(e){}
@@ -6961,6 +6963,8 @@ async function generatePDF(){
   sf('quota secondo anno',v('quota_diretto'));sf('iban ditta',v('iban_ditta').toUpperCase());
   sf('cognome e nome',v('cognome')+' '+v('nome'));sf('data adesione 2',fd(v('data_dichiarazione')));
   sf('IBAN',v('iban_ditta').toUpperCase());sf('Luogo',v('luogo_sepa')||'Roma');
+  sf('tipo documento',v('tipo_documento'));sf('numero documento',v('numero_documento').toUpperCase());
+  sf('documento identita',[v('tipo_documento'),v('numero_documento').toUpperCase()].filter(Boolean).join(' n. '));
   const formSigs={firma_dichiarante_base64:getSignatureDataUrl('sig_dichiarante'),firma_consenso_base64:getSignatureDataUrl('sig_consenso'),firma_delega_inps_base64:getSignatureDataUrl('sig_inps'),firma_sepa_base64:getSignatureDataUrl('sig_sepa'),firma_cliente_path:null};
   await embedSigs(doc,pages,formSigs);
   try{form.flatten();}catch(fe){console.warn('Flatten warning:',fe);}
@@ -6986,6 +6990,8 @@ async function previewPDF(){
   sf('quota inps',v('quota_inps'));sf('quota secondo anno',v('quota_diretto'));sf('iban ditta',v('iban_ditta').toUpperCase());
   sf('cognome e nome',v('cognome')+' '+v('nome'));sf('data adesione 2',fd(v('data_dichiarazione')));
   sf('IBAN',v('iban_ditta').toUpperCase());sf('Luogo',v('luogo_sepa')||'Roma');
+  sf('tipo documento',v('tipo_documento'));sf('numero documento',v('numero_documento').toUpperCase());
+  sf('documento identita',[v('tipo_documento'),v('numero_documento').toUpperCase()].filter(Boolean).join(' n. '));
   const final=await doc.save();window.open(URL.createObjectURL(new Blob([final],{type:'application/pdf'})),'_blank');
   }catch(e){showToast(e.message,'error');}
 }
