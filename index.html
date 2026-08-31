@@ -6837,11 +6837,13 @@ function renderPage(page){
     const gestValue=gest?'caricato':'da-caricare';
     const hasGps=!!(x.gps_firma);
     const canEdit=(st==='bozza'||st==='inviato');
+    const otpOk=!!(x.otp_verificato_at);
+    const otpBadge=st==='firmato'?(otpOk?`<span title="OTP verificato il ${new Date(x.otp_verificato_at).toLocaleString('it-IT')} · ${x.otp_cellulare_usato||''}" style="font-size:10px;padding:2px 7px;border-radius:10px;background:#d4edda;color:#155724;font-weight:600;cursor:default">✓ OTP</span>`:`<span title="OTP non verificato" style="font-size:10px;padding:2px 7px;border-radius:10px;background:#fff3cd;color:#856404;font-weight:600;cursor:default">⚠ OTP</span>`):'';
     return `<div class="contract-item" data-id="${x.id}" data-nome="${(x.cognome||'')+' '+(x.nome||'')+' '+(x.ragione_sociale||'')}" data-email="${x.email||''}" data-tipo="${x.tipo_contratto||'tesseramento'}" data-anno="${anno}" data-stato="${st}" data-proprietario="${createdByName}" data-gestionale="${gestValue}">
         <input type="checkbox" class="contract-cb" value="${x.id}" onchange="updateExportBtn()" style="width:16px;height:16px;accent-color:var(--cna);flex-shrink:0">
         <div class="contract-info">
           <h4>${x.cognome||''} ${x.nome||''} - ${x.ragione_sociale||'N/D'}</h4>
-          <p>${x.email||''} · ${d} · <span class="status-badge ${bc}">${bt}</span> · <span style="font-size:10px;padding:2px 7px;border-radius:10px;background:var(--cna-light,#e3f0fa);color:var(--cna);font-weight:600">${getTipoLabel(x.tipo_contratto||'tesseramento')}</span> · <span style="font-size:10px;color:var(--txt2)">Proprietario: ${createdByName}</span></p>
+          <p>${x.email||''} · ${d} · <span class="status-badge ${bc}">${bt}</span>${otpBadge?' · '+otpBadge:''} · <span style="font-size:10px;padding:2px 7px;border-radius:10px;background:var(--cna-light,#e3f0fa);color:var(--cna);font-weight:600">${getTipoLabel(x.tipo_contratto||'tesseramento')}</span> · <span style="font-size:10px;color:var(--txt2)">Proprietario: ${createdByName}</span></p>
         </div>
         <div class="contract-actions">
           ${st==='firmato'?`<span style="padding:3px 8px;border-radius:10px;font-size:10px;font-weight:600;${gestClass};white-space:nowrap">${gestText}</span><select onchange="toggleGestionale('${x.id}',this.value==='1')" style="font-size:10px;padding:2px 4px;border:1px solid var(--brd);border-radius:4px"><option value="0" ${!gest?'selected':''}>Da caricare</option><option value="1" ${gest?'selected':''}>Caricato</option></select>`:''}
@@ -6882,7 +6884,7 @@ async function loadContracts(){
   const list=document.getElementById('contracts-list');
   list.innerHTML='<p style="text-align:center;padding:20px;color:var(--txt2)">Caricamento...</p>';
   try{
-    let query='contratti?select=id,token,stato,cognome,nome,ragione_sociale,email,partita_iva,codice_fiscale,created_at,firmato_at,caricato_gestionale,created_by,tipo_contratto,gps_firma&order=created_at.desc&limit=200';
+    let query='contratti?select=id,token,stato,cognome,nome,ragione_sociale,email,partita_iva,codice_fiscale,created_at,firmato_at,caricato_gestionale,created_by,tipo_contratto,gps_firma,otp_verificato_at,otp_cellulare_usato&order=created_at.desc&limit=200';
     if(loggedUser&&loggedUser.ruolo!=='admin'){
       query+='&created_by=eq.'+loggedUser.id;
     }
