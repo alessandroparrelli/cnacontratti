@@ -6138,6 +6138,21 @@ async function sendPostFirmaEmails(token){
     const data=await res.json();
     if(!data.success) throw new Error(JSON.stringify(data));
     console.log('Email post-firma OK:', data.results);
+
+    // SMS automatico post-firma al cliente
+    if(ct.cellulare&&ct.cellulare.trim()){
+      try{
+        let smsTpl=await sb('sms_templates?id=eq.post_firma&select=body');
+        let smsMsg=(smsTpl&&smsTpl[0])?smsTpl[0].body:'Gentile {{cognome}} {{nome}}, grazie! Il contratto CNA Roma è stato firmato con successo il {{data_firma}}.';
+        const dataFirma=ct.firmato_at?new Date(ct.firmato_at).toLocaleDateString('it-IT'):new Date().toLocaleDateString('it-IT');
+        smsMsg=smsMsg.replace(/\{\{cognome\}\}/g,ct.cognome||'').replace(/\{\{nome\}\}/g,ct.nome||'').replace(/\{\{data_firma\}\}/g,dataFirma).replace(/\{\{cellulare\}\}/g,ct.cellulare||'');
+        await fetch('https://ohahuqlfzqckaevaffbt.supabase.co/functions/v1/invia-sms',{
+          method:'POST',headers:{'Content-Type':'application/json'},
+          body:JSON.stringify({destinatari:[{telefono:ct.cellulare,cognome:ct.cognome,nome:ct.nome}],messaggio:smsMsg,mittente:'CNAROMA',contratto_id:ct.id,inviato_da:'sistema-postfirma'})
+        });
+        console.log('SMS post-firma inviato a',ct.cellulare);
+      }catch(smsErr){console.warn('SMS post-firma error:',smsErr.message);}
+    }
   }catch(e){
     console.error('sendPostFirmaEmails error:',e.message);
     throw e;
@@ -6263,6 +6278,29 @@ async function sendWhatsAppFromList(id){
     showToast('WhatsApp aperto','success');
     loadContracts();
   }catch(e){showToast('Errore: '+e.message,'error');}
+}
+
+async function sendSmsFromList(id){
+  try{
+    const contracts=await sb(`contratti?id=eq.${id}&select=token,cognome,nome,cellulare,id`);
+    if(!contracts||!contracts[0]){showToast('Contratto non trovato','error');return;}
+    const c=contracts[0];
+    if(!c.cellulare||!c.cellulare.trim()){showToast('Cellulare non presente nel contratto','error');return;}
+    const url=BASE_URL+'?firma='+c.token;
+    let smsTplData=await sb('sms_templates?id=eq.send_link&select=body');
+    let messaggio=(smsTplData&&smsTplData[0])?smsTplData[0].body:'Gentile {{cognome}} {{nome}}, la preghiamo di firmare il contratto CNA Roma: {{link_firma}}';
+    messaggio=messaggio.replace(/\{\{cognome\}\}/g,c.cognome||'').replace(/\{\{nome\}\}/g,c.nome||'').replace(/\{\{link_firma\}\}/g,url).replace(/\{\{cellulare\}\}/g,c.cellulare);
+    const res=await fetch('https://ohahuqlfzqckaevaffbt.supabase.co/functions/v1/invia-sms',{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({destinatari:[{telefono:c.cellulare,cognome:c.cognome,nome:c.nome}],messaggio,mittente:'CNAROMA',contratto_id:c.id,inviato_da:currentUser?.email||null})
+    });
+    const data=await res.json();
+    if(data.successo){
+      await sb(`contratti?id=eq.${id}`,'PATCH',{stato:'inviato',inviato_at:new Date().toISOString()});
+      showToast('SMS inviato a '+c.cellulare,'success');
+      loadContracts();
+    }else{showToast('Errore SMS: '+(data.errore||'errore'),'error');}
+  }catch(e){showToast('Errore SMS: '+e.message,'error');}
 }
 
 async function resetFirma(id){
@@ -6556,8 +6594,8 @@ function renderPage(page){
         <div class="contract-actions">
           ${st==='firmato'?`<span style="padding:3px 8px;border-radius:10px;font-size:10px;font-weight:600;${gestClass};white-space:nowrap">${gestText}</span><select onchange="toggleGestionale('${x.id}',this.value==='1')" style="font-size:10px;padding:2px 4px;border:1px solid var(--brd);border-radius:4px"><option value="0" ${!gest?'selected':''}>Da caricare</option><option value="1" ${gest?'selected':''}>Caricato</option></select>`:''}
           ${canEdit?`<button class="btn btn-sm btn-outline" onclick="editContract('${x.id}')" title="Modifica contratto">&#x270F; Modifica</button>`:''}
-          ${st==='bozza'?`<button class="btn btn-sm btn-warning" onclick="sendFromList('${x.id}','${x.token}','${x.email||''}')">Invia</button><button class="btn btn-sm" onclick="sendWhatsAppFromList('${x.id}')" style="background:#25D366;color:#fff;font-size:10px">&#x1F4AC; WA</button>`:''}
-          ${st==='inviato'?`<button class="btn btn-sm btn-warning" onclick="sendFromList('${x.id}','${x.token}','${x.email||''}')">Invia di nuovo</button><button class="btn btn-sm" onclick="sendWhatsAppFromList('${x.id}')" style="background:#25D366;color:#fff;font-size:10px">&#x1F4AC; WA</button>`:''}
+          ${st==='bozza'?`<button class="btn btn-sm btn-warning" onclick="sendFromList('${x.id}','${x.token}','${x.email||''}')">Invia</button><button class="btn btn-sm" onclick="sendSmsFromList('${x.id}')" style="background:#f97316;color:#fff;font-size:10px">📱 SMS</button><button class="btn btn-sm" onclick="sendWhatsAppFromList('${x.id}')" style="background:#25D366;color:#fff;font-size:10px">&#x1F4AC; WA</button>`:''}
+          ${st==='inviato'?`<button class="btn btn-sm btn-warning" onclick="sendFromList('${x.id}','${x.token}','${x.email||''}')">Invia di nuovo</button><button class="btn btn-sm" onclick="sendSmsFromList('${x.id}')" style="background:#f97316;color:#fff;font-size:10px">📱 SMS</button><button class="btn btn-sm" onclick="sendWhatsAppFromList('${x.id}')" style="background:#25D366;color:#fff;font-size:10px">&#x1F4AC; WA</button>`:''}
           ${st==='firmato'?`<button class="btn btn-sm btn-success" onclick="dlSigned('${x.id}')">PDF</button>`:''}
           ${st==='firmato'?`<button class="btn btn-sm" onclick="resetFirma('${x.id}')" style="background:#dc3545;color:#fff;font-size:10px">&#x1F504; Reset</button>`:''}
           ${hasDoc?`<button class="btn btn-sm btn-outline" onclick="viewDocSide('${x.id}','fronte')">📸 Fronte</button><button class="btn btn-sm btn-outline" onclick="viewDocSide('${x.id}','retro')">📸 Retro</button>`:''}
