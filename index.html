@@ -6195,6 +6195,14 @@ async function embedSigs(doc,pages,data){
     await es(data.firma_delega_inps_base64,SIG_POS.inps);
     await es(data.firma_sepa_base64,SIG_POS.sepa);
   }
+  // Scrivi documento identità in pagina 3 (delega INPS) - campo non compilabile nel PDF
+  const docIdTxt=data.documento_identita||([data.tipo_documento,data.numero_documento].filter(Boolean).join(' n. '))||'';
+  if(docIdTxt&&pages[2]){
+    try{
+      const {rgb}=PDFLib;
+      pages[2].drawText(docIdTxt,{x:165,y:408,size:9,color:rgb(0,0,0)});
+    }catch(e){console.warn('drawText doc identita:',e);}
+  }
 }
 
 // === FILL PDF ===
