@@ -6063,7 +6063,7 @@ async function confirmSendAuto(){
     const c=contracts[0];
     const link_firma=BASE_URL+'?firma='+c.token;
     await sb(`contratti?id=eq.${currentContractId}`,'PATCH',{stato:'inviato',inviato_at:new Date().toISOString(),email_inviata:true});
-    const res=await fetch('https://ohahuqlfzqckaevaffbt.supabase.co/functions/v1/send-email',{
+    const res=await fetch('https://yqdzciuykqhnnstghbeq.supabase.co/functions/v1/send-email',{
       method:'POST',
       headers:{'Content-Type':'application/json'},
       body:JSON.stringify({type:'send_link',to:email,cognome:c.cognome||'',nome:c.nome||'',link_firma,
@@ -6122,7 +6122,7 @@ async function sendPostFirmaEmails(token){
     const retroSize=Math.round((docRetro?.length||0)/1024);
     console.log(`Payload: PDF ${pdfSize}KB | Fronte ${fronteSize}KB | Retro ${retroSize}KB | Tot ~${pdfSize+fronteSize+retroSize}KB`);
 
-    const res=await fetch('https://ohahuqlfzqckaevaffbt.supabase.co/functions/v1/send-email',{
+    const res=await fetch('https://yqdzciuykqhnnstghbeq.supabase.co/functions/v1/send-email',{
       method:'POST',
       headers:{'Content-Type':'application/json'},
       body:JSON.stringify({
@@ -6146,7 +6146,7 @@ async function sendPostFirmaEmails(token){
         let smsMsg=(smsTpl&&smsTpl[0])?smsTpl[0].body:'Gentile {{cognome}} {{nome}}, grazie! Il contratto CNA Roma è stato firmato con successo il {{data_firma}}.';
         const dataFirma=ct.firmato_at?new Date(ct.firmato_at).toLocaleDateString('it-IT'):new Date().toLocaleDateString('it-IT');
         smsMsg=smsMsg.replace(/\{\{cognome\}\}/g,ct.cognome||'').replace(/\{\{nome\}\}/g,ct.nome||'').replace(/\{\{data_firma\}\}/g,dataFirma).replace(/\{\{cellulare\}\}/g,ct.cellulare||'');
-        await fetch('https://ohahuqlfzqckaevaffbt.supabase.co/functions/v1/invia-sms',{
+        await fetch('https://yqdzciuykqhnnstghbeq.supabase.co/functions/v1/invia-sms',{
           method:'POST',headers:{'Content-Type':'application/json'},
           body:JSON.stringify({destinatari:[{telefono:ct.cellulare,cognome:ct.cognome,nome:ct.nome}],messaggio:smsMsg,mittente:'CNAROMA',contratto_id:ct.id,inviato_da:'sistema-postfirma'})
         });
@@ -6173,7 +6173,7 @@ async function sendViaSMS(){
     let smsTplData=await sb('sms_templates?id=eq.send_link&select=body');
     let messaggio=(smsTplData&&smsTplData[0])?smsTplData[0].body:`Gentile {{cognome}} {{nome}}, la preghiamo di firmare il contratto CNA Roma: {{link_firma}}`;
     messaggio=messaggio.replace(/\{\{cognome\}\}/g,c.cognome||'').replace(/\{\{nome\}\}/g,c.nome||'').replace(/\{\{link_firma\}\}/g,url).replace(/\{\{cellulare\}\}/g,cellulare);
-    const res=await fetch('https://ohahuqlfzqckaevaffbt.supabase.co/functions/v1/invia-sms',{
+    const res=await fetch('https://yqdzciuykqhnnstghbeq.supabase.co/functions/v1/invia-sms',{
       method:'POST',
       headers:{'Content-Type':'application/json'},
       body:JSON.stringify({
@@ -6290,7 +6290,7 @@ async function sendSmsFromList(id){
     let smsTplData=await sb('sms_templates?id=eq.send_link&select=body');
     let messaggio=(smsTplData&&smsTplData[0])?smsTplData[0].body:'Gentile {{cognome}} {{nome}}, la preghiamo di firmare il contratto CNA Roma: {{link_firma}}';
     messaggio=messaggio.replace(/\{\{cognome\}\}/g,c.cognome||'').replace(/\{\{nome\}\}/g,c.nome||'').replace(/\{\{link_firma\}\}/g,url).replace(/\{\{cellulare\}\}/g,c.cellulare);
-    const res=await fetch('https://ohahuqlfzqckaevaffbt.supabase.co/functions/v1/invia-sms',{
+    const res=await fetch('https://yqdzciuykqhnnstghbeq.supabase.co/functions/v1/invia-sms',{
       method:'POST',headers:{'Content-Type':'application/json'},
       body:JSON.stringify({destinatari:[{telefono:c.cellulare,cognome:c.cognome,nome:c.nome}],messaggio,mittente:'CNAROMA',contratto_id:c.id,inviato_da:loggedUser?.email||null})
     });
