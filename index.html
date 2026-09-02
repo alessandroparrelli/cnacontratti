@@ -346,7 +346,7 @@ body,button,input,select,textarea{font-family:'Inter',-apple-system,'Helvetica N
 /* ===== RESET PROBLEMI LAYOUT ===== */
 html,body{overflow-x:hidden;width:100%}
 #app-container{overflow-x:hidden}
-#tab-4>.form-card>.form-card-body{padding:16px 20px 12px 20px}
+#tab-4>.form-card>.form-card-body{padding:16px 20px 12px 20px;overflow-x:hidden}
 
 /* ===== KPI CARD NUOVE ===== */
 .stat-mini-box{
@@ -502,7 +502,8 @@ body.dark-mode #cna-topbar-greeting{color:#fff}
 }
 body.dark-mode .contract-item{background:#2C2C2E!important;border-bottom-color:rgba(255,255,255,.06)!important}
 .contract-item:last-child{border-bottom:none!important}
-#contracts-list{background:#fff;border-radius:0 0 16px 16px;overflow:visible;box-shadow:none}
+#contracts-list{background:transparent;overflow:visible;box-shadow:none;max-width:100%;box-sizing:border-box}
+
 #contracts-table{border-collapse:collapse;font-size:13px}
 #tab-5 .stats-bar-container,#tab-4 .stats-bar-container{margin-bottom:40px}
 #ctr-table-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;border-radius:10px;background:#fff;margin:0 0 8px 0;border:1px solid #E5E7EB}
