@@ -512,7 +512,23 @@ body.dark-mode .contract-item{background:#2C2C2E!important;border-bottom-color:r
 #contracts-table tbody td{padding:9px 12px;border-bottom:1px solid #F1F5F9;vertical-align:middle;color:#374151}
 #contracts-table tbody td:first-child{padding-left:14px}
 #contracts-table tbody tr:last-child td{border-bottom:none}
-#contracts-table tbody tr:hover td{background:#EFF6FF;transition:background .1s}
+#contracts-table tbody tr:nth-child(odd) td{background:#ffffff}
+#contracts-table tbody tr:nth-child(even) td{background:#F8FAFC}
+#contracts-table tbody tr:hover td{background:#EFF6FF!important;transition:background .1s}
+/* Modal invio canale */
+#modal-send-channel{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:3000;align-items:center;justify-content:center;padding:16px}
+#modal-send-channel.show{display:flex}
+#modal-send-channel .msc-box{background:#fff;border-radius:20px;width:100%;max-width:380px;overflow:hidden;box-shadow:0 24px 60px rgba(0,0,0,.25)}
+#modal-send-channel .msc-header{background:linear-gradient(135deg,#005CA9,#1a78cc);padding:18px 22px;display:flex;align-items:center;gap:12px}
+#modal-send-channel .msc-title{color:#fff;font-weight:800;font-size:15px;flex:1}
+#modal-send-channel .msc-close{background:rgba(255,255,255,.15);border:none;color:#fff;width:30px;height:30px;border-radius:50%;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1}
+#modal-send-channel .msc-body{padding:20px;display:flex;flex-direction:column;gap:10px}
+#modal-send-channel .msc-name{padding:10px 20px;text-align:center;font-size:12px;color:#6B7280;background:#F8FAFC;border-radius:8px;font-weight:600;margin-bottom:4px}
+.msc-btn{display:flex;align-items:center;gap:14px;padding:14px 18px;border-radius:12px;border:1.5px solid #E5E7EB;background:#fff;cursor:pointer;font-family:inherit;transition:all .15s;width:100%;text-align:left}
+.msc-btn:hover{border-color:currentColor;transform:translateX(3px)}
+.msc-btn-icon{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:18px}
+.msc-btn-label{font-weight:700;font-size:14px}
+.msc-btn-sub{font-size:11px;color:#6B7280;margin-top:1px}
 .ct-btn{display:inline-flex;align-items:center;gap:4px;padding:5px 10px;border-radius:8px;font-size:11px;font-weight:700;border:none;cursor:pointer;font-family:inherit;white-space:nowrap;line-height:1.4;transition:all .15s;box-shadow:0 1px 2px rgba(0,0,0,.1);position:relative;z-index:0}
 .ct-btn:hover{box-shadow:0 2px 6px rgba(0,0,0,.2);filter:brightness(1.07)}
 .ct-btn:active{transform:translateY(0);box-shadow:0 1px 2px rgba(0,0,0,.12)}
@@ -3666,6 +3682,35 @@ table.quill-better-table {
 </div>
 </main>
 </div><!-- end cna-content-col -->
+
+<!-- MODAL INVIO CANALE -->
+<div id="modal-send-channel">
+  <div class="msc-box">
+    <div class="msc-header">
+      <div class="msc-title">&#x1F4E4; Invia contratto</div>
+      <button class="msc-close" onclick="closeSendChannel()">&times;</button>
+    </div>
+    <div class="msc-body">
+      <div class="msc-name" id="msc-cliente-name">—</div>
+      <button class="msc-btn" onclick="mscDoEmail()" style="color:#6366F1">
+        <div class="msc-btn-icon" style="background:#EEF2FF">&#x2709;&#xFE0F;</div>
+        <div><div class="msc-btn-label" style="color:#4F46E5">Email</div><div class="msc-btn-sub">Invia link via email</div></div>
+      </button>
+      <button class="msc-btn" id="msc-btn-sms" onclick="mscDoSMS()" style="color:#F97316">
+        <div class="msc-btn-icon" style="background:#FFF7ED">&#x1F4F1;</div>
+        <div><div class="msc-btn-label" style="color:#EA580C">SMS</div><div class="msc-btn-sub">Invia link via SMS</div></div>
+      </button>
+      <button class="msc-btn" id="msc-btn-wa" onclick="mscDoWhatsApp()" style="color:#16A34A">
+        <div class="msc-btn-icon" style="background:#F0FDF4">&#x1F4AC;</div>
+        <div><div class="msc-btn-label" style="color:#15803D">WhatsApp</div><div class="msc-btn-sub">Apri WhatsApp con il messaggio</div></div>
+      </button>
+      <button class="msc-btn" onclick="mscDoLink()" style="color:#2563EB">
+        <div class="msc-btn-icon" style="background:#EFF6FF">&#x1F517;</div>
+        <div><div class="msc-btn-label" style="color:#1D4ED8">Copia link</div><div class="msc-btn-sub">Copia il link di firma negli appunti</div></div>
+      </button>
+    </div>
+  </div>
+</div>
 
 <!-- APP FOOTER -->
 <footer id="app-footer" style="display:none;margin-top:auto;border-top:1px solid var(--brd);padding:20px 24px;text-align:center;background:var(--bg2)">
@@ -7231,6 +7276,35 @@ async function sendSmsFromList(id){
   }catch(e){showToast('Errore SMS: '+e.message,'error');}
 }
 
+// ── Modal invio canale ──
+let _mscId=null, _mscToken=null, _mscEmail='', _mscNome='';
+function openSendChannel(id,token,email,nome){
+  _mscId=id; _mscToken=token; _mscEmail=email||''; _mscNome=nome||'';
+  document.getElementById('msc-cliente-name').textContent=nome||'Cliente';
+  document.getElementById('modal-send-channel').classList.add('show');
+}
+function closeSendChannel(){
+  document.getElementById('modal-send-channel').classList.remove('show');
+}
+document.getElementById('modal-send-channel').addEventListener('click',function(e){if(e.target===this)closeSendChannel();});
+function mscDoEmail(){
+  closeSendChannel();
+  sendFromList(_mscId,_mscToken,_mscEmail);
+}
+function mscDoSMS(){
+  closeSendChannel();
+  sendSmsFromList(_mscId);
+}
+function mscDoWhatsApp(){
+  closeSendChannel();
+  sendWhatsAppFromList(_mscId);
+}
+function mscDoLink(){
+  closeSendChannel();
+  const url=BASE_URL+'?firma='+_mscToken;
+  navigator.clipboard.writeText(url).then(()=>showToast('Link copiato!','success'));
+}
+
 async function resetFirma(id){
   if(!confirm('Vuoi annullare la firma di questo contratto?\n\nIl link verrà rinnovato e il contratto tornerà "inviato" per essere rifirmato dal cliente.'))return;
   try{
@@ -7548,10 +7622,9 @@ function renderPage(page){
 
     // Colonna Azioni
     const btnPDF=st==='firmato'?`<button class="ct-btn ct-btn-pdf" onclick="dlSigned('${x.id}')" title="Scarica PDF">${svgPDF} PDF</button>`:'';
-    const btnReinvia=st==='firmato'?`<button class="ct-btn ct-btn-reinvia" onclick="sendFromList('${x.id}','${x.token}','${x.email||''}')" title="Reinvia email">${svgEmail} Reinvia</button>`:'';
-    const btnInvia=(st==='bozza'||st==='inviato')?`<button class="ct-btn ct-btn-invia" onclick="sendFromList('${x.id}','${x.token}','${x.email||''}')">${svgSend} ${st==='inviato'?'Reinvia':'Invia'}</button>`:'';
-    const btnSMS=(st==='bozza'||st==='inviato')?`<button class="ct-btn ct-btn-sms" onclick="sendSmsFromList('${x.id}')" title="SMS">${svgSMS} SMS</button>`:'';
-    const btnWA=(st==='bozza'||st==='inviato')?`<button class="ct-btn ct-btn-wa" onclick="sendWhatsAppFromList('${x.id}')" title="WhatsApp" style="background:#25D366;color:#fff;border-color:#25D366">WA</button>`:'';
+    const _mscNomeContr=((x.cognome||x.nome||x.ragione_sociale||'Cliente')).trim();
+    const btnReinvia=`<button class="ct-btn ct-btn-reinvia" onclick="openSendChannel('${x.id}','${x.token}','${x.email||''}',${JSON.stringify(_mscNomeContr)})" title="Invia / Reinvia">${svgSend} ${st==='firmato'?'Reinvia':'Invia'}</button>`;
+    const btnInvia=''; const btnSMS=''; const btnWA='';
     const btnReset=st==='firmato'?`<button class="ct-btn ct-btn-reset" onclick="resetFirma('${x.id}')" title="Reset firma">${svgReset} Reset</button>`:'';
     const btnEdit=canEdit?`<button class="ct-btn ct-btn-edit" onclick="editContract('${x.id}')">${svgEdit} Modifica</button>`:'';
     const btnFronte=hasDoc?`<button class="ct-btn ct-btn-doc" onclick="viewDocSide('${x.id}','fronte')" title="Documento fronte">${svgDoc} Fronte</button>`:'<span style="color:#D1D5DB;font-size:11px">—</span>';
@@ -7574,7 +7647,7 @@ function renderPage(page){
       <td>${otpBadge}</td>
       <td>${gestCol}</td>
       <td>${btnPDF}</td>
-      <td style="white-space:nowrap"><div style="display:flex;gap:4px;align-items:center;flex-wrap:nowrap">${btnReinvia||btnInvia||''} ${btnSMS} ${btnWA} ${btnEdit}</div></td>
+      <td style="white-space:nowrap">${btnReinvia} ${btnEdit}</td>
       <td style="white-space:nowrap">${btnReset}</td>
       <td style="white-space:nowrap">${btnFronte}</td>
       <td style="white-space:nowrap">${btnRetro}</td>
@@ -7594,7 +7667,7 @@ function renderPage(page){
       <th>OTP</th>
       <th>Caricato</th>
       <th>PDF</th>
-      <th>Invia / Reinvia</th>
+      <th>Invia</th>
       <th>Reset</th>
       <th>Fronte</th>
       <th>Retro</th>
