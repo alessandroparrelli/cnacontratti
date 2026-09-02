@@ -580,11 +580,11 @@ body.dark-mode .cna-act-text{color:#D1D5DB}
 /* ===== RICERCA IMPRESE ===== */
 @media(max-width:768px){
   #tab-5 .form-card{margin:0!important}
-  #tab-4 .form-card{margin:0!important}
+  #tab-4 .form-card{margin:0 20px!important}
 }
 @media(min-width:769px){
   #tab-5 .form-card{margin:0!important}
-  #tab-4 .form-card{margin:0!important}
+  #tab-4 .form-card{margin:0 20px!important}
 }
 
 /* ===== CONTRACT ITEM MOBILE ===== */
@@ -618,6 +618,7 @@ body.dark-mode .cna-act-text{color:#D1D5DB}
   }
   /* Form card / dashboard contratti con padding corretto */
   .form-card{margin:16px 24px!important}
+  #tab-4>.form-card{margin:0 24px!important}
   /* Checkbox visibile su desktop */
   .contract-cb{display:block!important}
 }
@@ -3592,7 +3593,7 @@ table.quill-better-table {
       </div>
     </div>
   </div>
-  <div class="form-card" style="margin:0 20px">
+  <div class="form-card" style="margin:0 20px;border-radius:16px">
     <div class="form-card-header" style="background:linear-gradient(135deg,#005CA9 0%,#1a78cc 100%);padding:18px 22px;gap:12px;flex-wrap:wrap;justify-content:space-between">
       <div style="display:flex;align-items:center;gap:12px">
         <div style="width:40px;height:40px;background:rgba(255,255,255,0.18);border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg></div>
@@ -3604,7 +3605,7 @@ table.quill-better-table {
       <button onclick="openNuovoContrattoModal()" style="background:#fff;color:#005CA9;border:none;border-radius:10px;padding:10px 22px;font-size:13px;font-weight:800;cursor:pointer;font-family:inherit;white-space:nowrap;box-shadow:0 2px 8px rgba(0,0,0,0.15);display:flex;align-items:center;gap:6px"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Nuovo contratto</button>
     </div>
     <div class="form-card-body">
-      <div style="margin-bottom:16px">
+      <div style="margin-bottom:16px;padding:0 4px">
         <!-- Barra superiore: cerca + pulsante filtri + aggiorna -->
         <div style="display:flex;gap:8px;align-items:center;margin-bottom:10px">
           <input type="text" id="search-contracts" placeholder="🔍 Cerca cliente..." style="flex:1;padding:8px 12px;border:1px solid var(--brd);border-radius:8px;font-size:13px;background:var(--input-bg);color:var(--txt)" oninput="filterContracts()">
@@ -3646,7 +3647,7 @@ table.quill-better-table {
           </div>
         </div>
         <!-- Selezione e azioni bulk -->
-        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;min-height:32px">
+        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;min-height:32px;padding:0 4px">
           <label style="display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer"><input type="checkbox" id="select-all-contracts" onchange="toggleSelectAll(this)" style="width:16px;height:16px;accent-color:var(--cna)"> Seleziona tutti</label>
           <button class="btn btn-sm btn-outline" onclick="exportExcel()" id="btn-export" style="display:none">&#x1F4CA; Esporta Excel</button>
           <button class="btn btn-sm btn-danger" onclick="deleteSelected()" id="btn-delete" style="display:none">&#x1F5D1; Elimina</button>
@@ -3654,7 +3655,7 @@ table.quill-better-table {
         </div>
       </div>
       <div style="overflow-x:auto;-webkit-overflow-scrolling:touch">
-      <div id="contracts-list"><p style="text-align:center;color:var(--txt2);padding:40px">Caricamento...</p></div>
+      <div id="contracts-list" style="padding:0 4px"><p style="text-align:center;color:var(--txt2);padding:40px">Caricamento...</p></div>
       </div>
       <div id="pagination-bar" style="display:none;margin-top:16px;align-items:center;justify-content:center;gap:6px;flex-wrap:wrap"></div>
     </div>
@@ -7579,6 +7580,7 @@ function renderPage(page){
     </tr>`;
   }).join('');
 
+  list.style.padding="0 4px";
   list.innerHTML=`<table id="contracts-table">
     <thead><tr>
       <th><input type="checkbox" id="select-all-contracts" onchange="toggleSelectAll(this)" style="width:15px;height:15px;accent-color:#2563EB"></th>
