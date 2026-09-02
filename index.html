@@ -7306,7 +7306,24 @@ function mscDoLink(){
 }
 
 async function resetFirma(id){
-  if(!confirm('Vuoi annullare la firma di questo contratto?\n\nIl link verrà rinnovato e il contratto tornerà "inviato" per essere rifirmato dal cliente.'))return;
+  const ok=await new Promise(res=>{
+    const d=document.createElement('div');
+    d.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9999;display:flex;align-items:center;justify-content:center;padding:16px';
+    d.innerHTML=`<div style="background:#fff;border-radius:16px;padding:24px;max-width:360px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,.3)">
+      <div style="font-size:28px;text-align:center;margin-bottom:12px">⚠️</div>
+      <h3 style="font-size:16px;font-weight:800;color:#111827;margin:0 0 8px;text-align:center">Reset firma</h3>
+      <p style="font-size:13px;color:#6B7280;text-align:center;margin:0 0 20px">Vuoi annullare la firma?<br>Il contratto tornerà in stato <strong>inviato</strong>.</p>
+      <div style="display:flex;gap:10px">
+        <button id="_rc_no" style="flex:1;padding:10px;border:1.5px solid #E5E7EB;border-radius:10px;background:#fff;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit">Annulla</button>
+        <button id="_rc_si" style="flex:1;padding:10px;border:none;border-radius:10px;background:#EF4444;color:#fff;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit">Sì, reset</button>
+      </div>
+    </div>`;
+    document.body.appendChild(d);
+    d.querySelector('#_rc_si').onclick=()=>{document.body.removeChild(d);res(true);};
+    d.querySelector('#_rc_no').onclick=()=>{document.body.removeChild(d);res(false);};
+    d.onclick=e=>{if(e.target===d){document.body.removeChild(d);res(false);}};
+  });
+  if(!ok)return;
   try{
     console.log('🔄 Reset firma per contratto:', id);
     const newToken=crypto.randomUUID();
@@ -7623,7 +7640,8 @@ function renderPage(page){
     // Colonna Azioni
     const btnPDF=st==='firmato'?`<button class="ct-btn ct-btn-pdf" onclick="dlSigned('${x.id}')" title="Scarica PDF">${svgPDF} PDF</button>`:'';
     const _mscNomeContr=((x.cognome||x.nome||x.ragione_sociale||'Cliente')).trim();
-    const btnReinvia=`<button class="ct-btn ct-btn-reinvia" onclick="openSendChannel('${x.id}','${x.token}','${x.email||''}',${JSON.stringify(_mscNomeContr)})" title="Invia / Reinvia">${svgSend} ${st==='firmato'?'Reinvia':'Invia'}</button>`;
+    const _mscNomeSafe=_mscNomeContr.replace(/'/g,"\\'").replace(/"/g,'&quot;');
+    const btnReinvia=`<button class="ct-btn ct-btn-reinvia" onclick="openSendChannel('${x.id}','${x.token}','${(x.email||'').replace(/'/g,\"\\\\'\")}',' ${_mscNomeSafe}')" title="Invia / Reinvia">${svgSend} ${st==='firmato'?'Reinvia':'Invia'}</button>`;
     const btnInvia=''; const btnSMS=''; const btnWA='';
     const btnReset=st==='firmato'?`<button class="ct-btn ct-btn-reset" onclick="resetFirma('${x.id}')" title="Reset firma">${svgReset} Reset</button>`:'';
     const btnEdit=canEdit?`<button class="ct-btn ct-btn-edit" onclick="editContract('${x.id}')">${svgEdit} Modifica</button>`:'';
@@ -7634,14 +7652,14 @@ function renderPage(page){
 
     return `<tr class="contract-item" data-id="${x.id}" data-nome="${(x.cognome||'')+' '+(x.nome||'')+' '+(x.ragione_sociale||'')}" data-email="${x.email||''}" data-tipo="${x.tipo_contratto||'tesseramento'}" data-anno="${anno}" data-stato="${st}" data-proprietario="${createdByName}" data-gestionale="${gestValue}">
       <td style="width:36px"><input type="checkbox" class="contract-cb" value="${x.id}" onchange="updateExportBtn()" style="width:15px;height:15px;accent-color:#2563EB"></td>
-      <td style="white-space:nowrap;color:#6B7280;font-size:12px">${d}</td>
-      <td style="white-space:nowrap;max-width:90px;overflow:hidden;text-overflow:ellipsis;font-size:12px;color:#374151" title="${createdByName}">${createdByName}</td>
-      <td style="min-width:160px;max-width:220px">
+      <td style="min-width:180px;max-width:240px">
         <div style="display:flex;align-items:center;gap:8px">
           <div class="ct-avatar" style="background:${avBg}">${initials}</div>
-          <span style="font-weight:600;font-size:13px;color:#111827;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:160px" title="${ragSoc}">${ragSoc}</span>
+          <span style="font-weight:600;font-size:13px;color:#111827;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:180px" title="${ragSoc}">${ragSoc}</span>
         </div>
       </td>
+      <td style="white-space:nowrap;color:#6B7280;font-size:12px">${d}</td>
+      <td style="white-space:nowrap;max-width:90px;overflow:hidden;text-overflow:ellipsis;font-size:12px;color:#374151" title="${createdByName}">${createdByName}</td>
       <td><span class="ct-tipo">${tipoLabel}</span></td>
       <td>${stBadge}</td>
       <td>${otpBadge}</td>
@@ -7659,9 +7677,9 @@ function renderPage(page){
   list.innerHTML=`<div id="ctr-table-scroll"><table id="contracts-table">
     <thead><tr>
       <th><input type="checkbox" id="select-all-contracts" onchange="toggleSelectAll(this)" style="width:15px;height:15px;accent-color:#2563EB"></th>
+      <th>Ragione Sociale</th>
       <th>Data</th>
       <th>Promotore</th>
-      <th>Ragione Sociale</th>
       <th>Tipo</th>
       <th>Stato</th>
       <th>OTP</th>
