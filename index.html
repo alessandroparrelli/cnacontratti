@@ -505,7 +505,7 @@ body.dark-mode .contract-item{background:#2C2C2E!important;border-bottom-color:r
 #contracts-list{background:#fff;border-radius:0 0 16px 16px;overflow:visible;box-shadow:none}
 #contracts-table{border-collapse:collapse;font-size:13px}
 #tab-5 .stats-bar-container,#tab-4 .stats-bar-container{margin-bottom:40px}
-#ctr-table-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;border-radius:0 0 14px 14px;background:#fff;margin:0 20px 8px 20px}
+#ctr-table-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;border-radius:0 0 14px 14px;background:#fff;margin:0 20px 12px 20px}
 #contracts-table{width:100%;border-collapse:collapse;font-size:13px}
 #contracts-table thead th{background:linear-gradient(180deg,#F0F4F8,#E8EDF3);color:#475569;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:0.08em;padding:10px 12px;border-bottom:2px solid #CBD5E1;white-space:nowrap;position:sticky;top:0;z-index:1}
 #contracts-table thead th:first-child{border-radius:0;padding-left:14px}
@@ -513,8 +513,8 @@ body.dark-mode .contract-item{background:#2C2C2E!important;border-bottom-color:r
 #contracts-table tbody td:first-child{padding-left:14px}
 #contracts-table tbody tr:last-child td{border-bottom:none}
 #contracts-table tbody tr:hover td{background:#EFF6FF;transition:background .1s}
-.ct-btn{display:inline-flex;align-items:center;gap:4px;padding:5px 11px;border-radius:8px;font-size:11px;font-weight:700;border:none;cursor:pointer;font-family:inherit;white-space:nowrap;line-height:1.4;transition:all .15s;box-shadow:0 1px 3px rgba(0,0,0,.12)}
-.ct-btn:hover{transform:translateY(-1px);box-shadow:0 3px 8px rgba(0,0,0,.18);filter:brightness(1.07)}
+.ct-btn{display:inline-flex;align-items:center;gap:4px;padding:5px 10px;border-radius:8px;font-size:11px;font-weight:700;border:none;cursor:pointer;font-family:inherit;white-space:nowrap;line-height:1.4;transition:all .15s;box-shadow:0 1px 2px rgba(0,0,0,.1);position:relative;z-index:0}
+.ct-btn:hover{box-shadow:0 2px 6px rgba(0,0,0,.2);filter:brightness(1.07)}
 .ct-btn:active{transform:translateY(0);box-shadow:0 1px 2px rgba(0,0,0,.12)}
 .ct-btn-pdf{background:linear-gradient(135deg,#059669,#047857);color:#fff}
 .ct-btn-reinvia{background:linear-gradient(135deg,#6366F1,#4F46E5);color:#fff}
@@ -3608,7 +3608,7 @@ table.quill-better-table {
       <button onclick="openNuovoContrattoModal()" style="background:#fff;color:#005CA9;border:none;border-radius:10px;padding:10px 22px;font-size:13px;font-weight:800;cursor:pointer;font-family:inherit;white-space:nowrap;box-shadow:0 2px 8px rgba(0,0,0,0.15);display:flex;align-items:center;gap:6px"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Nuovo contratto</button>
     </div>
     <div class="form-card-body">
-      <div style="margin-bottom:16px;padding:0 20px">
+      <div style="margin-bottom:12px;padding:0 20px">
         <!-- Barra superiore: cerca + pulsante filtri + aggiorna -->
         <div style="display:flex;gap:8px;align-items:center;margin-bottom:10px">
           <input type="text" id="search-contracts" placeholder="🔍 Cerca cliente..." style="flex:1;padding:8px 12px;border:1px solid var(--brd);border-radius:8px;font-size:13px;background:var(--input-bg);color:var(--txt)" oninput="filterContracts()">
@@ -7574,12 +7574,12 @@ function renderPage(page){
       <td>${otpBadge}</td>
       <td>${gestCol}</td>
       <td>${btnPDF}</td>
-      <td>${btnReinvia||btnInvia||''} ${btnSMS} ${btnWA} ${btnEdit}</td>
-      <td>${btnReset}</td>
-      <td>${btnFronte}</td>
-      <td>${btnRetro}</td>
-      <td>${btnGPS}</td>
-      <td>${btnLink}</td>
+      <td style="white-space:nowrap"><div style="display:flex;gap:4px;align-items:center;flex-wrap:nowrap">${btnReinvia||btnInvia||''} ${btnSMS} ${btnWA} ${btnEdit}</div></td>
+      <td style="white-space:nowrap">${btnReset}</td>
+      <td style="white-space:nowrap">${btnFronte}</td>
+      <td style="white-space:nowrap">${btnRetro}</td>
+      <td style="white-space:nowrap">${btnGPS}</td>
+      <td style="white-space:nowrap">${btnLink}</td>
     </tr>`;
   }).join('');
 
