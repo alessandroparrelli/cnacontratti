@@ -3,6 +3,8 @@
 <html lang="it">
 <head>
 <meta charset="UTF-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="theme-color" content="#1E3A8A">
 <meta name="description" content="Signature - Sistema gestione contratti e tesseramento CNA Roma">
@@ -324,6 +326,225 @@ body.dark-mode #app-footer{background:#161b22;border-color:#30363d}
   .modal-anag-grid>div[style*="grid-column:1/-1"]{grid-column:1!important}
 }
 @media print{body{display:none}}
+
+/* ===== FONT INTER ===== */
+body,button,input,select,textarea{font-family:'Inter',-apple-system,'Helvetica Neue',sans-serif!important}
+
+/* ===== RESET PROBLEMI LAYOUT ===== */
+html,body{overflow-x:hidden;width:100%}
+#app-container{overflow-x:hidden}
+
+/* ===== KPI CARD NUOVE ===== */
+.stat-mini-box{
+  background:#fff!important;
+  border-radius:16px!important;
+  border:none!important;
+  box-shadow:0 1px 3px rgba(0,0,0,0.06)!important;
+  padding:16px 14px!important;
+  display:flex!important;
+  flex-direction:column!important;
+}
+.stat-mini-header{margin-bottom:8px!important}
+.stat-mini-label{font-size:10px!important;font-weight:700!important;color:#8E8E93!important;letter-spacing:.07em!important;text-transform:uppercase!important}
+.stat-mini-icon{width:30px!important;height:30px!important;border-radius:9px!important}
+.stat-mini-num{font-size:30px!important;font-weight:900!important;letter-spacing:-.05em!important;padding:0!important;text-align:left!important;display:block!important}
+.stats-bar-container{background:transparent!important;border:none!important;padding:16px!important}
+.stats-bar{gap:10px!important}
+
+/* KPI colori */
+#stat-totali,#stat-totali-c{color:#2563EB!important}
+#stat-attesa,#stat-attesa-c{color:#F97316!important}
+#stat-da-caricare,#stat-da-caricare-c{color:#F97316!important}
+#stat-caricati,#stat-caricati-c{color:#16A34A!important}
+
+/* ===== HEADER MOBILE ===== */
+.app-header{background:#fff!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;border-bottom:0.5px solid rgba(0,0,0,0.1)!important;box-shadow:none!important}
+.header-logo svg{display:none}
+.header-logo{gap:8px!important}
+
+/* Logo text style */
+#header-logo-text{font-size:15px;font-weight:800;letter-spacing:-.03em;color:#1D1D1F}
+#header-logo-text span{color:#2563EB}
+
+/* ===== BOTTOM NAV MOBILE ===== */
+#cna-bottom-nav{
+  display:none;
+  position:fixed;bottom:0;left:0;right:0;z-index:500;
+  background:rgba(242,242,247,.95);
+  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  border-top:.5px solid rgba(0,0,0,.12);
+  padding:8px 0 max(16px,env(safe-area-inset-bottom));
+}
+.cna-bnav-item{
+  flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;
+  border:none;background:none;cursor:pointer;padding:0;position:relative;
+}
+.cna-bnav-label{font-size:9.5px;font-weight:600;color:#8E8E93;font-family:'Inter',sans-serif}
+.cna-bnav-item.active .cna-bnav-label{color:#2563EB}
+.cna-bnav-badge{
+  position:absolute;top:0;right:10px;min-width:14px;height:14px;
+  background:#FF3B30;border-radius:7px;font-size:8px;font-weight:700;
+  color:#fff;display:flex;align-items:center;justify-content:center;
+  padding:0 3px;border:1.5px solid rgba(242,242,247,.95);
+}
+@media(max-width:768px){
+  #cna-bottom-nav{display:flex!important}
+  .main-content{padding-bottom:90px!important}
+  /* Nascondi vecchia tab bar */
+  #tabs-nav{display:none!important}
+  /* Body background */
+  body{background:#F2F2F7!important}
+  body.dark-mode{background:#1C1C1E!important}
+  /* Nascondi hamburger btn su mobile - usiamo bottom nav */
+  #hamburger-btn{display:flex!important}
+  /* Contratti avatar border-radius */
+  .contract-avatar{border-radius:10px!important}
+}
+
+/* ===== DESKTOP SIDEBAR ===== */
+#cna-sidebar{
+  display:none;
+  width:220px;flex-shrink:0;background:#fff;
+  border-right:1px solid #E5E7EB;
+  height:100vh;position:sticky;top:0;
+  flex-direction:column;overflow-y:auto;z-index:200;
+}
+body.dark-mode #cna-sidebar{background:#1C1C1E;border-right-color:#2C2C2E}
+
+.cna-sb-logo{padding:20px 18px 16px;border-bottom:1px solid #E5E7EB;display:flex;align-items:center;gap:9px;cursor:pointer}
+body.dark-mode .cna-sb-logo{border-bottom-color:#2C2C2E}
+.cna-sb-logo-icon{width:28px;height:28px;background:#2563EB;border-radius:7px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.cna-sb-logo-txt{font-size:14px;font-weight:800;color:#1D1D1F;letter-spacing:-.03em}
+body.dark-mode .cna-sb-logo-txt{color:#fff}
+.cna-sb-logo-txt span{color:#2563EB}
+.cna-sb-ver{font-size:10px;font-weight:600;color:#8E8E93;background:#F2F2F7;padding:2px 6px;border-radius:4px;margin-left:auto}
+body.dark-mode .cna-sb-ver{background:#2C2C2E}
+
+.cna-sb-section{padding:10px 16px 4px;font-size:10px;font-weight:700;color:#8E8E93;letter-spacing:.1em;text-transform:uppercase}
+.cna-sb-btn{
+  display:flex;align-items:center;gap:10px;width:100%;padding:10px 16px;
+  border:none;background:none;cursor:pointer;font-size:13px;font-weight:600;
+  color:#6B7280;text-align:left;border-left:3px solid transparent;
+  transition:all .15s;font-family:'Inter',sans-serif;
+}
+body.dark-mode .cna-sb-btn{color:#8E8E93}
+.cna-sb-btn:hover{background:#F9FAFB;color:#1D1D1F}
+body.dark-mode .cna-sb-btn:hover{background:#2C2C2E;color:#fff}
+.cna-sb-btn.active{background:#EFF6FF;color:#2563EB;border-left-color:#2563EB;font-weight:700}
+body.dark-mode .cna-sb-btn.active{background:rgba(37,99,235,.15);color:#60A5FA}
+.cna-sb-pill{margin-left:auto;min-width:18px;height:18px;border-radius:9px;font-size:10px;font-weight:700;color:#fff;display:flex;align-items:center;justify-content:center;padding:0 5px}
+
+.cna-sb-footer{padding:14px 16px;border-top:1px solid #E5E7EB;display:flex;align-items:center;gap:10px;cursor:pointer}
+body.dark-mode .cna-sb-footer{border-top-color:#2C2C2E}
+.cna-sb-user-av{width:32px;height:32px;background:#1D1D1F;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:#fff;flex-shrink:0}
+.cna-sb-user-name{font-size:12px;font-weight:700;color:#1D1D1F}
+body.dark-mode .cna-sb-user-name{color:#fff}
+.cna-sb-user-role{font-size:10px;color:#8E8E93}
+
+/* ===== DESKTOP TOPBAR ===== */
+#cna-topbar{
+  display:none;
+  align-items:center;gap:14px;padding:14px 24px;
+  background:#fff;border-bottom:1px solid #E5E7EB;
+  position:sticky;top:0;z-index:100;
+}
+body.dark-mode #cna-topbar{background:#1C1C1E;border-bottom-color:#2C2C2E}
+#cna-topbar-title{font-size:20px;font-weight:800;color:#1D1D1F;letter-spacing:-.03em;flex:1}
+body.dark-mode #cna-topbar-title{color:#fff}
+#cna-topbar-date{font-size:12px;color:#8E8E93;white-space:nowrap}
+#cna-topbar-search{background:#F2F2F7;border-radius:10px;padding:8px 12px;display:flex;align-items:center;gap:8px;width:220px}
+body.dark-mode #cna-topbar-search{background:#2C2C2E}
+#cna-topbar-search input{border:none;background:none;font-size:12px;color:#1D1D1F;outline:none;width:100%;font-family:'Inter',sans-serif}
+body.dark-mode #cna-topbar-search input{color:#fff}
+#cna-topbar-search input::placeholder{color:#8E8E93}
+#cna-topbar-newbtn{background:#2563EB;color:#fff;border:none;border-radius:10px;padding:9px 16px;font-size:13px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:6px;white-space:nowrap;font-family:'Inter',sans-serif}
+
+@media(min-width:769px){
+  body{background:#F2F2F7!important}
+  body.dark-mode{background:#1C1C1E!important}
+  #cna-sidebar{display:flex!important}
+  #cna-topbar{display:flex!important}
+  /* Layout: sidebar + main side by side */
+  #app-container{flex-direction:row!important;align-items:flex-start!important}
+  .app-header{display:none!important}
+  #hamburger-btn{display:none!important}
+  #tabs-nav{display:none!important}
+  #cna-bottom-nav{display:none!important}
+  .main-content{padding:0!important;flex:1;min-width:0}
+  /* Push content under topbar */
+  #tab-5,#tab-4,#tab-0{padding:0 0 40px}
+  .stats-bar-container{padding:20px 24px 0!important}
+  .stats-bar{padding:0!important}
+  /* Desktop KPI 4 col */
+  .stats-bar{grid-template-columns:repeat(4,1fr)!important;gap:14px!important}
+}
+
+/* ===== CONTRATTI LIST ===== */
+.contract-item{
+  background:#fff!important;
+  border-radius:0!important;
+  border:none!important;
+  border-bottom:.5px solid rgba(0,0,0,.06)!important;
+  margin:0!important;
+  padding:13px 16px!important;
+}
+body.dark-mode .contract-item{background:#2C2C2E!important;border-bottom-color:rgba(255,255,255,.06)!important}
+.contract-item:last-child{border-bottom:none!important}
+#contracts-list{background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.06)}
+body.dark-mode #contracts-list{background:#2C2C2E}
+.contract-info h4{font-size:13px!important;font-weight:700!important}
+.contract-avatar{border-radius:10px!important}
+
+/* ===== FORM CARD ===== */
+.form-card{border-radius:16px!important;box-shadow:0 1px 3px rgba(0,0,0,.05)!important;border:none!important}
+body.dark-mode .form-card{background:#2C2C2E!important}
+
+/* ===== ALERT BANNER ===== */
+#cna-alert-banner{
+  margin:12px 16px 0;background:#FFF8F0;border:1px solid #FFD8A8;
+  border-radius:14px;padding:12px 14px;display:none;align-items:center;gap:11px;cursor:pointer;
+}
+body.dark-mode #cna-alert-banner{background:rgba(249,115,22,.1);border-color:rgba(249,115,22,.25)}
+@media(min-width:769px){#cna-alert-banner{margin:16px 24px 0}}
+
+/* ===== SIDE WIDGETS (desktop only) ===== */
+#cna-side-col{display:none}
+@media(min-width:769px){
+  #cna-home-wrap{display:grid;grid-template-columns:1fr 270px;gap:16px;padding:16px 24px 0}
+  #cna-main-col{}
+  #cna-side-col{display:flex;flex-direction:column;gap:14px}
+}
+.cna-sw{background:#fff;border-radius:16px;padding:18px;box-shadow:0 1px 3px rgba(0,0,0,.05)}
+body.dark-mode .cna-sw{background:#2C2C2E}
+.cna-sw-title{font-size:13px;font-weight:800;color:#1D1D1F;letter-spacing:-.02em;margin-bottom:12px}
+body.dark-mode .cna-sw-title{color:#fff}
+.cna-flow-row{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.cna-flow-row:last-child{margin-bottom:0}
+.cna-flow-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.cna-flow-label{font-size:12px;color:#6B7280;flex:1}
+body.dark-mode .cna-flow-label{color:#8E8E93}
+.cna-flow-bar-wrap{width:70px;height:4px;background:#F2F2F7;border-radius:2px;overflow:hidden}
+body.dark-mode .cna-flow-bar-wrap{background:#3A3A3C}
+.cna-flow-bar{height:100%;border-radius:2px;transition:width .4s}
+.cna-flow-val{font-size:12px;font-weight:700;color:#1D1D1F;min-width:22px;text-align:right}
+body.dark-mode .cna-flow-val{color:#fff}
+.cna-act-item{display:flex;gap:8px;padding:8px 0;border-bottom:.5px solid #F2F2F7}
+body.dark-mode .cna-act-item{border-bottom-color:#3A3A3C}
+.cna-act-item:last-child{border-bottom:none}
+.cna-act-dot{width:7px;height:7px;border-radius:50%;margin-top:4px;flex-shrink:0}
+.cna-act-text{font-size:11px;color:#374151;font-weight:600;line-height:1.4}
+body.dark-mode .cna-act-text{color:#D1D5DB}
+.cna-act-time{font-size:10px;color:#9CA3AF}
+
+/* ===== RICERCA IMPRESE ===== */
+@media(max-width:768px){
+  #tab-5 .form-card{margin:12px 0 0!important}
+  #tab-4 .form-card{margin:12px 0 0!important}
+}
+@media(min-width:769px){
+  #tab-5 .form-card{margin:0!important}
+  #tab-4 .form-card{margin:0!important}
+}
 </style>
 
 
@@ -2785,6 +3006,91 @@ table.quill-better-table {
 
 <!-- ==================== APP (hidden until login) ==================== -->
 <div id="app-container" style="display:none">
+<!-- SIDEBAR DESKTOP -->
+<aside id="cna-sidebar">
+  <div class="cna-sb-logo" onclick="location.reload()">
+    <div class="cna-sb-logo-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3L21 7 9 19 3 21 5 15Z"/></svg></div>
+    <div class="cna-sb-logo-txt">signature<span>cna</span></div>
+    <span class="cna-sb-ver">v9</span>
+  </div>
+  <nav style="flex:1;padding:8px 0;overflow-y:auto">
+    <div class="cna-sb-section">Principale</div>
+    <button class="cna-sb-btn active" id="sbnav-home" onclick="switchTab(5);cnaSetSb('sbnav-home','Dashboard')">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>Dashboard
+    </button>
+    <button class="cna-sb-btn" id="sbnav-contratti" onclick="switchTab(4);cnaSetSb('sbnav-contratti','Contratti')">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>Contratti
+      <span class="cna-sb-pill" style="background:#2563EB" id="sb-pill-contratti">0</span>
+    </button>
+    <div class="cna-sb-section" style="margin-top:4px">Gestione</div>
+    <button class="cna-sb-btn" id="sbnav-upload" onclick="switchTab(4);cnaSetSb('sbnav-upload','Caricamenti')">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 16 12 12 8 16"/><line x1="12" y1="12" x2="12" y2="21"/><path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"/></svg>Caricamenti
+      <span class="cna-sb-pill" id="sb-pill-upload" style="background:#F97316;display:none">0</span>
+    </button>
+    <div class="cna-sb-section" style="margin-top:4px">Account</div>
+    <button class="cna-sb-btn" id="sbnav-admin-email" onclick="openEmailTemplates()" style="display:none">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>Template Email & SMS
+    </button>
+    <button class="cna-sb-btn" id="sbnav-admin-utenti" onclick="openGestioneUtenti()" style="display:none">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>Gestione Utenti
+    </button>
+    <button class="cna-sb-btn" id="sbnav-admin-log" onclick="openLogsModal()" style="display:none">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/></svg>Log Connessioni
+    </button>
+    <button class="cna-sb-btn" onclick="toggleDarkMode()">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" id="dm-icon"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg><span id="dm-label">Dark mode</span>
+    </button>
+    <button class="cna-sb-btn" onclick="openChangelog()">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>Versioni
+    </button>
+  </nav>
+  <div class="cna-sb-footer" onclick="openProfile()">
+    <div class="cna-sb-user-av" id="cna-sb-av">AP</div>
+    <div style="flex:1;min-width:0">
+      <div class="cna-sb-user-name" id="cna-sb-name"></div>
+      <div class="cna-sb-user-role" id="cna-sb-role"></div>
+    </div>
+    <button onclick="event.stopPropagation();doLogout()" style="background:none;border:none;cursor:pointer;color:#8E8E93;padding:4px" title="Esci">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+    </button>
+  </div>
+</aside>
+
+<!-- DESKTOP TOPBAR -->
+<div id="cna-topbar">
+  <div id="cna-topbar-title">Dashboard</div>
+  <div id="cna-topbar-date"></div>
+  <div id="cna-topbar-search">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#8E8E93" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+    <input type="text" placeholder="Cerca impresa, P.IVA, CF…" oninput="filterContracts(false)">
+  </div>
+  <button id="cna-topbar-newbtn" onclick="openNuovoContrattoModal()">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Nuovo contratto
+  </button>
+</div>
+
+<!-- BOTTOM NAV MOBILE -->
+<div id="cna-bottom-nav">
+  <button class="cna-bnav-item active" id="bnav-home" onclick="switchTab(5);cnaSetBnav('bnav-home')">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#2563EB" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+    <span class="cna-bnav-label" style="color:#2563EB">Home</span>
+  </button>
+  <button class="cna-bnav-item" id="bnav-contratti" onclick="switchTab(4);cnaSetBnav('bnav-contratti')">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#8E8E93" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+    <span class="cna-bnav-label">Contratti</span>
+  </button>
+  <button class="cna-bnav-item" id="bnav-imprese" onclick="switchTab(5);cnaSetBnav('bnav-imprese');setTimeout(()=>document.getElementById('ri-piva')?.focus(),300)">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#8E8E93" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+    <span class="cna-bnav-label">Imprese</span>
+  </button>
+  <button class="cna-bnav-item" id="bnav-attivita" onclick="switchTab(4);cnaSetBnav('bnav-attivita')" style="position:relative">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#8E8E93" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+    <span class="cna-bnav-label">Attività</span>
+    <div class="cna-bnav-badge" id="bnav-badge-num" style="display:none">0</div>
+  </button>
+</div>
+
+
 
 <header class="app-header">
   <div class="header-inner">
@@ -2867,6 +3173,22 @@ table.quill-better-table {
 <main class="main-content">
 <!-- TAB 5: HOME -->
 <div class="tab-page active" id="tab-5">
+
+  <!-- ALERT BANNER -->
+  <div id="cna-alert-banner" onclick="switchTab(4);cnaSetBnav('bnav-contratti');cnaSetSb('sbnav-contratti','Contratti')">
+    <div style="width:32px;height:32px;background:#F97316;border-radius:9px;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+    </div>
+    <div style="flex:1">
+      <div style="font-size:12px;font-weight:800;color:#7C2D12;font-family:'Inter',sans-serif"><span id="cna-alert-num">0</span> contratti da caricare</div>
+      <div style="font-size:11px;color:#C2410C;font-family:'Inter',sans-serif">Tocca per gestire la coda</div>
+    </div>
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#F97316" stroke-width="2.5" stroke-linecap="round"><polyline points="9 18 15 12 9 6"/></svg>
+  </div>
+
+  <!-- DESKTOP TWO-COL LAYOUT -->
+  <div id="cna-home-wrap">
+    <div id="cna-main-col">
 
   <!-- STATS BAR -->
   <div class="stats-bar-container" style="padding:16px 0 0 0">
@@ -2955,6 +3277,38 @@ table.quill-better-table {
       </div>
     </div>
   </div>
+
+    </div><!-- end cna-main-col -->
+
+    <!-- SIDE COL DESKTOP -->
+    <div id="cna-side-col">
+      <!-- Widget coda -->
+      <div class="cna-sw" id="cna-sw-queue" style="display:none">
+        <div class="cna-sw-title">Coda caricamenti</div>
+        <div style="background:#FFF3E0;border-radius:12px;padding:14px;display:flex;align-items:center;gap:12px;margin-bottom:10px">
+          <div style="width:36px;height:36px;background:#F97316;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 16 12 12 8 16"/><line x1="12" y1="12" x2="12" y2="21"/><path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"/></svg></div>
+          <div><div style="font-size:26px;font-weight:900;color:#C2410C;letter-spacing:-.05em;font-family:'Inter',sans-serif" id="cna-sw-qnum">0</div><div style="font-size:11px;color:#9A3412;font-weight:700;font-family:'Inter',sans-serif">contratti da caricare</div></div>
+        </div>
+        <button onclick="switchTab(4);cnaSetSb('sbnav-contratti','Contratti')" style="width:100%;background:#F97316;color:#fff;border:none;border-radius:10px;padding:10px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif">Gestisci la coda →</button>
+      </div>
+      <!-- Avanzamento flusso -->
+      <div class="cna-sw">
+        <div class="cna-sw-title">Avanzamento flusso</div>
+        <div class="cna-flow-row"><div class="cna-flow-dot" style="background:#2563EB"></div><div class="cna-flow-label">Caricati</div><div class="cna-flow-bar-wrap"><div class="cna-flow-bar" id="cna-fb-caricati" style="background:#2563EB;width:0%"></div></div><div class="cna-flow-val" id="cna-fv-caricati">0</div></div>
+        <div class="cna-flow-row"><div class="cna-flow-dot" style="background:#F97316"></div><div class="cna-flow-label">Da caricare</div><div class="cna-flow-bar-wrap"><div class="cna-flow-bar" id="cna-fb-dac" style="background:#F97316;width:0%"></div></div><div class="cna-flow-val" id="cna-fv-dac">0</div></div>
+        <div class="cna-flow-row"><div class="cna-flow-dot" style="background:#F97316;opacity:.5"></div><div class="cna-flow-label">In firma</div><div class="cna-flow-bar-wrap"><div class="cna-flow-bar" id="cna-fb-firma" style="background:#F97316;opacity:.5;width:0%"></div></div><div class="cna-flow-val" id="cna-fv-firma">0</div></div>
+        <div class="cna-flow-row"><div class="cna-flow-dot" style="background:#9CA3AF"></div><div class="cna-flow-label">Totale</div><div class="cna-flow-bar-wrap"><div class="cna-flow-bar" id="cna-fb-tot" style="background:#9CA3AF;width:100%"></div></div><div class="cna-flow-val" id="cna-fv-tot">0</div></div>
+      </div>
+      <!-- Attività recente -->
+      <div class="cna-sw">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+          <div class="cna-sw-title" style="margin:0">Attività recente</div>
+          <button onclick="switchTab(4);cnaSetSb('sbnav-contratti','Contratti')" style="font-size:12px;color:#2563EB;font-weight:600;background:none;border:none;cursor:pointer;font-family:'Inter',sans-serif">Vedi tutto</button>
+        </div>
+        <div id="cna-act-list"><div style="font-size:12px;color:#9CA3AF;padding:8px 0;font-family:'Inter',sans-serif">Caricamento...</div></div>
+      </div>
+    </div><!-- end cna-side-col -->
+  </div><!-- end cna-home-wrap -->
 
 </div><!-- end tab-5 -->
 
@@ -4206,8 +4560,18 @@ async function eseguiRicercaImprese(){
         if(a.ragionesociale) r.ragSoc = a.ragionesociale;
         if(tit) r.titolare = tit;
       }
-      // Non aggiungiamo chi è solo in Anagrafiche ma non in diretti
-      // (non ha contratti attivi CNA legacy)
+      // Aggiungi anche chi è solo in Anagrafiche (tutte le imprese CNA)
+      if(!mappa.has(k)){
+        mappa.set(k,{
+          piva:pStr, cf:cfStr,
+          ragSoc:a.ragionesociale||[a.cognometitolare,a.nometitolare].filter(Boolean).join(' ')||'—',
+          titolare:tit, fonte:'anagrafica'
+        });
+      } else {
+        const r=mappa.get(k);
+        if(a.ragionesociale)r.ragSoc=a.ragionesociale;
+        if(tit)r.titolare=tit;
+      }
     });
 
     if(mappa.size===0){
@@ -4227,6 +4591,9 @@ async function eseguiRicercaImprese(){
       const sub=[];
       if(imp.piva) sub.push('P.IVA: '+imp.piva);
       if(imp.cf)   sub.push('CF: '+imp.cf);
+      const _impBg=imp.fonte==='diretti'?'rgba(37,99,235,0.08)':'rgba(16,163,74,0.08)';
+      const _impCol=imp.fonte==='diretti'?'#2563EB':'#16A34A';
+      const _impLabel=imp.fonte==='diretti'?'Contratto attivo':'Impresa CNA';
       const card=document.createElement('div');
       card.style.cssText='display:flex;align-items:center;justify-content:space-between;padding:14px 18px;background:var(--bg2);border:1.5px solid var(--brd);border-radius:10px;cursor:pointer;transition:all 0.15s ease;gap:12px';
       card.onmouseenter=()=>{card.style.borderColor='#005CA9';card.style.background='var(--cna-50)';card.style.transform='translateY(-1px)';card.style.boxShadow='0 4px 12px rgba(0,92,169,0.12)';};
@@ -4245,7 +4612,7 @@ async function eseguiRicercaImprese(){
           '</div>'+
         '</div>'+
         '<div style="display:flex;align-items:center;gap:8px;flex-shrink:0">'+
-          '<span style="background:rgba(124,58,237,0.1);color:#7c3aed;font-size:11px;font-weight:700;padding:4px 12px;border-radius:999px;white-space:nowrap">&#x26A0; Iscritto CNA</span>'+
+          '<span style="background:'+_impBg+';color:'+_impCol+';font-size:11px;font-weight:700;padding:4px 12px;border-radius:999px;white-space:nowrap">'+_impLabel+'</span>'+
           '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--txt2)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>'+
         '</div>';
       listaEl.appendChild(card);
@@ -4636,10 +5003,11 @@ function showApp(){
   updateHeaderAvatar();
   initApp();
   updateStats();
-  // Mostra pulsante Log per admin
   checkAdminForLogs();
-  // Log connessione
   logConnection('login');
+  // Nuova UI
+  cnaInitTopbar();
+  cnaUpdateSidebar();
 }
 
 function doLogout(){
@@ -5406,7 +5774,7 @@ function updateHeaderAvatar(){
 
 async function updateStats(){
   try{
-    let query='contratti?select=stato,caricato_gestionale';
+    let query='contratti?select=stato,caricato_gestionale,ragione_sociale,cognome,nome,created_at&order=created_at.desc&limit=200';
     if(loggedUser.ruolo!=='admin'){
       query+=`&created_by=eq.${loggedUser.id}`;
     }
@@ -5416,16 +5784,82 @@ async function updateStats(){
     const firmati=contracts.filter(c=>c.stato==='firmato').length;
     const daCaricare=firmati-contracts.filter(c=>c.stato==='firmato'&&c.caricato_gestionale).length;
     const caricati=contracts.filter(c=>c.stato==='firmato'&&c.caricato_gestionale).length;
-    document.getElementById('stat-totali').textContent=totali;
-    document.getElementById('stat-attesa').textContent=attesa;
-    document.getElementById('stat-da-caricare').textContent=daCaricare;
-    document.getElementById('stat-caricati').textContent=caricati;
-    // Aggiorna anche le KPI nel tab Contratti
-    const sc=document.getElementById('stat-totali-c');if(sc)sc.textContent=totali;
-    const sa=document.getElementById('stat-attesa-c');if(sa)sa.textContent=attesa;
-    const sd=document.getElementById('stat-da-caricare-c');if(sd)sd.textContent=daCaricare;
-    const sk=document.getElementById('stat-caricati-c');if(sk)sk.textContent=caricati;
+    const set=(id,v)=>{const e=document.getElementById(id);if(e)e.textContent=v;};
+    set('stat-totali',totali);set('stat-attesa',attesa);set('stat-da-caricare',daCaricare);set('stat-caricati',caricati);
+    set('stat-totali-c',totali);set('stat-attesa-c',attesa);set('stat-da-caricare-c',daCaricare);set('stat-caricati-c',caricati);
+    // Alert banner
+    const banner=document.getElementById('cna-alert-banner');
+    if(banner){banner.style.display=daCaricare>0?'flex':'none';}
+    set('cna-alert-num',daCaricare);
+    // Sidebar badges
+    const sbC=document.getElementById('sb-pill-contratti');if(sbC)sbC.textContent=totali;
+    const sbU=document.getElementById('sb-pill-upload');if(sbU){sbU.textContent=daCaricare;sbU.style.display=daCaricare>0?'flex':'none';}
+    const bnBadge=document.getElementById('bnav-badge-num');if(bnBadge){bnBadge.textContent=daCaricare;bnBadge.style.display=daCaricare>0?'flex':'none';}
+    // Side widgets
+    const swQ=document.getElementById('cna-sw-queue');if(swQ)swQ.style.display=daCaricare>0?'':'none';
+    set('cna-sw-qnum',daCaricare);
+    const mx=Math.max(totali,1);
+    const setBar=(id,pct)=>{const e=document.getElementById(id);if(e)e.style.width=Math.round(pct)+'%';};
+    setBar('cna-fb-caricati',(caricati/mx)*100);setBar('cna-fb-dac',(daCaricare/mx)*100);
+    setBar('cna-fb-firma',(attesa/mx)*100);setBar('cna-fb-tot',100);
+    set('cna-fv-caricati',caricati);set('cna-fv-dac',daCaricare);set('cna-fv-firma',attesa);set('cna-fv-tot',totali);
+    // Activity recente
+    const actList=document.getElementById('cna-act-list');
+    if(actList){
+      const recent=[...contracts].slice(0,5);
+      const stMap={firmato:{c:'#16A34A',l:'firmato'},inviato:{c:'#F97316',l:'inviato'},bozza:{c:'#6B7280',l:'bozza'}};
+      if(!recent.length){actList.innerHTML='<div style="font-size:12px;color:#9CA3AF;padding:8px 0">Nessuna attività</div>';}
+      else{actList.innerHTML=recent.map(c=>{
+        const nome=((c.ragione_sociale||(c.cognome||'')+(c.nome?' '+c.nome:''))||'N/D').trim().substring(0,28);
+        const s=stMap[c.stato]||{c:'#9CA3AF',l:c.stato||''};
+        const d=c.created_at?new Date(c.created_at).toLocaleDateString('it-IT',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}):'';
+        return `<div class="cna-act-item"><div class="cna-act-dot" style="background:${s.c}"></div><div><div class="cna-act-text">${nome} — ${s.l}</div><div class="cna-act-time">${d}</div></div></div>`;
+      }).join('');}
+    }
   }catch(e){console.error('updateStats:',e);}
+}
+
+function cnaSetSb(id,title){
+  document.querySelectorAll('.cna-sb-btn').forEach(b=>b.classList.remove('active'));
+  const el=document.getElementById(id);if(el)el.classList.add('active');
+  const t=document.getElementById('cna-topbar-title');if(t&&title)t.textContent=title;
+}
+
+function cnaSetBnav(id){
+  document.querySelectorAll('.cna-bnav-item').forEach(b=>{
+    b.classList.remove('active');
+    const lbl=b.querySelector('.cna-bnav-label');if(lbl)lbl.style.color='#8E8E93';
+    const svg=b.querySelector('svg');if(svg)svg.setAttribute('stroke','#8E8E93');
+  });
+  const el=document.getElementById(id);
+  if(el){
+    el.classList.add('active');
+    const lbl=el.querySelector('.cna-bnav-label');if(lbl)lbl.style.color='#2563EB';
+    const svg=el.querySelector('svg');if(svg)svg.setAttribute('stroke','#2563EB');
+  }
+}
+
+function cnaInitTopbar(){
+  const tb=document.getElementById('cna-topbar');
+  if(!tb)return;
+  const dateEl=document.getElementById('cna-topbar-date');
+  if(dateEl){
+    const now=new Date();
+    dateEl.textContent=now.toLocaleDateString('it-IT',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+  }
+}
+
+function cnaUpdateSidebar(){
+  if(!loggedUser)return;
+  const name=((loggedUser.nome||'')+' '+(loggedUser.cognome||'')).trim();
+  const initials=name.split(' ').filter(Boolean).map(w=>w[0]).join('').slice(0,2).toUpperCase()||'??';
+  const av=document.getElementById('cna-sb-av');if(av)av.textContent=initials;
+  const nm=document.getElementById('cna-sb-name');if(nm)nm.textContent=name||loggedUser.email||'';
+  const rl=document.getElementById('cna-sb-role');if(rl)rl.textContent=loggedUser.ruolo==='admin'?'Amministratore':'Operatore';
+  // Admin-only sidebar buttons
+  ['sbnav-admin-email','sbnav-admin-utenti','sbnav-admin-log'].forEach(id=>{
+    const b=document.getElementById(id);if(b)b.style.display=loggedUser.ruolo==='admin'?'flex':'none';
+  });
 }
 
 async function checkSession(){
@@ -7010,6 +7444,9 @@ async function previewPDF(){
 function switchTab(i){
   document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
   document.querySelectorAll('.tab-page').forEach(p=>p.classList.remove('active'));
+  // Aggiorna navigazione
+  if(i===5){cnaSetSb('sbnav-home','Dashboard');cnaSetBnav('bnav-home');}
+  else if(i===4){cnaSetSb('sbnav-contratti','Contratti');cnaSetBnav('bnav-contratti');}
   const btn=document.querySelector(`.tab-btn[data-tab="${i}"]`);
   if(btn)btn.classList.add('active');
   const page=document.getElementById(`tab-${i}`);
