@@ -160,6 +160,7 @@ body.dark-mode .dark-mode-toggle svg#icon-moon{fill:#000;stroke:none}
 .main-content{width:100%;margin:0;padding:24px 24px 100px}
 .tab-page{display:none;width:100%}.tab-page.active{display:block;width:100%}
 .form-card{background:var(--card-bg);border-radius:14px;box-shadow:0 1px 4px rgba(37,99,235,.06);border:1px solid var(--brd);margin-bottom:20px;overflow:hidden;width:100%;transition:box-shadow .2s}
+#tab-4>.form-card{overflow:visible}
 .form-card-header{background:var(--brand-subtle,#DBEAFE);padding:13px 20px;border-bottom:1px solid var(--brd);display:flex;align-items:center;gap:10px}
 .form-card-header h3{font-size:13px;font-weight:700;color:var(--brand-dark,#1E3A8A);text-transform:uppercase;letter-spacing:.5px}
 .form-card-body{padding:20px}
@@ -345,7 +346,7 @@ body,button,input,select,textarea{font-family:'Inter',-apple-system,'Helvetica N
 /* ===== RESET PROBLEMI LAYOUT ===== */
 html,body{overflow-x:hidden;width:100%}
 #app-container{overflow-x:hidden}
-#tab-4 .form-card-body{overflow-x:auto;-webkit-overflow-scrolling:touch}
+#tab-4>.form-card>.form-card-body{overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:8px}
 
 /* ===== KPI CARD NUOVE ===== */
 .stat-mini-box{
@@ -501,8 +502,8 @@ body.dark-mode #cna-topbar-greeting{color:#fff}
 }
 body.dark-mode .contract-item{background:#2C2C2E!important;border-bottom-color:rgba(255,255,255,.06)!important}
 .contract-item:last-child{border-bottom:none!important}
-#contracts-list{background:#fff;border-radius:0 0 16px 16px;overflow-x:auto;-webkit-overflow-scrolling:touch;box-shadow:0 1px 3px rgba(0,0,0,.06)}
-#contracts-table{width:100%;border-collapse:collapse;font-size:13px}
+#contracts-list{background:#fff;border-radius:0 0 16px 16px;overflow-x:auto;-webkit-overflow-scrolling:touch;box-shadow:0 1px 3px rgba(0,0,0,.06);padding:0 8px}
+#contracts-table{width:100%;min-width:900px;border-collapse:collapse;font-size:13px;table-layout:auto}
 #tab-5 .stats-bar-container,#tab-4 .stats-bar-container{margin-bottom:40px}
 #contracts-table thead th{background:linear-gradient(180deg,#F0F4F8,#E8EDF3);color:#475569;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:0.08em;padding:10px 12px;border-bottom:2px solid #CBD5E1;white-space:nowrap;position:sticky;top:0;z-index:1}
 #contracts-table thead th:first-child{border-radius:0;padding-left:14px}
@@ -3655,7 +3656,7 @@ table.quill-better-table {
         </div>
       </div>
       <div style="overflow-x:auto;-webkit-overflow-scrolling:touch">
-      <div id="contracts-list" style="padding:0 4px"><p style="text-align:center;color:var(--txt2);padding:40px">Caricamento...</p></div>
+      <div id="contracts-list"><p style="text-align:center;color:var(--txt2);padding:40px">Caricamento...</p></div>
       </div>
       <div id="pagination-bar" style="display:none;margin-top:16px;align-items:center;justify-content:center;gap:6px;flex-wrap:wrap"></div>
     </div>
@@ -7580,7 +7581,6 @@ function renderPage(page){
     </tr>`;
   }).join('');
 
-  list.style.padding="0 4px";
   list.innerHTML=`<table id="contracts-table">
     <thead><tr>
       <th><input type="checkbox" id="select-all-contracts" onchange="toggleSelectAll(this)" style="width:15px;height:15px;accent-color:#2563EB"></th>
