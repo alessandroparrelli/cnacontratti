@@ -213,8 +213,8 @@ input[readonly],select[readonly],textarea[readonly]{background:var(--input-bg);o
 .modal-header{padding:20px 24px;border-bottom:1px solid var(--brd);display:flex;justify-content:space-between;align-items:center}
 .modal-header h2{font-size:18px;font-weight:700;color:var(--cna-dk)}.modal-body{padding:24px}.modal-footer{padding:16px 24px;border-top:1px solid var(--brd);display:flex;gap:10px;justify-content:flex-end}
 .close-btn{background:none;border:none;font-size:24px;cursor:pointer;color:var(--txt2)}
-.contract-item{display:flex;flex-direction:row;justify-content:space-between;align-items:center;padding:14px 16px;border:none;border-bottom:0.5px solid rgba(0,0,0,0.06);border-radius:0;margin-bottom:0;background:#fff;box-shadow:none;transition:background .15s;gap:12px;width:100%}
-.contract-item:hover{background:#F9FAFB}
+.contract-item{display:contents}
+.contract-item:hover>td{background:#F0F6FF!important}
 .contract-info{flex:1;min-width:0}
 .contract-info h4{font-size:17px;font-weight:800;margin-bottom:4px;color:var(--txt);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;letter-spacing:-0.01em}
 .contract-info p{font-size:11px;color:var(--txt2);line-height:1.4}
@@ -501,6 +501,34 @@ body.dark-mode #cna-topbar-greeting{color:#fff}
 body.dark-mode .contract-item{background:#2C2C2E!important;border-bottom-color:rgba(255,255,255,.06)!important}
 .contract-item:last-child{border-bottom:none!important}
 #contracts-list{background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.06)}
+#contracts-table{width:100%;border-collapse:collapse;font-size:13px}
+#contracts-table thead th{background:#F8FAFC;color:#6B7280;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;padding:10px 10px;border-bottom:1.5px solid #E5E7EB;white-space:nowrap;position:sticky;top:0;z-index:1}
+#contracts-table thead th:first-child{border-radius:0;padding-left:14px}
+#contracts-table tbody td{padding:10px 10px;border-bottom:1px solid #F3F4F6;vertical-align:middle;color:#374151}
+#contracts-table tbody td:first-child{padding-left:14px}
+#contracts-table tbody tr:last-child td{border-bottom:none}
+#contracts-table tbody tr:hover td{background:#F0F6FF}
+.ct-btn{display:inline-flex;align-items:center;gap:4px;padding:4px 9px;border-radius:7px;font-size:11px;font-weight:700;border:1.5px solid transparent;cursor:pointer;font-family:inherit;white-space:nowrap;line-height:1.4;transition:opacity .15s}
+.ct-btn:hover{opacity:0.85}
+.ct-btn-pdf{background:#059669;color:#fff;border-color:#059669}
+.ct-btn-reinvia{background:#6366F1;color:#fff;border-color:#6366F1}
+.ct-btn-reset{background:#EF4444;color:#fff;border-color:#EF4444}
+.ct-btn-doc{background:#fff;color:#374151;border-color:#D1D5DB}
+.ct-btn-gps-ok{background:#F0FDF4;color:#16A34A;border-color:#86EFAC}
+.ct-btn-gps-no{background:#fff;color:#9CA3AF;border-color:#E5E7EB}
+.ct-btn-link{background:#fff;color:#2563EB;border-color:#BFDBFE}
+.ct-btn-invia{background:#2563EB;color:#fff;border-color:#2563EB}
+.ct-btn-sms{background:#F97316;color:#fff;border-color:#F97316}
+.ct-btn-wa{background:#25D366;color:#fff;border-color:#25D366}
+.ct-btn-edit{background:#fff;color:#374151;border-color:#D1D5DB}
+.ct-gest-sel{font-size:11px;padding:4px 7px;border:1px solid #E5E7EB;border-radius:7px;background:#F9FAFB;color:#374151;cursor:pointer}
+.ct-badge-firmato{background:#D1FAE5;color:#065F46;font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px;white-space:nowrap}
+.ct-badge-inviato{background:#FEF3C7;color:#92400E;font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px;white-space:nowrap}
+.ct-badge-bozza{background:#F3F4F6;color:#6B7280;font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px;white-space:nowrap}
+.ct-badge-otp-ok{background:#D1FAE5;color:#065F46;font-size:10px;font-weight:700;padding:2px 7px;border-radius:20px}
+.ct-badge-otp-no{background:#FEF3C7;color:#92400E;font-size:10px;font-weight:700;padding:2px 7px;border-radius:20px}
+.ct-tipo{background:#EFF6FF;color:#2563EB;font-size:10px;font-weight:700;padding:2px 7px;border-radius:20px;white-space:nowrap}
+.ct-avatar{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;flex-shrink:0}
 body.dark-mode #contracts-list{background:#2C2C2E}
 .contract-info h4{font-size:13px!important;font-weight:700!important}
 .contract-avatar{border-radius:10px!important}
@@ -3616,7 +3644,9 @@ table.quill-better-table {
         </div>
         </div>
       </div>
+      <div style="overflow-x:auto;-webkit-overflow-scrolling:touch">
       <div id="contracts-list"><p style="text-align:center;color:var(--txt2);padding:40px">Caricamento...</p></div>
+      </div>
       <div id="pagination-bar" style="display:none;margin-top:16px;align-items:center;justify-content:center;gap:6px;flex-wrap:wrap"></div>
     </div>
   </div>
@@ -7456,56 +7486,110 @@ function renderPage(page){
   const pageData=filtered.slice(start,start+PAGE_SIZE);
   const list=document.getElementById('contracts-list');
   if(!pageData.length){list.innerHTML='<p style="text-align:center;padding:40px;color:var(--txt2)">Nessun contratto trovato</p>';renderPagination(0,1,1);return;}
-  list.innerHTML=pageData.map(x=>{
+  // ── Tabella contratti ──
+  const svgPDF='<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>';
+  const svgReset='<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-4.95"/></svg>';
+  const svgDoc='<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>';
+  const svgGPS='<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>';
+  const svgLink='<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>';
+  const svgSend='<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>';
+  const svgEdit='<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>';
+  const svgEmail='<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>';
+  const svgSMS='<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12a19.79 19.79 0 0 1-3-8.63A2 2 0 0 1 3.68 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.6a16 16 0 0 0 6 6l1.06-1.06a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>';
+
+  const rows=pageData.map(x=>{
     const createdByName=(window._userMap&&window._userMap[x.created_by])||'N/D';
-    const st=x.stato||'bozza';const bc=st==='firmato'?'signed':st==='inviato'?'sent':'empty';
-    const bt=st==='firmato'?'Firmato':st==='inviato'?'Inviato':'Bozza';
+    const st=x.stato||'bozza';
     const d=new Date(x.created_at).toLocaleDateString('it-IT');
     const anno=new Date(x.created_at).getFullYear();
     const url=BASE_URL+'?firma='+x.token;
     const hasDoc=(st==='firmato');
     const gest=x.caricato_gestionale;
-    const gestClass=gest?'background:#d4edda;color:#155724':'background:#fff3cd;color:#856404';
-    const gestText=gest?'✓ Caricato':'● Da caricare';
     const gestValue=gest?'caricato':'da-caricare';
     const hasGps=!!(x.gps_firma);
     const canEdit=(st==='bozza'||st==='inviato');
     const otpOk=!!(x.otp_verificato_at);
-    const otpBadge=st==='firmato'?(otpOk?`<span title="OTP verificato il ${new Date(x.otp_verificato_at).toLocaleString('it-IT')} · ${x.otp_cellulare_usato||''}" style="font-size:10px;padding:2px 7px;border-radius:10px;background:#d4edda;color:#155724;font-weight:600;cursor:default">✓ OTP</span>`:`<span title="OTP non verificato" style="font-size:10px;padding:2px 7px;border-radius:10px;background:#fff3cd;color:#856404;font-weight:600;cursor:default">⚠ OTP</span>`):'';
-    // Avatar iniziali
     const rawN=(x.cognome||x.ragione_sociale||'?');
     const rawN2=(x.nome||'');
     const initials=((rawN[0]||'?')+(rawN2[0]||rawN[1]||'?')).toUpperCase();
     const avPalette=['#2563EB','#7C3AED','#059669','#B91C1C','#D97706','#0891B2','#9333EA','#0F766E','#1E40AF','#92400E'];
     const avBg=avPalette[(rawN.charCodeAt(0)||65)%avPalette.length];
 
-    return `<div class="contract-item" data-id="${x.id}" data-nome="${(x.cognome||'')+' '+(x.nome||'')+' '+(x.ragione_sociale||'')}" data-email="${x.email||''}" data-tipo="${x.tipo_contratto||'tesseramento'}" data-anno="${anno}" data-stato="${st}" data-proprietario="${createdByName}" data-gestionale="${gestValue}">
-        <!-- TOP ROW: checkbox + avatar + info -->
-        <div class="contract-item-top">
-          <input type="checkbox" class="contract-cb" value="${x.id}" onchange="updateExportBtn()" style="width:16px;height:16px;accent-color:#2563EB;flex-shrink:0">
-          <div class="contract-avatar" style="background:${avBg};width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#fff;flex-shrink:0">${initials}</div>
-          <div class="contract-info" style="flex:1;min-width:0">
-            <h4>${x.cognome||''} ${x.nome||''} ${x.ragione_sociale?'· '+x.ragione_sociale:''}</h4>
-            <p>${d} &nbsp;·&nbsp; <span class="status-badge ${bc}">${bt}</span>${otpBadge?' &nbsp;'+otpBadge:''} &nbsp;·&nbsp; <span style="font-size:10px;padding:2px 6px;border-radius:6px;background:#EFF6FF;color:#2563EB;font-weight:600">${getTipoLabel(x.tipo_contratto||'tesseramento')}</span></p>
-            <p style="margin-top:2px"><span style="font-size:10px;color:#8E8E93">👤 ${createdByName}</span>${st==='firmato'?'&nbsp;·&nbsp;<span style="font-size:10px;padding:2px 6px;border-radius:6px;font-weight:600;'+gestClass+'">'+gestText+'</span>':''}</p>
-          </div>
+    const stBadge=st==='firmato'?'<span class="ct-badge-firmato">✓ Firmato</span>'
+                 :st==='inviato'?'<span class="ct-badge-inviato">⏳ Inviato</span>'
+                 :'<span class="ct-badge-bozza">Bozza</span>';
+    const otpBadge=st==='firmato'
+      ?(otpOk?`<span class="ct-badge-otp-ok" title="OTP verificato il ${new Date(x.otp_verificato_at).toLocaleString('it-IT')}">✓ OTP</span>`
+             :`<span class="ct-badge-otp-no">⚠ OTP</span>`)
+      :'<span style="color:#D1D5DB;font-size:11px">—</span>';
+    const tipoLabel=getTipoLabel(x.tipo_contratto||'tesseramento');
+    const ragSoc=[x.cognome||'',x.nome||''].filter(Boolean).join(' ')+(x.ragione_sociale?' · '+x.ragione_sociale:'');
+
+    // Colonna Caricato
+    const gestCol=st==='firmato'
+      ?`<select class="ct-gest-sel" onchange="toggleGestionale('${x.id}',this.value==='1')">
+          <option value="0" ${!gest?'selected':''}>⏳ Da caricare</option>
+          <option value="1" ${gest?'selected':''}>✓ Caricato</option>
+        </select>`
+      :'<span style="color:#D1D5DB;font-size:11px">—</span>';
+
+    // Colonna Azioni
+    const btnPDF=st==='firmato'?`<button class="ct-btn ct-btn-pdf" onclick="dlSigned('${x.id}')" title="Scarica PDF">${svgPDF} PDF</button>`:'';
+    const btnReinvia=st==='firmato'?`<button class="ct-btn ct-btn-reinvia" onclick="sendFromList('${x.id}','${x.token}','${x.email||''}')" title="Reinvia email">${svgEmail} Reinvia</button>`:'';
+    const btnInvia=(st==='bozza'||st==='inviato')?`<button class="ct-btn ct-btn-invia" onclick="sendFromList('${x.id}','${x.token}','${x.email||''}')">${svgSend} ${st==='inviato'?'Reinvia':'Invia'}</button>`:'';
+    const btnSMS=(st==='bozza'||st==='inviato')?`<button class="ct-btn ct-btn-sms" onclick="sendSmsFromList('${x.id}')" title="SMS">${svgSMS} SMS</button>`:'';
+    const btnWA=(st==='bozza'||st==='inviato')?`<button class="ct-btn ct-btn-wa" onclick="sendWhatsAppFromList('${x.id}')" title="WhatsApp" style="background:#25D366;color:#fff;border-color:#25D366">WA</button>`:'';
+    const btnReset=st==='firmato'?`<button class="ct-btn ct-btn-reset" onclick="resetFirma('${x.id}')" title="Reset firma">${svgReset} Reset</button>`:'';
+    const btnEdit=canEdit?`<button class="ct-btn ct-btn-edit" onclick="editContract('${x.id}')">${svgEdit} Modifica</button>`:'';
+    const btnFronte=hasDoc?`<button class="ct-btn ct-btn-doc" onclick="viewDocSide('${x.id}','fronte')" title="Documento fronte">${svgDoc} Fronte</button>`:'<span style="color:#D1D5DB;font-size:11px">—</span>';
+    const btnRetro=hasDoc?`<button class="ct-btn ct-btn-doc" onclick="viewDocSide('${x.id}','retro')" title="Documento retro">${svgDoc} Retro</button>`:'<span style="color:#D1D5DB;font-size:11px">—</span>';
+    const btnGPS=st==='firmato'?`<button class="ct-btn ${hasGps?'ct-btn-gps-ok':'ct-btn-gps-no'}" onclick="openGpsModal('${x.id}','${x.gps_firma||''}')" title="GPS firma">${svgGPS} GPS</button>`:'<span style="color:#D1D5DB;font-size:11px">—</span>';
+    const btnLink=`<button class="ct-btn ct-btn-link" onclick="cpLink('${url}')" title="Copia link firma">${svgLink} Link</button>`;
+
+    return `<tr class="contract-item" data-id="${x.id}" data-nome="${(x.cognome||'')+' '+(x.nome||'')+' '+(x.ragione_sociale||'')}" data-email="${x.email||''}" data-tipo="${x.tipo_contratto||'tesseramento'}" data-anno="${anno}" data-stato="${st}" data-proprietario="${createdByName}" data-gestionale="${gestValue}">
+      <td style="width:36px"><input type="checkbox" class="contract-cb" value="${x.id}" onchange="updateExportBtn()" style="width:15px;height:15px;accent-color:#2563EB"></td>
+      <td style="white-space:nowrap;color:#6B7280;font-size:12px">${d}</td>
+      <td style="white-space:nowrap;max-width:90px;overflow:hidden;text-overflow:ellipsis;font-size:12px;color:#374151" title="${createdByName}">${createdByName}</td>
+      <td style="min-width:160px;max-width:220px">
+        <div style="display:flex;align-items:center;gap:8px">
+          <div class="ct-avatar" style="background:${avBg}">${initials}</div>
+          <span style="font-weight:600;font-size:13px;color:#111827;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:160px" title="${ragSoc}">${ragSoc}</span>
         </div>
-        <!-- ACTION BUTTONS — compatti, wrap su mobile -->
-        <div class="contract-actions">
-          ${st==='firmato'?`<select onchange="toggleGestionale('${x.id}',this.value==='1')" style="font-size:11px;padding:6px 8px;border:1px solid #E5E7EB;border-radius:8px;background:#F9FAFB;color:#374151;cursor:pointer"><option value="0" ${!gest?'selected':''}>● Da caricare</option><option value="1" ${gest?'selected':''}>✓ Caricato</option></select>`:''}
-          ${canEdit?`<button class="btn btn-sm btn-outline" onclick="editContract('${x.id}')"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" style="display:inline;vertical-align:-1px"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg> Modifica</button>`:''}
-          ${(st==='bozza'||st==='inviato')?`<button class="btn btn-sm" onclick="sendFromList('${x.id}','${x.token}','${x.email||''}')" style="background:#2563EB;color:#fff"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" style="display:inline;vertical-align:-1px"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg> ${st==='inviato'?'Reinvia':'Invia'}</button>`:''}
-          ${(st==='bozza'||st==='inviato')?`<button class="btn btn-sm" onclick="sendSmsFromList('${x.id}')" style="background:#F97316;color:#fff" title="Invia SMS"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" style="display:inline;vertical-align:-1px"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12a19.79 19.79 0 0 1-3-8.63A2 2 0 0 1 3.68 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.6a16 16 0 0 0 6 6l1.06-1.06a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg> SMS</button>`:''}
-          ${(st==='bozza'||st==='inviato')?`<button class="btn btn-sm" onclick="sendWhatsAppFromList('${x.id}')" style="background:#25D366;color:#fff" title="Invia WhatsApp"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" style="display:inline;vertical-align:-1px"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg> WA</button>`:''}
-          ${st==='firmato'?`<button class="btn btn-sm btn-success" onclick="dlSigned('${x.id}')"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" style="display:inline;vertical-align:-1px"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg> PDF</button>`:''}
-          ${st==='firmato'?`<button class="btn btn-sm" onclick="sendFromList('${x.id}','${x.token}','${x.email||''}')" style="background:#6366F1;color:#fff" title="Reinvia email post-firma"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" style="display:inline;vertical-align:-1px"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg> 📧</button>`:''}
-          ${st==='firmato'?`<button class="btn btn-sm" onclick="resetFirma('${x.id}')" style="background:#EF4444;color:#fff" title="Reset firma"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" style="display:inline;vertical-align:-1px"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-4.95"/></svg> Reset</button>`:''}
-          ${hasDoc?`<button class="btn btn-sm btn-outline" onclick="viewDocSide('${x.id}','fronte')" title="Doc fronte"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" style="display:inline;vertical-align:-1px"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg> Fronte</button><button class="btn btn-sm btn-outline" onclick="viewDocSide('${x.id}','retro')" title="Doc retro"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" style="display:inline;vertical-align:-1px"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg> Retro</button>`:''}
-          ${st==='firmato'?`<button class="btn btn-sm btn-outline" onclick="openGpsModal('${x.id}','${x.gps_firma||''}')" title="GPS firma" style="${hasGps?'background:#F0FDF4;color:#16A34A;border-color:#86EFAC':'color:#9CA3AF;border-color:#E5E7EB'}"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" style="display:inline;vertical-align:-1px"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg> GPS</button>`:''}
-          <button class="btn btn-sm btn-outline" onclick="cpLink('${url}')" title="Copia link firma"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" style="display:inline;vertical-align:-1px"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg> Link</button>
-        </div>
-      </div>`;
+      </td>
+      <td><span class="ct-tipo">${tipoLabel}</span></td>
+      <td>${stBadge}</td>
+      <td>${otpBadge}</td>
+      <td>${gestCol}</td>
+      <td>${btnPDF}</td>
+      <td>${btnReinvia||btnInvia||''} ${btnSMS} ${btnWA} ${btnEdit}</td>
+      <td>${btnReset}</td>
+      <td>${btnFronte}</td>
+      <td>${btnRetro}</td>
+      <td>${btnGPS}</td>
+      <td>${btnLink}</td>
+    </tr>`;
   }).join('');
+
+  list.innerHTML=`<table id="contracts-table">
+    <thead><tr>
+      <th><input type="checkbox" id="select-all-contracts" onchange="toggleSelectAll(this)" style="width:15px;height:15px;accent-color:#2563EB"></th>
+      <th>Data</th>
+      <th>Promotore</th>
+      <th>Ragione Sociale</th>
+      <th>Tipo</th>
+      <th>Stato</th>
+      <th>OTP</th>
+      <th>Caricato</th>
+      <th>PDF</th>
+      <th>Invia / Reinvia</th>
+      <th>Reset</th>
+      <th>Fronte</th>
+      <th>Retro</th>
+      <th>GPS</th>
+      <th>Link</th>
+    </tr></thead>
+    <tbody>${rows}</tbody>
+  </table>`;
   renderPagination(total,page,totalPages);
 }
 
