@@ -125,12 +125,24 @@ body.dark-mode .dark-mode-toggle svg#icon-moon{fill:#000;stroke:none}
 .app-header{background:rgba(255,255,255,0.72);backdrop-filter:blur(20px) saturate(180%);-webkit-backdrop-filter:blur(20px) saturate(180%);color:var(--txt);position:sticky;top:0;z-index:100;box-shadow:0 1px 3px rgba(15,23,42,0.04),0 8px 24px rgba(15,23,42,0.03);border-bottom:1px solid rgba(255,255,255,0.5)}
 .stats-bar-container{background:transparent;border-bottom:none;padding:16px 0}
 .stats-bar{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;max-width:100%;margin:0 auto;padding:0 24px}
-.stat-mini-box{border:1.5px solid rgba(37,99,235,0.18);border-radius:16px;padding:20px 20px 18px 20px;background:#fff;display:flex;flex-direction:column;gap:0;position:relative;box-shadow:none;transition:all 0.2s ease}
-.stat-mini-box:hover{border-color:rgba(37,99,235,0.45);box-shadow:0 4px 16px rgba(37,99,235,0.1);transform:translateY(-2px)}
+.stat-mini-box{
+  border:none;border-radius:16px;padding:20px 20px 18px 20px;
+  background:#fff;display:flex;flex-direction:column;gap:0;
+  position:relative;box-shadow:0 1px 3px rgba(0,0,0,.06);
+  transition:all 0.2s ease;overflow:hidden;
+}
+.stat-mini-box::before{
+  content:'';position:absolute;left:0;top:0;bottom:0;width:4px;
+  background:#2563EB;border-radius:4px 0 0 4px;
+}
+.stat-mini-box:nth-child(2)::before{background:#F97316}
+.stat-mini-box:nth-child(3)::before{background:#F97316}
+.stat-mini-box:nth-child(4)::before{background:#16A34A}
+.stat-mini-box:hover{box-shadow:0 4px 16px rgba(0,0,0,.1);transform:translateY(-2px)}
 .stat-mini-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:4px}
 .stat-mini-label{font-size:11px;font-weight:700;color:#6B7280;font-family:'Outfit',sans-serif;letter-spacing:0.18em;text-transform:uppercase;line-height:1.3;text-align:center}
 .stat-mini-icon{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.stat-mini-num{font-size:36px;font-weight:800;color:#2563EB;line-height:1;font-family:'Outfit',sans-serif;letter-spacing:-0.03em;display:block;text-align:center;padding:14px 0 10px 0}
+.stat-mini-num{font-size:38px;font-weight:900;color:#1D1D1F;line-height:1;font-family:'Inter',sans-serif;letter-spacing:-0.05em;display:block;text-align:left;padding:12px 0 8px 0}
 .header-inner{max-width:100%;margin:0 auto;padding:14px 24px;display:flex;align-items:center;gap:16px}
 .header-logo img{height:44px;width:auto}
 .header-text h1{font-size:20px;font-weight:700;color:#1E3A8A;font-family:Outfit,sans-serif;letter-spacing:-0.02em}.header-text p{font-size:12px;color:var(--txt2)}
@@ -356,6 +368,8 @@ html,body{overflow-x:hidden;width:100%}
 #stat-attesa,#stat-attesa-c{color:#F97316!important}
 #stat-da-caricare,#stat-da-caricare-c{color:#F97316!important}
 #stat-caricati,#stat-caricati-c{color:#16A34A!important}
+/* KPI icon box */
+.stat-mini-icon{border-radius:10px!important}
 
 /* ===== HEADER MOBILE ===== */
 .app-header{background:#fff!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;border-bottom:0.5px solid rgba(0,0,0,0.1)!important;box-shadow:none!important}
@@ -411,13 +425,12 @@ html,body{overflow-x:hidden;width:100%}
 }
 body.dark-mode #cna-sidebar{background:#1C1C1E;border-right-color:#2C2C2E}
 
-.cna-sb-logo{padding:20px 18px 16px;border-bottom:1px solid #E5E7EB;display:flex;align-items:center;gap:9px;cursor:pointer}
+.cna-sb-logo{padding:18px 18px 16px;border-bottom:1px solid #E5E7EB;display:flex;align-items:center;gap:10px;cursor:pointer}
 body.dark-mode .cna-sb-logo{border-bottom-color:#2C2C2E}
-.cna-sb-logo-icon{width:28px;height:28px;background:#2563EB;border-radius:7px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.cna-sb-logo-txt{font-size:14px;font-weight:800;color:#1D1D1F;letter-spacing:-.03em}
+.cna-sb-logo-txt{font-size:15px;font-weight:800;color:#1D1D1F;letter-spacing:-.03em}
 body.dark-mode .cna-sb-logo-txt{color:#fff}
 .cna-sb-logo-txt span{color:#2563EB}
-.cna-sb-ver{font-size:10px;font-weight:600;color:#8E8E93;background:#F2F2F7;padding:2px 6px;border-radius:4px;margin-left:auto}
+.cna-sb-ver{font-size:10px;font-weight:600;color:#8E8E93;background:#F2F2F7;padding:2px 6px;border-radius:4px}
 body.dark-mode .cna-sb-ver{background:#2C2C2E}
 
 .cna-sb-section{padding:10px 16px 4px;font-size:10px;font-weight:700;color:#8E8E93;letter-spacing:.1em;text-transform:uppercase}
@@ -444,20 +457,17 @@ body.dark-mode .cna-sb-user-name{color:#fff}
 /* ===== DESKTOP TOPBAR ===== */
 #cna-topbar{
   display:none;
-  align-items:center;gap:14px;padding:14px 24px;
+  align-items:center;justify-content:space-between;padding:14px 28px;
   background:#fff;border-bottom:1px solid #E5E7EB;
   position:sticky;top:0;z-index:100;
 }
 body.dark-mode #cna-topbar{background:#1C1C1E;border-bottom-color:#2C2C2E}
-#cna-topbar-title{font-size:20px;font-weight:800;color:#1D1D1F;letter-spacing:-.03em;flex:1}
+#cna-topbar-title{font-size:20px;font-weight:800;color:#1D1D1F;letter-spacing:-.03em}
 body.dark-mode #cna-topbar-title{color:#fff}
-#cna-topbar-date{font-size:12px;color:#8E8E93;white-space:nowrap}
-#cna-topbar-search{background:#F2F2F7;border-radius:10px;padding:8px 12px;display:flex;align-items:center;gap:8px;width:220px}
-body.dark-mode #cna-topbar-search{background:#2C2C2E}
-#cna-topbar-search input{border:none;background:none;font-size:12px;color:#1D1D1F;outline:none;width:100%;font-family:'Inter',sans-serif}
-body.dark-mode #cna-topbar-search input{color:#fff}
-#cna-topbar-search input::placeholder{color:#8E8E93}
-#cna-topbar-newbtn{background:#2563EB;color:#fff;border:none;border-radius:10px;padding:9px 16px;font-size:13px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:6px;white-space:nowrap;font-family:'Inter',sans-serif}
+#cna-topbar-right{display:flex;flex-direction:column;align-items:flex-end;gap:1px}
+#cna-topbar-greeting{font-size:13px;font-weight:700;color:#1D1D1F;letter-spacing:-.01em}
+body.dark-mode #cna-topbar-greeting{color:#fff}
+#cna-topbar-date{font-size:12px;color:#8E8E93;font-weight:500}
 
 @media(min-width:769px){
   body{background:#F2F2F7!important}
@@ -3047,8 +3057,18 @@ table.quill-better-table {
 <!-- SIDEBAR DESKTOP -->
 <aside id="cna-sidebar">
   <div class="cna-sb-logo" onclick="location.reload()">
-    <div class="cna-sb-logo-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3L21 7 9 19 3 21 5 15Z"/></svg></div>
-    <div class="cna-sb-logo-txt">signature<span>cna</span></div>
+    <svg viewBox="0 0 56 56" width="36" height="36" fill="none" style="flex-shrink:0">
+      <rect width="56" height="56" rx="12" fill="#EFF6FF"/>
+      <path d="M38 10 L46 18 L22 42 L14 44 L16 36 Z" fill="#1E3A8A" opacity=".15"/>
+      <path d="M38 10 L46 18 L22 42 L14 44 L16 36 Z" stroke="#1E3A8A" stroke-width="2" fill="none" stroke-linejoin="round"/>
+      <path d="M16 36 L14 44 L22 42" stroke="#2563EB" stroke-width="2.5" stroke-linejoin="round" fill="none"/>
+      <circle cx="15" cy="43" r="2.5" fill="#2563EB"/>
+      <path d="M19 40 C23 36 29 40 34 33" stroke="#2563EB" stroke-width="2" stroke-linecap="round" fill="none" opacity=".6"/>
+      <path d="M36 8 L48 20" stroke="#1E3A8A" stroke-width="2" stroke-linecap="round"/>
+    </svg>
+    <div style="display:flex;flex-direction:column;gap:0;flex:1;min-width:0">
+      <div class="cna-sb-logo-txt" style="font-size:15px;line-height:1.1">signature<span>cna</span></div>
+    </div>
     <span class="cna-sb-ver">v9</span>
   </div>
   <nav style="flex:1;padding:8px 0;overflow-y:auto">
@@ -3098,14 +3118,10 @@ table.quill-better-table {
 <!-- DESKTOP TOPBAR -->
 <div id="cna-topbar">
   <div id="cna-topbar-title">Dashboard</div>
-  <div id="cna-topbar-date"></div>
-  <div id="cna-topbar-search">
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#8E8E93" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-    <input type="text" placeholder="Cerca impresa, P.IVA, CF…" oninput="filterContracts(false)">
+  <div id="cna-topbar-right">
+    <div id="cna-topbar-greeting"></div>
+    <div id="cna-topbar-date"></div>
   </div>
-  <button id="cna-topbar-newbtn" onclick="openNuovoContrattoModal()">
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Nuovo contratto
-  </button>
 </div>
 
 <!-- BOTTOM NAV MOBILE -->
@@ -5882,10 +5898,21 @@ function cnaSetBnav(id){
 function cnaInitTopbar(){
   const tb=document.getElementById('cna-topbar');
   if(!tb)return;
+  const now=new Date();
+  // Data
   const dateEl=document.getElementById('cna-topbar-date');
   if(dateEl){
-    const now=new Date();
-    dateEl.textContent=now.toLocaleDateString('it-IT',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+    const d=now.toLocaleDateString('it-IT',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+    dateEl.textContent=d.charAt(0).toUpperCase()+d.slice(1);
+  }
+  // Saluto basato sull'ora
+  const h=now.getHours();
+  const saluto=h<13?'Buongiorno':h<18?'Buon pomeriggio':'Buona sera';
+  const emoji=h<13?'☀️':h<18?'🌤️':'🌙';
+  const greetEl=document.getElementById('cna-topbar-greeting');
+  if(greetEl){
+    const nome=loggedUser?(loggedUser.nome||loggedUser.email?.split('@')[0]||''):'';
+    greetEl.textContent=`${saluto} ${nome} ${emoji}`;
   }
 }
 
