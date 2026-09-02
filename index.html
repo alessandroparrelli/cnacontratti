@@ -545,6 +545,52 @@ body.dark-mode .cna-act-text{color:#D1D5DB}
   #tab-5 .form-card{margin:0!important}
   #tab-4 .form-card{margin:0!important}
 }
+
+/* ===== CONTRACT ITEM MOBILE LAYOUT ===== */
+@media(max-width:768px){
+  .contract-item{
+    flex-direction:column!important;
+    align-items:stretch!important;
+    padding:14px 16px!important;
+    gap:10px!important;
+  }
+  .contract-item-top{
+    display:flex;align-items:center;gap:10px;
+  }
+  .contract-info{flex:1;min-width:0}
+  .contract-info h4{
+    font-size:13px!important;font-weight:700!important;
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  }
+  .contract-info p{font-size:11px!important;color:#8E8E93!important;line-height:1.4}
+  /* Action buttons mobile: griglia icone */
+  .contract-actions{
+    display:flex!important;flex-wrap:wrap!important;gap:6px!important;
+    padding-top:2px;
+  }
+  .contract-actions .btn-sm{
+    flex:0 0 auto;
+    padding:7px 10px!important;
+    font-size:11px!important;
+    border-radius:9px!important;
+    font-weight:600!important;
+    display:flex!important;align-items:center!important;gap:4px!important;
+    white-space:nowrap;
+  }
+  /* Gestionale select su mobile */
+  .contract-actions select{
+    font-size:11px!important;padding:6px 8px!important;border-radius:8px!important;
+    border:1px solid #E5E7EB!important;background:#F9FAFB!important;
+  }
+  /* Checkbox nascosta su mobile, sostituita dall'avatar */
+  .contract-cb{display:none!important}
+}
+@media(min-width:769px){
+  .contract-item{display:flex;align-items:center;gap:12px}
+  .contract-item-top{display:contents}
+}
+/* Avatar bordo arrotondato sempre */
+.contract-avatar{border-radius:10px!important}
 </style>
 
 
@@ -7281,22 +7327,37 @@ function renderPage(page){
     const canEdit=(st==='bozza'||st==='inviato');
     const otpOk=!!(x.otp_verificato_at);
     const otpBadge=st==='firmato'?(otpOk?`<span title="OTP verificato il ${new Date(x.otp_verificato_at).toLocaleString('it-IT')} · ${x.otp_cellulare_usato||''}" style="font-size:10px;padding:2px 7px;border-radius:10px;background:#d4edda;color:#155724;font-weight:600;cursor:default">✓ OTP</span>`:`<span title="OTP non verificato" style="font-size:10px;padding:2px 7px;border-radius:10px;background:#fff3cd;color:#856404;font-weight:600;cursor:default">⚠ OTP</span>`):'';
+    // Avatar iniziali
+    const rawN=(x.cognome||x.ragione_sociale||'?');
+    const rawN2=(x.nome||'');
+    const initials=((rawN[0]||'?')+(rawN2[0]||rawN[1]||'?')).toUpperCase();
+    const avPalette=['#2563EB','#7C3AED','#059669','#B91C1C','#D97706','#0891B2','#9333EA','#0F766E','#1E40AF','#92400E'];
+    const avBg=avPalette[(rawN.charCodeAt(0)||65)%avPalette.length];
+
     return `<div class="contract-item" data-id="${x.id}" data-nome="${(x.cognome||'')+' '+(x.nome||'')+' '+(x.ragione_sociale||'')}" data-email="${x.email||''}" data-tipo="${x.tipo_contratto||'tesseramento'}" data-anno="${anno}" data-stato="${st}" data-proprietario="${createdByName}" data-gestionale="${gestValue}">
-        <input type="checkbox" class="contract-cb" value="${x.id}" onchange="updateExportBtn()" style="width:16px;height:16px;accent-color:var(--cna);flex-shrink:0">
-        <div class="contract-info">
-          <h4>${x.cognome||''} ${x.nome||''} - ${x.ragione_sociale||'N/D'}</h4>
-          <p>${x.email||''} · ${d} · <span class="status-badge ${bc}">${bt}</span>${otpBadge?' · '+otpBadge:''} · <span style="font-size:10px;padding:2px 7px;border-radius:10px;background:var(--cna-light,#e3f0fa);color:var(--cna);font-weight:600">${getTipoLabel(x.tipo_contratto||'tesseramento')}</span> · <span style="font-size:10px;color:var(--txt2)">Proprietario: ${createdByName}</span></p>
+        <!-- TOP ROW: checkbox + avatar + info -->
+        <div class="contract-item-top">
+          <input type="checkbox" class="contract-cb" value="${x.id}" onchange="updateExportBtn()" style="width:16px;height:16px;accent-color:#2563EB;flex-shrink:0">
+          <div class="contract-avatar" style="background:${avBg};width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#fff;flex-shrink:0">${initials}</div>
+          <div class="contract-info" style="flex:1;min-width:0">
+            <h4>${x.cognome||''} ${x.nome||''} ${x.ragione_sociale?'· '+x.ragione_sociale:''}</h4>
+            <p>${d} &nbsp;·&nbsp; <span class="status-badge ${bc}">${bt}</span>${otpBadge?' &nbsp;'+otpBadge:''} &nbsp;·&nbsp; <span style="font-size:10px;padding:2px 6px;border-radius:6px;background:#EFF6FF;color:#2563EB;font-weight:600">${getTipoLabel(x.tipo_contratto||'tesseramento')}</span></p>
+            <p style="margin-top:2px"><span style="font-size:10px;color:#8E8E93">👤 ${createdByName}</span>${st==='firmato'?'&nbsp;·&nbsp;<span style="font-size:10px;padding:2px 6px;border-radius:6px;font-weight:600;'+gestClass+'">'+gestText+'</span>':''}</p>
+          </div>
         </div>
+        <!-- ACTION BUTTONS — compatti, wrap su mobile -->
         <div class="contract-actions">
-          ${st==='firmato'?`<span style="padding:3px 8px;border-radius:10px;font-size:10px;font-weight:600;${gestClass};white-space:nowrap">${gestText}</span><select onchange="toggleGestionale('${x.id}',this.value==='1')" style="font-size:10px;padding:2px 4px;border:1px solid var(--brd);border-radius:4px"><option value="0" ${!gest?'selected':''}>Da caricare</option><option value="1" ${gest?'selected':''}>Caricato</option></select>`:''}
-          ${canEdit?`<button class="btn btn-sm btn-outline" onclick="editContract('${x.id}')" title="Modifica contratto">&#x270F; Modifica</button>`:''}
-          ${st==='bozza'?`<button class="btn btn-sm btn-warning" onclick="sendFromList('${x.id}','${x.token}','${x.email||''}')">Invia</button><button class="btn btn-sm" onclick="sendSmsFromList('${x.id}')" style="background:#f97316;color:#fff;font-size:10px">📱 SMS</button><button class="btn btn-sm" onclick="sendWhatsAppFromList('${x.id}')" style="background:#25D366;color:#fff;font-size:10px">&#x1F4AC; WA</button>`:''}
-          ${st==='inviato'?`<button class="btn btn-sm btn-warning" onclick="sendFromList('${x.id}','${x.token}','${x.email||''}')">Invia di nuovo</button><button class="btn btn-sm" onclick="sendSmsFromList('${x.id}')" style="background:#f97316;color:#fff;font-size:10px">📱 SMS</button><button class="btn btn-sm" onclick="sendWhatsAppFromList('${x.id}')" style="background:#25D366;color:#fff;font-size:10px">&#x1F4AC; WA</button>`:''}
-          ${st==='firmato'?`<button class="btn btn-sm btn-success" onclick="dlSigned('${x.id}')">PDF</button>`:''}
-          ${st==='firmato'?`<button class="btn btn-sm" onclick="resetFirma('${x.id}')" style="background:#dc3545;color:#fff;font-size:10px">&#x1F504; Reset</button>`:''}
-          ${hasDoc?`<button class="btn btn-sm btn-outline" onclick="viewDocSide('${x.id}','fronte')">📸 Fronte</button><button class="btn btn-sm btn-outline" onclick="viewDocSide('${x.id}','retro')">📸 Retro</button>`:''}
-          ${st==='firmato'?`<button class="btn btn-sm btn-outline" onclick="openGpsModal('${x.id}','${x.gps_firma||''}')" title="Posizione firma" style="${hasGps?'background:#e8f5e9;color:#2e7d32;border-color:#a5d6a7':'background:#f5f5f5;color:#999;border-color:#ddd'}">&#x1F4CD; GPS</button>`:''}
-          <button class="btn btn-sm btn-outline" onclick="cpLink('${url}')">Link</button>
+          ${st==='firmato'?`<select onchange="toggleGestionale('${x.id}',this.value==='1')" style="font-size:11px;padding:6px 8px;border:1px solid #E5E7EB;border-radius:8px;background:#F9FAFB;color:#374151;cursor:pointer"><option value="0" ${!gest?'selected':''}>● Da caricare</option><option value="1" ${gest?'selected':''}>✓ Caricato</option></select>`:''}
+          ${canEdit?`<button class="btn btn-sm btn-outline" onclick="editContract('${x.id}')"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" style="display:inline;vertical-align:-1px"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg> Modifica</button>`:''}
+          ${(st==='bozza'||st==='inviato')?`<button class="btn btn-sm" onclick="sendFromList('${x.id}','${x.token}','${x.email||''}')" style="background:#2563EB;color:#fff"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" style="display:inline;vertical-align:-1px"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg> ${st==='inviato'?'Reinvia':'Invia'}</button>`:''}
+          ${(st==='bozza'||st==='inviato')?`<button class="btn btn-sm" onclick="sendSmsFromList('${x.id}')" style="background:#F97316;color:#fff" title="Invia SMS"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" style="display:inline;vertical-align:-1px"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12a19.79 19.79 0 0 1-3-8.63A2 2 0 0 1 3.68 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.6a16 16 0 0 0 6 6l1.06-1.06a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg> SMS</button>`:''}
+          ${(st==='bozza'||st==='inviato')?`<button class="btn btn-sm" onclick="sendWhatsAppFromList('${x.id}')" style="background:#25D366;color:#fff" title="Invia WhatsApp"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" style="display:inline;vertical-align:-1px"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg> WA</button>`:''}
+          ${st==='firmato'?`<button class="btn btn-sm btn-success" onclick="dlSigned('${x.id}')"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" style="display:inline;vertical-align:-1px"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg> PDF</button>`:''}
+          ${st==='firmato'?`<button class="btn btn-sm" onclick="sendFromList('${x.id}','${x.token}','${x.email||''}')" style="background:#6366F1;color:#fff" title="Reinvia email post-firma"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" style="display:inline;vertical-align:-1px"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg> 📧</button>`:''}
+          ${st==='firmato'?`<button class="btn btn-sm" onclick="resetFirma('${x.id}')" style="background:#EF4444;color:#fff" title="Reset firma"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" style="display:inline;vertical-align:-1px"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-4.95"/></svg> Reset</button>`:''}
+          ${hasDoc?`<button class="btn btn-sm btn-outline" onclick="viewDocSide('${x.id}','fronte')" title="Doc fronte"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" style="display:inline;vertical-align:-1px"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg> Fronte</button><button class="btn btn-sm btn-outline" onclick="viewDocSide('${x.id}','retro')" title="Doc retro"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" style="display:inline;vertical-align:-1px"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg> Retro</button>`:''}
+          ${st==='firmato'?`<button class="btn btn-sm btn-outline" onclick="openGpsModal('${x.id}','${x.gps_firma||''}')" title="GPS firma" style="${hasGps?'background:#F0FDF4;color:#16A34A;border-color:#86EFAC':'color:#9CA3AF;border-color:#E5E7EB'}"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" style="display:inline;vertical-align:-1px"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg> GPS</button>`:''}
+          <button class="btn btn-sm btn-outline" onclick="cpLink('${url}')" title="Copia link firma"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" style="display:inline;vertical-align:-1px"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg> Link</button>
         </div>
       </div>`;
   }).join('');
