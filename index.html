@@ -7278,6 +7278,7 @@ async function sendSmsFromList(id){
 
 // ── Modal invio canale ──
 let _mscId=null, _mscToken=null, _mscEmail='', _mscNome='';
+function openSendChannelBtn(btn){openSendChannel(btn.dataset.cid,btn.dataset.tok,btn.dataset.email,btn.dataset.nome);}
 function openSendChannel(id,token,email,nome){
   _mscId=id; _mscToken=token; _mscEmail=email||''; _mscNome=nome||'';
   document.getElementById('msc-cliente-name').textContent=nome||'Cliente';
@@ -7640,8 +7641,7 @@ function renderPage(page){
     // Colonna Azioni
     const btnPDF=st==='firmato'?`<button class="ct-btn ct-btn-pdf" onclick="dlSigned('${x.id}')" title="Scarica PDF">${svgPDF} PDF</button>`:'';
     const _mscNomeContr=((x.cognome||x.nome||x.ragione_sociale||'Cliente')).trim();
-    const _mscNomeSafe=_mscNomeContr.replace(/'/g,"\\'").replace(/"/g,'&quot;');
-    const btnReinvia=`<button class="ct-btn ct-btn-reinvia" onclick="openSendChannel('${x.id}','${x.token}','${(x.email||'').replace(/'/g,\"\\\\'\")}',' ${_mscNomeSafe}')" title="Invia / Reinvia">${svgSend} ${st==='firmato'?'Reinvia':'Invia'}</button>`;
+    const btnReinvia=`<button class="ct-btn ct-btn-reinvia" data-cid="${x.id}" data-tok="${x.token}" data-email="${(x.email||'').replace(/"/g,'&quot;')}" data-nome="${_mscNomeContr.replace(/"/g,'&quot;')}" onclick="openSendChannelBtn(this)" title="Invia">${svgSend} ${st==='firmato'?'Reinvia':'Invia'}</button>`;
     const btnInvia=''; const btnSMS=''; const btnWA='';
     const btnReset=st==='firmato'?`<button class="ct-btn ct-btn-reset" onclick="resetFirma('${x.id}')" title="Reset firma">${svgReset} Reset</button>`:'';
     const btnEdit=canEdit?`<button class="ct-btn ct-btn-edit" onclick="editContract('${x.id}')">${svgEdit} Modifica</button>`:'';
