@@ -160,7 +160,7 @@ body.dark-mode .dark-mode-toggle svg#icon-moon{fill:#000;stroke:none}
 .main-content{width:100%;margin:0;padding:24px 24px 100px}
 .tab-page{display:none;width:100%}.tab-page.active{display:block;width:100%}
 .form-card{background:var(--card-bg);border-radius:14px;box-shadow:0 1px 4px rgba(37,99,235,.06);border:1px solid var(--brd);margin-bottom:20px;overflow:hidden;width:100%;transition:box-shadow .2s}
-#tab-4>.form-card{overflow:visible}
+
 .form-card-header{background:var(--brand-subtle,#DBEAFE);padding:13px 20px;border-bottom:1px solid var(--brd);display:flex;align-items:center;gap:10px}
 .form-card-header h3{font-size:13px;font-weight:700;color:var(--brand-dark,#1E3A8A);text-transform:uppercase;letter-spacing:.5px}
 .form-card-body{padding:20px}
@@ -346,7 +346,7 @@ body,button,input,select,textarea{font-family:'Inter',-apple-system,'Helvetica N
 /* ===== RESET PROBLEMI LAYOUT ===== */
 html,body{overflow-x:hidden;width:100%}
 #app-container{overflow-x:hidden}
-#tab-4>.form-card>.form-card-body{overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:8px}
+#tab-4>.form-card>.form-card-body{padding-bottom:8px}
 
 /* ===== KPI CARD NUOVE ===== */
 .stat-mini-box{
@@ -502,9 +502,11 @@ body.dark-mode #cna-topbar-greeting{color:#fff}
 }
 body.dark-mode .contract-item{background:#2C2C2E!important;border-bottom-color:rgba(255,255,255,.06)!important}
 .contract-item:last-child{border-bottom:none!important}
-#contracts-list{background:#fff;border-radius:0 0 16px 16px;overflow-x:auto;-webkit-overflow-scrolling:touch;box-shadow:0 1px 3px rgba(0,0,0,.06);padding:0 8px}
-#contracts-table{width:100%;min-width:900px;border-collapse:collapse;font-size:13px;table-layout:auto}
+#contracts-list{background:#fff;border-radius:0 0 16px 16px;overflow:visible;box-shadow:none}
+#contracts-table{border-collapse:collapse;font-size:13px}
 #tab-5 .stats-bar-container,#tab-4 .stats-bar-container{margin-bottom:40px}
+#ctr-table-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;border-radius:0 0 14px 14px;background:#fff;margin:0 20px 8px 20px}
+#contracts-table{width:100%;border-collapse:collapse;font-size:13px}
 #contracts-table thead th{background:linear-gradient(180deg,#F0F4F8,#E8EDF3);color:#475569;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:0.08em;padding:10px 12px;border-bottom:2px solid #CBD5E1;white-space:nowrap;position:sticky;top:0;z-index:1}
 #contracts-table thead th:first-child{border-radius:0;padding-left:14px}
 #contracts-table tbody td{padding:9px 12px;border-bottom:1px solid #F1F5F9;vertical-align:middle;color:#374151}
@@ -3606,7 +3608,7 @@ table.quill-better-table {
       <button onclick="openNuovoContrattoModal()" style="background:#fff;color:#005CA9;border:none;border-radius:10px;padding:10px 22px;font-size:13px;font-weight:800;cursor:pointer;font-family:inherit;white-space:nowrap;box-shadow:0 2px 8px rgba(0,0,0,0.15);display:flex;align-items:center;gap:6px"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Nuovo contratto</button>
     </div>
     <div class="form-card-body">
-      <div style="margin-bottom:16px;padding:0 4px">
+      <div style="margin-bottom:16px;padding:0 20px">
         <!-- Barra superiore: cerca + pulsante filtri + aggiorna -->
         <div style="display:flex;gap:8px;align-items:center;margin-bottom:10px">
           <input type="text" id="search-contracts" placeholder="🔍 Cerca cliente..." style="flex:1;padding:8px 12px;border:1px solid var(--brd);border-radius:8px;font-size:13px;background:var(--input-bg);color:var(--txt)" oninput="filterContracts()">
@@ -3648,7 +3650,7 @@ table.quill-better-table {
           </div>
         </div>
         <!-- Selezione e azioni bulk -->
-        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;min-height:32px;padding:0 4px">
+        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;min-height:32px;padding:0 20px">
           <label style="display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer"><input type="checkbox" id="select-all-contracts" onchange="toggleSelectAll(this)" style="width:16px;height:16px;accent-color:var(--cna)"> Seleziona tutti</label>
           <button class="btn btn-sm btn-outline" onclick="exportExcel()" id="btn-export" style="display:none">&#x1F4CA; Esporta Excel</button>
           <button class="btn btn-sm btn-danger" onclick="deleteSelected()" id="btn-delete" style="display:none">&#x1F5D1; Elimina</button>
@@ -7581,7 +7583,7 @@ function renderPage(page){
     </tr>`;
   }).join('');
 
-  list.innerHTML=`<table id="contracts-table">
+  list.innerHTML=`<div id="ctr-table-scroll"><table id="contracts-table">
     <thead><tr>
       <th><input type="checkbox" id="select-all-contracts" onchange="toggleSelectAll(this)" style="width:15px;height:15px;accent-color:#2563EB"></th>
       <th>Data</th>
@@ -7600,7 +7602,7 @@ function renderPage(page){
       <th>Link</th>
     </tr></thead>
     <tbody>${rows}</tbody>
-  </table>`;
+  </table></div>`;
   renderPagination(total,page,totalPages);
 }
 
