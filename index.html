@@ -424,8 +424,27 @@ html,body{overflow-x:hidden;width:100%}
   border-right:1px solid #E5E7EB;
   height:100vh;position:sticky;top:0;
   flex-direction:column;overflow-y:auto;z-index:200;
+  transition:width .2s ease;
 }
 body.dark-mode #cna-sidebar{background:#1C1C1E;border-right-color:#2C2C2E}
+#cna-sidebar.sb-collapsed{width:56px;overflow:hidden}
+#cna-sidebar.sb-collapsed .cna-sb-logo-txt,
+#cna-sidebar.sb-collapsed .cna-sb-ver,
+#cna-sidebar.sb-collapsed .cna-sb-section,
+#cna-sidebar.sb-collapsed .cna-sb-pill,
+#cna-sidebar.sb-collapsed .cna-sb-user-name,
+#cna-sidebar.sb-collapsed .cna-sb-user-role,
+#cna-sidebar.sb-collapsed #dm-label,
+#cna-sidebar.sb-collapsed .cna-sb-btn>span,
+#cna-sidebar.sb-collapsed #sb-collapse-label{display:none!important}
+#cna-sidebar.sb-collapsed .cna-sb-btn{justify-content:center;padding:10px 0}
+#cna-sidebar.sb-collapsed .cna-sb-logo{justify-content:center;padding:18px 0 16px}
+#cna-sidebar.sb-collapsed .cna-sb-footer{justify-content:center;padding:12px 0}
+#cna-sidebar.sb-collapsed .cna-sb-footer>div:last-of-type{display:none}
+#sb-collapse-btn{margin-left:auto;background:none;border:none;cursor:pointer;color:#8E8E93;padding:4px;display:flex;align-items:center;gap:4px;font-size:11px;font-weight:600;border-radius:6px;transition:background .15s}
+#sb-collapse-btn:hover{background:#F2F2F7;color:#1D1D1F}
+body.dark-mode #sb-collapse-btn:hover{background:#2C2C2E;color:#fff}
+#cna-sidebar.sb-collapsed #sb-collapse-btn{margin:0 auto}
 
 .cna-sb-logo{padding:18px 18px 16px;border-bottom:1px solid #E5E7EB;display:flex;align-items:center;gap:10px;cursor:pointer}
 body.dark-mode .cna-sb-logo{border-bottom-color:#2C2C2E}
@@ -3124,6 +3143,10 @@ table.quill-better-table {
       <div class="cna-sb-logo-txt" style="font-size:15px;line-height:1.1">signature<span>cna</span></div>
     </div>
     <span class="cna-sb-ver">v9</span>
+    <button id="sb-collapse-btn" onclick="toggleSidebar()" title="Comprimi menu">
+      <svg id="sb-collapse-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 17l-5-5 5-5"/><path d="M18 17l-5-5 5-5"/></svg>
+      <span id="sb-collapse-label">Comprimi</span>
+    </button>
   </div>
   <nav style="flex:1;padding:8px 0;overflow-y:auto">
     <div class="cna-sb-section">Principale</div>
@@ -7151,6 +7174,28 @@ async function sendPostFirmaEmails(token){
     throw e;
   }
 }
+
+function toggleSidebar(){
+  const sb=document.getElementById('cna-sidebar');
+  const icon=document.getElementById('sb-collapse-icon');
+  const collapsed=sb.classList.toggle('sb-collapsed');
+  localStorage.setItem('sb-collapsed',collapsed?'1':'0');
+  if(icon){
+    icon.innerHTML=collapsed
+      ?'<path d="M13 17l5-5-5-5"/><path d="M6 17l5-5-5-5"/>'
+      :'<path d="M11 17l-5-5 5-5"/><path d="M18 17l-5-5 5-5"/>';
+  }
+}
+(function(){
+  if(localStorage.getItem('sb-collapsed')==='1'){
+    const sb=document.getElementById('cna-sidebar');
+    if(sb){
+      sb.classList.add('sb-collapsed');
+      const icon=document.getElementById('sb-collapse-icon');
+      if(icon) icon.innerHTML='<path d="M13 17l5-5-5-5"/><path d="M6 17l5-5-5-5"/>';
+    }
+  }
+})();
 
 async function reinviaEmailPostFirma(token,id,btn){
   if(!token){showToast('Token contratto mancante','error');return;}
