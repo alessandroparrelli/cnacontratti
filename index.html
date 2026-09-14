@@ -544,6 +544,7 @@ body.dark-mode .contract-item{background:#2C2C2E!important;border-bottom-color:r
 .ct-btn-invia{background:linear-gradient(135deg,#3B82F6,#2563EB);color:#fff}
 .ct-btn-sms{background:linear-gradient(135deg,#F97316,#EA580C);color:#fff}
 .ct-btn-wa{background:linear-gradient(135deg,#22C55E,#16A34A);color:#fff}
+.ct-btn-email-firma{background:linear-gradient(135deg,#0EA5E9,#0284C7);color:#fff}
 .ct-btn-edit{background:#F8FAFC;color:#374151;box-shadow:0 1px 3px rgba(0,0,0,.08);border:1px solid #E2E8F0}
 .ct-gest-sel{font-size:11px;padding:5px 8px;border:1px solid #E2E8F0;border-radius:8px;background:#F8FAFC;color:#374151;cursor:pointer;font-weight:600}
 .ct-badge-firmato{background:#D1FAE5;color:#065F46;font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px;white-space:nowrap}
@@ -7151,6 +7152,21 @@ async function sendPostFirmaEmails(token){
   }
 }
 
+async function reinviaEmailPostFirma(token,id,btn){
+  if(!token){showToast('Token contratto mancante','error');return;}
+  const origTxt=btn?btn.innerHTML:'';
+  if(btn){btn.disabled=true;btn.innerHTML='⏳';}
+  try{
+    await sendPostFirmaEmails(token);
+    showToast('Email post-firma reinviate con successo','success');
+  }catch(e){
+    console.error('reinviaEmailPostFirma error:',e);
+    showToast('Errore: '+e.message,'error');
+  }finally{
+    if(btn){btn.disabled=false;btn.innerHTML=origTxt;}
+  }
+}
+
 async function sendViaSMS(){
   const btn=document.getElementById('btn-send-sms');
   try{
@@ -7659,6 +7675,7 @@ function renderPage(page){
 
     // Colonna Azioni
     const btnPDF=st==='firmato'?`<button class="ct-btn ct-btn-pdf" onclick="dlSigned('${x.id}')" title="Scarica PDF">${svgPDF} PDF</button>`:'';
+    const btnEmailFirma=st==='firmato'?`<button class="ct-btn ct-btn-email-firma" onclick="reinviaEmailPostFirma('${x.token}','${x.id}',this)" title="Reinvia email post-firma (cliente + notifiche interne)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg> Email</button>`:'';
     const _mscNomeContr=((x.cognome||x.nome||x.ragione_sociale||'Cliente')).trim();
     const btnReinvia=`<button class="ct-btn ct-btn-reinvia" data-cid="${x.id}" data-tok="${x.token}" data-email="${(x.email||'').replace(/"/g,'&quot;')}" data-nome="${_mscNomeContr.replace(/"/g,'&quot;')}" onclick="openSendChannelBtn(this)" title="Invia">${svgSend} ${st==='firmato'?'Reinvia':'Invia'}</button>`;
     const btnInvia=''; const btnSMS=''; const btnWA='';
@@ -7684,6 +7701,7 @@ function renderPage(page){
       <td>${otpBadge}</td>
       <td>${gestCol}</td>
       <td>${btnPDF}</td>
+      <td style="white-space:nowrap">${btnEmailFirma}</td>
       <td style="white-space:nowrap">${btnReinvia} ${btnEdit}</td>
       <td style="white-space:nowrap">${btnReset}</td>
       <td style="white-space:nowrap">${btnFronte}</td>
