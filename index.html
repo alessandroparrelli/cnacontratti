@@ -7202,12 +7202,12 @@ async function sendPostFirmaEmails(token){
 }
 
 // ---- Sidebar tooltip ----
-(function(){
+document.addEventListener('DOMContentLoaded',function(){
   const tt=document.createElement('div');
   tt.id='sb-tooltip';
   document.body.appendChild(tt);
 
-  function showTT(btn,e){
+  function showTT(btn){
     const sb=document.getElementById('cna-sidebar');
     if(!sb||!sb.classList.contains('sb-collapsed')) return;
     const label=btn.dataset.label;
@@ -7223,21 +7223,22 @@ async function sendPostFirmaEmails(token){
   }
   function hideTT(){tt.classList.remove('sb-tt-visible');}
 
-  document.addEventListener('DOMContentLoaded',function(){
-    document.getElementById('cna-sidebar').addEventListener('mouseover',function(e){
+  const sidebar=document.getElementById('cna-sidebar');
+  if(sidebar){
+    sidebar.addEventListener('mouseover',function(e){
       const btn=e.target.closest('.cna-sb-btn[data-label]');
-      if(btn) showTT(btn,e);
+      if(btn) showTT(btn);
     });
-    document.getElementById('cna-sidebar').addEventListener('mouseout',function(e){
+    sidebar.addEventListener('mouseout',function(e){
       const btn=e.target.closest('.cna-sb-btn[data-label]');
       if(btn) hideTT();
     });
-    document.getElementById('cna-sidebar').addEventListener('mousemove',function(e){
+    sidebar.addEventListener('mousemove',function(e){
       const btn=e.target.closest('.cna-sb-btn[data-label]');
       if(btn) positionTT(btn);
     });
-  });
-})();
+  }
+});
 
 function toggleSidebar(){
   const sb=document.getElementById('cna-sidebar');
