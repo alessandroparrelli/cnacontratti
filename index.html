@@ -447,18 +447,15 @@ body.dark-mode #cna-sidebar{background:#1C1C1E;border-right-color:#2C2C2E}
 #cna-sidebar.sb-collapsed .cna-sb-footer>div{display:none}
 #cna-sidebar.sb-collapsed .cna-sb-footer>div.cna-sb-user-av{display:flex!important}
 
-/* Tooltip on hover quando collapsed */
-#cna-sidebar.sb-collapsed .cna-sb-btn[data-label]:hover::after{
-  content:attr(data-label);
-  position:absolute;left:calc(100% + 8px);top:50%;transform:translateY(-50%);
+/* Tooltip sidebar — gestito via JS (#sb-tooltip) */
+#sb-tooltip{
+  position:fixed;left:0;top:0;
   background:#1D1D1F;color:#fff;font-size:12px;font-weight:600;
-  padding:5px 10px;border-radius:6px;white-space:nowrap;pointer-events:none;z-index:999;
-  box-shadow:0 2px 8px rgba(0,0,0,.25);
+  padding:5px 10px;border-radius:6px;white-space:nowrap;pointer-events:none;
+  z-index:9999;box-shadow:0 2px 8px rgba(0,0,0,.3);
+  opacity:0;transition:opacity .1s;
 }
-#cna-sidebar.sb-collapsed .cna-sb-btn[data-label]:hover::before{
-  content:'';position:absolute;left:calc(100% + 2px);top:50%;transform:translateY(-50%);
-  border:5px solid transparent;border-right-color:#1D1D1F;pointer-events:none;z-index:999;
-}
+#sb-tooltip.sb-tt-visible{opacity:1}
 
 /* ---- COLLAPSE BUTTON ---- */
 #sb-collapse-btn{background:none;border:none;cursor:pointer;color:#6B7280;padding:10px 16px;
@@ -7203,6 +7200,44 @@ async function sendPostFirmaEmails(token){
     throw e;
   }
 }
+
+// ---- Sidebar tooltip ----
+(function(){
+  const tt=document.createElement('div');
+  tt.id='sb-tooltip';
+  document.body.appendChild(tt);
+
+  function showTT(btn,e){
+    const sb=document.getElementById('cna-sidebar');
+    if(!sb||!sb.classList.contains('sb-collapsed')) return;
+    const label=btn.dataset.label;
+    if(!label) return;
+    tt.textContent=label;
+    tt.classList.add('sb-tt-visible');
+    positionTT(btn);
+  }
+  function positionTT(btn){
+    const r=btn.getBoundingClientRect();
+    tt.style.top=(r.top + r.height/2 - tt.offsetHeight/2)+'px';
+    tt.style.left=(r.right+10)+'px';
+  }
+  function hideTT(){tt.classList.remove('sb-tt-visible');}
+
+  document.addEventListener('DOMContentLoaded',function(){
+    document.getElementById('cna-sidebar').addEventListener('mouseover',function(e){
+      const btn=e.target.closest('.cna-sb-btn[data-label]');
+      if(btn) showTT(btn,e);
+    });
+    document.getElementById('cna-sidebar').addEventListener('mouseout',function(e){
+      const btn=e.target.closest('.cna-sb-btn[data-label]');
+      if(btn) hideTT();
+    });
+    document.getElementById('cna-sidebar').addEventListener('mousemove',function(e){
+      const btn=e.target.closest('.cna-sb-btn[data-label]');
+      if(btn) positionTT(btn);
+    });
+  });
+})();
 
 function toggleSidebar(){
   const sb=document.getElementById('cna-sidebar');
