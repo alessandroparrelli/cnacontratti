@@ -427,7 +427,9 @@ html,body{overflow-x:hidden;width:100%}
   transition:width .2s ease;
 }
 body.dark-mode #cna-sidebar{background:#1C1C1E;border-right-color:#2C2C2E}
-#cna-sidebar.sb-collapsed{width:56px;overflow:hidden}
+
+/* ---- COLLAPSED ---- */
+#cna-sidebar.sb-collapsed{width:56px}
 #cna-sidebar.sb-collapsed .cna-sb-logo-txt,
 #cna-sidebar.sb-collapsed .cna-sb-ver,
 #cna-sidebar.sb-collapsed .cna-sb-section,
@@ -435,16 +437,37 @@ body.dark-mode #cna-sidebar{background:#1C1C1E;border-right-color:#2C2C2E}
 #cna-sidebar.sb-collapsed .cna-sb-user-name,
 #cna-sidebar.sb-collapsed .cna-sb-user-role,
 #cna-sidebar.sb-collapsed #dm-label,
-#cna-sidebar.sb-collapsed .cna-sb-btn>span,
 #cna-sidebar.sb-collapsed #sb-collapse-label{display:none!important}
-#cna-sidebar.sb-collapsed .cna-sb-btn{justify-content:center;padding:10px 0}
+/* Collapsed: mostra solo icone, nascondi testo */
+#cna-sidebar.sb-collapsed .cna-sb-btn{justify-content:center;padding:10px 0;position:relative}
+#cna-sidebar.sb-collapsed .cna-sb-btn>svg{flex-shrink:0}
+#cna-sidebar.sb-collapsed .cna-sb-btn .sb-btn-label{display:none!important}
 #cna-sidebar.sb-collapsed .cna-sb-logo{justify-content:center;padding:18px 0 16px}
 #cna-sidebar.sb-collapsed .cna-sb-footer{justify-content:center;padding:12px 0}
-#cna-sidebar.sb-collapsed .cna-sb-footer>div:last-of-type{display:none}
-#sb-collapse-btn{margin-left:auto;background:none;border:none;cursor:pointer;color:#8E8E93;padding:4px;display:flex;align-items:center;gap:4px;font-size:11px;font-weight:600;border-radius:6px;transition:background .15s}
-#sb-collapse-btn:hover{background:#F2F2F7;color:#1D1D1F}
+#cna-sidebar.sb-collapsed .cna-sb-footer>div{display:none}
+#cna-sidebar.sb-collapsed .cna-sb-footer>div.cna-sb-user-av{display:flex!important}
+
+/* Tooltip on hover quando collapsed */
+#cna-sidebar.sb-collapsed .cna-sb-btn[data-label]:hover::after{
+  content:attr(data-label);
+  position:absolute;left:calc(100% + 8px);top:50%;transform:translateY(-50%);
+  background:#1D1D1F;color:#fff;font-size:12px;font-weight:600;
+  padding:5px 10px;border-radius:6px;white-space:nowrap;pointer-events:none;z-index:999;
+  box-shadow:0 2px 8px rgba(0,0,0,.25);
+}
+#cna-sidebar.sb-collapsed .cna-sb-btn[data-label]:hover::before{
+  content:'';position:absolute;left:calc(100% + 2px);top:50%;transform:translateY(-50%);
+  border:5px solid transparent;border-right-color:#1D1D1F;pointer-events:none;z-index:999;
+}
+
+/* ---- COLLAPSE BUTTON ---- */
+#sb-collapse-btn{background:none;border:none;cursor:pointer;color:#6B7280;padding:10px 16px;
+  display:flex;align-items:center;gap:10px;width:100%;font-size:13px;font-weight:600;
+  font-family:'Inter',sans-serif;transition:all .15s;border-left:3px solid transparent}
+#sb-collapse-btn:hover{background:#F9FAFB;color:#1D1D1F}
+body.dark-mode #sb-collapse-btn{color:#8E8E93}
 body.dark-mode #sb-collapse-btn:hover{background:#2C2C2E;color:#fff}
-#cna-sidebar.sb-collapsed #sb-collapse-btn{margin:0 auto}
+#cna-sidebar.sb-collapsed #sb-collapse-btn{justify-content:center;padding:10px 0}
 
 .cna-sb-logo{padding:18px 18px 16px;border-bottom:1px solid #E5E7EB;display:flex;align-items:center;gap:10px;cursor:pointer}
 body.dark-mode .cna-sb-logo{border-bottom-color:#2C2C2E}
@@ -458,14 +481,20 @@ body.dark-mode .cna-sb-ver{background:#2C2C2E}
 .cna-sb-btn{
   display:flex;align-items:center;gap:10px;width:100%;padding:10px 16px;
   border:none;background:none;cursor:pointer;font-size:13px;font-weight:600;
-  color:#6B7280;text-align:left;border-left:3px solid transparent;
+  color:#374151;text-align:left;border-left:3px solid transparent;
   transition:all .15s;font-family:'Inter',sans-serif;
 }
-body.dark-mode .cna-sb-btn{color:#8E8E93}
-.cna-sb-btn:hover{background:#F9FAFB;color:#1D1D1F}
+.cna-sb-btn svg{color:#374151;flex-shrink:0}
+body.dark-mode .cna-sb-btn{color:#D1D5DB}
+body.dark-mode .cna-sb-btn svg{color:#D1D5DB}
+.cna-sb-btn:hover{background:#F3F4F6;color:#111827}
+.cna-sb-btn:hover svg{color:#111827}
 body.dark-mode .cna-sb-btn:hover{background:#2C2C2E;color:#fff}
+body.dark-mode .cna-sb-btn:hover svg{color:#fff}
 .cna-sb-btn.active{background:#EFF6FF;color:#2563EB;border-left-color:#2563EB;font-weight:700}
+.cna-sb-btn.active svg{color:#2563EB}
 body.dark-mode .cna-sb-btn.active{background:rgba(37,99,235,.15);color:#60A5FA}
+body.dark-mode .cna-sb-btn.active svg{color:#60A5FA}
 .cna-sb-pill{margin-left:auto;min-width:18px;height:18px;border-radius:9px;font-size:10px;font-weight:700;color:#fff;display:flex;align-items:center;justify-content:center;padding:0 5px}
 
 .cna-sb-footer{padding:14px 16px;border-top:1px solid #E5E7EB;display:flex;align-items:center;gap:10px;cursor:pointer}
@@ -3145,38 +3174,38 @@ table.quill-better-table {
     <span class="cna-sb-ver">v9</span>
   </div>
   <nav style="flex:1;padding:8px 0;overflow-y:auto">
-    <button id="sb-collapse-btn" onclick="toggleSidebar()" title="Comprimi menu" class="cna-sb-btn" style="color:#8E8E93;font-weight:600;font-size:12px">
+    <button id="sb-collapse-btn" onclick="toggleSidebar()" title="Comprimi/espandi menu" class="cna-sb-btn" data-label="Espandi">
       <svg id="sb-collapse-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 17l-5-5 5-5"/><path d="M18 17l-5-5 5-5"/></svg>
       <span id="sb-collapse-label">Comprimi</span>
     </button>
     <div class="cna-sb-section">Principale</div>
-    <button class="cna-sb-btn active" id="sbnav-home" onclick="switchTab(5);cnaSetSb('sbnav-home','Dashboard')">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>Dashboard
+    <button class="cna-sb-btn active" id="sbnav-home" data-label="Dashboard" onclick="switchTab(5);cnaSetSb('sbnav-home','Dashboard')">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg><span class="sb-btn-label">Dashboard</span>
     </button>
-    <button class="cna-sb-btn" id="sbnav-contratti" onclick="switchTab(4);cnaSetSb('sbnav-contratti','Contratti')">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>Contratti
+    <button class="cna-sb-btn" id="sbnav-contratti" data-label="Contratti" onclick="switchTab(4);cnaSetSb('sbnav-contratti','Contratti')">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg><span class="sb-btn-label">Contratti</span>
       <span class="cna-sb-pill" style="background:#2563EB" id="sb-pill-contratti">0</span>
     </button>
     <div class="cna-sb-section" style="margin-top:4px">Gestione</div>
-    <button class="cna-sb-btn" id="sbnav-upload" onclick="switchTab(4);cnaSetSb('sbnav-upload','Caricamenti')">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 16 12 12 8 16"/><line x1="12" y1="12" x2="12" y2="21"/><path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"/></svg>Caricamenti
+    <button class="cna-sb-btn" id="sbnav-upload" data-label="Caricamenti" onclick="switchTab(4);cnaSetSb('sbnav-upload','Caricamenti')">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 16 12 12 8 16"/><line x1="12" y1="12" x2="12" y2="21"/><path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"/></svg><span class="sb-btn-label">Caricamenti</span>
       <span class="cna-sb-pill" id="sb-pill-upload" style="background:#F97316;display:none">0</span>
     </button>
     <div class="cna-sb-section" style="margin-top:4px">Account</div>
-    <button class="cna-sb-btn" id="sbnav-admin-email" onclick="openEmailTemplates()" style="display:none">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>Template Email & SMS
+    <button class="cna-sb-btn" id="sbnav-admin-email" data-label="Template Email & SMS" onclick="openEmailTemplates()" style="display:none">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg><span class="sb-btn-label">Template Email &amp; SMS</span>
     </button>
-    <button class="cna-sb-btn" id="sbnav-admin-utenti" onclick="openGestioneUtenti()" style="display:none">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>Gestione Utenti
+    <button class="cna-sb-btn" id="sbnav-admin-utenti" data-label="Gestione Utenti" onclick="openGestioneUtenti()" style="display:none">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg><span class="sb-btn-label">Gestione Utenti</span>
     </button>
-    <button class="cna-sb-btn" id="sbnav-admin-log" onclick="openLogsModal()" style="display:none">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/></svg>Log Connessioni
+    <button class="cna-sb-btn" id="sbnav-admin-log" data-label="Log Connessioni" onclick="openLogsModal()" style="display:none">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/></svg><span class="sb-btn-label">Log Connessioni</span>
     </button>
-    <button class="cna-sb-btn" onclick="toggleDarkMode()">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" id="dm-icon"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg><span id="dm-label">Dark mode</span>
+    <button class="cna-sb-btn" data-label="Dark mode" onclick="toggleDarkMode()">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" id="dm-icon"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg><span class="sb-btn-label" id="dm-label">Dark mode</span>
     </button>
-    <button class="cna-sb-btn" onclick="openChangelog()">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>Versioni
+    <button class="cna-sb-btn" data-label="Versioni" onclick="openChangelog()">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg><span class="sb-btn-label">Versioni</span>
     </button>
   </nav>
   <div class="cna-sb-footer" onclick="openProfile()">
@@ -7178,13 +7207,15 @@ async function sendPostFirmaEmails(token){
 function toggleSidebar(){
   const sb=document.getElementById('cna-sidebar');
   const icon=document.getElementById('sb-collapse-icon');
+  const lbl=document.getElementById('sb-collapse-label');
+  const btn=document.getElementById('sb-collapse-btn');
   const collapsed=sb.classList.toggle('sb-collapsed');
   localStorage.setItem('sb-collapsed',collapsed?'1':'0');
-  if(icon){
-    icon.innerHTML=collapsed
-      ?'<path d="M13 17l5-5-5-5"/><path d="M6 17l5-5-5-5"/>'
-      :'<path d="M11 17l-5-5 5-5"/><path d="M18 17l-5-5 5-5"/>';
-  }
+  if(icon) icon.innerHTML=collapsed
+    ?'<path d="M13 17l5-5-5-5"/><path d="M6 17l5-5-5-5"/>'
+    :'<path d="M11 17l-5-5 5-5"/><path d="M18 17l-5-5 5-5"/>';
+  if(lbl) lbl.textContent=collapsed?'Espandi':'Comprimi';
+  if(btn) btn.dataset.label=collapsed?'Espandi':'';
 }
 (function(){
   if(localStorage.getItem('sb-collapsed')==='1'){
@@ -7193,6 +7224,10 @@ function toggleSidebar(){
       sb.classList.add('sb-collapsed');
       const icon=document.getElementById('sb-collapse-icon');
       if(icon) icon.innerHTML='<path d="M13 17l5-5-5-5"/><path d="M6 17l5-5-5-5"/>';
+      const lbl=document.getElementById('sb-collapse-label');
+      if(lbl) lbl.textContent='Espandi';
+      const btn=document.getElementById('sb-collapse-btn');
+      if(btn) btn.dataset.label='Espandi';
     }
   }
 })();
