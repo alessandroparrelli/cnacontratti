@@ -6667,6 +6667,20 @@ function submitClientSignature(token){
     alert('Devi caricare almeno il FRONTE del documento di identita.');
     return;
   }
+  const tipoDoc=document.getElementById('tipo_documento');
+  const numDoc=document.getElementById('numero_documento');
+  const tipoVal=tipoDoc?tipoDoc.value.trim():'';
+  const numVal=numDoc?numDoc.value.trim():'';
+  if(!tipoVal){
+    alert('Seleziona il tipo di documento di identità.');
+    if(tipoDoc)tipoDoc.focus();
+    return;
+  }
+  if(!numVal){
+    alert('Inserisci il numero del documento di identità.');
+    if(numDoc)numDoc.focus();
+    return;
+  }
   if(!fullscreenSigData){alert('Devi firmare prima di confermare. Clicca "Apri pannello firma".');return;}
   const consents={
     consenso_trattamento_generale:pa.checked,
@@ -7077,7 +7091,10 @@ async function sendPostFirmaEmails(token){
       fillPDF(form,ct);await embedSigs(doc,pages,ct);
       try{form.flatten();}catch(fe){}
       const pdfBytes=await doc.save();
-      pdfBase64=btoa(String.fromCharCode(...new Uint8Array(pdfBytes)));
+      const pdfArr=new Uint8Array(pdfBytes);
+      let pdfB64='';
+      for(let i=0;i<pdfArr.length;i+=8192){pdfB64+=String.fromCharCode(...pdfArr.subarray(i,i+8192));}
+      pdfBase64=btoa(pdfB64);
     }catch(pdfErr){console.warn('PDF gen:',pdfErr.message);}
 
     // Comprimi foto documento per email (max 900px, qualità 0.55 → ~100-150KB ciascuna)
