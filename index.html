@@ -6,7 +6,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-<meta name="theme-color" content="#1E3A8A">
+<meta name="theme-color" content="#F2F2F7">
 <meta name="description" content="Signature - Sistema gestione contratti e tesseramento CNA Roma">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -417,6 +417,12 @@ html,body{overflow-x:hidden;width:100%}
   .contract-avatar{border-radius:10px!important}
 }
 
+/* ===== v9.54 STATUS BAR PWA: fascia superiore col colore pagina ===== */
+@media(max-width:768px){
+  .app-header{padding-top:env(safe-area-inset-top,0px)!important}
+  body::before{content:"";position:fixed;top:0;left:0;right:0;height:env(safe-area-inset-top,0px);background:#F2F2F7;z-index:2000;pointer-events:none}
+  body.dark-mode::before{background:#1C1C1E}
+}
 /* ===== v9.53 RICERCA IMPRESA MOBILE ===== */
 @media(max-width:768px){
   #ri-card{border-radius:22px!important;box-shadow:0 2px 14px rgba(15,23,42,.06)!important;margin:0!important}
