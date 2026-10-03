@@ -439,8 +439,8 @@ html,body{overflow-x:hidden;width:100%}
   #cna-bottom-nav{
     left:16px!important;right:16px!important;bottom:max(14px,env(safe-area-inset-bottom))!important;
     height:66px;padding:0 8px!important;border-radius:34px;
-    background:linear-gradient(180deg,rgba(255,255,255,.72),rgba(255,255,255,.55))!important;
-    backdrop-filter:blur(24px) saturate(180%)!important;-webkit-backdrop-filter:blur(24px) saturate(180%)!important;
+    background:rgba(255,255,255,.18)!important;
+    backdrop-filter:blur(14px) saturate(160%)!important;-webkit-backdrop-filter:blur(14px) saturate(160%)!important;
     border:1px solid rgba(255,255,255,.7)!important;border-top:1px solid rgba(255,255,255,.9)!important;
     box-shadow:0 10px 30px rgba(15,23,42,.14),inset 0 1px 0 rgba(255,255,255,.8),inset 0 -1px 0 rgba(0,0,0,.04)!important;
     align-items:center;justify-content:space-around;
@@ -457,6 +457,27 @@ html,body{overflow-x:hidden;width:100%}
   body.dark-mode #cna-bottom-nav{background:linear-gradient(180deg,rgba(44,44,46,.72),rgba(28,28,30,.6))!important;border-color:rgba(255,255,255,.12)!important}
   body.dark-mode .cna-bnav-item.active{background:rgba(255,255,255,.12)}
   .main-content{padding-bottom:110px!important}
+
+  /* Lista contratti: card stile CRM */
+  #ctr-table-scroll{overflow:visible!important;background:transparent!important;border:none!important;border-radius:0!important}
+  #contracts-table,#contracts-table tbody{display:block!important;width:100%!important;min-width:0!important}
+  #contracts-table thead{display:none!important}
+  #contracts-table tbody tr{
+    display:flex!important;flex-wrap:wrap;align-items:center;gap:6px 8px;
+    background:#fff;border-radius:20px;margin:0 0 12px;padding:14px 16px 12px;
+    box-shadow:0 2px 14px rgba(15,23,42,.06);border-left:5px solid #F59E0B;
+  }
+  #contracts-table tbody tr td{display:block;border:none!important;padding:0!important;background:transparent!important;max-width:none!important;white-space:normal}
+  #contracts-table tbody tr td:nth-child(1){order:0}
+  #contracts-table tbody tr td:nth-child(2){order:1;flex:1;min-width:0;font-weight:800;font-size:15px;color:#111827}
+  #contracts-table tbody tr td:nth-child(6){order:2}
+  #contracts-table tbody tr td:nth-child(4),#contracts-table tbody tr td:nth-child(3){order:3;margin-top:6px;padding-top:10px!important;border-top:1px solid #EEF0F4!important;font-size:14px!important;color:#374151!important}
+  #contracts-table tbody tr td:nth-child(4){flex:1 1 55%}
+  #contracts-table tbody tr td:nth-child(3){flex:1 1 35%;text-align:right}
+  #contracts-table tbody tr td:nth-child(n+5):not(:nth-child(6)){order:4}
+  #contracts-table tbody tr td:nth-child(5){margin-top:4px}
+  #contracts-table tbody tr td:empty{display:none}
+  body.dark-mode #contracts-table tbody tr{background:#1C1C1E}
 }
 
 /* ===== DESKTOP SIDEBAR ===== */
