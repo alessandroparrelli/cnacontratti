@@ -5,7 +5,7 @@
 <meta charset="UTF-8">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="theme-color" content="#1E3A8A">
 <meta name="description" content="Signature - Sistema gestione contratti e tesseramento CNA Roma">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -417,6 +417,9 @@ html,body{overflow-x:hidden;width:100%}
   .contract-avatar{border-radius:10px!important}
 }
 
+/* ===== v9.50 BLOCCO ZOOM / OVERFLOW ===== */
+html,body{max-width:100%;overflow-x:hidden;-webkit-text-size-adjust:100%;text-size-adjust:100%;touch-action:manipulation}
+@media(max-width:768px){input,select,textarea{font-size:16px!important}}
 /* ===== v9.48 MOBILE: KPI stile CRM + BOTTOM NAV LIQUID GLASS ===== */
 @media(max-width:768px){
   /* KPI cards stile CRM: centrate, numero grande, label sotto */
@@ -458,26 +461,25 @@ html,body{overflow-x:hidden;width:100%}
   body.dark-mode .cna-bnav-item.active{background:rgba(255,255,255,.12)}
   .main-content{padding-bottom:110px!important}
 
-  /* Lista contratti: card stile CRM */
-  #ctr-table-scroll{overflow:visible!important;background:transparent!important;border:none!important;border-radius:0!important}
-  #contracts-table,#contracts-table tbody{display:block!important;width:100%!important;min-width:0!important}
-  #contracts-table thead{display:none!important}
-  #contracts-table tbody tr{
-    display:flex!important;flex-wrap:wrap;align-items:center;gap:6px 8px;
-    background:#fff;border-radius:20px;margin:0 0 12px;padding:14px 16px 12px;
-    box-shadow:0 2px 14px rgba(15,23,42,.06);border-left:5px solid #F59E0B;
-  }
-  #contracts-table tbody tr td{display:block;border:none!important;padding:0!important;background:transparent!important;max-width:none!important;white-space:normal}
-  #contracts-table tbody tr td:nth-child(1){order:0}
-  #contracts-table tbody tr td:nth-child(2){order:1;flex:1;min-width:0;font-weight:800;font-size:15px;color:#111827}
-  #contracts-table tbody tr td:nth-child(6){order:2}
-  #contracts-table tbody tr td:nth-child(4),#contracts-table tbody tr td:nth-child(3){order:3;margin-top:6px;padding-top:10px!important;border-top:1px solid #EEF0F4!important;font-size:14px!important;color:#374151!important}
-  #contracts-table tbody tr td:nth-child(4){flex:1 1 55%}
-  #contracts-table tbody tr td:nth-child(3){flex:1 1 35%;text-align:right}
-  #contracts-table tbody tr td:nth-child(n+5):not(:nth-child(6)){order:4}
-  #contracts-table tbody tr td:nth-child(5){margin-top:4px}
-  #contracts-table tbody tr td:empty{display:none}
-  body.dark-mode #contracts-table tbody tr{background:#1C1C1E}
+  /* Contenitore contratti: niente box blu, solo card */
+  #tab-4 .form-card{background:transparent!important;box-shadow:none!important;border:none!important;overflow:visible!important}
+  #tab-4 .form-card-header{border-radius:20px!important}
+  #tab-4 .form-card-body{padding:14px 0 0!important;background:transparent!important}
+  #tab-4 .form-card-body > div[style*="overflow-x"]{overflow:visible!important}
+  .m-ct-list{display:flex;flex-direction:column;gap:12px}
+  .m-ct-card{background:#fff;border-radius:20px;padding:14px 16px;box-shadow:0 2px 14px rgba(15,23,42,.06);border-left:5px solid var(--acc);display:block!important}
+  .m-ct-top{display:flex;align-items:center;gap:10px}
+  .m-ct-top .contract-cb{width:18px;height:18px;accent-color:#2563EB;flex-shrink:0;margin:0}
+  .m-ct-top .ct-avatar{width:36px!important;height:36px!important;flex-shrink:0;font-size:13px}
+  .m-ct-name{flex:1;min-width:0;font-weight:800;font-size:15px;color:#111827;line-height:1.25;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+  .m-ct-top > span{flex-shrink:0;white-space:nowrap}
+  .m-ct-meta{display:flex;justify-content:space-between;gap:8px;margin-top:12px;padding-top:10px;border-top:1px solid #EEF0F4;font-size:14px;color:#374151}
+  .m-ct-tags{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin-top:10px}
+  .m-ct-tags .ct-gest-sel{font-size:13px!important;padding:4px 8px;border-radius:8px}
+  .m-ct-acts{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:12px}
+  .m-ct-acts .ct-btn{width:100%;justify-content:center;font-size:12px!important;padding:8px 4px!important;margin:0!important;border-radius:10px!important;white-space:nowrap}
+  body.dark-mode .m-ct-card{background:#1C1C1E}
+  body.dark-mode .m-ct-name{color:#F3F4F6}
 }
 
 /* ===== DESKTOP SIDEBAR ===== */
@@ -6208,6 +6210,9 @@ function cnaSetSb(id,title){
   const t=document.getElementById('cna-topbar-title');if(t&&title)t.textContent=title;
 }
 
+document.addEventListener('gesturestart',e=>e.preventDefault());
+document.addEventListener('touchmove',e=>{if(e.touches&&e.touches.length>1)e.preventDefault();},{passive:false});
+(function(){let m=window.innerWidth<=768;window.addEventListener('resize',()=>{const n=window.innerWidth<=768;if(n!==m){m=n;try{if(window._filteredData)filterContracts(true);}catch(e){}}});})();
 function cnaSetBnav(id){
   document.querySelectorAll('.cna-bnav-item').forEach(b=>{
     b.classList.remove('active');
@@ -7865,6 +7870,21 @@ function renderPage(page){
     const btnGPS=st==='firmato'?`<button class="ct-btn ${hasGps?'ct-btn-gps-ok':'ct-btn-gps-no'}" onclick="openGpsModal('${x.id}','${x.gps_firma||''}')" title="GPS firma">${svgGPS} GPS</button>`:'<span style="color:#D1D5DB;font-size:11px">—</span>';
     const btnLink=`<button class="ct-btn ct-btn-link" onclick="cpLink('${url}')" title="Copia link firma">${svgLink} Link</button>`;
 
+    if(window.innerWidth<=768){
+      const _acc=st==='firmato'?'#16A34A':st==='inviato'?'#F59E0B':'#94A3B8';
+      const _acts=[btnPDF,btnEmailFirma,btnReinvia,btnEdit,btnReset,hasDoc?btnFronte:'',hasDoc?btnRetro:'',st==='firmato'?btnGPS:'',btnLink].filter(Boolean).join('');
+      return `<div class="m-ct-card" style="--acc:${_acc}" data-id="${x.id}">
+        <div class="m-ct-top">
+          <input type="checkbox" class="contract-cb" value="${x.id}" onchange="updateExportBtn()">
+          <div class="ct-avatar" style="background:${avBg}">${initials}</div>
+          <div class="m-ct-name">${ragSoc}</div>
+          ${stBadge}
+        </div>
+        <div class="m-ct-meta"><span>${createdByName}</span><span>${d}</span></div>
+        <div class="m-ct-tags"><span class="ct-tipo">${tipoLabel}</span>${st==='firmato'?otpBadge:''}${st==='firmato'?gestCol:''}</div>
+        <div class="m-ct-acts">${_acts}</div>
+      </div>`;
+    }
     return `<tr class="contract-item" data-id="${x.id}" data-nome="${(x.cognome||'')+' '+(x.nome||'')+' '+(x.ragione_sociale||'')}" data-email="${x.email||''}" data-tipo="${x.tipo_contratto||'tesseramento'}" data-anno="${anno}" data-stato="${st}" data-proprietario="${createdByName}" data-gestionale="${gestValue}">
       <td style="width:36px"><input type="checkbox" class="contract-cb" value="${x.id}" onchange="updateExportBtn()" style="width:15px;height:15px;accent-color:#2563EB"></td>
       <td style="min-width:180px;max-width:240px">
@@ -7890,6 +7910,7 @@ function renderPage(page){
     </tr>`;
   }).join('');
 
+  if(window.innerWidth<=768){list.innerHTML=`<div class="m-ct-list">${rows}</div>`;renderPagination(total,page,totalPages);return;}
   list.innerHTML=`<div id="ctr-table-scroll"><table id="contracts-table">
     <thead><tr>
       <th><input type="checkbox" id="select-all-contracts" onchange="toggleSelectAll(this)" style="width:15px;height:15px;accent-color:#2563EB"></th>
