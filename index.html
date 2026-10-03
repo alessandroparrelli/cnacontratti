@@ -4862,7 +4862,7 @@ async function eseguiRicercaImprese(){
     if(nome.length>=2)    dOrs.push('"Cliente".ilike.*'+esc(nome)+'*');
     if(ragione.length>=2) dOrs.push('"Cliente".ilike.*'+esc(ragione)+'*');
     const dParam='or=('+dOrs.join(',')+')';
-    const urlD=SB_URL+'/rest/v1/diretti?'+dParam+'&datadisdetta=is.null&select=partitaiva,"Codice Fiscale","Ragione Sociale/Denominazione","Cliente",tipo,servizio&limit=200';
+    const urlD=SB_URL+'/rest/v1/diretti?'+dParam+'&datadisdetta=is.null&select=partitaiva,"Codice Fiscale","Ragione Sociale/Denominazione","Cliente",servizio&limit=200';
 
     // ── 2. ANAGRAFICHE: fonte dati per nome/ragione sociale ──
     const aOrs=[];
