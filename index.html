@@ -479,6 +479,42 @@ html,body{max-width:100%;overflow-x:hidden;-webkit-text-size-adjust:100%;text-si
   .m-ct-acts{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:12px}
   .m-ct-acts .ct-btn{width:100%;justify-content:center;font-size:12px!important;padding:8px 4px!important;margin:0!important;border-radius:10px!important;white-space:nowrap}
   body.dark-mode .m-ct-card{background:#1C1C1E}
+  /* v9.51 rifinitura card */
+  .m-ct-card{padding:16px 16px 14px;border-left-width:4px}
+  .m-ct-top{align-items:flex-start}
+  .m-ct-top .contract-cb{margin-top:9px}
+  .m-ct-name{font-size:16px;padding-top:2px}
+  .m-ct-top > span{font-size:11px!important;padding:4px 10px!important;border-radius:999px!important}
+  .m-ct-meta{font-size:13px;color:#6B7280}
+  .m-ct-meta span:first-child{display:flex;align-items:center;gap:6px;font-weight:600;color:#374151}
+  .m-ct-meta span:first-child::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--acc)}
+  .m-ct-tags .ct-tipo,.m-ct-tags span{border-radius:999px!important}
+  .m-ct-acts{grid-template-columns:repeat(4,1fr);gap:8px;padding-top:12px;border-top:1px solid #EEF0F4}
+  .m-ct-acts .ct-btn{
+    flex-direction:column!important;gap:4px!important;height:58px;padding:6px 2px!important;
+    background:#F3F6FB!important;color:#1E3A8A!important;border:none!important;box-shadow:none!important;
+    font-size:11px!important;font-weight:700!important;border-radius:14px!important;
+  }
+  .m-ct-acts .ct-btn svg{width:18px!important;height:18px!important;stroke:currentColor}
+  .m-ct-acts .ct-btn:active{transform:scale(.94);background:#E4EBF7!important}
+  .m-ct-acts .ct-btn-pdf{color:#047857!important;background:#ECFDF5!important}
+  .m-ct-acts .ct-btn-reset{color:#DC2626!important;background:#FEF2F2!important}
+  .m-ct-acts .ct-btn-reinvia{color:#4F46E5!important;background:#EEF2FF!important}
+  .m-ct-acts .ct-btn-gps-ok{color:#047857!important;background:#ECFDF5!important}
+  .m-ct-acts .ct-btn-gps-no{color:#B45309!important;background:#FFFBEB!important}
+  body.dark-mode .m-ct-acts .ct-btn{background:#2C2C2E!important;color:#93C5FD!important}
+  /* Barra ricerca e filtri */
+  #search-contracts{height:46px;border-radius:14px!important;border:1px solid #E5E7EB!important;background:#fff!important;padding:0 14px!important;box-shadow:0 1px 6px rgba(15,23,42,.04)}
+  #btn-toggle-filters,#search-contracts ~ button{height:46px;border-radius:14px!important;padding:0 14px!important}
+  #filters-panel{border-radius:16px!important;background:#fff!important;border:none!important;box-shadow:0 2px 14px rgba(15,23,42,.06)}
+  #filters-panel select{height:42px;border-radius:12px!important}
+  /* Testata compatta */
+  #tab-4 .form-card-header{padding:16px 18px!important}
+  #tab-4 .form-card-header button{width:100%;height:46px;border-radius:14px!important;margin-top:4px}
+  /* Paginazione */
+  #pagination-bar{justify-content:center;flex-wrap:wrap;gap:6px;margin:16px 0 8px}
+  #pagination-bar .pagination-btn{min-width:40px;height:40px;border-radius:12px;border:none;box-shadow:0 1px 6px rgba(15,23,42,.06)}
+  #pagination-bar .pagination-info{width:100%;text-align:center;font-size:12px;color:#6B7280;margin-bottom:4px}
   body.dark-mode .m-ct-name{color:#F3F4F6}
 }
 
