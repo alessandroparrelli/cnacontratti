@@ -417,6 +417,35 @@ html,body{overflow-x:hidden;width:100%}
   .contract-avatar{border-radius:10px!important}
 }
 
+/* ===== v9.52 IMPOSTAZIONI ===== */
+.st-root{max-width:640px;margin:0 auto;padding:16px 16px 24px}
+.st-card{background:#fff;border-radius:20px;box-shadow:0 2px 14px rgba(15,23,42,.06);overflow:hidden;margin-bottom:8px}
+.st-profile{display:flex;align-items:center;gap:14px;padding:18px}
+.st-avatar{width:60px;height:60px;border-radius:50%;background:linear-gradient(135deg,#2563EB,#1E3A8A);color:#fff;font-weight:800;font-size:22px;display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden}
+.st-avatar img{width:100%;height:100%;object-fit:cover}
+.st-name{font-size:18px;font-weight:800;color:#111827}
+.st-mail{font-size:13px;color:#6B7280;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.st-role{display:inline-block;margin-top:6px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#2563EB;background:#EFF6FF;padding:3px 10px;border-radius:999px}
+.st-sec{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#6B7280;margin:20px 6px 8px}
+.st-info{display:flex;justify-content:space-between;gap:12px;padding:13px 16px;border-bottom:1px solid #F1F2F6;font-size:14px}
+.st-info span{color:#6B7280}.st-info b{color:#111827;font-weight:600;text-align:right;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.st-row{display:flex;align-items:center;gap:12px;width:100%;padding:13px 16px;border:none;background:none;border-bottom:1px solid #F1F2F6;cursor:pointer;font-family:inherit;text-align:left}
+.st-card>.st-row:last-child,.st-card>.st-info:last-child{border-bottom:none}
+.st-ico{width:32px;height:32px;border-radius:9px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.st-ico svg{width:17px;height:17px;fill:none;stroke:#fff;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.st-lbl{flex:1;font-size:15px;font-weight:600;color:#111827;display:flex;flex-direction:column}
+.st-lbl small{font-size:12px;font-weight:500;color:#6B7280;margin-top:2px}
+.st-val{font-size:14px;color:#6B7280}
+.st-tog input{position:absolute;opacity:0;pointer-events:none}
+.st-sw{width:50px;height:30px;border-radius:15px;background:#E5E7EB;position:relative;flex-shrink:0;transition:background .2s}
+.st-sw::after{content:"";position:absolute;top:3px;left:3px;width:24px;height:24px;border-radius:50%;background:#fff;box-shadow:0 2px 4px rgba(0,0,0,.2);transition:transform .2s}
+.st-tog input:checked+.st-sw{background:#34C759}
+.st-tog input:checked+.st-sw::after{transform:translateX(20px)}
+.st-logout{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;margin-top:24px;height:50px;border-radius:16px;border:none;background:#FEF2F2;color:#DC2626;font-size:15px;font-weight:700;font-family:inherit;cursor:pointer}
+.st-logout svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+body.dark-mode .st-card{background:#1C1C1E}
+body.dark-mode .st-name,body.dark-mode .st-lbl,body.dark-mode .st-info b{color:#F3F4F6}
+body.dark-mode .st-row,body.dark-mode .st-info{border-color:#2C2C2E}
 /* ===== v9.50 BLOCCO ZOOM / OVERFLOW ===== */
 html,body{max-width:100%;overflow-x:hidden;-webkit-text-size-adjust:100%;text-size-adjust:100%;touch-action:manipulation}
 @media(max-width:768px){input,select,textarea{font-size:16px!important}}
@@ -3347,6 +3376,10 @@ table.quill-better-table {
     <span class="cna-bnav-label">Attività</span>
     <div class="cna-bnav-badge" id="bnav-badge-num" style="display:none">0</div>
   </button>
+  <button class="cna-bnav-item" id="bnav-impostazioni" onclick="switchTab(6)">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#8E8E93" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+    <span class="cna-bnav-label">Impostazioni</span>
+  </button>
 </div>
 
 
@@ -3393,22 +3426,6 @@ table.quill-better-table {
   </div>
   <!-- Voci menu -->
   <div style="flex:1;padding:12px 0">
-    <button onclick="openChangelog();toggleHamburger()" style="display:flex;align-items:center;gap:14px;width:100%;padding:14px 20px;border:none;background:none;cursor:pointer;font-size:14px;font-weight:600;color:var(--cna);font-family:inherit;text-align:left">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-      Versioni
-    </button>
-    <button id="btn-logs" onclick="openLogsModal();toggleHamburger()" style="display:none;align-items:center;gap:14px;width:100%;padding:14px 20px;border:none;background:none;cursor:pointer;font-size:14px;font-weight:600;color:var(--cna);font-family:inherit;text-align:left">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
-      Log
-    </button>
-    <button id="btn-email-templates" onclick="openEmailTemplates();toggleHamburger()" style="display:none;align-items:center;gap:14px;width:100%;padding:14px 20px;border:none;background:none;cursor:pointer;font-size:14px;font-weight:600;color:var(--cna);font-family:inherit;text-align:left">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-      Template Email & SMS
-    </button>
-    <button id="btn-gestione-utenti" onclick="openGestioneUtenti();toggleHamburger()" style="display:none;align-items:center;gap:14px;width:100%;padding:14px 20px;border:none;background:none;cursor:pointer;font-size:14px;font-weight:600;color:var(--cna);font-family:inherit;text-align:left">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-      Gestione Utenti
-    </button>
     <div style="height:1px;background:var(--brd);margin:8px 20px"></div>
     <button onclick="toggleDarkMode();toggleHamburger()" style="display:flex;align-items:center;gap:14px;width:100%;padding:14px 20px;border:none;background:none;cursor:pointer;font-size:14px;font-weight:600;color:var(--txt2);font-family:inherit;text-align:left">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" id="dm-icon"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
@@ -3833,6 +3850,8 @@ table.quill-better-table {
     </div>
   </div>
 </div>
+<!-- TAB 6: IMPOSTAZIONI -->
+<div class="tab-page" id="tab-6"><div id="settings-root" class="st-root"></div></div>
 </main>
 </div><!-- end cna-content-col -->
 
@@ -6210,12 +6229,13 @@ async function updateStats(){
     set('stat-totali-c',totali);set('stat-attesa-c',attesa);set('stat-da-caricare-c',daCaricare);set('stat-caricati-c',caricati);
     // Alert banner
     const banner=document.getElementById('cna-alert-banner');
-    if(banner){banner.style.display=daCaricare>0?'flex':'none';}
+    if(banner){banner.style.display=(daCaricare>0&&cnaPref('banner'))?'flex':'none';}
+    cnaPushCheck(firmati);
     set('cna-alert-num',daCaricare);
     // Sidebar badges
     const sbC=document.getElementById('sb-pill-contratti');if(sbC)sbC.textContent=totali;
     const sbU=document.getElementById('sb-pill-upload');if(sbU){sbU.textContent=daCaricare;sbU.style.display=daCaricare>0?'flex':'none';}
-    const bnBadge=document.getElementById('bnav-badge-num');if(bnBadge){bnBadge.textContent=daCaricare;bnBadge.style.display=daCaricare>0?'flex':'none';}
+    const bnBadge=document.getElementById('bnav-badge-num');if(bnBadge){bnBadge.textContent=daCaricare;bnBadge.style.display=(daCaricare>0&&cnaPref('badge'))?'flex':'none';}
     // Side widgets
     const swQ=document.getElementById('cna-sw-queue');if(swQ)swQ.style.display=daCaricare>0?'':'none';
     set('cna-sw-qnum',daCaricare);
@@ -6249,6 +6269,90 @@ function cnaSetSb(id,title){
 document.addEventListener('gesturestart',e=>e.preventDefault());
 document.addEventListener('touchmove',e=>{if(e.touches&&e.touches.length>1)e.preventDefault();},{passive:false});
 (function(){let m=window.innerWidth<=768;window.addEventListener('resize',()=>{const n=window.innerWidth<=768;if(n!==m){m=n;try{if(window._filteredData)filterContracts(true);}catch(e){}}});})();
+
+// ===== IMPOSTAZIONI (v9.52) =====
+const CNA_PREF_DEF={badge:true,banner:true,push:false};
+function cnaPref(k){const n=(loggedUser&&loggedUser.notifiche)||{};return (k in n)?!!n[k]:CNA_PREF_DEF[k];}
+async function cnaSetPref(k,v){
+  if(!loggedUser)return;
+  if(k==='push'&&v){
+    if(!('Notification' in window)){showToast('Notifiche non supportate da questo browser','error');renderSettings();return;}
+    const perm=await Notification.requestPermission();
+    if(perm!=='granted'){showToast('Permesso notifiche negato dal browser','error');renderSettings();return;}
+  }
+  const n=Object.assign({},CNA_PREF_DEF,loggedUser.notifiche||{},{[k]:v});
+  try{
+    await sb(`cna_users?id=eq.${loggedUser.id}`,'PATCH',{notifiche:n});
+    loggedUser.notifiche=n;
+    showToast('Preferenza salvata','success');
+    updateStats();
+  }catch(e){showToast('Errore: '+e.message,'error');}
+  renderSettings();
+}
+function cnaPushCheck(firmati){
+  try{
+    if(!loggedUser)return;
+    const key='cna_last_firmati_'+loggedUser.id;
+    const prev=parseInt(localStorage.getItem(key)||'-1');
+    localStorage.setItem(key,firmati);
+    if(prev>=0&&firmati>prev&&cnaPref('push')&&'Notification' in window&&Notification.permission==='granted'){
+      const d=firmati-prev;
+      new Notification('SignatureCNA',{body:d===1?'Un nuovo contratto è stato firmato':d+' nuovi contratti firmati'});
+    }
+  }catch(e){}
+}
+function renderSettings(){
+  const root=document.getElementById('settings-root');if(!root||!loggedUser)return;
+  const u=loggedUser,isAdmin=u.ruolo==='admin',isOp=isAdmin||u.ruolo==='operatore';
+  const ini=((u.nome||'?')[0]+(u.cognome||'')[0]||'').toUpperCase();
+  const av=u.foto_profilo_base64?`<img src="${u.foto_profilo_base64}" alt="">`:ini;
+  const chev='<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#C7C7CC" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>';
+  const row=(ico,col,label,act,extra)=>`<button class="st-row" onclick="${act}"><span class="st-ico" style="background:${col}">${ico}</span><span class="st-lbl">${label}</span>${extra||chev}</button>`;
+  const tog=(k,label,sub)=>`<label class="st-row st-tog"><span class="st-lbl">${label}<small>${sub}</small></span><input type="checkbox" ${cnaPref(k)?'checked':''} onchange="cnaSetPref('${k}',this.checked)"><span class="st-sw"></span></label>`;
+  const I={
+    user:'<svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>',
+    users:'<svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>',
+    mail:'<svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>',
+    log:'<svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>',
+    ver:'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>',
+    moon:'<svg viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>',
+    out:'<svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>'
+  };
+  root.innerHTML=`
+  <div class="st-card st-profile">
+    <div class="st-avatar">${av}</div>
+    <div style="min-width:0">
+      <div class="st-name">${(u.nome||'')} ${(u.cognome||'')}</div>
+      <div class="st-mail">${u.email||''}</div>
+      <span class="st-role">${u.ruolo||'utente'}</span>
+    </div>
+  </div>
+  <div class="st-sec">Account</div>
+  <div class="st-card">
+    <div class="st-info"><span>Email</span><b>${u.email||'—'}</b></div>
+    <div class="st-info"><span>Cellulare</span><b>${u.cellulare||'—'}</b></div>
+    <div class="st-info"><span>Ultimo accesso</span><b>${u.last_login?new Date(u.last_login).toLocaleString('it-IT'):'—'}</b></div>
+    ${row(I.user,'#2563EB','Modifica dati e password','openProfile()')}
+  </div>
+  <div class="st-sec">Notifiche</div>
+  <div class="st-card">
+    ${tog('badge','Badge contratti da caricare','Numero rosso sull\'icona Attività')}
+    ${tog('banner','Avviso in Home','Banner arancione con la coda da caricare')}
+    ${tog('push','Notifiche del browser','Avviso quando un cliente firma un contratto')}
+  </div>
+  ${isOp?`<div class="st-sec">Gestione app</div><div class="st-card">
+    ${isAdmin?row(I.users,'#DC2626','Gestione utenti','openGestioneUtenti()'):''}
+    ${isAdmin?row(I.mail,'#7C3AED','Template Email & SMS','openEmailTemplates()'):''}
+    ${row(I.log,'#0891B2','Log accessi','openLogsModal()')}
+  </div>`:''}
+  <div class="st-sec">App</div>
+  <div class="st-card">
+    ${row(I.moon,'#475569','Dark mode','toggleDarkMode();renderSettings()',`<span class="st-val">${document.body.classList.contains('dark-mode')?'Attiva':'Off'}</span>`)}
+    ${row(I.ver,'#16A34A','Versioni','openChangelog()')}
+  </div>
+  <button class="st-logout" onclick="doLogout()">${I.out} Esci</button>`;
+}
+
 function cnaSetBnav(id){
   document.querySelectorAll('.cna-bnav-item').forEach(b=>{
     b.classList.remove('active');
@@ -8114,6 +8218,7 @@ function switchTab(i){
   // Aggiorna navigazione
   if(i===5){cnaSetSb('sbnav-home','Dashboard');cnaSetBnav('bnav-home');}
   else if(i===4){cnaSetSb('sbnav-contratti','Contratti');cnaSetBnav('bnav-contratti');}
+  else if(i===6){cnaSetBnav('bnav-impostazioni');try{renderSettings();}catch(e){console.error(e);}}
   const btn=document.querySelector(`.tab-btn[data-tab="${i}"]`);
   if(btn)btn.classList.add('active');
   const page=document.getElementById(`tab-${i}`);
