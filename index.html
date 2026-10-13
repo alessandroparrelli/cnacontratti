@@ -417,7 +417,7 @@ html,body{overflow-x:hidden;width:100%}
   .contract-avatar{border-radius:10px!important}
 }
 
-/* ===== v9.62 VIEWER MODAL ===== */
+/* ===== v9.56 VIEWER MODAL ===== */
 #cna-viewer{position:fixed;inset:0;z-index:10000;display:none;align-items:center;justify-content:center;background:rgba(15,23,42,.55);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);padding:max(12px,env(safe-area-inset-top)) 12px max(12px,env(safe-area-inset-bottom))}
 #cna-viewer .cv-box{background:#fff;border-radius:22px;width:100%;max-width:900px;height:100%;max-height:92vh;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.3)}
 #cna-viewer .cv-head{display:flex;align-items:center;gap:12px;padding:14px 14px 14px 18px;border-bottom:1px solid #EEF0F4;flex-shrink:0}
@@ -3331,7 +3331,7 @@ table.quill-better-table {
     <div class="form-group"><label>Email</label><input type="text" id="login-email" placeholder="email@esempio.com" autocomplete="username" required></div>
     <div class="form-group"><label>Password</label><input type="password" id="login-password" placeholder="••••••••" autocomplete="current-password" required></div>
     <button class="login-btn" onclick="doLogin()">Accedi</button>
-    <p style="text-align:center;font-size:11px;color:var(--txt2);margin-top:20px">Signature v8.3</p>
+    <p style="text-align:center;font-size:11px;color:var(--txt2);margin-top:20px">Signature v9.62</p>
     <p style="text-align:center;font-size:10px;color:var(--txt2);margin-top:4px">&copy; 2026 CNA Roma - Confederazione Nazionale dell'Artigianato</p>
   </div>
 </div>
@@ -4428,9 +4428,124 @@ Cordiali saluti, CNA Roma</div>
 <div class="modal-overlay" id="modal-changelog"><div class="modal" style="max-width:800px">
   <div class="modal-header"><h2>&#x1F4CB; Note di versione</h2><button class="close-btn" onclick="closeModal('modal-changelog')">&times;</button></div>
   <div class="modal-body" style="max-height:70vh;overflow-y:auto">
-    
+
     <div class="changelog-entry">
-      <h3>v8.3 - 18 Maggio 2026 ✅ ATTUALE</h3>
+      <h3>v9.62 - 13 Ottobre 2026 ✅ ATTUALE</h3>
+      <ul>
+        <li><strong>Editor email potenziato:</strong> pannello <em>Inserisci blocco</em> (saluto, chiusura, pulsante, immagine, tabella dati cliente, riquadro, linea, spazio, firma CNA Roma)</li>
+        <li><strong>Variabili:</strong> tutte le 20 variabili disponibili, raggruppate (Cliente, Impresa, Adesione, Firma) e cercabili; quelle non disponibili in un'email sono evidenziate in rosso nell'anteprima</li>
+        <li><strong>Anteprima:</strong> con i dati di un contratto reale, vista desktop/mobile</li>
+        <li><strong>Immagini:</strong> ridimensionamento reale in pixel (% calcolata sull'originale), slider, maniglia trascinabile, allineamento, link, testo alternativo, sostituzione</li>
+        <li><strong>Formattazione:</strong> colori personalizzati, 5 nuovi font, annulla/ripeti, modifica HTML; al salvataggio stili convertiti inline per Gmail/Outlook (allineamenti, font, tabelle con bordi)</li>
+        <li><strong>Aggiornamenti:</strong> l'app carica sempre l'ultima versione (no-cache su index.html)</li>
+      </ul>
+    </div>
+
+    <div class="changelog-entry">
+      <h3>v9.58–v9.61 - 13 Ottobre 2026 - CARICA CARTACEI 📄</h3>
+      <ul>
+        <li><strong>Nuovo pulsante Carica cartacei:</strong> upload di PDF scansionati di moduli firmati a penna, anche con più clienti nello stesso file</li>
+        <li><strong>Riconoscimento automatico:</strong> scheda adesione, informativa privacy, delega INPS, mandato SEPA e foto documento (fronte/retro), con verifica OCR delle intestazioni e gestione pagine capovolte o storte</li>
+        <li><strong>Abbinamento contratto:</strong> via OCR (P.IVA, codice fiscale, nome, ragione sociale, email), con revisione e correzione manuale pagina per pagina</li>
+        <li><strong>Firmato da cartaceo:</strong> il contratto passa a firmato, il PDF scansionato sostituisce quello generato (anteprima, download, email post-firma); possibile ricaricare un cartaceo già caricato</li>
+      </ul>
+    </div>
+
+    <div class="changelog-entry">
+      <h3>v9.57 - 13 Ottobre 2026</h3>
+      <ul>
+        <li><strong>Pagina firma cliente:</strong> ripristinati i campi obbligatori Tipo e N° documento d'identità, salvati sul contratto</li>
+      </ul>
+    </div>
+
+    <div class="changelog-entry">
+      <h3>v9.48–v9.56 - 3 Ottobre 2026 - MOBILE E IMPOSTAZIONI 📱</h3>
+      <ul>
+        <li><strong>Viewer integrato:</strong> PDF e foto documenti si aprono in una finestra con Chiudi, Condividi e Scarica</li>
+        <li><strong>Impostazioni:</strong> nuova voce nel menu: profilo, preferenze notifiche, gestione app admin</li>
+        <li><strong>Mobile:</strong> lista contratti a card native, KPI stile CRM, menu in basso flottante (Home/Contratti/Nuovo/Impostazioni), Ricerca Impresa reimpaginata, blocco zoom iOS</li>
+        <li><strong>PWA:</strong> status bar con colore pagina, header sotto la safe-area</li>
+        <li><strong>Fix:</strong> ricerca impresa (errore 400 su colonna inesistente)</li>
+      </ul>
+    </div>
+
+    <div class="changelog-entry">
+      <h3>v9.39–v9.47 - 14 Settembre 2026</h3>
+      <ul>
+        <li><strong>Menu laterale:</strong> comprimi/espandi con stato salvato, icone visibili e tooltip</li>
+        <li><strong>Email post-firma:</strong> pulsante Email nella dashboard per il reinvio; fix allegato PDF</li>
+        <li><strong>SMS:</strong> mittente CNA Roma</li>
+        <li><strong>Fix critico login:</strong> script tooltip eseguito prima del caricamento della pagina</li>
+      </ul>
+    </div>
+
+    <div class="changelog-entry">
+      <h3>v9.17–v9.38 - 2 Settembre 2026 - REDESIGN DASHBOARD 🎨</h3>
+      <ul>
+        <li><strong>Nuovo layout:</strong> sidebar desktop + menu in basso su mobile, font Inter, saluto in base all'ora</li>
+        <li><strong>Dashboard Contratti:</strong> tabella con colonne Ragione Sociale, Data, Promotore, Tipo, Stato, OTP, Caricato, PDF, Invia, Reset, Fronte, Retro, GPS, Link; 10 per pagina, righe zebrate</li>
+        <li><strong>Invio unificato:</strong> modal di scelta canale Email / SMS / WhatsApp / Copia link</li>
+        <li><strong>Ricerca Impresa:</strong> box ridisegnato, badge ATTIVA / ARTIGIANO / ISCRITTO CNA / PAGANTE, incassi per azienda CNA Roma e CAF Lazio</li>
+        <li><strong>Fix:</strong> margini tabella, pulsanti sovrapposti, conferme personalizzate al posto di confirm()</li>
+      </ul>
+    </div>
+
+    <div class="changelog-entry">
+      <h3>v9.14–v9.16 - 31 Agosto 2026 - VERIFICA OTP 🔐</h3>
+      <ul>
+        <li><strong>OTP via SMS:</strong> verifica identità del cliente prima della firma; badge OTP nella dashboard</li>
+        <li><strong>Documento d'identità:</strong> tipo e numero nel PDF, canvas firma più grande</li>
+        <li><strong>PDF:</strong> non più modificabile dopo la firma; email post-firma anche a ufficiosoci@cnaroma.it</li>
+        <li><strong>SMS:</strong> pulsante SMS nella lista contratti e SMS automatico post-firma</li>
+      </ul>
+    </div>
+
+    <div class="changelog-entry">
+      <h3>29 Agosto 2026 - SMS ED EMAIL 💬</h3>
+      <ul>
+        <li><strong>Invio SMS:</strong> tramite Infobip, con editor dei template SMS</li>
+        <li><strong>Email:</strong> mittente tesseramento@cnaroma.it, tutte le variabili del contratto nell'email di invio link</li>
+      </ul>
+    </div>
+
+    <div class="changelog-entry">
+      <h3>v9.0–v9.3 - 23 Luglio 2026 - DESIGN SIGNATURECNA</h3>
+      <ul>
+        <li><strong>Nuovo design system:</strong> font Outfit, colori brand, wordmark signaturecna, login rinnovato, icone PWA aggiornate</li>
+      </ul>
+    </div>
+
+    <div class="changelog-entry">
+      <h3>15–22 Giugno 2026</h3>
+      <ul>
+        <li><strong>Firma:</strong> presa visione obbligatoria del PDF prima di firmare, tratto più realistico, firma non deformata alla rotazione dello schermo</li>
+        <li><strong>Indirizzi:</strong> ricerca con civici (OpenStreetMap), provincia di Roma corretta</li>
+        <li><strong>Incassi:</strong> sezione Pagamenti nell'anagrafica impresa raggruppata per anno</li>
+        <li><strong>Fix:</strong> quota INPS e quota 2° anno invertite</li>
+      </ul>
+    </div>
+
+    <div class="changelog-entry">
+      <h3>v9.1–v9.13 - 26 Maggio 2026 - RICERCA IMPRESE 🔎</h3>
+      <ul>
+        <li><strong>Ricerca imprese:</strong> per P.IVA, CF, nome, ragione sociale su Anagrafiche CRM, diretti e contratti di servizio, con dettaglio impresa</li>
+        <li><strong>Tipi di contratto:</strong> Tesseramento come primo tipo, struttura pronta per altri contratti</li>
+        <li><strong>Gestione utenti:</strong> lista, modifica, attiva/disattiva, nuovo utente (solo admin)</li>
+        <li><strong>Mobile:</strong> drawer laterale, griglie responsive, icone SVG al posto delle emoji</li>
+      </ul>
+    </div>
+
+    <div class="changelog-entry">
+      <h3>18–21 Maggio 2026 - EMAIL AUTOMATICHE ✉️</h3>
+      <ul>
+        <li><strong>Email via Resend:</strong> invio automatico del link firma e 3 email post-firma (cliente, promotore, ufficio soci)</li>
+        <li><strong>Editor template:</strong> editor visuale per i template email con tabelle, immagini e formattazione avanzata</li>
+        <li><strong>Fix:</strong> compressione foto documento per stare nei limiti dell'email, niente invii doppi</li>
+      </ul>
+    </div>
+
+    <div class="changelog-entry">
+      <h3>v8.3 - 18 Maggio 2026</h3>
         <ul>
           <li><strong>Icone PWA:</strong> favicon multi-size (16/32/48px), apple-touch-icon (180px), icon-192, icon-512 dal logo SVG ufficiale CNA</li>
           <li><strong>manifest.json:</strong> PWA installabile su Android e iOS con icona CNA</li>
@@ -6623,7 +6738,7 @@ function renderSettings(){
 }
 
 
-// ===== VIEWER MODAL (v9.62) =====
+// ===== VIEWER MODAL (v9.56) =====
 function cnaViewerOpen(title,bodyHtml,actionsHtml){
   let m=document.getElementById('cna-viewer');
   if(!m){m=document.createElement('div');m.id='cna-viewer';document.body.appendChild(m);}
