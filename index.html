@@ -417,7 +417,7 @@ html,body{overflow-x:hidden;width:100%}
   .contract-avatar{border-radius:10px!important}
 }
 
-/* ===== v9.59 VIEWER MODAL ===== */
+/* ===== v9.60 VIEWER MODAL ===== */
 #cna-viewer{position:fixed;inset:0;z-index:10000;display:none;align-items:center;justify-content:center;background:rgba(15,23,42,.55);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);padding:max(12px,env(safe-area-inset-top)) 12px max(12px,env(safe-area-inset-bottom))}
 #cna-viewer .cv-box{background:#fff;border-radius:22px;width:100%;max-width:900px;height:100%;max-height:92vh;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.3)}
 #cna-viewer .cv-head{display:flex;align-items:center;gap:12px;padding:14px 14px 14px 18px;border-bottom:1px solid #EEF0F4;flex-shrink:0}
@@ -6553,7 +6553,7 @@ function renderSettings(){
 }
 
 
-// ===== VIEWER MODAL (v9.59) =====
+// ===== VIEWER MODAL (v9.60) =====
 function cnaViewerOpen(title,bodyHtml,actionsHtml){
   let m=document.getElementById('cna-viewer');
   if(!m){m=document.createElement('div');m.id='cna-viewer';document.body.appendChild(m);}
@@ -8690,19 +8690,27 @@ async function crtEnsureLibs(){
   if(!window.pdfjsLib){await crtLoadScript('https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js');pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';}
   if(!window.Tesseract)await crtLoadScript('https://cdn.jsdelivr.net/npm/tesseract.js@5.1.1/dist/tesseract.min.js');
 }
-function crtShrink(cv,minW){let c=cv;while(c.width/2>=minW){const n=document.createElement('canvas');n.width=Math.round(c.width/2);n.height=Math.round(c.height/2);const x=n.getContext('2d');x.imageSmoothingQuality='high';x.drawImage(c,0,0,n.width,n.height);c=n;}return c;}
+const CRT_W=32,CRT_H=45;
 function crtFp(cv,rot){
-  cv=crtShrink(cv,64);
-  const W=32,H=45,c=document.createElement('canvas');c.width=W;c.height=H;const x=c.getContext('2d');
-  x.fillStyle='#fff';x.fillRect(0,0,W,H);
-  if(rot){x.translate(W,H);x.rotate(Math.PI);}
-  x.drawImage(cv,0,0,W,H);
-  const d=x.getImageData(0,0,W,H).data,a=[];
-  for(let j=1;j<H-1;j++)for(let i=1;i<W-1;i++){const k=(j*W+i)*4;a.push(255-(d[k]*0.299+d[k+1]*0.587+d[k+2]*0.114));}
-  const m=a.reduce((s,v)=>s+v,0)/a.length,sd=Math.sqrt(a.reduce((s,v)=>s+(v-m)*(v-m),0)/a.length)||1;
-  return a.map(v=>(v-m)/sd);
+  // Griglia di "inchiostro" con media a blocchi calcolata a mano: identica su ogni browser
+  const W=CRT_W,H=CRT_H,w=cv.width,h=cv.height,d=cv.getContext('2d').getImageData(0,0,w,h).data;
+  const sum=new Float64Array(W*H),cnt=new Float64Array(W*H);
+  for(let y=0;y<h;y++){const by=Math.min(H-1,Math.floor(y*H/h))*W;const row=y*w*4;
+    for(let x=0;x<w;x++){const k=row+x*4;const bi=by+Math.min(W-1,Math.floor(x*W/w));sum[bi]+=255-(d[k]*0.299+d[k+1]*0.587+d[k+2]*0.114);cnt[bi]++;}}
+  const g=new Float64Array(W*H);for(let i=0;i<W*H;i++)g[i]=sum[i]/(cnt[i]||1);
+  if(rot)g.reverse();
+  return g;
 }
-function crtCorr(a,b){let s=0;for(let i=0;i<a.length;i++)s+=a[i]*b[i];return s/a.length;}
+function crtCorr(a,b){
+  // Correlazione tollerante a piccoli spostamenti della scansione (±2 celle ≈ ±4% pagina)
+  const W=CRT_W,H=CRT_H,M=3;let best=-1;
+  for(let dy=-2;dy<=2;dy++)for(let dx=-2;dx<=2;dx++){
+    let n=0,sa=0,sb=0,saa=0,sbb=0,sab=0;
+    for(let j=M;j<H-M;j++)for(let i=M;i<W-M;i++){const x=a[j*W+i],y=b[(j+dy)*W+i+dx];n++;sa+=x;sb+=y;saa+=x*x;sbb+=y*y;sab+=x*y;}
+    const c=(sab-sa*sb/n)/Math.sqrt(((saa-sa*sa/n)*(sbb-sb*sb/n))||1);if(c>best)best=c;
+  }
+  return best;
+}
 async function crtRender(page,targetW){
   const v1=page.getViewport({scale:1});const vp=page.getViewport({scale:targetW/v1.width});
   const cv=document.createElement('canvas');cv.width=Math.round(vp.width);cv.height=Math.round(vp.height);
@@ -8714,7 +8722,7 @@ async function crtTemplate(){
   if(_crtTpl)return _crtTpl;
   const bytes=Uint8Array.from(atob(PDF_B64),ch=>ch.charCodeAt(0));
   const pdf=await pdfjsLib.getDocument({data:bytes}).promise;_crtTpl=[];
-  for(let i=1;i<=Math.min(4,pdf.numPages);i++){_crtTpl.push(crtFp(await crtRender(await pdf.getPage(i),300)));}
+  for(let i=1;i<=Math.min(4,pdf.numPages);i++){_crtTpl.push(crtFp(await crtRender(await pdf.getPage(i),620)));}
   return _crtTpl;
 }
 function crtStatus(t){const e=document.getElementById('crt-status');if(e)e.innerHTML=t;}
@@ -8742,7 +8750,7 @@ async function crtAnalyze(){
   const files=[...document.getElementById('crt-file').files];if(!files.length){showToast('Seleziona uno o più PDF','error');return;}
   try{
     crtStatus('⏳ Caricamento librerie di analisi...');await crtEnsureLibs();const T=await crtTemplate();
-    let q='contratti?select=id,token,stato,cognome,nome,ragione_sociale,partita_iva,codice_fiscale,email,created_at&stato=neq.firmato&order=created_at.desc&limit=500';
+    let q='contratti?select=id,token,stato,cognome,nome,ragione_sociale,partita_iva,codice_fiscale,email,created_at,firma_modalita&or=(stato.neq.firmato,firma_modalita.eq.cartacea)&order=created_at.desc&limit=500';
     if(loggedUser&&loggedUser.ruolo!=='admin')q+='&created_by=eq.'+loggedUser.id;
     _crtCands=await sb(q)||[];
     const pages=[];
@@ -8751,19 +8759,37 @@ async function crtAnalyze(){
       for(let i=1;i<=pdf.numPages;i++){
         crtStatus(`⏳ Analisi ${f.name} · pagina ${i}/${pdf.numPages}...`);
         let cv=await crtRender(await pdf.getPage(i),1240);
-        let best=-1,bi=-1,rot=false;
-        for(const r of [false,true]){const fp=crtFp(cv,r);T.forEach((t,k)=>{const c=crtCorr(fp,t);if(c>best){best=c;bi=k;rot=r;}});}
-        if(best>=0.45&&rot)cv=crtRotate(cv);
-        pages.push({cv,role:best>=0.45?CRT_MOD[bi]:'doc',score:best,file:f.name,n:i});
+        const sc=fp=>T.map(t=>crtCorr(fp,t));
+        let s0=sc(crtFp(cv,false)),best=Math.max(...s0),bi=s0.indexOf(best);
+        // Pagina capovolta solo se dritta non somiglia a nulla e ruotata somiglia chiaramente a un modulo
+        if(best<0.3){const s1=sc(crtFp(cv,true)),b1=Math.max(...s1);if(b1>=0.5){cv=crtRotate(cv);best=b1;bi=s1.indexOf(b1);}}
+        // Foto/documenti: molte zone grigie (i moduli sono quasi tutti bianchi)
+        const px=cv.getContext('2d').getImageData(0,0,cv.width,cv.height).data;let mid=0,nn=0;
+        for(let k=0;k<px.length;k+=16){const gy=px[k]*0.299+px[k+1]*0.587+px[k+2]*0.114;nn++;if(gy<200&&gy>60)mid++;}
+        const grey=mid/nn;
+        const isMod=best>=0.6||(best>=0.45&&grey<0.16);
+        pages.push({cv,sc:s0,role:isMod?'mod':'doc',score:best,grey,file:f.name,n:i});
       }
     }
-    // Raggruppa: una nuova scheda (o un modulo già presente) apre un nuovo contratto
-    const groups=[];let g=null;
+    // Raggruppa per cliente: si riparte quando dopo le foto documento ricompaiono i moduli,
+    // o quando arriva una pagina che somiglia chiaramente a una nuova scheda
+    const groups=[];let g=null,seenDoc=false;
+    const schedaLike=p=>p.role==='mod'&&p.sc[0]>=Math.max(...p.sc.slice(1))+0.08;
     for(const p of pages){
-      if(p.role!=='doc'&&(!g||p.role==='scheda'||g.pages.some(x=>x.role===p.role))){g={pages:[]};groups.push(g);}
-      if(!g){g={pages:[]};groups.push(g);}
-      g.pages.push(p);
+      const mods=g?g.pages.filter(x=>x.role==='mod'):[];
+      if(!g||(p.role==='mod'&&mods.length&&(seenDoc||mods.length>=4||(schedaLike(p)&&mods.some(schedaLike))))){g={pages:[]};groups.push(g);seenDoc=false;}
+      g.pages.push(p);if(p.role==='doc'&&g.pages.some(x=>x.role==='mod'))seenDoc=true;
     }
+    // Gruppi di sole foto documento: uniscili al cliente vicino
+    for(let k=groups.length-1;k>=0;k--){if(groups.length>1&&!groups[k].pages.some(x=>x.role==='mod')){const t=groups[k+1]||groups[k-1];if(groups[k+1])t.pages.unshift(...groups[k].pages);else t.pages.push(...groups[k].pages);groups.splice(k,1);}}
+    // Dentro ogni cliente: assegna scheda/privacy/INPS/SEPA senza doppioni (combinazione con somiglianza massima)
+    const perms=[];(function pm(arr,cur){if(!arr.length){perms.push(cur);return;}arr.forEach((v,i)=>pm(arr.filter((_,j)=>j!==i),cur.concat(v)));})([0,1,2,3],[]);
+    groups.forEach(g=>{
+      const mods=g.pages.filter(p=>p.role==='mod').slice(0,4);let bestP=null,bestS=-1e9;
+      for(const pr of perms){let t=0;mods.forEach((p,i)=>t+=p.sc[pr[i]]);if(t>bestS){bestS=t;bestP=pr;}}
+      mods.forEach((p,i)=>p.role=CRT_MOD[bestP[i]]);
+      g.pages.filter(p=>p.role==='mod').forEach(p=>p.role='allegato');
+    });
     groups.forEach(g=>{let d=0;g.pages.forEach(p=>{if(p.role==='doc'){p.role=d===0?'fronte':d===1?'retro':'allegato';d++;}});});
     // OCR per riconoscere il cliente
     for(let k=0;k<groups.length;k++){
@@ -8781,7 +8807,7 @@ async function crtAnalyze(){
 function crtRenderReview(){
   const box=document.getElementById('crt-review');
   box.innerHTML=_crtGroups.map((g,gi)=>{
-    const opts=['<option value="">— Seleziona contratto —</option>'].concat(g.ranked.map(r=>`<option value="${r.c.id}"${r.c.id===g.contractId?' selected':''}>${(r.s>=4?'★ ':'')}${[r.c.cognome,r.c.nome].filter(Boolean).join(' ')} · ${r.c.ragione_sociale||''} · ${r.c.partita_iva||''} (${r.c.stato})</option>`)).join('');
+    const opts=['<option value="">— Seleziona contratto —</option>'].concat(g.ranked.map(r=>`<option value="${r.c.id}"${r.c.id===g.contractId?' selected':''}>${(r.s>=4?'★ ':'')}${[r.c.cognome,r.c.nome].filter(Boolean).join(' ')} · ${r.c.ragione_sociale||''} · ${r.c.partita_iva||''} (${r.c.firma_modalita==='cartacea'?'già caricato · verrà sostituito':r.c.stato})</option>`)).join('');
     const ok=!!g.contractId;
     const thumbs=g.pages.map((p,pi)=>{const t=p.cv.toDataURL('image/jpeg',0.4);
       return `<div style="width:110px;flex-shrink:0"><img src="${t}" style="width:110px;border:1px solid var(--brd);border-radius:6px;cursor:zoom-in;background:#fff" onclick="crtZoom(${gi},${pi})"><select data-g="${gi}" data-p="${pi}" onchange="crtSetRole(this)" style="width:100%;font-size:11px;padding:3px;margin-top:4px;border:1px solid var(--brd);border-radius:6px">${CRT_ROLES.map(r=>`<option value="${r[0]}"${p.role===r[0]?' selected':''}>${r[1]}</option>`).join('')}</select><div style="font-size:10px;color:var(--txt2);text-align:center">${p.file.length>14?p.file.slice(0,12)+'…':p.file} p.${p.n}</div></div>`;}).join('');
@@ -8818,8 +8844,8 @@ async function crtUploadAll(){
       const now=new Date().toISOString();
       await sb(`contratti?id=eq.${ct.id}`,'PATCH',{stato:'firmato',firmato_at:now,updated_at:now,firma_modalita:'cartacea',ip_firma:'cartaceo',user_agent_firma:'Caricamento cartaceo da '+((loggedUser&&loggedUser.email)||'operatore'),consenso_trattamento_generale:true,consenso_trattamento_inps_inail:true,documento_foto_tipo:'image/jpeg'});
       await sb(`contratti?id=eq.${ct.id}`,'PATCH',{pdf_cartaceo_base64:pdfB64});
-      if(fr)await sb(`contratti?id=eq.${ct.id}`,'PATCH',{documento_foto_base64:crtJpeg(fr.cv,1400,0.65)});
-      if(re)await sb(`contratti?id=eq.${ct.id}`,'PATCH',{documento_retro_base64:crtJpeg(re.cv,1400,0.65)});
+      await sb(`contratti?id=eq.${ct.id}`,'PATCH',{documento_foto_base64:fr?crtJpeg(fr.cv,1400,0.65):null});
+      await sb(`contratti?id=eq.${ct.id}`,'PATCH',{documento_retro_base64:re?crtJpeg(re.cv,1400,0.65):null});
       if(sendMail){try{await sendPostFirmaEmails(ct.token);}catch(e){console.warn('Email post-firma:',e.message);}}
       g.skip=true;ok++;
     }
