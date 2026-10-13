@@ -417,7 +417,7 @@ html,body{overflow-x:hidden;width:100%}
   .contract-avatar{border-radius:10px!important}
 }
 
-/* ===== v9.58 VIEWER MODAL ===== */
+/* ===== v9.59 VIEWER MODAL ===== */
 #cna-viewer{position:fixed;inset:0;z-index:10000;display:none;align-items:center;justify-content:center;background:rgba(15,23,42,.55);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);padding:max(12px,env(safe-area-inset-top)) 12px max(12px,env(safe-area-inset-bottom))}
 #cna-viewer .cv-box{background:#fff;border-radius:22px;width:100%;max-width:900px;height:100%;max-height:92vh;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.3)}
 #cna-viewer .cv-head{display:flex;align-items:center;gap:12px;padding:14px 14px 14px 18px;border-bottom:1px solid #EEF0F4;flex-shrink:0}
@@ -4238,8 +4238,17 @@ Cordiali saluti, CNA Roma</div>
               <button title="Colore sfondo cella/testo" style="width:auto;padding:0 6px;font-size:11px;font-weight:600" onclick="etCellColor()">🎨 Sfondo</button>
               <button title="Interlinea" style="width:auto;padding:0 6px;font-size:11px;font-weight:600" onclick="document.getElementById('et-format-panel').style.display=document.getElementById('et-format-panel').style.display==='none'?'flex':'none'">↕ Formato</button>
             </span>
+            <span class="ql-formats">
+              <button title="Annulla (Ctrl+Z)" style="width:auto;padding:0 5px;font-size:13px" onclick="etUndo()">↶</button>
+              <button title="Ripeti (Ctrl+Y)" style="width:auto;padding:0 5px;font-size:13px" onclick="etRedo()">↷</button>
+              <button title="Inserisci pulsante con link" style="width:auto;padding:0 6px;font-size:11px;font-weight:600" onclick="etInsertButton()">🔘 Pulsante</button>
+              <button title="Linea divisoria" style="width:auto;padding:0 6px;font-size:11px;font-weight:600" onclick="etInsertDivider()">― Linea</button>
+              <button title="Inserisci firma CNA Roma (logo + indirizzo)" style="width:auto;padding:0 6px;font-size:11px;font-weight:600" onclick="etInsertSignature()">✍️ Firma CNA</button>
+              <button id="et-btn-html" title="Modifica codice HTML" style="width:auto;padding:0 6px;font-size:11px;font-weight:600;border-radius:4px" onclick="etToggleHtml()">&lt;/&gt; HTML</button>
+            </span>
           </div>
           <div id="et-quill-editor" style="min-height:300px;font-size:10pt"></div>
+          <textarea id="et-html-source" style="display:none;min-height:400px;width:100%;box-sizing:border-box;border:none;border-top:1px solid #e5e7eb;padding:12px;font-family:monospace;font-size:12px;resize:vertical" spellcheck="false"></textarea>
           <!-- Pannello formattazione avanzata -->
           <div id="et-format-panel" style="display:none;flex-wrap:wrap;gap:6px;padding:10px;background:#f8fafc;border-top:1px solid #e5e7eb;align-items:center">
             <div style="width:100%;display:flex;flex-wrap:wrap;gap:6px;align-items:center;padding-bottom:6px;border-bottom:1px solid #e5e7eb;margin-bottom:4px">
@@ -4288,16 +4297,33 @@ Cordiali saluti, CNA Roma</div>
             </div>
           </div>
         </div>
-        <div id="et-img-resize-bar" style="display:none;background:#f0f9ff;border:1px solid #bae6fd;border-radius:6px;padding:8px 12px;margin-top:6px;font-size:12px;align-items:center;gap:10px">
-          <span style="color:#0369a1">🖼️ Larghezza:</span>
-          <input type="text" id="et-img-width" placeholder="es. 200px o 50%" style="width:100px;padding:3px 6px;border:1px solid #bae6fd;border-radius:4px;font-size:12px">
+        <div id="et-img-resize-bar" style="display:none;position:sticky;bottom:0;z-index:6;background:#f0f9ff;border:1px solid #bae6fd;border-radius:8px;padding:8px 12px;margin-top:6px;font-size:12px;align-items:center;gap:8px;flex-wrap:wrap;box-shadow:0 -2px 10px rgba(0,0,0,.06)">
+          <span style="color:#0369a1;font-weight:700">🖼️ Immagine</span>
+          <input type="range" id="et-img-slider" min="5" max="200" step="1" oninput="etImgSlider(this.value)" style="width:140px">
+          <b id="et-img-pct" style="min-width:38px;color:#005CA9">100%</b>
+          <span style="color:#64748b">dell'originale</span>
+          <button onclick="etImgPct(25)" style="padding:2px 7px;border:1px solid #bae6fd;background:#fff;border-radius:4px;cursor:pointer;font-size:11px">25%</button>
+          <button onclick="etImgPct(50)" style="padding:2px 7px;border:1px solid #bae6fd;background:#fff;border-radius:4px;cursor:pointer;font-size:11px">50%</button>
+          <button onclick="etImgPct(75)" style="padding:2px 7px;border:1px solid #bae6fd;background:#fff;border-radius:4px;cursor:pointer;font-size:11px">75%</button>
+          <button onclick="etImgPct(100)" style="padding:2px 7px;border:1px solid #bae6fd;background:#fff;border-radius:4px;cursor:pointer;font-size:11px">100%</button>
+          <span style="color:#ccc">|</span>
+          <span style="color:#0369a1">Larghezza</span>
+          <input type="text" id="et-img-width" placeholder="px o %" onkeydown="if(event.key==='Enter')applyImgResize()" style="width:64px;padding:3px 6px;border:1px solid #bae6fd;border-radius:4px;font-size:12px"><span style="color:#64748b">px</span>
           <button onclick="applyImgResize()" style="padding:3px 10px;background:#005CA9;color:#fff;border:none;border-radius:4px;cursor:pointer;font-size:12px">Applica</button>
+          <span style="color:#ccc">|</span>
+          <button title="Allinea a sinistra" onclick="etImgAlign('left')" style="padding:2px 7px;border:1px solid #bae6fd;background:#fff;border-radius:4px;cursor:pointer;font-size:11px">⬅︎</button>
+          <button title="Centra" onclick="etImgAlign('center')" style="padding:2px 7px;border:1px solid #bae6fd;background:#fff;border-radius:4px;cursor:pointer;font-size:11px">↔︎</button>
+          <button title="Allinea a destra" onclick="etImgAlign('right')" style="padding:2px 7px;border:1px solid #bae6fd;background:#fff;border-radius:4px;cursor:pointer;font-size:11px">➡︎</button>
+          <button title="Link sull'immagine" onclick="etImgLink()" style="padding:2px 7px;border:1px solid #bae6fd;background:#fff;border-radius:4px;cursor:pointer;font-size:11px">🔗 Link</button>
+          <button title="Sostituisci immagine" onclick="etImgReplace()" style="padding:2px 7px;border:1px solid #bae6fd;background:#fff;border-radius:4px;cursor:pointer;font-size:11px">🔄 Sostituisci</button>
+          <input type="text" id="et-img-alt" placeholder="Testo alternativo" oninput="etImgAlt(this.value)" style="width:120px;padding:3px 6px;border:1px solid #bae6fd;border-radius:4px;font-size:12px">
           <button onclick="removeImgResize()" style="padding:3px 10px;background:#dc2626;color:#fff;border:none;border-radius:4px;cursor:pointer;font-size:12px">Rimuovi</button>
+          <span id="et-img-info" style="width:100%;color:#64748b;font-size:11px"></span>
         </div>
       </div>
       <!-- Anteprima sotto l'editor -->
       <div id="et-email-preview-wrap">
-        <label style="font-size:11px;font-weight:700;color:#374151;text-transform:uppercase;letter-spacing:.5px;display:block;margin-bottom:8px">Anteprima</label>
+        <div style="display:flex;align-items:center;gap:6px;margin-bottom:8px"><label style="font-size:11px;font-weight:700;color:#374151;text-transform:uppercase;letter-spacing:.5px;flex:1">Anteprima</label><button class="et-pv-btn" data-m="desktop" onclick="etPreviewMode('desktop')" style="padding:3px 10px;font-size:11px;border:1px solid #d1d5db;border-radius:6px;cursor:pointer;background:#005CA9;color:#fff">🖥 Desktop</button><button class="et-pv-btn" data-m="mobile" onclick="etPreviewMode('mobile')" style="padding:3px 10px;font-size:11px;border:1px solid #d1d5db;border-radius:6px;cursor:pointer;background:#fff;color:#374151">📱 Mobile</button></div>
         <div id="et-preview" style="border:1px solid #e5e7eb;border-radius:8px;padding:16px;background:#fff;font-size:9.5pt;min-height:120px"></div>
       </div>
       <!-- SMS Template Editor (hidden by default) -->
@@ -5671,10 +5697,7 @@ async function openEmailTemplates(){
         toolbar:{
           container:'#et-quill-toolbar',
           handlers:{
-            image:function(){
-              const url=prompt('URL immagine (es. https://...):');
-              if(url){const range=this.quill.getSelection();this.quill.insertEmbed(range?range.index:0,'image',url);}
-            }
+            image:function(){etInsertImage();}
           }
         },
         ...(typeof QuillBetterTable!=='undefined'?{'better-table':{operationMenu:{items:{unmergeCells:{text:'Separa celle'}}}}}:{})
@@ -5859,6 +5882,8 @@ async function loadEmailTemplate(id){
 
 function etSetHtml(html){
   if(!etQuill||!html)return;
+  const _src=document.getElementById('et-html-source');if(_src&&_src.style.display!=='none')etToggleHtml();
+  if(typeof etImgSelect==='function')etImgSelect(null);
   // Doppio requestAnimationFrame: garantisce che Quill abbia completato
   // il suo MutationObserver prima che impostiamo innerHTML
   requestAnimationFrame(()=>{
@@ -5963,17 +5988,37 @@ function updateEmailPreview(){
     .replace(/\{\{quota_anni_successivi\}\}/g,'120,00')
     .replace(/\{\{modalita_pagamento\}\}/g,'Bonifico')
     .replace(/\{\{codice_fiscale\}\}/g,'RSSMRA80A01H501Z');
-  document.getElementById('et-preview').innerHTML=preview;
+  document.getElementById('et-preview').innerHTML=typeof etInlineStyles==='function'?etInlineStyles(preview):preview;
+}
+
+function etInlineStyles(html){
+  // Converte le classi di Quill in stili inline: i client email (Gmail, Outlook) ignorano le classi
+  const d=document.createElement('div');d.innerHTML=html;
+  const add=(el,css)=>{el.setAttribute('style',((el.getAttribute('style')||'').replace(/;?\s*$/,';')+css).replace(/^;/,''));};
+  const map={'ql-align-center':'text-align:center','ql-align-right':'text-align:right','ql-align-justify':'text-align:justify','ql-size-small':'font-size:0.75em','ql-size-large':'font-size:1.5em','ql-size-huge':'font-size:2.5em','ql-font-serif':'font-family:Georgia,serif','ql-font-monospace':'font-family:monospace','ql-direction-rtl':'direction:rtl'};
+  d.querySelectorAll('[class]').forEach(el=>{
+    el.classList.forEach(c=>{
+      if(map[c]&&!el.style.getPropertyValue(map[c].split(':')[0]))add(el,map[c]);
+      const m=c.match(/^ql-indent-(\d+)$/);if(m&&!el.style.paddingLeft)add(el,'padding-left:'+(m[1]*3)+'em');
+    });
+  });
+  d.querySelectorAll('p').forEach(el=>{if(!/margin/.test(el.getAttribute('style')||''))add(el,'margin:0');});
+  d.querySelectorAll('img').forEach(el=>{const w=el.getAttribute('width');if(w&&!/width/.test(el.getAttribute('style')||''))add(el,'width:'+w+'px;height:auto');if(!el.style.borderStyle&&!el.style.borderWidth)add(el,'border:0');});
+  // Pulsanti: link con sfondo colorato -> blocco cliccabile con padding
+  d.querySelectorAll('a').forEach(a=>{const bg=a.style.backgroundColor||(a.parentElement&&a.parentElement.style.backgroundColor)||(a.firstElementChild&&a.firstElementChild.style&&a.firstElementChild.style.backgroundColor);
+    if(bg&&!/padding/.test(a.getAttribute('style')||'')){add(a,'display:inline-block;padding:12px 26px;border-radius:6px;text-decoration:none;background-color:'+bg);}});
+  return d.innerHTML;
 }
 
 async function saveEmailTemplate(){
   const subject=document.getElementById('et-subject').value.trim();
+  const _src=document.getElementById('et-html-source');if(_src&&_src.style.display!=='none'&&etQuill)etQuill.root.innerHTML=_src.value;
   const html_body=etQuill?etQuill.root.innerHTML:'';
   if(!subject||!html_body||html_body==='<p><br></p>'){showToast('Oggetto e corpo sono obbligatori','error');return;}
   const btn=document.getElementById('et-save-btn');
   btn.disabled=true;btn.textContent='Salvataggio...';
   try{
-    await sb(`email_templates?id=eq.${currentEtId}`,'PATCH',{subject,html_body,updated_at:new Date().toISOString()});
+    await sb(`email_templates?id=eq.${currentEtId}`,'PATCH',{subject,html_body:etInlineStyles(html_body),updated_at:new Date().toISOString()});
     showToast('Template salvato!','success');
   }catch(e){showToast('Errore salvataggio: '+e.message,'error');}
   finally{btn.disabled=false;btn.textContent='\uD83D\uDCBE Salva Template';}
@@ -5988,33 +6033,136 @@ function insertEtVar(varName){
 
 let etSelectedImg=null;
 
+// ===== Gestione immagini: dimensioni reali in pixel (percentuali calcolate sull'originale) =====
+function etImgNatural(img){return {w:img.naturalWidth||img.width||1,h:img.naturalHeight||img.height||1};}
+function etImgSetWidth(img,px){
+  const n=etImgNatural(img);px=Math.max(10,Math.min(Math.round(px),1200));
+  img.setAttribute('width',px);img.removeAttribute('height');
+  img.style.width=px+'px';img.style.height='auto';img.style.maxWidth='100%';
+  etImgSync();updateEmailPreview();
+}
+function etImgSync(){
+  const img=etSelectedImg;if(!img)return;
+  const n=etImgNatural(img);const w=parseInt(img.getAttribute('width'))||img.width||n.w;
+  const pct=Math.round(w/n.w*100);
+  const pi=document.getElementById('et-img-width');if(pi&&document.activeElement!==pi)pi.value=w;
+  const sl=document.getElementById('et-img-slider');if(sl){sl.value=Math.min(pct,200);}
+  const pl=document.getElementById('et-img-pct');if(pl)pl.textContent=pct+'%';
+  const info=document.getElementById('et-img-info');if(info)info.textContent=`${w} × ${Math.round(w*n.h/n.w)} px · originale ${n.w} × ${n.h} px`;
+  const alt=document.getElementById('et-img-alt');if(alt&&document.activeElement!==alt)alt.value=img.getAttribute('alt')||'';
+  etImgHandlePos();
+}
+function etImgHandlePos(){
+  const h=document.getElementById('et-img-handle');const img=etSelectedImg;const box=document.getElementById('et-quill-container');
+  if(!h||!box)return;
+  if(!img||!img.isConnected){h.style.display='none';return;}
+  const r=img.getBoundingClientRect(),b=box.getBoundingClientRect();
+  h.style.display='block';h.style.left=(r.right-b.left-7)+'px';h.style.top=(r.bottom-b.top-7)+'px';
+  const o=document.getElementById('et-img-outline');
+  if(o){o.style.display='block';o.style.left=(r.left-b.left-2)+'px';o.style.top=(r.top-b.top-2)+'px';o.style.width=(r.width)+'px';o.style.height=(r.height)+'px';}
+}
+function etImgSelect(img){
+  etSelectedImg=img;
+  const bar=document.getElementById('et-img-resize-bar');
+  if(!img){bar.style.display='none';const h=document.getElementById('et-img-handle');if(h)h.style.display='none';const o=document.getElementById('et-img-outline');if(o)o.style.display='none';return;}
+  bar.style.display='flex';
+  if(!img.complete)img.onload=etImgSync;
+  etImgSync();
+}
 function setupQuillImgClick(){
   if(!etQuill)return;
-  etQuill.root.addEventListener('click',e=>{
-    if(e.target.tagName==='IMG'){
-      etSelectedImg=e.target;
-      document.getElementById('et-img-resize-bar').style.display='flex';
-      document.getElementById('et-img-width').value=etSelectedImg.style.width||etSelectedImg.getAttribute('width')||'';
-    }else{
-      etSelectedImg=null;
-      document.getElementById('et-img-resize-bar').style.display='none';
-    }
-  });
+  const box=document.getElementById('et-quill-container');box.style.position='relative';
+  if(!document.getElementById('et-img-handle')){
+    box.insertAdjacentHTML('beforeend','<div id="et-img-outline" style="display:none;position:absolute;border:2px solid #005CA9;pointer-events:none;border-radius:2px"></div><div id="et-img-handle" title="Trascina per ridimensionare" style="display:none;position:absolute;width:14px;height:14px;background:#005CA9;border:2px solid #fff;border-radius:3px;cursor:nwse-resize;box-shadow:0 1px 4px rgba(0,0,0,.3);touch-action:none;z-index:5"></div>');
+    const h=document.getElementById('et-img-handle');
+    h.addEventListener('pointerdown',e=>{
+      if(!etSelectedImg)return;e.preventDefault();h.setPointerCapture(e.pointerId);
+      const x0=e.clientX,w0=etSelectedImg.getBoundingClientRect().width;
+      const mv=ev=>{const w=w0+(ev.clientX-x0);etSelectedImg.setAttribute('width',Math.max(10,Math.round(w)));etSelectedImg.style.width=Math.max(10,Math.round(w))+'px';etSelectedImg.style.height='auto';etImgSync();};
+      const up=()=>{h.removeEventListener('pointermove',mv);h.removeEventListener('pointerup',up);etImgSetWidth(etSelectedImg,etSelectedImg.getBoundingClientRect().width);};
+      h.addEventListener('pointermove',mv);h.addEventListener('pointerup',up);
+    });
+  }
+  etQuill.root.addEventListener('click',e=>{etImgSelect(e.target.tagName==='IMG'?e.target:null);});
+  etQuill.root.addEventListener('scroll',etImgHandlePos);
+  document.getElementById('et-quill-editor').addEventListener('scroll',etImgHandlePos);
+  const sc=box.closest('[style*="overflow-y:auto"]');if(sc)sc.addEventListener('scroll',etImgHandlePos);
+  window.addEventListener('resize',etImgHandlePos);
+  etQuill.on('text-change',()=>{if(etSelectedImg&&!etSelectedImg.isConnected)etImgSelect(null);else etImgHandlePos();});
 }
-
 function applyImgResize(){
   if(!etSelectedImg)return;
-  const w=document.getElementById('et-img-width').value.trim();
-  if(w){etSelectedImg.style.width=w;etSelectedImg.style.maxWidth='100%';}
-  updateEmailPreview();
+  const v=document.getElementById('et-img-width').value.trim();if(!v)return;
+  const n=etImgNatural(etSelectedImg);
+  if(v.endsWith('%'))etImgSetWidth(etSelectedImg,n.w*parseFloat(v)/100);else etImgSetWidth(etSelectedImg,parseFloat(v));
 }
-
+function etImgPct(p){if(etSelectedImg)etImgSetWidth(etSelectedImg,etImgNatural(etSelectedImg).w*p/100);}
+function etImgSlider(v){etImgPct(parseFloat(v));}
+function etImgAlign(a){
+  const img=etSelectedImg;if(!img)return;
+  const idx=etQuill.getIndex(Quill.find(img));etQuill.formatLine(idx,1,'align',a==='left'?false:a,'user');
+  img.style.display='';img.style.margin='';
+  setTimeout(()=>{etImgHandlePos();updateEmailPreview();},0);
+}
+function etImgAlt(v){if(etSelectedImg){etSelectedImg.setAttribute('alt',v);updateEmailPreview();}}
+function etImgLink(){
+  const img=etSelectedImg;if(!img)return;
+  const blot=Quill.find(img);const idx=etQuill.getIndex(blot);const cur=etQuill.getFormat(idx,1).link||'';
+  const url=prompt('Link sull\'immagine (vuoto per rimuovere):',cur||'https://www.cnaroma.it');
+  if(url===null)return;etQuill.formatText(idx,1,'link',url||false,'user');updateEmailPreview();
+}
+function etImgReplace(){
+  const img=etSelectedImg;if(!img)return;
+  const url=prompt('Nuovo URL immagine:',img.getAttribute('src'));if(!url)return;
+  const w=img.getAttribute('width');img.setAttribute('src',url);img.onload=()=>{if(w)etImgSetWidth(img,parseInt(w));etImgSync();};
+}
 function removeImgResize(){
   if(!etSelectedImg)return;
-  etSelectedImg.remove();
-  etSelectedImg=null;
-  document.getElementById('et-img-resize-bar').style.display='none';
+  const blot=Quill.find(etSelectedImg);if(blot){etQuill.deleteText(etQuill.getIndex(blot),1,'user');}else etSelectedImg.remove();
+  etImgSelect(null);updateEmailPreview();
+}
+function etInsertImage(){
+  const url=prompt('URL immagine (https://...)\nSuggerimento: usa immagini ospitate online, le email non mostrano immagini incorporate.','https://');
+  if(!url||url==='https://')return;
+  const range=etQuill.getSelection(true);const idx=range?range.index:etQuill.getLength()-1;
+  etQuill.insertEmbed(idx,'image',url,'user');etQuill.setSelection(idx+1,0,'silent');
+  setTimeout(()=>{const imgs=[...etQuill.root.querySelectorAll('img')].filter(i=>i.getAttribute('src')===url);const img=imgs[imgs.length-1];if(!img)return;
+    const fit=()=>{const n=etImgNatural(img);if(n.w>560)etImgSetWidth(img,560);etImgSelect(img);};
+    if(img.complete)fit();else img.onload=fit;},50);
+}
+
+// ===== Blocchi e strumenti aggiuntivi =====
+function etInsertHtmlAtCursor(html){
+  const range=etQuill.getSelection(true);let idx=range?range.index:etQuill.getLength()-1;
+  const [line,off]=etQuill.getLine(idx);if(line&&line.length()>1){const end=idx-off+line.length()-1;etQuill.insertText(end,'\n','user');idx=end+1;}
+  etQuill.removeFormat(idx,1,'user');
+  etQuill.clipboard.dangerouslyPasteHTML(idx,html,'user');updateEmailPreview();
+}
+function etInsertButton(){
+  const txt=prompt('Testo del pulsante:','Firma il contratto');if(!txt)return;
+  const url=prompt('Link del pulsante (puoi usare {{link_firma}}):','{{link_firma}}');if(!url)return;
+  const range=etQuill.getSelection(true);const idx=range?range.index:etQuill.getLength()-1;
+  etQuill.insertText(idx,'\n','user');
+  etQuill.insertText(idx+1,txt,{link:url,bold:true,color:'#ffffff',background:'#005CA9'},'user');
+  etQuill.insertText(idx+1+txt.length,'\n','user');
+  etQuill.formatLine(idx+1,1,'align','center','user');
   updateEmailPreview();
+}
+function etInsertDivider(){etInsertHtmlAtCursor('<p>────────────────────────────────────────</p>');}
+function etInsertSignature(){
+  etInsertHtmlAtCursor('<p><br></p><p><img src="https://alessandroparrelli.github.io/fileappoggio/NUOVO-LOGO-CNA-ROMA-SOLO-ROMA.png" width="180" alt="CNA Roma"></p><p><strong>CNA di Roma</strong></p><p>Via Cristoforo Colombo 283A - 00147 – Roma</p><p>Telefono 06/570151 - email info@cnaroma.it</p>');
+  setTimeout(()=>etQuill.root.querySelectorAll('img[width="180"]').forEach(i=>{i.style.width='180px';i.style.height='auto';}),50);
+}
+function etUndo(){etQuill.history.undo();updateEmailPreview();}
+function etRedo(){etQuill.history.redo();updateEmailPreview();}
+function etToggleHtml(){
+  const ta=document.getElementById('et-html-source');const ed=document.getElementById('et-quill-editor');const btn=document.getElementById('et-btn-html');
+  if(ta.style.display==='none'){ta.value=etQuill.root.innerHTML;ta.style.display='block';ed.style.display='none';btn.style.background='#005CA9';btn.style.color='#fff';etImgSelect(null);}
+  else{etQuill.root.innerHTML=ta.value;ta.style.display='none';ed.style.display='';btn.style.background='';btn.style.color='';updateEmailPreview();}
+}
+function etPreviewMode(m){
+  const p=document.getElementById('et-preview');p.style.maxWidth=m==='mobile'?'375px':'';p.style.margin=m==='mobile'?'0 auto':'';
+  document.querySelectorAll('.et-pv-btn').forEach(b=>{const on=b.dataset.m===m;b.style.background=on?'#005CA9':'#fff';b.style.color=on?'#fff':'#374151';});
 }
 
 function openLogsModal(){
@@ -6405,7 +6553,7 @@ function renderSettings(){
 }
 
 
-// ===== VIEWER MODAL (v9.58) =====
+// ===== VIEWER MODAL (v9.59) =====
 function cnaViewerOpen(title,bodyHtml,actionsHtml){
   let m=document.getElementById('cna-viewer');
   if(!m){m=document.createElement('div');m.id='cna-viewer';document.body.appendChild(m);}
