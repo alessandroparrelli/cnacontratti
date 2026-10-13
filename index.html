@@ -417,7 +417,7 @@ html,body{overflow-x:hidden;width:100%}
   .contract-avatar{border-radius:10px!important}
 }
 
-/* ===== v9.61 VIEWER MODAL ===== */
+/* ===== v9.62 VIEWER MODAL ===== */
 #cna-viewer{position:fixed;inset:0;z-index:10000;display:none;align-items:center;justify-content:center;background:rgba(15,23,42,.55);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);padding:max(12px,env(safe-area-inset-top)) 12px max(12px,env(safe-area-inset-bottom))}
 #cna-viewer .cv-box{background:#fff;border-radius:22px;width:100%;max-width:900px;height:100%;max-height:92vh;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.3)}
 #cna-viewer .cv-head{display:flex;align-items:center;gap:12px;padding:14px 14px 14px 18px;border-bottom:1px solid #EEF0F4;flex-shrink:0}
@@ -3176,7 +3176,16 @@ var qrcode = function() {
 #et-quill-editor .ql-editor{min-height:200px;font-size:10pt;font-family:Arial,sans-serif}
 #et-quill-editor .ql-editor img{max-width:100%;cursor:pointer;border:2px solid transparent}
 #et-quill-editor .ql-editor img:hover{border-color:#005CA9;border-radius:2px}
-#et-img-resize-bar{display:none;background:#f0f9ff;border:1px solid #bae6fd;border-radius:6px;padding:8px 12px;margin-top:6px;font-size:12px;align-items:center;gap:10px}
+#et-img-resize-bar{display:none;}
+.et-blk{padding:8px 6px;font-size:12px;font-weight:600;border:1px solid #d1d5db;border-radius:8px;background:#fff;cursor:pointer;text-align:left;font-family:inherit;color:#111827}
+.et-blk:hover{border-color:#005CA9;background:#f0f7ff;color:#005CA9}
+.ql-font-arial{font-family:Arial,Helvetica,sans-serif}.ql-font-georgia{font-family:Georgia,serif}.ql-font-verdana{font-family:Verdana,sans-serif}.ql-font-tahoma{font-family:Tahoma,sans-serif}.ql-font-trebuchet{font-family:'Trebuchet MS',sans-serif}
+.ql-picker.ql-font .ql-picker-item[data-value=arial]::before,.ql-picker.ql-font .ql-picker-label[data-value=arial]::before{content:'Arial'}
+.ql-picker.ql-font .ql-picker-item[data-value=georgia]::before,.ql-picker.ql-font .ql-picker-label[data-value=georgia]::before{content:'Georgia'}
+.ql-picker.ql-font .ql-picker-item[data-value=verdana]::before,.ql-picker.ql-font .ql-picker-label[data-value=verdana]::before{content:'Verdana'}
+.ql-picker.ql-font .ql-picker-item[data-value=tahoma]::before,.ql-picker.ql-font .ql-picker-label[data-value=tahoma]::before{content:'Tahoma'}
+.ql-picker.ql-font .ql-picker-item[data-value=trebuchet]::before,.ql-picker.ql-font .ql-picker-label[data-value=trebuchet]::before{content:'Trebuchet'}
+#et-img-resize-bar-old{display:none;background:#f0f9ff;border:1px solid #bae6fd;border-radius:6px;padding:8px 12px;margin-top:6px;font-size:12px;align-items:center;gap:10px}
 .ql-font-serif{font-family:Georgia,serif}
 .ql-font-monospace{font-family:monospace}</style>
 <script id="quill-js">/*! For license information please see quill.js.LICENSE.txt */
@@ -4186,6 +4195,11 @@ Cordiali saluti, CNA Roma</div>
                 <option selected>Sans Serif</option>
                 <option value="serif">Serif</option>
                 <option value="monospace">Monospace</option>
+                <option value="arial">Arial</option>
+                <option value="georgia">Georgia</option>
+                <option value="verdana">Verdana</option>
+                <option value="tahoma">Tahoma</option>
+                <option value="trebuchet">Trebuchet</option>
               </select>
             </span>
             <span class="ql-formats">
@@ -4205,6 +4219,8 @@ Cordiali saluti, CNA Roma</div>
             <span class="ql-formats">
               <select class="ql-color"></select>
               <select class="ql-background"></select>
+              <button title="Colore testo personalizzato" style="width:auto;padding:0 5px;font-size:12px" onclick="etColor('color')">🎨</button>
+              <button title="Evidenziatore personalizzato" style="width:auto;padding:0 5px;font-size:12px" onclick="etColor('background')">🖍️</button>
             </span>
             <span class="ql-formats">
               <select class="ql-align"></select>
@@ -4323,7 +4339,7 @@ Cordiali saluti, CNA Roma</div>
       </div>
       <!-- Anteprima sotto l'editor -->
       <div id="et-email-preview-wrap">
-        <div style="display:flex;align-items:center;gap:6px;margin-bottom:8px"><label style="font-size:11px;font-weight:700;color:#374151;text-transform:uppercase;letter-spacing:.5px;flex:1">Anteprima</label><button class="et-pv-btn" data-m="desktop" onclick="etPreviewMode('desktop')" style="padding:3px 10px;font-size:11px;border:1px solid #d1d5db;border-radius:6px;cursor:pointer;background:#005CA9;color:#fff">🖥 Desktop</button><button class="et-pv-btn" data-m="mobile" onclick="etPreviewMode('mobile')" style="padding:3px 10px;font-size:11px;border:1px solid #d1d5db;border-radius:6px;cursor:pointer;background:#fff;color:#374151">📱 Mobile</button></div>
+        <div style="display:flex;align-items:center;gap:6px;margin-bottom:8px"><label style="font-size:11px;font-weight:700;color:#374151;text-transform:uppercase;letter-spacing:.5px">Anteprima</label><select id="et-pv-contract" onchange="etPreviewWith(this.value)" title="Mostra l'anteprima con i dati di un contratto reale" style="flex:1;max-width:280px;margin-left:8px;padding:4px 8px;font-size:11px;border:1px solid #d1d5db;border-radius:6px"><option value="">Dati di esempio</option></select><span style="flex:1"></span><button class="et-pv-btn" data-m="desktop" onclick="etPreviewMode('desktop')" style="padding:3px 10px;font-size:11px;border:1px solid #d1d5db;border-radius:6px;cursor:pointer;background:#005CA9;color:#fff">🖥 Desktop</button><button class="et-pv-btn" data-m="mobile" onclick="etPreviewMode('mobile')" style="padding:3px 10px;font-size:11px;border:1px solid #d1d5db;border-radius:6px;cursor:pointer;background:#fff;color:#374151">📱 Mobile</button></div>
         <div id="et-preview" style="border:1px solid #e5e7eb;border-radius:8px;padding:16px;background:#fff;font-size:9.5pt;min-height:120px"></div>
       </div>
       <!-- SMS Template Editor (hidden by default) -->
@@ -4352,10 +4368,23 @@ Cordiali saluti, CNA Roma</div>
         </div>
       </div>
     </div>
-    <!-- Sidebar: solo variabili -->
-    <div style="width:260px;flex-shrink:0;border-left:1px solid #e5e7eb;overflow-y:auto;padding:20px;background:#fafafa">
-      <label style="font-size:11px;font-weight:700;color:#374151;text-transform:uppercase;letter-spacing:.5px;display:block;margin-bottom:8px">Variabili <span style="font-weight:400;color:#888;font-size:10px">(click per inserire)</span></label>
-      <div id="et-vars-box" style="font-size:11px;color:#0369a1;line-height:2.4"></div>
+    <!-- Sidebar: blocchi + variabili -->
+    <div style="width:290px;flex-shrink:0;border-left:1px solid #e5e7eb;overflow-y:auto;padding:18px;background:#fafafa">
+      <label style="font-size:11px;font-weight:700;color:#374151;text-transform:uppercase;letter-spacing:.5px;display:block;margin-bottom:8px">Inserisci blocco</label>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:18px">
+        <button onclick="etBlock('greeting')" class="et-blk">👋 Saluto</button>
+        <button onclick="etBlock('closing')" class="et-blk">🙏 Chiusura</button>
+        <button onclick="etBlock('button')" class="et-blk">🔘 Pulsante</button>
+        <button onclick="etBlock('image')" class="et-blk">🖼️ Immagine</button>
+        <button onclick="etBlock('table')" class="et-blk">📋 Dati cliente</button>
+        <button onclick="etBlock('callout')" class="et-blk">⚠️ Riquadro</button>
+        <button onclick="etBlock('divider')" class="et-blk">― Linea</button>
+        <button onclick="etBlock('spacer')" class="et-blk">↕ Spazio</button>
+        <button onclick="etBlock('signature')" class="et-blk" style="grid-column:span 2">✍️ Firma CNA Roma (logo + contatti)</button>
+      </div>
+      <label style="font-size:11px;font-weight:700;color:#374151;text-transform:uppercase;letter-spacing:.5px;display:block;margin-bottom:6px">Variabili <span style="font-weight:400;color:#888;font-size:10px">(click per inserire)</span></label>
+      <input type="text" id="et-var-search" oninput="etRenderVars()" placeholder="🔍 Cerca variabile..." style="width:100%;box-sizing:border-box;padding:7px 10px;border:1px solid #d1d5db;border-radius:8px;font-size:12px;margin-bottom:4px">
+      <div id="et-vars-box"></div>
     </div>
   </div>
 </div>
@@ -5675,11 +5704,70 @@ async function toggleAttivoUtente(id,attivoCorrente){
 // ===== FINE GESTIONE UTENTI =====
 
 
+// ===== Variabili: elenco completo (quelle realmente sostituite dalla funzione send-email) =====
+const ET_VAR_DEFS=[
+  ['Cliente','cognome','Cognome','Rossi'],['Cliente','nome','Nome','Mario'],['Cliente','codice_fiscale','Codice fiscale','RSSMRA80A01H501Z'],
+  ['Cliente','email','Email','mario.rossi@email.it'],['Cliente','pec','PEC','rossi@pec.it'],['Cliente','telefono','Telefono','06 1234567'],['Cliente','cellulare','Cellulare','333 1234567'],
+  ['Impresa','ragione_sociale','Ragione sociale','Rossi SRL'],['Impresa','partita_iva','Partita IVA','12345678901'],['Impresa','attivita_svolta','Attività','Idraulico (43.22.01)'],
+  ['Impresa','sede_attivita_indirizzo','Sede · indirizzo','Via Roma 1'],['Impresa','sede_attivita_comune','Sede · comune','Roma'],['Impresa','sede_attivita_prov','Sede · provincia','RM'],
+  ['Adesione','motivo_iscrizione','Motivo iscrizione','Sindacale/Rappresentanza'],['Adesione','quota_primo_anno','Quota 1° anno','150,00'],['Adesione','quota_anni_successivi','Quota anni succ.','120,00'],
+  ['Adesione','modalita_pagamento','Modalità pagamento','Sepa immediato'],['Adesione','raccolta_da','Raccolto da','Alessandro Parrelli'],['Adesione','data_firma','Data firma / invio',new Date().toLocaleDateString('it-IT')],
+  ['Firma','link_firma','Link per la firma','https://cnacontratti.vercel.app?firma=ESEMPIO']
+];
 const ET_VARS={
-  send_link:['{{cognome}}','{{nome}}','{{link_firma}}'],
-  post_firma_cliente:['{{cognome}}','{{nome}}','{{data_firma}}'],
-  post_firma_interno:['{{cognome}}','{{nome}}','{{data_firma}}','{{email}}','{{ragione_sociale}}','{{partita_iva}}','{{raccolta_da}}','{{attivita_svolta}}','{{sede_attivita_comune}}','{{sede_attivita_indirizzo}}','{{sede_attivita_prov}}','{{pec}}','{{telefono}}','{{cellulare}}','{{motivo_iscrizione}}','{{quota_primo_anno}}','{{quota_anni_successivi}}','{{modalita_pagamento}}','{{codice_fiscale}}']
+  send_link:ET_VAR_DEFS.map(d=>'{{'+d[1]+'}}'),
+  post_firma_cliente:ET_VAR_DEFS.filter(d=>d[1]!=='link_firma').map(d=>'{{'+d[1]+'}}'),
+  post_firma_interno:ET_VAR_DEFS.filter(d=>d[1]!=='link_firma').map(d=>'{{'+d[1]+'}}')
 };
+let etPreviewData=null;
+function etRenderVars(){
+  const box=document.getElementById('et-vars-box');if(!box)return;
+  const allowed=new Set(ET_VARS[currentEtId]||[]);const q=(document.getElementById('et-var-search')||{}).value||'';const ql=q.toLowerCase();
+  const groups={};ET_VAR_DEFS.forEach(d=>{if(!allowed.has('{{'+d[1]+'}}'))return;if(ql&&!(d[1]+' '+d[2]).toLowerCase().includes(ql))return;(groups[d[0]]=groups[d[0]]||[]).push(d);});
+  box.innerHTML=Object.keys(groups).map(g=>`<div style="font-size:10px;font-weight:800;color:#64748b;text-transform:uppercase;letter-spacing:.6px;margin:10px 0 4px">${g}</div>`+groups[g].map(d=>`<div onclick="insertEtVar('{{${d[1]}}}')" title="Clicca per inserire {{${d[1]}}}" style="display:flex;justify-content:space-between;align-items:center;gap:6px;padding:5px 8px;margin-bottom:3px;background:#fff;border:1px solid #e0f2fe;border-radius:6px;cursor:pointer;line-height:1.3" onmouseover="this.style.borderColor='#005CA9'" onmouseout="this.style.borderColor='#e0f2fe'"><span style="color:#111827;font-size:12px">${d[2]}</span><code style="color:#0369a1;font-size:10px">{{${d[1]}}}</code></div>`).join('')).join('')||'<p style="font-size:12px;color:#888">Nessuna variabile trovata</p>';
+}
+function etBlock(kind){
+  if(!etQuill)return;
+  if(kind==='button')return etInsertButton();
+  if(kind==='divider')return etInsertDivider();
+  if(kind==='signature')return etInsertSignature();
+  if(kind==='image')return etInsertImage();
+  if(kind==='table'){
+    const rows=[['Cliente','{{cognome}} {{nome}}'],['Ragione sociale','{{ragione_sociale}}'],['Codice fiscale','{{codice_fiscale}}'],['Partita IVA','{{partita_iva}}'],['Email','{{email}}'],['Telefono','{{telefono}} / {{cellulare}}'],['Quota 1° anno','€ {{quota_primo_anno}}'],['Modalità pagamento','{{modalita_pagamento}}']];
+    return etInsertHtmlAtCursor('<table style="border-collapse:collapse;width:100%"><tbody>'+rows.map(r=>`<tr><td style="border:1px solid #d1d5db;padding:6px 10px;background:#f1f5f9"><strong>${r[0]}:</strong></td><td style="border:1px solid #d1d5db;padding:6px 10px">${r[1]}</td></tr>`).join('')+'</tbody></table><p><br></p>');
+  }
+  if(kind==='callout'){
+    const txt=prompt('Testo del riquadro evidenziato:','Importante: firma entro 7 giorni.');if(!txt)return;
+    const range=etQuill.getSelection(true);const idx=range?range.index:etQuill.getLength()-1;
+    etQuill.insertText(idx,'\n'+txt+'\n','user');etQuill.formatText(idx+1,txt.length,{background:'#FEF3C7',bold:true,color:'#92400E'},'user');updateEmailPreview();return;
+  }
+  if(kind==='spacer')return etInsertHtmlAtCursor('<p><br></p><p><br></p>');
+  if(kind==='greeting')return etInsertHtmlAtCursor('<p>Gentile {{nome}} {{cognome}},</p><p><br></p>');
+  if(kind==='closing')return etInsertHtmlAtCursor('<p>Cordiali saluti,</p><p><strong>CNA Roma</strong></p>');
+}
+function etColor(prop){
+  if(!etQuill)return;const inp=document.createElement('input');inp.type='color';inp.value=prop==='color'?'#005CA9':'#FEF3C7';
+  const range=etQuill.getSelection(true);
+  inp.oninput=()=>{if(range&&range.length)etQuill.formatText(range.index,range.length,prop,inp.value,'user');else etQuill.format(prop,inp.value,'user');updateEmailPreview();};
+  inp.style.position='fixed';inp.style.opacity='0';document.body.appendChild(inp);inp.click();setTimeout(()=>inp.remove(),60000);
+}
+async function etLoadPreviewContracts(){
+  const sel=document.getElementById('et-pv-contract');if(!sel||sel.dataset.loaded)return;
+  try{const rows=await sb('contratti?select=id,cognome,nome,ragione_sociale&order=created_at.desc&limit=40');sel.dataset.loaded='1';
+    sel.innerHTML='<option value="">Dati di esempio</option>'+(rows||[]).map(r=>`<option value="${r.id}">${[r.cognome,r.nome].filter(Boolean).join(' ')} · ${r.ragione_sociale||''}</option>`).join('');}catch(e){}
+}
+async function etPreviewWith(id){
+  if(!id){etPreviewData=null;updateEmailPreview();return;}
+  try{const r=await sb(`contratti?id=eq.${id}&select=*`);const c=r&&r[0];if(!c)return;
+    etPreviewData={cognome:c.cognome,nome:c.nome,codice_fiscale:c.codice_fiscale,email:c.email,pec:c.pec,telefono:c.telefono,cellulare:c.cellulare,ragione_sociale:c.ragione_sociale,partita_iva:c.partita_iva,attivita_svolta:c.attivita_svolta,sede_attivita_indirizzo:c.sede_attivita_indirizzo,sede_attivita_comune:c.sede_attivita_comune,sede_attivita_prov:c.sede_attivita_prov,motivo_iscrizione:c.motivo_iscrizione,quota_primo_anno:c.quota_primo_anno_importo,quota_anni_successivi:c.quota_anni_successivi_importo,modalita_pagamento:c.modalita_pagamento,raccolta_da:c.raccolta_da,data_firma:c.firmato_at?new Date(c.firmato_at).toLocaleDateString('it-IT'):new Date().toLocaleDateString('it-IT'),link_firma:BASE_URL+'?firma='+c.token};
+    updateEmailPreview();}catch(e){showToast('Errore caricamento contratto','error');}
+}
+function etFillVars(html){
+  const sample={};ET_VAR_DEFS.forEach(d=>sample[d[1]]=d[3]);const data=etPreviewData||sample;
+  const allowed=new Set((ET_VARS[currentEtId]||[]).map(v=>v.slice(2,-2)));
+  return html.replace(/\{\{(\w+)\}\}/g,(m,k)=>allowed.has(k)&&k in data?(data[k]==null?'':String(data[k])):`<span style="background:#FEE2E2;color:#B91C1C" title="Variabile non disponibile in questa email">${m}</span>`);
+}
+
 let currentEtId='send_link';
 let etQuill=null;
 
@@ -5689,7 +5777,7 @@ async function openEmailTemplates(){
   if(!etQuill&&typeof Quill!=='undefined'){
     try{if(typeof QuillBetterTable!=='undefined') Quill.register({'modules/better-table':QuillBetterTable},true);}catch(e){console.warn('quill-better-table init:',e.message);}
     const Font=Quill.import('formats/font');
-    Font.whitelist=['serif','monospace'];
+    Font.whitelist=['serif','monospace','arial','georgia','verdana','tahoma','trebuchet'];
     Quill.register(Font,true);
     etQuill=new Quill('#et-quill-editor',{
       theme:'snow',
@@ -5864,7 +5952,7 @@ function etInsertTable(){
 async function loadEmailTemplate(id){
   currentEtId=id;
   const vars=ET_VARS[id]||[];
-  document.getElementById('et-vars-box').innerHTML='<strong>Variabili disponibili:</strong> '+vars.map(v=>`<code style="background:#e0f2fe;padding:1px 5px;border-radius:4px;margin:0 2px;cursor:pointer" onclick="insertEtVar('${v}')">${v}</code>`).join(' ');
+  etRenderVars();etLoadPreviewContracts();
   // Tutti i template usano Quill (con supporto tabelle via quill-better-table)
   document.getElementById('et-quill-container').style.display='flex';
   const bodyLabel=document.getElementById('et-body-label');
@@ -5967,27 +6055,7 @@ async function saveSmsTemplate(){
 
 function updateEmailPreview(){
   const html=etQuill?etQuill.root.innerHTML:'';
-  const preview=html
-    .replace(/\{\{cognome\}\}/g,'Rossi')
-    .replace(/\{\{nome\}\}/g,'Mario')
-    .replace(/\{\{link_firma\}\}/g,'https://cnacontratti.vercel.app?firma=ESEMPIO')
-    .replace(/\{\{data_firma\}\}/g,new Date().toLocaleDateString('it-IT'))
-    .replace(/\{\{email\}\}/g,'mario.rossi@email.it')
-    .replace(/\{\{ragione_sociale\}\}/g,'Rossi SRL')
-    .replace(/\{\{partita_iva\}\}/g,'12345678901')
-    .replace(/\{\{raccolta_da\}\}/g,'Alessandro Parrelli')
-    .replace(/\{\{attivita_svolta\}\}/g,'Idraulico (43.22.01)')
-    .replace(/\{\{sede_attivita_comune\}\}/g,'Roma')
-    .replace(/\{\{sede_attivita_indirizzo\}\}/g,'Via Roma 1')
-    .replace(/\{\{sede_attivita_prov\}\}/g,'RM')
-    .replace(/\{\{pec\}\}/g,'rossi@pec.it')
-    .replace(/\{\{telefono\}\}/g,'06 1234567')
-    .replace(/\{\{cellulare\}\}/g,'333 1234567')
-    .replace(/\{\{motivo_iscrizione\}\}/g,'Assistenza fiscale')
-    .replace(/\{\{quota_primo_anno\}\}/g,'150,00')
-    .replace(/\{\{quota_anni_successivi\}\}/g,'120,00')
-    .replace(/\{\{modalita_pagamento\}\}/g,'Bonifico')
-    .replace(/\{\{codice_fiscale\}\}/g,'RSSMRA80A01H501Z');
+  const preview=etFillVars(html);
   document.getElementById('et-preview').innerHTML=typeof etInlineStyles==='function'?etInlineStyles(preview):preview;
 }
 
@@ -5995,7 +6063,7 @@ function etInlineStyles(html){
   // Converte le classi di Quill in stili inline: i client email (Gmail, Outlook) ignorano le classi
   const d=document.createElement('div');d.innerHTML=html;
   const add=(el,css)=>{el.setAttribute('style',((el.getAttribute('style')||'').replace(/;?\s*$/,';')+css).replace(/^;/,''));};
-  const map={'ql-align-center':'text-align:center','ql-align-right':'text-align:right','ql-align-justify':'text-align:justify','ql-size-small':'font-size:0.75em','ql-size-large':'font-size:1.5em','ql-size-huge':'font-size:2.5em','ql-font-serif':'font-family:Georgia,serif','ql-font-monospace':'font-family:monospace','ql-direction-rtl':'direction:rtl'};
+  const map={'ql-align-center':'text-align:center','ql-align-right':'text-align:right','ql-align-justify':'text-align:justify','ql-size-small':'font-size:0.75em','ql-size-large':'font-size:1.5em','ql-size-huge':'font-size:2.5em','ql-font-serif':'font-family:Georgia,serif','ql-font-monospace':'font-family:monospace','ql-font-arial':'font-family:Arial,Helvetica,sans-serif','ql-font-georgia':'font-family:Georgia,serif','ql-font-verdana':'font-family:Verdana,sans-serif','ql-font-tahoma':'font-family:Tahoma,sans-serif','ql-font-trebuchet':"font-family:'Trebuchet MS',sans-serif",'ql-direction-rtl':'direction:rtl'};
   d.querySelectorAll('[class]').forEach(el=>{
     el.classList.forEach(c=>{
       if(map[c]&&!el.style.getPropertyValue(map[c].split(':')[0]))add(el,map[c]);
@@ -6003,6 +6071,8 @@ function etInlineStyles(html){
     });
   });
   d.querySelectorAll('p').forEach(el=>{if(!/margin/.test(el.getAttribute('style')||''))add(el,'margin:0');});
+  d.querySelectorAll('table').forEach(t=>{if(!t.style.borderCollapse)add(t,'border-collapse:collapse');if(!t.style.width)add(t,'width:100%');});
+  d.querySelectorAll('td,th').forEach(el=>{if(!el.style.border&&!el.style.borderStyle&&!el.style.borderWidth)add(el,'border:1px solid #d1d5db');if(!el.style.padding)add(el,'padding:6px 10px');});
   d.querySelectorAll('img').forEach(el=>{const w=el.getAttribute('width');if(w&&!/width/.test(el.getAttribute('style')||''))add(el,'width:'+w+'px;height:auto');if(!el.style.borderStyle&&!el.style.borderWidth)add(el,'border:0');});
   // Pulsanti: link con sfondo colorato -> blocco cliccabile con padding
   d.querySelectorAll('a').forEach(a=>{const bg=a.style.backgroundColor||(a.parentElement&&a.parentElement.style.backgroundColor)||(a.firstElementChild&&a.firstElementChild.style&&a.firstElementChild.style.backgroundColor);
@@ -6553,7 +6623,7 @@ function renderSettings(){
 }
 
 
-// ===== VIEWER MODAL (v9.61) =====
+// ===== VIEWER MODAL (v9.62) =====
 function cnaViewerOpen(title,bodyHtml,actionsHtml){
   let m=document.getElementById('cna-viewer');
   if(!m){m=document.createElement('div');m.id='cna-viewer';document.body.appendChild(m);}
@@ -7572,7 +7642,7 @@ async function confirmSendAuto(){
         pec:c.pec||'',telefono:c.telefono||'',cellulare:c.cellulare||'',
         motivo_iscrizione:c.motivo_iscrizione||'',quota_primo_anno:c.quota_primo_anno_importo||'',
         quota_anni_successivi:c.quota_anni_successivi_importo||'',modalita_pagamento:c.modalita_pagamento||'',
-        raccolta_da:c.raccolta_da||''})
+        raccolta_da:c.raccolta_da||'',email:c.email||email,data_firma:new Date().toLocaleDateString('it-IT')})
     });
     const data=await res.json();
     if(res.ok&&data.id){

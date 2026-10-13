@@ -3,20 +3,58 @@
   "outputDirectory": ".",
   "headers": [
     {
+      "source": "/",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "no-cache, must-revalidate"
+        }
+      ]
+    },
+    {
+      "source": "/index.html",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "no-cache, must-revalidate"
+        }
+      ]
+    },
+    {
       "source": "/manifest.json",
-      "headers": [{ "key": "Content-Type", "value": "application/manifest+json" }]
+      "headers": [
+        {
+          "key": "Content-Type",
+          "value": "application/manifest+json"
+        }
+      ]
     },
     {
       "source": "/:path*.ico",
-      "headers": [{ "key": "Content-Type", "value": "image/x-icon" }]
+      "headers": [
+        {
+          "key": "Content-Type",
+          "value": "image/x-icon"
+        }
+      ]
     },
     {
       "source": "/:path*.png",
-      "headers": [{ "key": "Content-Type", "value": "image/png" }]
+      "headers": [
+        {
+          "key": "Content-Type",
+          "value": "image/png"
+        }
+      ]
     },
     {
       "source": "/:path*.svg",
-      "headers": [{ "key": "Content-Type", "value": "image/svg+xml" }]
+      "headers": [
+        {
+          "key": "Content-Type",
+          "value": "image/svg+xml"
+        }
+      ]
     }
   ]
 }
