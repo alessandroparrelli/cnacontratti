@@ -417,7 +417,7 @@ html,body{overflow-x:hidden;width:100%}
   .contract-avatar{border-radius:10px!important}
 }
 
-/* ===== v9.60 VIEWER MODAL ===== */
+/* ===== v9.61 VIEWER MODAL ===== */
 #cna-viewer{position:fixed;inset:0;z-index:10000;display:none;align-items:center;justify-content:center;background:rgba(15,23,42,.55);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);padding:max(12px,env(safe-area-inset-top)) 12px max(12px,env(safe-area-inset-bottom))}
 #cna-viewer .cv-box{background:#fff;border-radius:22px;width:100%;max-width:900px;height:100%;max-height:92vh;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.3)}
 #cna-viewer .cv-head{display:flex;align-items:center;gap:12px;padding:14px 14px 14px 18px;border-bottom:1px solid #EEF0F4;flex-shrink:0}
@@ -6553,7 +6553,7 @@ function renderSettings(){
 }
 
 
-// ===== VIEWER MODAL (v9.60) =====
+// ===== VIEWER MODAL (v9.61) =====
 function cnaViewerOpen(title,bodyHtml,actionsHtml){
   let m=document.getElementById('cna-viewer');
   if(!m){m=document.createElement('div');m.id='cna-viewer';document.body.appendChild(m);}
@@ -8725,6 +8725,10 @@ async function crtTemplate(){
   for(let i=1;i<=Math.min(4,pdf.numPages);i++){_crtTpl.push(crtFp(await crtRender(await pdf.getPage(i),620)));}
   return _crtTpl;
 }
+const CRT_KW=[['scheda',/SCHEDA\s*DI\s*ADES|SCHEDADIADES/],['privacy',/INFORMATIVA|2016\/?679|REGOLAMENTO\s*UE/],['inps',/\bINPS\b|PREVIDENZA\s*SOCIALE|ISTITUTO\s*NAZIONALE/],['sepa',/SEPA|DIRECT\s*DEBIT|MANDATO/],['doc',/REPUBBLICA\s*ITALIANA|CARTA\s*D.?\s*IDENTIT|PATENTE|PASSAPORTO|PASSPORT|PERMESSO\s*DI\s*SOGG|IDENTITY\s*CARD|MINISTERO\s*DELL/]];
+function crtKeyword(txt){const t=(txt||'').toUpperCase();for(const [k,re] of CRT_KW)if(re.test(t))return k;return null;}
+function crtCrop(cv,frac){const c=document.createElement('canvas');c.width=cv.width;c.height=Math.round(cv.height*frac);c.getContext('2d').drawImage(cv,0,0);return c;}
+async function crtOcrWorker(){if(Tesseract.createWorker){const w=await Tesseract.createWorker('ita');return {rec:async c=>(await w.recognize(c)).data.text,end:()=>w.terminate()};}return {rec:async c=>(await Tesseract.recognize(c,'ita')).data.text,end:()=>{}};}
 function crtStatus(t){const e=document.getElementById('crt-status');if(e)e.innerHTML=t;}
 function openCartaceiModal(){
   _crtGroups=[];document.getElementById('crt-review').innerHTML='';document.getElementById('crt-actions').style.display='none';
@@ -8773,6 +8777,14 @@ async function crtAnalyze(){
     }
     // Raggruppa per cliente: si riparte quando dopo le foto documento ricompaiono i moduli,
     // o quando arriva una pagina che somiglia chiaramente a una nuova scheda
+    // Verifica con OCR dell'intestazione (prevale sul confronto grafico)
+    const ocr=await crtOcrWorker();
+    for(let k=0;k<pages.length;k++){
+      const p=pages[k];crtStatus(`⏳ Lettura intestazioni ${k+1}/${pages.length}...`);
+      try{p.kw=crtKeyword(await ocr.rec(crtCrop(p.cv,0.3)));}catch(e){p.kw=null;}
+      if(p.kw==='doc')p.role='doc';
+      else if(p.kw){p.role='mod';const i=CRT_MOD.indexOf(p.kw);p.sc=p.sc.map((v,j)=>j===i?v+1:v);}
+    }
     const groups=[];let g=null,seenDoc=false;
     const schedaLike=p=>p.role==='mod'&&p.sc[0]>=Math.max(...p.sc.slice(1))+0.08;
     for(const p of pages){
@@ -8796,10 +8808,11 @@ async function crtAnalyze(){
       const g=groups[k];crtStatus(`⏳ Riconoscimento cliente ${k+1}/${groups.length} (OCR)...`);
       let txt='';
       for(const r of ['scheda','sepa','inps']){const p=g.pages.find(x=>x.role===r);if(!p)continue;
-        const o=await Tesseract.recognize(p.cv,'ita');txt+=' '+o.data.text;if(r==='scheda'&&_crtCands.some(c=>crtScore(c,txt)>=8))break;}
+        txt+=' '+await ocr.rec(p.cv);if(r==='scheda'&&_crtCands.some(c=>crtScore(c,txt)>=8))break;}
       g.ranked=_crtCands.map(c=>({c,s:crtScore(c,txt)})).sort((a,b)=>b.s-a.s);
       g.contractId=g.ranked[0]&&g.ranked[0].s>=4?g.ranked[0].c.id:'';
     }
+    ocr.end();
     _crtGroups=groups;crtRenderReview();
     crtStatus(`✅ Trovati <b>${groups.length}</b> contratti in ${pages.length} pagine. Controlla abbinamenti e pagine, poi carica.`);
   }catch(e){console.error(e);crtStatus('<span style="color:var(--err)">Errore: '+e.message+'</span>');}
@@ -8810,7 +8823,7 @@ function crtRenderReview(){
     const opts=['<option value="">— Seleziona contratto —</option>'].concat(g.ranked.map(r=>`<option value="${r.c.id}"${r.c.id===g.contractId?' selected':''}>${(r.s>=4?'★ ':'')}${[r.c.cognome,r.c.nome].filter(Boolean).join(' ')} · ${r.c.ragione_sociale||''} · ${r.c.partita_iva||''} (${r.c.firma_modalita==='cartacea'?'già caricato · verrà sostituito':r.c.stato})</option>`)).join('');
     const ok=!!g.contractId;
     const thumbs=g.pages.map((p,pi)=>{const t=p.cv.toDataURL('image/jpeg',0.4);
-      return `<div style="width:110px;flex-shrink:0"><img src="${t}" style="width:110px;border:1px solid var(--brd);border-radius:6px;cursor:zoom-in;background:#fff" onclick="crtZoom(${gi},${pi})"><select data-g="${gi}" data-p="${pi}" onchange="crtSetRole(this)" style="width:100%;font-size:11px;padding:3px;margin-top:4px;border:1px solid var(--brd);border-radius:6px">${CRT_ROLES.map(r=>`<option value="${r[0]}"${p.role===r[0]?' selected':''}>${r[1]}</option>`).join('')}</select><div style="font-size:10px;color:var(--txt2);text-align:center">${p.file.length>14?p.file.slice(0,12)+'…':p.file} p.${p.n}</div></div>`;}).join('');
+      return `<div style="width:110px;flex-shrink:0"><img src="${t}" style="width:110px;border:1px solid var(--brd);border-radius:6px;cursor:zoom-in;background:#fff" onclick="crtZoom(${gi},${pi})"><select data-g="${gi}" data-p="${pi}" onchange="crtSetRole(this)" style="width:100%;font-size:11px;padding:3px;margin-top:4px;border:1px solid var(--brd);border-radius:6px">${CRT_ROLES.map(r=>`<option value="${r[0]}"${p.role===r[0]?' selected':''}>${r[1]}</option>`).join('')}</select><div style="font-size:10px;color:var(--txt2);text-align:center">${p.file.length>14?p.file.slice(0,12)+'…':p.file} p.${p.n}${p.kw&&p.kw!=='doc'?' · 🔤':''}</div></div>`;}).join('');
     return `<div class="form-card" style="margin-bottom:12px;border:2px solid ${ok?'var(--ok)':'#F59E0B'}"><div class="form-card-body" style="padding:12px">
       <div style="display:flex;gap:8px;align-items:center;margin-bottom:10px;flex-wrap:wrap"><b style="font-size:13px">Contratto ${gi+1}</b>
       <select data-g="${gi}" onchange="_crtGroups[this.dataset.g].contractId=this.value;crtRenderReview()" style="flex:1;min-width:220px;padding:8px;border:1px solid var(--brd);border-radius:8px;font-size:13px">${opts}</select>
