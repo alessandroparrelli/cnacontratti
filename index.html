@@ -412,7 +412,7 @@ body.dark-mode .app-header{background:#00418f!important}
 #cna-topbar{flex-direction:column!important;align-items:stretch!important;justify-content:flex-start!important;padding:0!important;background:var(--cna-hero)!important;border-bottom:none!important;box-shadow:0 2px 12px rgba(0,60,140,.18)}
 body.dark-mode #cna-topbar{background:#00418f!important}
 .hero-row1{display:flex;align-items:center;justify-content:space-between;padding:14px 28px 12px}
-.hero-row2{display:flex;align-items:flex-end;justify-content:space-between;padding:6px 28px 14px;border-top:1px solid rgba(255,255,255,.14)}
+.hero-row2{display:flex;align-items:flex-end;justify-content:space-between;padding:6px 28px 14px}
 .hero-brand{display:flex;align-items:center;gap:18px;cursor:pointer}
 .hero-right{display:flex;align-items:center;gap:10px}
 .hero-user{display:flex;align-items:center;gap:9px;padding:5px 14px 5px 5px;border-radius:999px;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.28);color:#fff;font-weight:700;font-size:13px;cursor:pointer;transition:.15s}
@@ -423,6 +423,65 @@ body.dark-mode #cna-topbar{background:#00418f!important}
 #cna-topbar #cna-topbar-title,body.dark-mode #cna-topbar #cna-topbar-title{color:#fff!important;font-size:19px}
 #cna-topbar #cna-topbar-greeting,body.dark-mode #cna-topbar #cna-topbar-greeting{color:#fff!important}
 #cna-topbar #cna-topbar-date{color:rgba(255,255,255,.7)!important}
+.hero-row1,.hero-row2,#cna-topbar>*{border:none!important}
+
+/* ===== LOG ATTIVITA ===== */
+.lg-root{padding:28px 32px 60px;max-width:1500px}
+.lg-head{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;margin-bottom:18px;flex-wrap:wrap}
+.lg-head h1{font-size:30px;font-weight:800;letter-spacing:-.03em;margin:0;color:#0F172A}
+.lg-head p{margin:4px 0 0;color:#64748B;font-size:14px}
+.lg-head-btns{display:flex;gap:8px}
+.lg-btn{display:inline-flex;align-items:center;gap:7px;padding:9px 16px;border-radius:999px;border:1px solid #E2E8F0;background:#fff;color:#0F172A;font-weight:600;font-size:13px;cursor:pointer;font-family:inherit}
+.lg-btn:hover{border-color:#005ac9;color:#005ac9}
+.lg-btn-del{color:#DC2626}.lg-btn-del:hover{border-color:#DC2626;color:#DC2626;background:#FEF2F2}
+.lg-card{background:#fff;border:1px solid #EEF2F7;border-radius:18px;padding:18px 20px;margin-bottom:16px;box-shadow:0 1px 2px rgba(15,23,42,.03)}
+.lg-np{padding:0;overflow:hidden}
+.lg-chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.lg-chips button{padding:7px 16px;border-radius:999px;border:1px solid #E2E8F0;background:#fff;font-weight:600;font-size:13px;cursor:pointer;font-family:inherit;color:#334155}
+.lg-chips button.on{background:#005ac9;border-color:#005ac9;color:#fff}
+.lg-frow{display:flex;gap:10px;flex-wrap:wrap}
+.lg-search{flex:1;min-width:220px;display:flex;align-items:center;gap:8px;border:1px solid #E2E8F0;border-radius:999px;padding:0 14px;color:#94A3B8}
+.lg-search input{border:none;outline:none;flex:1;padding:9px 0;font-size:13.5px;font-family:inherit;background:transparent;color:#0F172A}
+.lg-frow select{padding:8px 12px;border:1px solid #E2E8F0;border-radius:10px;font-size:13px;background:#fff;font-family:inherit;color:#0F172A}
+.lg-kpis{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-bottom:16px}
+.lg-kpi{background:#fff;border:1px solid #EEF2F7;border-radius:18px;padding:16px 18px;display:flex;gap:14px;align-items:center}
+.lg-kpi-ic{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.lg-kpi b{display:block;font-size:26px;font-weight:800;line-height:1.1}
+.lg-kpi span{display:block;font-size:13px;color:#334155;font-weight:600}
+.lg-kpi small{display:block;font-size:11.5px;color:#94A3B8}
+.lg-grid2{display:grid;grid-template-columns:2fr 1fr;gap:16px}
+.lg-ct{font-weight:800;font-size:15px;color:#0F172A;margin-bottom:12px}
+.lg-ct span{font-weight:500;color:#94A3B8;font-size:13px}
+.lg-bar{margin-bottom:12px}.lg-bar div:first-child{display:flex;justify-content:space-between;font-size:13px;font-weight:600;color:#0F172A;margin-bottom:5px}
+.lg-bar i{display:block;height:6px;border-radius:9px;background:#EEF2F7;overflow:hidden}.lg-bar i em{display:block;height:100%;background:linear-gradient(90deg,#005ac9,#4f95ef);border-radius:9px}
+.lg-thead{display:flex;justify-content:space-between;align-items:center;padding:16px 20px 4px;flex-wrap:wrap;gap:8px}
+.lg-thead .lg-ct{margin:0}
+.lg-thead a{color:#005ac9;font-weight:700;font-size:13px;text-decoration:none}
+.lg-chk{display:flex;align-items:center;gap:6px;font-size:13px;color:#475569;cursor:pointer}
+.lg-tbl{width:100%;border-collapse:collapse;font-size:13px}
+.lg-tbl th{text-align:left;font-size:10.5px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#64748B;padding:12px 14px;border-bottom:1px solid #EEF2F7;white-space:nowrap}
+.lg-tbl td{padding:12px 14px;border-bottom:1px solid #F1F5F9;vertical-align:middle}
+.lg-tbl td.n{text-align:right;font-variant-numeric:tabular-nums;font-weight:600}.lg-tbl td.z{color:#CBD5E1}
+.lg-urow{cursor:pointer}.lg-urow:hover td{background:#F8FBFF}
+.lg-arr{color:#94A3B8;transition:transform .15s;display:inline-block}.lg-urow.open .lg-arr{transform:rotate(90deg)}
+.lg-u{display:flex;align-items:center;gap:10px}.lg-av{width:34px;height:34px;border-radius:50%;background:#EEF4FF;color:#005ac9;font-weight:800;font-size:12px;display:flex;align-items:center;justify-content:center;overflow:hidden;flex-shrink:0}.lg-av img{width:100%;height:100%;object-fit:cover}
+.lg-u b{display:block;font-size:13.5px;color:#0F172A}.lg-u small{color:#94A3B8;font-size:12px}
+.lg-role{background:#EEF4FF;color:#005ac9;font-weight:700;font-size:11.5px;padding:3px 10px;border-radius:999px}
+.lg-sub{font-size:11.5px;color:#94A3B8}
+.lg-detail td{background:#FAFCFF;padding:4px 14px 14px 62px}
+.lg-ev{display:flex;gap:12px;align-items:flex-start;padding:9px 0;border-bottom:1px dashed #EEF2F7}
+.lg-ev:last-child{border-bottom:none}
+.lg-ev-ic{width:30px;height:30px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+.lg-ev-main{flex:1;min-width:0}.lg-ev-main b{font-size:13px;color:#0F172A}.lg-ev-main div{font-size:12px;color:#64748B;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.lg-ev-t{font-size:12px;color:#64748B;white-space:nowrap;text-align:right}
+#lg-reg{padding:4px 20px 8px}
+#lg-more{padding:0 20px 18px;text-align:center}
+.lg-empty{padding:30px;text-align:center;color:#94A3B8;font-size:13px}
+body.dark-mode .lg-card,body.dark-mode .lg-kpi,body.dark-mode .lg-btn,body.dark-mode .lg-chips button:not(.on),body.dark-mode .lg-frow select{background:#2C2C2E;border-color:#3A3A3C;color:#F3F4F6}
+body.dark-mode .lg-head h1,body.dark-mode .lg-ct,body.dark-mode .lg-u b,body.dark-mode .lg-ev-main b,body.dark-mode .lg-search input{color:#F3F4F6}
+body.dark-mode .lg-detail td{background:#232325}body.dark-mode .lg-tbl td,body.dark-mode .lg-tbl th{border-color:#3A3A3C}
+@media(max-width:1100px){.lg-kpis{grid-template-columns:repeat(2,1fr)}.lg-grid2{grid-template-columns:1fr}}
+@media(max-width:768px){.lg-root{padding:16px}.lg-tbl .lg-hm{display:none}}
 
 /* ===== BOTTOM NAV MOBILE ===== */
 #cna-bottom-nav{
@@ -3519,8 +3578,8 @@ table.quill-better-table {
     <button class="cna-sb-btn" id="sbnav-admin-utenti" data-label="Gestione Utenti" onclick="openGestioneUtenti()" style="display:none">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg><span class="sb-btn-label">Gestione Utenti</span>
     </button>
-    <button class="cna-sb-btn" id="sbnav-admin-log" data-label="Log Connessioni" onclick="openLogsModal()" style="display:none">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/></svg><span class="sb-btn-label">Log Connessioni</span>
+    <button class="cna-sb-btn" id="sbnav-admin-log" data-label="Log Attività" onclick="switchTab(7)" style="display:none">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/></svg><span class="sb-btn-label">Log Attività</span>
     </button>
     <button class="cna-sb-btn" data-label="Dark mode" onclick="toggleDarkMode()">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" id="dm-icon"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg><span class="sb-btn-label" id="dm-label">Dark mode</span>
@@ -3547,7 +3606,6 @@ table.quill-better-table {
   <div class="hero-row1">
     <div class="hero-brand" onclick="switchTab(5)">
       <span class="hero-logo-wrap"><img src="/logo-cna-hero.png" alt="CNA Roma" class="hero-logo"></span>
-      <span class="hero-sep"></span>
       <span class="hero-sig"><svg viewBox="0 0 56 56" width="34" height="34" fill="none"><rect width="56" height="56" rx="12" fill="rgba(255,255,255,.16)"/><path d="M38 10 L46 18 L22 42 L14 44 L16 36 Z" fill="#fff" opacity=".2"/><path d="M38 10 L46 18 L22 42 L14 44 L16 36 Z" stroke="#fff" stroke-width="2" fill="none" stroke-linejoin="round"/><path d="M16 36 L14 44 L22 42" stroke="#fff" stroke-width="2.5" stroke-linejoin="round" fill="none"/><circle cx="15" cy="43" r="2.5" fill="#fff"/><path d="M19 40 C23 36 29 40 34 33" stroke="#fff" stroke-width="2" stroke-linecap="round" fill="none" opacity=".7"/><path d="M36 8 L48 20" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg><span class="hero-sig-txt">signature<b>cna</b></span></span>
     </div>
     <div class="hero-right">
@@ -3597,7 +3655,7 @@ table.quill-better-table {
         <circle cx="9" cy="49" r="2" fill="#2563EB"/>
         <path d="M14 44 C20 38 30 46 38 36" stroke="#2563EB" stroke-width="2" stroke-linecap="round" fill="none" opacity=".5"/>
       </svg>
-      <span class="hero-logo-wrap"><img src="/logo-cna-hero.png" alt="CNA Roma" class="hero-logo"></span><span class="hero-sep"></span><span class="hero-sig"><svg viewBox="0 0 56 56" width="34" height="34" fill="none"><rect width="56" height="56" rx="12" fill="rgba(255,255,255,.16)"/><path d="M38 10 L46 18 L22 42 L14 44 L16 36 Z" fill="#fff" opacity=".2"/><path d="M38 10 L46 18 L22 42 L14 44 L16 36 Z" stroke="#fff" stroke-width="2" fill="none" stroke-linejoin="round"/><path d="M16 36 L14 44 L22 42" stroke="#fff" stroke-width="2.5" stroke-linejoin="round" fill="none"/><circle cx="15" cy="43" r="2.5" fill="#fff"/><path d="M19 40 C23 36 29 40 34 33" stroke="#fff" stroke-width="2" stroke-linecap="round" fill="none" opacity=".7"/><path d="M36 8 L48 20" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg><span class="hero-sig-txt">signature<b>cna</b></span></span>
+      <span class="hero-logo-wrap"><img src="/logo-cna-hero.png" alt="CNA Roma" class="hero-logo"></span><span class="hero-sig"><svg viewBox="0 0 56 56" width="34" height="34" fill="none"><rect width="56" height="56" rx="12" fill="rgba(255,255,255,.16)"/><path d="M38 10 L46 18 L22 42 L14 44 L16 36 Z" fill="#fff" opacity=".2"/><path d="M38 10 L46 18 L22 42 L14 44 L16 36 Z" stroke="#fff" stroke-width="2" fill="none" stroke-linejoin="round"/><path d="M16 36 L14 44 L22 42" stroke="#fff" stroke-width="2.5" stroke-linejoin="round" fill="none"/><circle cx="15" cy="43" r="2.5" fill="#fff"/><path d="M19 40 C23 36 29 40 34 33" stroke="#fff" stroke-width="2" stroke-linecap="round" fill="none" opacity=".7"/><path d="M36 8 L48 20" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg><span class="hero-sig-txt">signature<b>cna</b></span></span>
     </div>
 
     <div class="header-actions">
@@ -4052,6 +4110,21 @@ table.quill-better-table {
     </div>
   </div>
 </div>
+<!-- TAB 7: LOG ATTIVITA -->
+<div class="tab-page" id="tab-7"><div class="lg-root">
+  <div class="lg-head"><div><h1>Log Attività</h1><p>Chi ha fatto cosa, quando e da quale dispositivo</p></div>
+    <div class="lg-head-btns"><button class="lg-btn" onclick="lgCsv()"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>Esporta CSV</button><button class="lg-btn" onclick="lgLoad()"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>Aggiorna</button><button class="lg-btn lg-btn-del" onclick="deleteAllLogs()" title="Elimina tutti i log">🗑</button></div></div>
+  <div class="lg-card lg-filters">
+    <div class="lg-chips" id="lg-chips"><button data-d="1" class="on">Oggi</button><button data-d="7">7 giorni</button><button data-d="30">30 giorni</button><button data-d="90">90 giorni</button><button data-d="0">Tutti</button></div>
+    <div class="lg-frow"><div class="lg-search"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg><input id="lg-q" placeholder="Cerca utente, cliente, operazione..." oninput="lgRender()"></div>
+      <select id="lg-user" onchange="lgRender()"><option value="">Tutti gli utenti</option></select>
+      <select id="lg-act" onchange="lgRender()"><option value="">Tutte le attività</option></select></div>
+  </div>
+  <div class="lg-kpis" id="lg-kpis"></div>
+  <div class="lg-grid2"><div class="lg-card"><div class="lg-ct" id="lg-chart-t">Operazioni</div><div id="lg-chart"></div></div><div class="lg-card"><div class="lg-ct">Attività più frequenti</div><div id="lg-top"></div></div></div>
+  <div class="lg-card lg-np"><div class="lg-thead"><div class="lg-ct">Attività per utente <span id="lg-nu"></span></div><div style="display:flex;gap:16px;align-items:center"><label class="lg-chk"><input type="checkbox" id="lg-hide" onchange="lgRender()"> Nascondi login e aperture app</label><a href="#" onclick="lgExpandAll();return false" id="lg-exp">Espandi tutti</a></div></div><div id="lg-users"></div></div>
+  <div class="lg-card lg-np"><div class="lg-thead"><div class="lg-ct">Registro completo <span id="lg-nr"></span></div></div><div id="lg-reg"></div><div id="lg-more"></div></div>
+</div></div>
 <!-- TAB 6: IMPOSTAZIONI -->
 <div class="tab-page" id="tab-6"><div id="settings-root" class="st-root"></div></div>
 </main>
@@ -5854,6 +5927,7 @@ function showApp(){
   initApp();
   updateStats();
   checkAdminForLogs();
+  try{if(!sessionStorage.getItem('lg_open')){sessionStorage.setItem('lg_open','1');logOp('apertura_app',{});}}catch(e){}
   logConnection('login');
   // Nuova UI
   cnaInitTopbar();
@@ -6539,7 +6613,7 @@ function etPreviewMode(m){
   document.querySelectorAll('.et-pv-btn').forEach(b=>{const on=b.dataset.m===m;b.style.background=on?'#005CA9':'#fff';b.style.color=on?'#fff':'#374151';});
 }
 
-function openLogsModal(){
+function openLogsModal(){switchTab(7);return;
   console.log("📜 openLogsModal chiamata!");
   const modal=document.getElementById('modal-logs');
   if(modal){
@@ -6610,8 +6684,8 @@ async function logConnection(action){
     await sb('cna_admin_logs','POST',{
       user_id:loggedUser.id,
       action:action,
-      details:{timestamp:new Date().toISOString()},
-      ip_address:null,
+      details:{timestamp:new Date().toISOString(),device:lgDevice(navigator.userAgent),browser:lgBrowser(navigator.userAgent)},
+      ip_address:await lgIp(),
       user_agent:navigator.userAgent
     });
     console.log('Log registrato:',action);
@@ -8315,6 +8389,7 @@ async function resetFirma(id){
     d.onclick=e=>{if(e.target===d){document.body.removeChild(d);res(false);}};
   });
   if(!ok)return;
+  try{logOp('reset_firma',{contratto:lgCtName(id),contratto_id:id});}catch(e){}
   try{
     console.log('🔄 Reset firma per contratto:', id);
     const newToken=crypto.randomUUID();
@@ -8877,6 +8952,7 @@ function switchTab(i){
   // Aggiorna navigazione
   if(i===5){cnaSetSb('sbnav-home','Dashboard');cnaSetBnav('bnav-home');}
   else if(i===4){cnaSetSb('sbnav-contratti','Contratti');cnaSetBnav('bnav-contratti');}
+  else if(i===7){cnaSetSb('sbnav-admin-log','Log Attività');try{lgLoad();}catch(e){console.error(e);}}
   else if(i===6){cnaSetBnav('bnav-impostazioni');try{renderSettings();}catch(e){console.error(e);}}
   const btn=document.querySelector(`.tab-btn[data-tab="${i}"]`);
   if(btn)btn.classList.add('active');
@@ -8918,6 +8994,7 @@ async function deleteSelected(){
   if(!confirm('Sei sicuro di voler eliminare '+ids.length+' contratto/i?\nQuesta operazione è irreversibile.'))return;
   if(!confirm('CONFERMA DEFINITIVA: eliminare '+ids.length+' contratto/i?'))return;
   try{
+    try{logOp('contratti_eliminati',{n:ids.length,contratti:ids.map(i=>lgCtName(i))});}catch(e){}
     for(const id of ids){await sb(`contratti?id=eq.${id}`,'DELETE');}
     showToast(ids.length+' contratto/i eliminato/i','success');
     loadContracts();
@@ -9715,5 +9792,129 @@ document.addEventListener('DOMContentLoaded',async()=>{
 </div>
 
 
+<script>
+/* ===== LOG ATTIVITA (v9.65) ===== */
+const LG_ACT={
+ login:['Login','🔓','#EEF4FF'],logout:['Logout','🔒','#F1F5F9'],apertura_app:['Apertura app','📱','#F1F5F9'],
+ contratto_salvato:['Contratto salvato','💾','#ECFDF5'],contratto_inviato:['Contratto inviato','📨','#EEF2FF'],contratto_modificato:['Modifica contratto','✏️','#FFF7ED'],
+ invio_email:['Invio email','✉️','#E0F2FE'],invio_sms:['Invio SMS','💬','#FFF7ED'],invio_whatsapp:['Invio WhatsApp','🟢','#ECFDF5'],link_copiato:['Link copiato','🔗','#EEF4FF'],
+ email_postfirma:['Reinvio email post-firma','📧','#E0F2FE'],pdf_scaricato:['PDF scaricato','📄','#ECFDF5'],reset_firma:['Reset firma','↩️','#FEF2F2'],
+ documento_visto:['Documento visualizzato','🪪','#F5F3FF'],gps_visto:['GPS visualizzato','📍','#ECFDF5'],caricato_gestionale:['Stato caricamento','📥','#FFF7ED'],
+ export_excel:['Export Excel','📊','#ECFDF5'],contratti_eliminati:['Contratti eliminati','🗑','#FEF2F2'],cartacei_caricati:['Cartacei caricati','📑','#F5F3FF'],
+ template_salvato:['Template salvato','📝','#EEF4FF'],profilo_salvato:['Profilo aggiornato','👤','#EEF4FF'],qr_scaricato:['QR scaricato','🔳','#F1F5F9'],otp_inviato:['OTP inviato','🔐','#EEF4FF']
+};
+const LG_ACCESS=['login','logout','apertura_app'];
+function lgDevice(ua){ua=ua||'';return /iPad|Tablet/i.test(ua)?'Tablet':/Mobi|iPhone|Android/i.test(ua)?'Mobile':'Desktop';}
+function lgBrowser(ua){ua=ua||'';const os=/iPhone|iPad/.test(ua)?'iOS':/Android/.test(ua)?'Android':/Mac OS/.test(ua)?'macOS':/Windows/.test(ua)?'Windows':/Linux/.test(ua)?'Linux':'';const b=/Edg\//.test(ua)?'Edge':/Chrome\//.test(ua)?'Chrome':/Firefox\//.test(ua)?'Firefox':/Safari\//.test(ua)?'Safari':'';return [b,os].filter(Boolean).join(' · ');}
+let _lgIp=null;async function lgIp(){if(_lgIp!==null)return _lgIp;try{const c=new AbortController();setTimeout(()=>c.abort(),2500);const r=await fetch('https://api.ipify.org?format=json',{signal:c.signal});_lgIp=(await r.json()).ip||'';}catch(e){_lgIp='';}return _lgIp||null;}
+function lgCtFind(v){const d=window._contractsData||[];return d.find(x=>x.id===v||x.token===v);}
+function lgCtName(v){const x=lgCtFind(v);if(!x)return null;return x.ragione_sociale||[x.cognome,x.nome].filter(Boolean).join(' ')||null;}
+async function logOp(action,details){
+  try{if(!loggedUser||!loggedUser.id)return;const ua=navigator.userAgent;
+    await sb('cna_admin_logs','POST',{user_id:loggedUser.id,action,details:Object.assign({device:lgDevice(ua),browser:lgBrowser(ua)},details||{}),ip_address:await lgIp(),user_agent:ua});
+  }catch(e){console.warn('logOp',e);}
+}
+// aggancio automatico alle funzioni esistenti
+(function(){
+  const formCt=()=>({contratto:(document.getElementById('ragione_sociale')||{}).value||[(document.getElementById('cognome')||{}).value,(document.getElementById('nome')||{}).value].filter(Boolean).join(' ')||null});
+  const ct=a=>{for(const v of a){if(typeof v==='string'){const n=lgCtName(v);if(n)return{contratto:n,contratto_id:(lgCtFind(v)||{}).id};}}return{};};
+  const last=()=>window._lgLastCt?{contratto:lgCtName(window._lgLastCt),contratto_id:window._lgLastCt}:{};
+  const H={
+    saveToSupabase:['contratto_salvato',formCt],saveAndSend:['contratto_inviato',formCt],confirmSend:['contratto_inviato',formCt],confirmSendAuto:['contratto_inviato',formCt],
+    editContract:['contratto_modificato',ct],reinviaEmailPostFirma:['email_postfirma',ct],dlSigned:['pdf_scaricato',ct],
+    viewDocSide:['documento_visto',a=>Object.assign(ct(a),{lato:a[1]})],openGpsModal:['gps_visto',ct],
+    toggleGestionale:['caricato_gestionale',a=>Object.assign(ct(a),{valore:a[1]?'Caricato':'Da caricare'})],
+    exportExcel:['export_excel',()=>({n:document.querySelectorAll('.contract-cb:checked').length})],
+    mscDoEmail:['invio_email',last],mscDoSMS:['invio_sms',last],mscDoWhatsApp:['invio_whatsapp',last],mscDoLink:['link_copiato',last],
+    sendSmsFromList:['invio_sms',ct],sendWhatsAppFromList:['invio_whatsapp',ct],sendViaSMS:['invio_sms',formCt],sendViaWhatsApp:['invio_whatsapp',formCt],
+    crtUploadAll:['cartacei_caricati',()=>({})],saveEmailTemplate:['template_salvato',()=>({tipo:'email'})],saveSmsTemplate:['template_salvato',()=>({tipo:'sms'})],
+    saveProfile:['profilo_salvato',()=>({})],downloadQRCode:['qr_scaricato',()=>({})],inviaOTP:['otp_inviato',()=>({})]
+  };
+  const oc=window.openSendChannel;if(typeof oc==='function')window.openSendChannel=function(id){window._lgLastCt=id;return oc.apply(this,arguments);};
+  Object.keys(H).forEach(n=>{const f=window[n];if(typeof f!=='function')return;const [act,det]=H[n];
+    window[n]=function(){try{if(loggedUser)logOp(act,det([...arguments]));}catch(e){}return f.apply(this,arguments);};});
+})();
+let _lgData=[],_lgUsers={},_lgDays=1,_lgRegN=50;
+document.addEventListener('click',e=>{const b=e.target.closest('#lg-chips button');if(!b)return;document.querySelectorAll('#lg-chips button').forEach(x=>x.classList.remove('on'));b.classList.add('on');_lgDays=+b.dataset.d;lgLoad();});
+async function lgLoad(){
+  const reg=document.getElementById('lg-reg');if(reg)reg.innerHTML='<div class="lg-empty">Caricamento...</div>';
+  try{
+    let q='cna_admin_logs?select=*&order=created_at.desc&limit=5000';
+    if(_lgDays){const d=new Date();d.setHours(0,0,0,0);d.setDate(d.getDate()-(_lgDays-1));q+='&created_at=gte.'+d.toISOString();}
+    const [logs,users]=await Promise.all([sb(q),sb('cna_users?select=id,nome,cognome,email,ruolo,foto_profilo_base64,attivo')]);
+    _lgData=logs||[];_lgUsers={};(users||[]).forEach(u=>_lgUsers[u.id]=u);
+    const us=document.getElementById('lg-user'),cur=us.value;
+    us.innerHTML='<option value="">Tutti gli utenti</option>'+(users||[]).map(u=>`<option value="${u.id}">${(u.nome||'')+' '+(u.cognome||'')}</option>`).join('');us.value=cur;
+    const as=document.getElementById('lg-act'),ca=as.value;const acts=[...new Set(_lgData.map(l=>l.action))];
+    as.innerHTML='<option value="">Tutte le attività</option>'+acts.map(a=>`<option value="${a}">${(LG_ACT[a]||[a])[0]}</option>`).join('');as.value=ca;
+    _lgRegN=50;lgRender();
+  }catch(e){if(reg)reg.innerHTML='<div class="lg-empty" style="color:#DC2626">Errore: '+e.message+'</div>';}
+}
+function lgUName(u){return u?((u.nome||'')+' '+(u.cognome||'')).trim()||u.email:'Sconosciuto';}
+function lgFiltered(){
+  const q=(document.getElementById('lg-q').value||'').toLowerCase(),u=document.getElementById('lg-user').value,a=document.getElementById('lg-act').value;
+  return _lgData.filter(l=>{if(u&&l.user_id!==u)return false;if(a&&l.action!==a)return false;
+    if(q){const t=(lgUName(_lgUsers[l.user_id])+' '+((LG_ACT[l.action]||[l.action])[0])+' '+JSON.stringify(l.details||{})).toLowerCase();if(!t.includes(q))return false;}return true;});
+}
+function lgEvDesc(l){const d=l.details||{};const p=[];if(d.contratto)p.push(d.contratto);if(d.lato)p.push(d.lato);if(d.valore)p.push(d.valore);if(d.n)p.push(d.n+' contratti');if(d.tipo)p.push(d.tipo);
+  const dev=[d.device||lgDevice(l.user_agent),d.browser||lgBrowser(l.user_agent),l.ip_address].filter(Boolean).join(' · ');return [p.join(' · '),dev].filter(Boolean).join(' — ');}
+function lgEvHtml(l,showUser){const a=LG_ACT[l.action]||[l.action,'•','#F1F5F9'];const t=new Date(l.created_at);
+  return `<div class="lg-ev"><div class="lg-ev-ic" style="background:${a[2]}">${a[1]}</div><div class="lg-ev-main"><b>${showUser?lgUName(_lgUsers[l.user_id])+' · ':''}${a[0]}</b><div title="${lgEvDesc(l).replace(/"/g,'&quot;')}">${lgEvDesc(l)||'&nbsp;'}</div></div><div class="lg-ev-t">${t.toLocaleTimeString('it-IT',{hour:'2-digit',minute:'2-digit'})}<br><span class="lg-sub">${t.toLocaleDateString('it-IT')}</span></div></div>`;}
+function lgAgo(d){const m=Math.round((Date.now()-d)/60000);return m<1?'ora':m<60?m+' min fa':m<1440?Math.round(m/60)+' h fa':Math.round(m/1440)+' g fa';}
+function lgRender(){
+  const all=lgFiltered();const hide=document.getElementById('lg-hide').checked;
+  const ops=all.filter(l=>!LG_ACCESS.includes(l.action));
+  const usersAct=new Set(all.map(l=>l.user_id));const enabled=Object.values(_lgUsers).filter(u=>u.attivo!==false).length;
+  const cnt=k=>all.filter(l=>k.includes(l.action)).length;
+  const ctTouched=new Set(ops.map(l=>(l.details||{}).contratto_id||(l.details||{}).contratto).filter(Boolean)).size;
+  const K=[[ops.length,'Operazioni','esclusi accessi','#EEF2FF','#4F46E5','M22 12h-4l-3 9L9 3l-3 9H2'],
+    [usersAct.size,'Utenti attivi','su '+enabled+' abilitati','#F5F3FF','#7C3AED','M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8z'],
+    [ctTouched,'Contratti gestiti','modifiche, PDF, documenti','#ECFDF5','#059669','M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8zM14 2v6h6'],
+    [cnt(['contratto_inviato','invio_email','invio_sms','invio_whatsapp','email_postfirma','link_copiato']),'Invii','email, SMS, WhatsApp, link','#E0F2FE','#0284C7','M22 2 11 13M22 2l-7 20-4-9-9-4z'],
+    [cnt(['login','apertura_app']),'Accessi','login e aperture app','#FFF7ED','#EA580C','M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4M10 17l5-5-5-5M15 12H3']];
+  document.getElementById('lg-kpis').innerHTML=K.map(k=>`<div class="lg-kpi"><div class="lg-kpi-ic" style="background:${k[3]};color:${k[4]}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="${k[5]}"/></svg></div><div><b style="color:${k[4]}">${k[0]}</b><span>${k[1]}</span><small>${k[2]}</small></div></div>`).join('');
+  // grafico
+  const hourly=_lgDays===1;const N=hourly?24:(_lgDays||30);const bins=new Array(N).fill(0);const now=new Date();const lbl=[];
+  if(hourly){for(let i=0;i<24;i++)lbl.push(i+':00');all.forEach(l=>bins[new Date(l.created_at).getHours()]++);}
+  else{const base=new Date();base.setHours(0,0,0,0);for(let i=N-1;i>=0;i--){const d=new Date(base);d.setDate(d.getDate()-i);lbl.push(d.toLocaleDateString('it-IT',{day:'2-digit',month:'2-digit'}));}
+    all.forEach(l=>{const d=new Date(l.created_at);d.setHours(0,0,0,0);const i=N-1-Math.round((new Date().setHours(0,0,0,0)-d)/864e5);if(i>=0&&i<N)bins[i]++;});}
+  document.getElementById('lg-chart-t').textContent=hourly?'Operazioni di oggi, per ora':_lgDays?'Operazioni per giorno, ultimi '+_lgDays+' giorni':'Operazioni per giorno, ultimi 30 giorni';
+  const W=800,Hh=220,pl=32,pb=26,mx=Math.max(4,...bins),X=i=>pl+i*(W-pl-10)/(N-1),Y=v=>10+(Hh-pb-10)*(1-v/mx);
+  let path='';bins.forEach((v,i)=>{path+=(i?'L':'M')+X(i).toFixed(1)+' '+Y(v).toFixed(1);});
+  const grid=[0,.5,1].map(f=>{const v=Math.round(mx*f);return `<line x1="${pl}" x2="${W-10}" y1="${Y(v)}" y2="${Y(v)}" stroke="#EEF2F7"/><text x="${pl-8}" y="${Y(v)+4}" text-anchor="end" font-size="11" fill="#94A3B8">${v}</text>`;}).join('');
+  const step=Math.ceil(N/8);const xl=lbl.map((t,i)=>i%step===0||i===N-1?`<text x="${X(i)}" y="${Hh-6}" text-anchor="middle" font-size="11" fill="#94A3B8">${t}</text>`:'').join('');
+  const dots=bins.map((v,i)=>v?`<circle cx="${X(i)}" cy="${Y(v)}" r="3.5" fill="#005ac9"><title>${lbl[i]}: ${v}</title></circle>`:'').join('');
+  document.getElementById('lg-chart').innerHTML=`<svg viewBox="0 0 ${W} ${Hh}" style="width:100%;height:auto;display:block"><defs><linearGradient id="lgg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#005ac9" stop-opacity=".22"/><stop offset="1" stop-color="#005ac9" stop-opacity="0"/></linearGradient></defs>${grid}<path d="${path}L${X(N-1)} ${Y(0)}L${X(0)} ${Y(0)}Z" fill="url(#lgg)"/><path d="${path}" fill="none" stroke="#005ac9" stroke-width="2.2" stroke-linejoin="round"/>${dots}${xl}</svg><div class="lg-sub" style="text-align:right;margin-top:4px">Totale periodo: <b style="color:#005ac9">${all.length}</b></div>`;
+  // top
+  const tc={};all.forEach(l=>tc[l.action]=(tc[l.action]||0)+1);const top=Object.entries(tc).sort((a,b)=>b[1]-a[1]).slice(0,7);const tm=top.length?top[0][1]:1;
+  document.getElementById('lg-top').innerHTML=top.length?top.map(([a,n])=>`<div class="lg-bar"><div><span>${(LG_ACT[a]||[a])[0]}</span><span>${n}</span></div><i><em style="width:${n/tm*100}%"></em></i></div>`).join(''):'<div class="lg-empty">Nessuna attività</div>';
+  // utenti
+  const by={};all.forEach(l=>(by[l.user_id]=by[l.user_id]||[]).push(l));
+  const ids=Object.keys(by).sort((a,b)=>new Date(by[b][0].created_at)-new Date(by[a][0].created_at));
+  document.getElementById('lg-nu').textContent=ids.length+' utenti attivi';
+  document.getElementById('lg-users').innerHTML=ids.length?`<table class="lg-tbl"><thead><tr><th style="width:24px"></th><th>Utente</th><th class="lg-hm">Ruolo</th><th>Prima / Ultima</th><th style="text-align:right">Operazioni</th><th class="lg-hm" style="text-align:right">Contratti</th><th class="lg-hm" style="text-align:right">Invii</th><th style="text-align:right">Accessi</th><th class="lg-hm">Dispositivi</th></tr></thead><tbody>${ids.map(id=>{
+    const L=by[id],u=_lgUsers[id],o=L.filter(l=>!LG_ACCESS.includes(l.action));const f=new Date(L[L.length-1].created_at),la=new Date(L[0].created_at);
+    const inv=L.filter(l=>['contratto_inviato','invio_email','invio_sms','invio_whatsapp','email_postfirma','link_copiato'].includes(l.action)).length;
+    const cts=new Set(o.map(l=>(l.details||{}).contratto).filter(Boolean)).size;const acc=L.filter(l=>LG_ACCESS.includes(l.action)&&l.action!=='logout').length;
+    const dev=[...new Set(L.map(l=>(l.details||{}).device||lgDevice(l.user_agent)))].join(', ');
+    const ini=lgUName(u).split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();const sameDay=f.toDateString()===la.toDateString();
+    const tf=d=>d.toLocaleTimeString('it-IT',{hour:'2-digit',minute:'2-digit'});const ev=(hide?o:L);
+    return `<tr class="lg-urow" onclick="this.classList.toggle('open');this.nextElementSibling.style.display=this.classList.contains('open')?'':'none'"><td><span class="lg-arr">›</span></td>
+    <td><div class="lg-u"><div class="lg-av">${u&&u.foto_profilo_base64?`<img src="${u.foto_profilo_base64}">`:ini}</div><div><b>${lgUName(u)}</b><small>${u?u.email||'':''}</small></div></div></td>
+    <td class="lg-hm"><span class="lg-role">${u&&u.ruolo==='admin'?'Admin':'Operatore'}</span></td>
+    <td>${sameDay?tf(f)+' - '+tf(la):f.toLocaleDateString('it-IT')+' - '+la.toLocaleDateString('it-IT')}<div class="lg-sub">${lgAgo(la)}</div></td>
+    <td class="n ${o.length?'':'z'}">${o.length}</td><td class="n lg-hm ${cts?'':'z'}">${cts}</td><td class="n lg-hm ${inv?'':'z'}">${inv}</td><td class="n ${acc?'':'z'}">${acc}</td><td class="lg-hm">${dev}</td></tr>
+    <tr class="lg-detail" style="display:none"><td colspan="9">${ev.length?ev.slice(0,100).map(l=>lgEvHtml(l,false)).join(''):'<div class="lg-empty">Solo accessi nel periodo</div>'}</td></tr>`;}).join('')}</tbody></table>`:'<div class="lg-empty">Nessuna attività nel periodo selezionato</div>';
+  // registro
+  const R=hide?ops:all;document.getElementById('lg-nr').textContent=R.length+' eventi';
+  document.getElementById('lg-reg').innerHTML=R.length?R.slice(0,_lgRegN).map(l=>lgEvHtml(l,true)).join(''):'<div class="lg-empty">Nessun evento</div>';
+  document.getElementById('lg-more').innerHTML=R.length>_lgRegN?`<button class="lg-btn" onclick="_lgRegN+=100;lgRender()">Mostra altri (${R.length-_lgRegN})</button>`:'';
+}
+function lgExpandAll(){const rows=document.querySelectorAll('#lg-users .lg-urow');const open=![...rows].every(r=>r.classList.contains('open'));rows.forEach(r=>{r.classList.toggle('open',open);r.nextElementSibling.style.display=open?'':'none';});document.getElementById('lg-exp').textContent=open?'Comprimi tutti':'Espandi tutti';}
+function lgCsv(){const R=lgFiltered();const h=['Data','Ora','Utente','Email','Attività','Dettagli','Dispositivo','Browser','IP'];
+  const rows=R.map(l=>{const t=new Date(l.created_at),u=_lgUsers[l.user_id],d=l.details||{};return [t.toLocaleDateString('it-IT'),t.toLocaleTimeString('it-IT'),lgUName(u),u?u.email:'',(LG_ACT[l.action]||[l.action])[0],[d.contratto,d.lato,d.valore,d.n&&d.n+' contratti',d.tipo].filter(Boolean).join(' · '),d.device||lgDevice(l.user_agent),d.browser||lgBrowser(l.user_agent),l.ip_address||''];});
+  const csv=[h,...rows].map(r=>r.map(v=>'"'+String(v??'').replace(/"/g,'""')+'"').join(';')).join('\n');
+  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob(['﻿'+csv],{type:'text/csv;charset=utf-8'}));a.download='CNA_Log_attivita_'+new Date().toISOString().slice(0,10)+'.csv';a.click();}
+</script>
 </body>
 </html>
