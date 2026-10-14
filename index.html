@@ -384,9 +384,9 @@ html,body{overflow-x:hidden;width:100%}
 
 /* ===== HERO UNICO v9.59 ===== */
 :root{--cna-hero:#005ac9}
-.hero-logo-wrap{display:block;width:212px;height:64px;overflow:hidden;flex-shrink:0}
-.hero-logo{height:132px!important;width:auto;display:block;margin:-34px 0 0 -26px;max-width:none}
-@media(max-width:768px){.app-header .hero-logo-wrap{width:140px;height:42px}.app-header .hero-logo{height:88px!important;margin:-23px 0 0 -17px}}
+.hero-logo-wrap{display:block;flex-shrink:0}
+.hero-logo{height:50px!important;width:auto;display:block}
+@media(max-width:768px){.app-header .hero-logo{height:32px!important}}
 .hero-sig{display:inline-flex;align-items:center;gap:10px}
 .hero-sig-txt{color:#fff;font-weight:800;font-size:19px;letter-spacing:-.03em}
 .hero-sig-txt b{font-weight:800;color:#BFDBFE}
@@ -413,7 +413,7 @@ body.dark-mode .app-header{background:#00418f!important}
 body.dark-mode #cna-topbar{background:#00418f!important}
 .hero-row1{display:flex;align-items:center;justify-content:space-between;padding:14px 28px 12px}
 .hero-row2{display:flex;align-items:flex-end;justify-content:space-between;padding:6px 28px 14px;border-top:1px solid rgba(255,255,255,.14)}
-.hero-brand{display:flex;align-items:center;gap:14px;cursor:pointer}
+.hero-brand{display:flex;align-items:center;gap:18px;cursor:pointer}
 .hero-right{display:flex;align-items:center;gap:10px}
 .hero-user{display:flex;align-items:center;gap:9px;padding:5px 14px 5px 5px;border-radius:999px;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.28);color:#fff;font-weight:700;font-size:13px;cursor:pointer;transition:.15s}
 .hero-user:hover{background:rgba(255,255,255,.24)}
@@ -3535,7 +3535,7 @@ table.quill-better-table {
 <div id="cna-topbar">
   <div class="hero-row1">
     <div class="hero-brand" onclick="switchTab(5)">
-      <span class="hero-logo-wrap"><img src="https://alessandroparrelli.github.io/fileappoggio/Nuovo-logo-CNA-blu-bianco.png" alt="CNA Roma" class="hero-logo"></span>
+      <span class="hero-logo-wrap"><img src="/logo-cna-hero.png" alt="CNA Roma" class="hero-logo"></span>
       <span class="hero-sep"></span>
       <span class="hero-sig"><svg viewBox="0 0 56 56" width="34" height="34" fill="none"><rect width="56" height="56" rx="12" fill="rgba(255,255,255,.16)"/><path d="M38 10 L46 18 L22 42 L14 44 L16 36 Z" fill="#fff" opacity=".2"/><path d="M38 10 L46 18 L22 42 L14 44 L16 36 Z" stroke="#fff" stroke-width="2" fill="none" stroke-linejoin="round"/><path d="M16 36 L14 44 L22 42" stroke="#fff" stroke-width="2.5" stroke-linejoin="round" fill="none"/><circle cx="15" cy="43" r="2.5" fill="#fff"/><path d="M19 40 C23 36 29 40 34 33" stroke="#fff" stroke-width="2" stroke-linecap="round" fill="none" opacity=".7"/><path d="M36 8 L48 20" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg><span class="hero-sig-txt">signature<b>cna</b></span></span>
     </div>
@@ -3586,7 +3586,7 @@ table.quill-better-table {
         <circle cx="9" cy="49" r="2" fill="#2563EB"/>
         <path d="M14 44 C20 38 30 46 38 36" stroke="#2563EB" stroke-width="2" stroke-linecap="round" fill="none" opacity=".5"/>
       </svg>
-      <span class="hero-logo-wrap"><img src="https://alessandroparrelli.github.io/fileappoggio/Nuovo-logo-CNA-blu-bianco.png" alt="CNA Roma" class="hero-logo"></span><span class="hero-sep"></span><span class="hero-sig"><svg viewBox="0 0 56 56" width="34" height="34" fill="none"><rect width="56" height="56" rx="12" fill="rgba(255,255,255,.16)"/><path d="M38 10 L46 18 L22 42 L14 44 L16 36 Z" fill="#fff" opacity=".2"/><path d="M38 10 L46 18 L22 42 L14 44 L16 36 Z" stroke="#fff" stroke-width="2" fill="none" stroke-linejoin="round"/><path d="M16 36 L14 44 L22 42" stroke="#fff" stroke-width="2.5" stroke-linejoin="round" fill="none"/><circle cx="15" cy="43" r="2.5" fill="#fff"/><path d="M19 40 C23 36 29 40 34 33" stroke="#fff" stroke-width="2" stroke-linecap="round" fill="none" opacity=".7"/><path d="M36 8 L48 20" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg><span class="hero-sig-txt">signature<b>cna</b></span></span>
+      <span class="hero-logo-wrap"><img src="/logo-cna-hero.png" alt="CNA Roma" class="hero-logo"></span><span class="hero-sep"></span><span class="hero-sig"><svg viewBox="0 0 56 56" width="34" height="34" fill="none"><rect width="56" height="56" rx="12" fill="rgba(255,255,255,.16)"/><path d="M38 10 L46 18 L22 42 L14 44 L16 36 Z" fill="#fff" opacity=".2"/><path d="M38 10 L46 18 L22 42 L14 44 L16 36 Z" stroke="#fff" stroke-width="2" fill="none" stroke-linejoin="round"/><path d="M16 36 L14 44 L22 42" stroke="#fff" stroke-width="2.5" stroke-linejoin="round" fill="none"/><circle cx="15" cy="43" r="2.5" fill="#fff"/><path d="M19 40 C23 36 29 40 34 33" stroke="#fff" stroke-width="2" stroke-linecap="round" fill="none" opacity=".7"/><path d="M36 8 L48 20" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg><span class="hero-sig-txt">signature<b>cna</b></span></span>
     </div>
 
     <div class="header-actions">
