@@ -5164,6 +5164,18 @@ async function eseguiRicercaImprese(){
     statusEl.textContent=mappa.size+' impres'+(mappa.size===1?'a trovata':'e trovate');
     statusEl.style.color='var(--txt2)';
 
+    // Stato Infocamere (CCIAA) per le P.IVA trovate
+    const statoInfocamere=new Map();
+    try{
+      const pivas=[...new Set([...mappa.values()].map(i=>String(i.piva||'').trim()).filter(p=>/^[0-9]{5,}$/.test(p)))];
+      for(let i=0;i<pivas.length;i+=50){
+        const sl=pivas.slice(i,i+50);
+        const rc=await fetch(SB_URL+'/rest/v1/cciaa?partita_iva=in.('+sl.join(',')+')&select=partita_iva,stato_attivita',{headers:hdrs});
+        if(rc.ok)(await rc.json()).forEach(c=>statoInfocamere.set(String(c.partita_iva).trim(),c.stato_attivita));
+      }
+    }catch(e){console.warn('CCIAA stato:',e);}
+    const traduciStatoInfocamere=c=>({'0':{t:'ATTIVA',bg:'#10B981'},'1':{t:'IN LIQUIDAZIONE',bg:'#F59E0B'},'2':{t:'FALLITA',bg:'#EF4444'},'3':{t:'SOSPESA',bg:'#F59E0B'},'4':{t:'INATTIVA',bg:'#9CA3AF'},'5':{t:'CESSATA',bg:'#EF4444'}})[String(c)]||null;
+
     mappa.forEach(imp=>{
       const sub=[];
       if(imp.piva) sub.push('P.IVA: '+imp.piva);
@@ -5173,10 +5185,11 @@ async function eseguiRicercaImprese(){
       const pills=[];
       const isAttiva=imp.fonte==='diretti';
 
-      // Pill ATTIVA / CESSATA
-      pills.push(isAttiva
-        ? {label:'ATTIVA',    bg:'#6B7280',ic:''}
-        : {label:'NON ATTIVA',bg:'#9CA3AF',ic:''});
+      // Pill STATO INFOCAMERE (da CCIAA)
+      const stIc=traduciStatoInfocamere(statoInfocamere.get(String(imp.piva||'').trim()));
+      pills.push(stIc
+        ? {label:'INFOCAMERE: '+stIc.t,bg:stIc.bg,ic:''}
+        : {label:'INFOCAMERE: N.D.',bg:'#9CA3AF',ic:''});
 
       // Pill TIPO (Artigiano, Commerciante, Piccola Impresa...)
       if(imp.tipo){
@@ -5197,9 +5210,9 @@ async function eseguiRicercaImprese(){
       const isIscrittoServ=tuttiServizi.has('ISCRITTO');
       // ISCRITTO solo se ha il servizio ISCRITTO SENZA data cessazione (le query filtrano datadisdetta IS NULL)
       const isIscrittoDiretti=(imp.servizio||'').toUpperCase().split('|').some(x=>x.trim()==='ISCRITTO');
-      if(isIscrittoServ||isIscrittoDiretti){
-        pills.push({label:'ISCRITTO CNA',bg:'#2563EB',ic:'✓ '});
-      }
+      pills.push((isIscrittoServ||isIscrittoDiretti)
+        ? {label:'ISCRITTO CNA',bg:'#16A34A',ic:'✓ '}
+        : {label:'NON ISCRITTO CNA',bg:'#DC2626',ic:'✗ '});
 
       // Pill PAGANTE (se ha incassi — rilevato in apertura modal, non qui; usa segnaposto)
       // Il campo imp.haIncassi viene impostato se la fonte è diretti e ha importo nei servizi
@@ -5331,6 +5344,15 @@ async function apriDettaglioImpresa(piva, cf){
     document.getElementById('modal-impresa-nome').textContent=ragSoc;
     document.getElementById('modal-impresa-piva').textContent=
       (pivaDisp?'P.IVA '+pivaDisp:'')+(pivaDisp&&cfDisp?'   ':'')+(cfDisp?'CF '+cfDisp:'');
+    // Badge ISCRITTO / NON ISCRITTO CNA (servizio ISCRITTO senza data cessazione)
+    {
+      const _isc=(diretti||[]).some(d=>(d.servizio||'').trim().toUpperCase()==='ISCRITTO')||(servizi||[]).some(x=>(x.tipocontratto||'').trim().toUpperCase()==='ISCRITTO');
+      const _pEl=document.getElementById('modal-impresa-piva');
+      let _b=document.getElementById('modal-isc-badge');
+      if(!_b){_b=document.createElement('div');_b.id='modal-isc-badge';_pEl.insertAdjacentElement('afterend',_b);}
+      _b.style.cssText='display:inline-block;margin-top:6px;padding:4px 12px;border-radius:999px;font-size:11px;font-weight:800;letter-spacing:.04em;color:#fff;background:'+(_isc?'#16A34A':'#DC2626');
+      _b.textContent=_isc?'✓ ISCRITTO CNA':'✗ NON ISCRITTO CNA';
+    }
     document.getElementById('modal-titolare').textContent=titolare;
     document.getElementById('modal-cf').textContent=cfDisp||'—';
     document.getElementById('modal-tel').textContent=telDisp;
