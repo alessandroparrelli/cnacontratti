@@ -539,6 +539,28 @@ body.dark-mode .imp-f,body.dark-mode .imp-add div:not(.tot){background:#1C1C1E;b
 body.dark-mode .imp-tabs{background:#2C2C2E}body.dark-mode .imp-tab{color:#D1D5DB}
 @media(max-width:768px){.imp-hero{padding:14px 16px 56px}.imp-id{text-align:left;margin-left:0}.imp-id h1{font-size:22px}.imp-body{padding:0 12px 30px}.imp-kpis b{font-size:24px}.imp-tab{font-size:13px;padding:10px 4px}.imp-add b{font-size:24px}}
 
+/* ===== EDITOR HERO EMAIL ===== */
+.eth-panel{border:1px solid #d1d5db;border-radius:10px;background:#fff;margin:10px 0;overflow:hidden;flex-shrink:0}
+.eth-h{display:flex;align-items:center;gap:10px;padding:11px 14px;cursor:pointer;font-weight:700;font-size:13px;color:#1E3A8A;background:#F5F8FF}
+.eth-sum{margin-left:auto;font-weight:500;font-size:12px;color:#64748B}
+.eth-chev{transition:transform .15s;color:#64748B}.eth-panel.open .eth-chev{transform:rotate(180deg)}
+.eth-b{display:none;padding:12px 14px 14px;border-top:1px solid #E5E7EB}.eth-panel.open .eth-b{display:block}
+.eth-b.off .eth-g{opacity:.4;pointer-events:none}
+.eth-sw{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:#334155;margin-bottom:10px;cursor:pointer}
+.eth-g{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px}
+.eth-g label{display:block;font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:#64748B;margin-bottom:5px}
+.eth-g label b{color:#005ac9;text-transform:none}
+.eth-g input:not([type]),.eth-g select{width:100%;padding:7px 10px;border:1px solid #d1d5db;border-radius:7px;font-size:13px;font-family:inherit;box-sizing:border-box}
+.eth-g input[type=range]{width:100%}
+.eth-g input[type=color]{width:100%;height:32px;border:1px solid #d1d5db;border-radius:7px;padding:2px;background:#fff;cursor:pointer}
+.eth-cols{display:flex;gap:8px;align-items:flex-end}.eth-cols>div{flex:1}
+.eth-seg{display:flex;flex-wrap:wrap;gap:4px}
+.eth-seg button{padding:6px 10px;border:1px solid #d1d5db;background:#fff;border-radius:7px;font-size:12px;cursor:pointer;font-family:inherit;color:#334155}
+.eth-seg button.on{background:#005ac9;border-color:#005ac9;color:#fff}
+.eth-acts{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap}
+.eth-acts button{padding:7px 14px;border-radius:8px;border:1px solid #d1d5db;background:#fff;font-size:12.5px;font-weight:600;cursor:pointer;font-family:inherit}
+.eth-acts button:last-child{background:#005ac9;border-color:#005ac9;color:#fff}
+
 /* ===== BOTTOM NAV MOBILE ===== */
 #cna-bottom-nav{
   display:none;
@@ -4466,6 +4488,26 @@ Cordiali saluti, CNA Roma</div>
         <label style="font-size:11px;font-weight:700;color:#374151;text-transform:uppercase;letter-spacing:.5px">Oggetto</label>
         <input type="text" id="et-subject" style="margin-top:4px;font-size:13px" placeholder="Oggetto email">
       </div>
+      <div class="eth-panel">
+        <div class="eth-h" onclick="this.parentElement.classList.toggle('open')"><span>🎨 Intestazione email (hero)</span><span class="eth-sum" id="eth-sum"></span><span class="eth-chev">▾</span></div>
+        <div class="eth-b">
+          <label class="eth-sw"><input type="checkbox" id="eth-show" onchange="ethChange()"> Mostra intestazione</label>
+          <div class="eth-g">
+            <div><label>Logo</label><select id="eth-logo-sel" onchange="ethLogoSel()"><option value="https://alessandroparrelli.github.io/fileappoggio/NUOVO-LOGO-CNA-ROMA-SOLO-ROMA.png">CNA Roma a colori</option><option value="https://cnacontratti.vercel.app/logo-cna-hero.png">CNA Roma bianco (per sfondi scuri)</option><option value="">Nessun logo</option><option value="custom">URL personalizzato…</option></select><input id="eth-logo" placeholder="https://…/logo.png" oninput="ethChange()" style="display:none;margin-top:6px"></div>
+            <div><label>Altezza logo <b id="eth-logo-h-v"></b></label><input type="range" id="eth-logo-h" min="24" max="110" oninput="ethChange()"></div>
+            <div><label>Allineamento</label><div class="eth-seg" data-k="align"><button data-v="left">Sinistra</button><button data-v="center">Centro</button><button data-v="right">Destra</button></div></div>
+            <div><label>Sfondo</label><div class="eth-seg" data-k="bg_type"><button data-v="white">Bianco</button><button data-v="solid">Tinta unita</button><button data-v="gradient">Sfumato</button></div></div>
+            <div class="eth-cols"><div><label>Colore 1</label><input type="color" id="eth-bg1" oninput="ethChange()"></div><div><label>Colore 2</label><input type="color" id="eth-bg2" oninput="ethChange()"></div><div><label>Testo</label><input type="color" id="eth-tc" oninput="ethChange()"></div></div>
+            <div><label>Forma</label><div class="eth-seg" data-k="shape"><button data-v="rect">Rettangolo</button><button data-v="rounded">Arrotondato</button><button data-v="bottom">Curvo in basso</button><button data-v="card">Riquadro</button><button data-v="pill">Pillola</button></div></div>
+            <div><label>Raggio angoli <b id="eth-radius-v"></b></label><input type="range" id="eth-radius" min="0" max="48" oninput="ethChange()"></div>
+            <div><label>Spaziatura</label><div class="eth-seg" data-k="pad"><button data-v="s">Compatta</button><button data-v="m">Normale</button><button data-v="l">Ampia</button></div></div>
+            <div class="eth-cols"><div style="flex:2"><label class="eth-sw" style="margin:0"><input type="checkbox" id="eth-line" onchange="ethChange()"> Linea sotto</label></div><div><input type="color" id="eth-line-c" oninput="ethChange()"></div></div>
+            <div><label>Titolo (facoltativo)</label><input id="eth-title" placeholder="es. Benvenuto in CNA Roma" oninput="ethChange()"></div>
+            <div><label>Sottotitolo (facoltativo)</label><input id="eth-sub" placeholder="es. Confederazione Nazionale dell'Artigianato" oninput="ethChange()"></div>
+          </div>
+          <div class="eth-acts"><button onclick="ethReset()">↺ Ripristina predefinita</button><button onclick="ethApplyAll()">Applica a tutti i template</button></div>
+        </div>
+      </div>
       <div class="form-group" style="display:flex;flex-direction:column">
         <label id="et-body-label" style="font-size:11px;font-weight:700;color:#374151;text-transform:uppercase;letter-spacing:.5px">Corpo Email</label>
         <div id="et-quill-container" style="margin-top:4px;border:1px solid #d1d5db;border-radius:6px;overflow:hidden;background:#fff;display:flex;flex-direction:column">
@@ -4620,7 +4662,7 @@ Cordiali saluti, CNA Roma</div>
       <!-- Anteprima sotto l'editor -->
       <div id="et-email-preview-wrap">
         <div style="display:flex;align-items:center;gap:6px;margin-bottom:8px"><label style="font-size:11px;font-weight:700;color:#374151;text-transform:uppercase;letter-spacing:.5px">Anteprima</label><select id="et-pv-contract" onchange="etPreviewWith(this.value)" title="Mostra l'anteprima con i dati di un contratto reale" style="flex:1;max-width:280px;margin-left:8px;padding:4px 8px;font-size:11px;border:1px solid #d1d5db;border-radius:6px"><option value="">Dati di esempio</option></select><span style="flex:1"></span><button class="et-pv-btn" data-m="desktop" onclick="etPreviewMode('desktop')" style="padding:3px 10px;font-size:11px;border:1px solid #d1d5db;border-radius:6px;cursor:pointer;background:#005CA9;color:#fff">🖥 Desktop</button><button class="et-pv-btn" data-m="mobile" onclick="etPreviewMode('mobile')" style="padding:3px 10px;font-size:11px;border:1px solid #d1d5db;border-radius:6px;cursor:pointer;background:#fff;color:#374151">📱 Mobile</button></div>
-        <div id="et-preview" style="border:1px solid #e5e7eb;border-radius:8px;padding:16px;background:#fff;font-size:9.5pt;min-height:120px"></div>
+        <div id="et-preview" style="border:1px solid #e5e7eb;border-radius:8px;padding:0;overflow:hidden;background:#fff;font-size:9.5pt;min-height:120px"></div>
       </div>
       <!-- SMS Template Editor (hidden by default) -->
       <div id="sms-template-panel" style="display:none;flex-direction:column;gap:14px;padding:4px 0">
@@ -6437,8 +6479,9 @@ async function loadEmailTemplate(id){
   const bodyLabel=document.getElementById('et-body-label');
   if(bodyLabel) bodyLabel.textContent='Corpo Email';
   try{
-    const rows=await sb(`email_templates?id=eq.${id}&select=subject,html_body`);
+    const rows=await sb(`email_templates?id=eq.${id}&select=subject,html_body,header_json`);
     if(rows&&rows[0]){
+      ethSet(rows[0].header_json);
       document.getElementById('et-subject').value=rows[0].subject||'';
       const html=rows[0].html_body||'';
       if(etQuill&&html) etSetHtml(html);
@@ -6532,10 +6575,66 @@ async function saveSmsTemplate(){
   finally{btn.disabled=false;btn.textContent='💾 Salva Template SMS';}
 }
 
+const HERO_DEF={show:true,logo:'https://alessandroparrelli.github.io/fileappoggio/NUOVO-LOGO-CNA-ROMA-SOLO-ROMA.png',logo_h:50,align:'left',bg_type:'white',bg1:'#005ac9',bg2:'#2f7fe6',shape:'rect',radius:16,pad:'m',line:true,line_color:'#005CA9',title:'',subtitle:'',text_color:'#ffffff'};
+function buildEmailHero(h){
+  h=Object.assign({},HERO_DEF,h||{});
+  if(!h.show)return '';
+  const esc=(s)=>String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  const r=Math.max(0,Math.min(60,+h.radius||0));
+  const bg=h.bg_type==='white'?'background-color:#ffffff':h.bg_type==='solid'?'background-color:'+h.bg1:'background-color:'+h.bg1+';background-image:linear-gradient(135deg,'+h.bg1+','+h.bg2+')';
+  const rad=h.shape==='rounded'||h.shape==='card'?r+'px':h.shape==='bottom'?'0 0 '+r+'px '+r+'px':h.shape==='pill'?'999px':'0';
+  const pad=({s:'14px 24px',m:'22px 24px',l:'36px 28px'})[h.pad]||'22px 24px';
+  const outer=h.shape==='card'||h.shape==='pill'?'padding:16px 16px 0':'';
+  const line=h.line?'border-bottom:3px solid '+h.line_color+';':'';
+  const tc=h.bg_type==='white'&&(!h.text_color||h.text_color.toLowerCase()==='#ffffff')?'#0f172a':h.text_color;
+  const logo=h.logo?'<img src="'+esc(h.logo)+'" alt="CNA Roma" style="height:'+(+h.logo_h||50)+'px;width:auto;display:inline-block;border:0;vertical-align:middle" />':'';
+  const title=h.title?'<div style="font-size:20px;font-weight:bold;color:'+tc+';margin-top:'+(logo?'12px':'0')+';line-height:1.25">'+esc(h.title)+'</div>':'';
+  const sub=h.subtitle?'<div style="font-size:13px;color:'+tc+';opacity:.85;margin-top:4px;line-height:1.4">'+esc(h.subtitle)+'</div>':'';
+  return '<div style="'+outer+'"><div style="'+bg+';border-radius:'+rad+';padding:'+pad+';text-align:'+h.align+';'+line+'">'+logo+title+sub+'</div></div>';
+}
+
+window._ethCfg=null;
+function ethSet(cfg){
+  const h=Object.assign({},HERO_DEF,cfg||{});window._ethCfg=h;
+  const $=i=>document.getElementById(i);
+  $('eth-show').checked=!!h.show;$('eth-logo-h').value=h.logo_h;$('eth-bg1').value=h.bg1;$('eth-bg2').value=h.bg2;$('eth-tc').value=h.text_color;
+  $('eth-radius').value=h.radius;$('eth-line').checked=!!h.line;$('eth-line-c').value=h.line_color;$('eth-title').value=h.title||'';$('eth-sub').value=h.subtitle||'';
+  const sel=$('eth-logo-sel');const known=[...sel.options].some(o=>o.value===h.logo&&o.value!=='custom');
+  sel.value=known?h.logo:'custom';$('eth-logo').value=h.logo||'';$('eth-logo').style.display=known?'none':'';
+  document.querySelectorAll('.eth-seg').forEach(g=>g.querySelectorAll('button').forEach(b=>b.classList.toggle('on',b.dataset.v===String(h[g.dataset.k]))));
+  ethLabels();
+}
+function ethLabels(){const h=window._ethCfg;if(!h)return;
+  document.getElementById('eth-logo-h-v').textContent=h.logo_h+'px';document.getElementById('eth-radius-v').textContent=h.radius+'px';
+  document.getElementById('eth-sum').textContent=h.show?({white:'Bianco',solid:'Tinta unita',gradient:'Sfumato'})[h.bg_type]+' · '+({rect:'Rettangolo',rounded:'Arrotondato',bottom:'Curvo in basso',card:'Riquadro',pill:'Pillola'})[h.shape]:'Nascosta';
+  document.querySelector('.eth-b').classList.toggle('off',!h.show);}
+function ethChange(){
+  const $=i=>document.getElementById(i);const h=window._ethCfg||Object.assign({},HERO_DEF);
+  h.show=$('eth-show').checked;h.logo_h=+$('eth-logo-h').value;h.bg1=$('eth-bg1').value;h.bg2=$('eth-bg2').value;h.text_color=$('eth-tc').value;
+  h.radius=+$('eth-radius').value;h.line=$('eth-line').checked;h.line_color=$('eth-line-c').value;h.title=$('eth-title').value;h.subtitle=$('eth-sub').value;
+  const sv=$('eth-logo-sel').value;h.logo=sv==='custom'?$('eth-logo').value.trim():sv;
+  window._ethCfg=h;ethLabels();updateEmailPreview();
+}
+function ethLogoSel(){const v=document.getElementById('eth-logo-sel').value;const i=document.getElementById('eth-logo');i.style.display=v==='custom'?'':'none';
+  if(v==='https://cnacontratti.vercel.app/logo-cna-hero.png'&&window._ethCfg&&window._ethCfg.bg_type==='white'){window._ethCfg.bg_type='gradient';ethSet(window._ethCfg);}
+  ethChange();}
+document.addEventListener('click',e=>{const b=e.target.closest('.eth-seg button');if(!b)return;const g=b.parentElement;
+  g.querySelectorAll('button').forEach(x=>x.classList.toggle('on',x===b));const h=window._ethCfg||Object.assign({},HERO_DEF);h[g.dataset.k]=b.dataset.v;
+  if(g.dataset.k==='shape'&&b.dataset.v!=='rect'&&h.line){h.line=false;document.getElementById('eth-line').checked=false;}
+  window._ethCfg=h;ethLabels();updateEmailPreview();});
+function ethReset(){ethSet({});updateEmailPreview();}
+async function ethApplyAll(){
+  if(!window._ethCfg)return;
+  CT_ASK.eth_all={t:'Applica a tutti i template',m:'Questa intestazione verrà usata da <b>tutti i template email</b>. Le intestazioni personalizzate degli altri template verranno <b>sostituite</b>.',ok:'Sì, applica',c:'#005ac9',i:'🎨'};
+  ctAsk('eth_all',()=>ethDoAll());
+}
+async function ethDoAll(){try{await sb('email_templates?id=neq.__none__','PATCH',{header_json:window._ethCfg});showToast('Intestazione applicata a tutti i template','success');}catch(e){showToast('Errore: '+e.message,'error');}}
+
 function updateEmailPreview(){
   const html=etQuill?etQuill.root.innerHTML:'';
   const preview=etFillVars(html);
-  document.getElementById('et-preview').innerHTML=typeof etInlineStyles==='function'?etInlineStyles(preview):preview;
+  const _b=typeof etInlineStyles==='function'?etInlineStyles(preview):preview;
+  document.getElementById('et-preview').innerHTML='<div style="background:#f5f5f5;padding:14px;border-radius:8px"><div style="max-width:600px;margin:0 auto;background:#fff;border-radius:8px;overflow:hidden;font-family:Arial,Helvetica,sans-serif;font-size:10pt;line-height:1.3;color:#222">'+buildEmailHero(window._ethCfg||{})+'<div style="padding:24px">'+_b+'</div><div style="padding:12px 24px;background:#f0f0f0;font-size:9pt;color:#888;text-align:center">CNA di Roma &mdash; Confederazione Nazionale dell\'Artigianato e della Piccola e Media Impresa</div></div></div>';
 }
 
 function etInlineStyles(html){
@@ -6567,7 +6666,7 @@ async function saveEmailTemplate(){
   const btn=document.getElementById('et-save-btn');
   btn.disabled=true;btn.textContent='Salvataggio...';
   try{
-    await sb(`email_templates?id=eq.${currentEtId}`,'PATCH',{subject,html_body:etInlineStyles(html_body),updated_at:new Date().toISOString()});
+    await sb(`email_templates?id=eq.${currentEtId}`,'PATCH',{subject,html_body:etInlineStyles(html_body),header_json:window._ethCfg||null,updated_at:new Date().toISOString()});
     showToast('Template salvato!','success');
   }catch(e){showToast('Errore salvataggio: '+e.message,'error');}
   finally{btn.disabled=false;btn.textContent='\uD83D\uDCBE Salva Template';}
