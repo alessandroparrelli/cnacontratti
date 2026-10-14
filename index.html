@@ -5058,7 +5058,7 @@ async function eseguiRicercaImprese(){
     if(nome.length>=2)    dOrs.push('"Cliente".ilike.*'+esc(nome)+'*');
     if(ragione.length>=2) dOrs.push('"Cliente".ilike.*'+esc(ragione)+'*');
     const dParam='or=('+dOrs.join(',')+')';
-    const urlD=SB_URL+'/rest/v1/diretti?'+dParam+'&datadisdetta=is.null&select=partitaiva,"Codice Fiscale","Ragione Sociale/Denominazione","Cliente",servizio&limit=200';
+    const urlD=SB_URL+'/rest/v1/diretti?'+dParam+'&datadisdetta=is.null&select=partitaiva,codiceanagrafica,"Codice Fiscale","Ragione Sociale/Denominazione","Cliente",servizio&limit=200';
 
     // ── 2. ANAGRAFICHE: fonte dati per nome/ragione sociale ──
     const aOrs=[];
@@ -5068,7 +5068,7 @@ async function eseguiRicercaImprese(){
     if(nome.length>=2)    aOrs.push('nometitolare.ilike.*'+esc(nome)+'*');
     if(ragione.length>=2) aOrs.push('ragionesociale.ilike.*'+esc(ragione)+'*');
     const aParam='or=('+aOrs.join(',')+')';
-    const urlA=SB_URL+'/rest/v1/Anagrafiche?'+aParam+'&select=partitaiva,codicefiscale,ragionesociale,cognometitolare,nometitolare&limit=200';
+    const urlA=SB_URL+'/rest/v1/Anagrafiche?'+aParam+'&select=partitaiva,codicefiscale,ragionesociale,cognometitolare,nometitolare,codiceanagrafica&limit=200';
 
     // ── 3. CONTRATTISERVIZIO: verifica ISCRITTO e altri servizi attivi ──
     const sOrs=[];
@@ -5117,7 +5117,8 @@ async function eseguiRicercaImprese(){
           titolare: '',
           fonte: 'diretti',
           tipo: d.tipo||'',
-          servizio: d.servizio||''
+          servizio: d.servizio||'',
+          codice: d.codiceanagrafica||''
         });
       } else {
         // accumula tutti i servizi attivi (non disdettati) dell'impresa
@@ -5136,13 +5137,14 @@ async function eseguiRicercaImprese(){
         const r = mappa.get(k);
         if(a.ragionesociale) r.ragSoc = a.ragionesociale;
         if(tit) r.titolare = tit;
+        if(!r.codice && a.codiceanagrafica) r.codice = a.codiceanagrafica;
       }
       // Aggiungi anche chi è solo in Anagrafiche (tutte le imprese CNA)
       if(!mappa.has(k)){
         mappa.set(k,{
           piva:pStr, cf:cfStr,
           ragSoc:a.ragionesociale||[a.cognometitolare,a.nometitolare].filter(Boolean).join(' ')||'—',
-          titolare:tit, fonte:'anagrafica'
+          titolare:tit, fonte:'anagrafica', codice:a.codiceanagrafica||''
         });
       } else {
         const r=mappa.get(k);
@@ -5174,6 +5176,16 @@ async function eseguiRicercaImprese(){
         if(rc.ok)(await rc.json()).forEach(c=>statoInfocamere.set(String(c.partita_iva).trim(),c.stato_attivita));
       }
     }catch(e){console.warn('CCIAA stato:',e);}
+    // PAGANTE (regola unica DB get_paganti_tesseramento): pagato >= 50€ negli ultimi 2 anni
+    // oppure fatture tesseramento negli ultimi 2 anni senza insoluti
+    const paganti=new Map();
+    try{
+      const codici=[...new Set([...mappa.values()].map(i=>i.codice).filter(Boolean))];
+      if(codici.length){
+        const rp=await fetch(SB_URL+'/rest/v1/rpc/get_paganti_tesseramento',{method:'POST',headers:{...hdrs,'Content-Type':'application/json'},body:JSON.stringify({p_codici:codici})});
+        if(rp.ok)(await rp.json()).forEach(x=>paganti.set(x.codice_cliente,!!x.pagante));
+      }
+    }catch(e){console.warn('Paganti:',e);}
     const traduciStatoInfocamere=c=>({'0':{t:'ATTIVA',bg:'#10B981'},'1':{t:'IN LIQUIDAZIONE',bg:'#F59E0B'},'2':{t:'FALLITA',bg:'#EF4444'},'3':{t:'SOSPESA',bg:'#F59E0B'},'4':{t:'INATTIVA',bg:'#9CA3AF'},'5':{t:'CESSATA',bg:'#EF4444'}})[String(c)]||null;
 
     mappa.forEach(imp=>{
@@ -5217,9 +5229,9 @@ async function eseguiRicercaImprese(){
       // Pill PAGANTE (se ha incassi — rilevato in apertura modal, non qui; usa segnaposto)
       // Il campo imp.haIncassi viene impostato se la fonte è diretti e ha importo nei servizi
       // Per ora: pill verde se isAttiva e ha dati concreti
-      if(imp.fonte==='diretti'){
-        pills.push({label:'PAGANTE',bg:'#16A34A',ic:'✓ '});
-      }
+      pills.push(paganti.get(imp.codice)
+        ? {label:'PAGANTE',bg:'#16A34A',ic:'✓ '}
+        : {label:'NON PAGANTE',bg:'#DC2626',ic:'✗ '});
 
       const pillsHtml=pills.map(p=>
         '<span style="background:'+p.bg+';color:#fff;font-size:11px;font-weight:700;padding:5px 13px;border-radius:999px;white-space:nowrap;letter-spacing:0.02em">'
