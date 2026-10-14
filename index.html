@@ -539,6 +539,18 @@ body.dark-mode .imp-f,body.dark-mode .imp-add div:not(.tot){background:#1C1C1E;b
 body.dark-mode .imp-tabs{background:#2C2C2E}body.dark-mode .imp-tab{color:#D1D5DB}
 @media(max-width:768px){.imp-hero{padding:14px 16px 56px}.imp-id{text-align:left;margin-left:0}.imp-id h1{font-size:22px}.imp-body{padding:0 12px 30px}.imp-kpis b{font-size:24px}.imp-tab{font-size:13px;padding:10px 4px}.imp-add b{font-size:24px}}
 
+/* ===== KPI card sfumate (v9.69) ===== */
+.stat-mini-box::before{display:none!important}
+.stat-mini-box{--k:#2563EB;--kbg:rgba(37,99,235,.13);background:linear-gradient(135deg,var(--kbg) 0%,#fff 72%)!important;border:1px solid rgba(15,23,42,.05)!important}
+.stat-mini-box:nth-child(2){--k:#D97706;--kbg:rgba(245,158,11,.17)}
+.stat-mini-box:nth-child(3){--k:#7C3AED;--kbg:rgba(124,58,237,.14)}
+.stat-mini-box:nth-child(4){--k:#16A34A;--kbg:rgba(22,163,74,.14)}
+.stat-mini-box .stat-mini-icon{background:#fff!important;box-shadow:0 1px 4px rgba(15,23,42,.08)}
+.stat-mini-box .stat-mini-icon svg{stroke:var(--k)!important}
+.stat-mini-box .stat-mini-num,#stat-attesa,#stat-attesa-c,#stat-da-caricare,#stat-da-caricare-c,#stat-caricati,#stat-caricati-c{color:var(--k)!important}
+body.dark-mode .stat-mini-box{background:linear-gradient(135deg,var(--kbg) 0%,#161b22 75%)!important}
+body.dark-mode .stat-mini-box .stat-mini-icon{background:#1f2630!important}
+
 /* ===== EDITOR HERO EMAIL ===== */
 .eth-panel{border:1px solid #d1d5db;border-radius:10px;background:#fff;margin:10px 0;overflow:hidden;flex-shrink:0}
 .eth-h{display:flex;align-items:center;gap:10px;padding:11px 14px;cursor:pointer;font-weight:700;font-size:13px;color:#1E3A8A;background:#F5F8FF}
