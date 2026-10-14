@@ -6,7 +6,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-<meta name="theme-color" content="#F2F2F7">
+<meta name="theme-color" content="#005ac9">
 <meta name="description" content="Signature - Sistema gestione contratti e tesseramento CNA Roma">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -384,7 +384,20 @@ html,body{overflow-x:hidden;width:100%}
 
 /* ===== HERO UNICO v9.59 ===== */
 :root{--cna-hero:#005ac9}
-.hero-logo{height:38px;width:auto;filter:brightness(0) invert(1);display:block}
+.hero-logo{height:40px;width:auto;display:block}
+.hero-sig{display:inline-flex;align-items:center;gap:10px}
+.hero-sig-txt{color:#fff;font-weight:800;font-size:19px;letter-spacing:-.03em}
+.hero-sig-txt b{font-weight:800;color:#BFDBFE}
+@media(max-width:768px){.app-header .hero-sig svg{width:28px;height:28px}.app-header .hero-sig-txt{font-size:15px}}
+/* hero a tutta larghezza su desktop */
+@media(min-width:769px){
+  #cna-topbar{position:fixed!important;top:0;left:0;right:0;z-index:500!important;height:124px}
+  .hero-row1{height:68px;box-sizing:border-box}
+  .hero-row2{height:56px;box-sizing:border-box;align-items:center!important}
+  #app-container{padding-top:124px!important;box-sizing:border-box}
+  #cna-sidebar{top:124px!important;height:calc(100vh - 124px)!important;border-top:none}
+  #cna-sidebar .cna-sb-logo{display:none!important}
+}
 .hero-sep{width:1px;height:34px;background:rgba(255,255,255,.35);display:inline-block}
 .hero-app{color:#fff;font-weight:800;font-size:16px;letter-spacing:-.01em}
 .app-header{background:var(--cna-hero)!important;border-bottom:none!important}
@@ -3520,9 +3533,9 @@ table.quill-better-table {
 <div id="cna-topbar">
   <div class="hero-row1">
     <div class="hero-brand" onclick="switchTab(5)">
-      <img src="https://alessandroparrelli.github.io/fileappoggio/NUOVO-LOGO-CNA-ROMA-SOLO-ROMA.png" alt="CNA Roma" class="hero-logo">
+      <img src="https://alessandroparrelli.github.io/fileappoggio/Nuovo-logo-CNA-blu-bianco.png" alt="CNA Roma" class="hero-logo">
       <span class="hero-sep"></span>
-      <span class="hero-app">Signature</span>
+      <span class="hero-sig"><svg viewBox="0 0 56 56" width="34" height="34" fill="none"><rect width="56" height="56" rx="12" fill="rgba(255,255,255,.16)"/><path d="M38 10 L46 18 L22 42 L14 44 L16 36 Z" fill="#fff" opacity=".2"/><path d="M38 10 L46 18 L22 42 L14 44 L16 36 Z" stroke="#fff" stroke-width="2" fill="none" stroke-linejoin="round"/><path d="M16 36 L14 44 L22 42" stroke="#fff" stroke-width="2.5" stroke-linejoin="round" fill="none"/><circle cx="15" cy="43" r="2.5" fill="#fff"/><path d="M19 40 C23 36 29 40 34 33" stroke="#fff" stroke-width="2" stroke-linecap="round" fill="none" opacity=".7"/><path d="M36 8 L48 20" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg><span class="hero-sig-txt">signature<b>cna</b></span></span>
     </div>
     <div class="hero-right">
       <div class="hero-user" onclick="openProfile()"><span class="hero-av" id="hero-av">AP</span><span id="hero-name"></span></div>
@@ -3571,7 +3584,7 @@ table.quill-better-table {
         <circle cx="9" cy="49" r="2" fill="#2563EB"/>
         <path d="M14 44 C20 38 30 46 38 36" stroke="#2563EB" stroke-width="2" stroke-linecap="round" fill="none" opacity=".5"/>
       </svg>
-      <img src="https://alessandroparrelli.github.io/fileappoggio/NUOVO-LOGO-CNA-ROMA-SOLO-ROMA.png" alt="CNA Roma" class="hero-logo"><span class="hero-sep"></span><span class="hero-app">Signature</span>
+      <img src="https://alessandroparrelli.github.io/fileappoggio/Nuovo-logo-CNA-blu-bianco.png" alt="CNA Roma" class="hero-logo"><span class="hero-sep"></span><span class="hero-sig"><svg viewBox="0 0 56 56" width="34" height="34" fill="none"><rect width="56" height="56" rx="12" fill="rgba(255,255,255,.16)"/><path d="M38 10 L46 18 L22 42 L14 44 L16 36 Z" fill="#fff" opacity=".2"/><path d="M38 10 L46 18 L22 42 L14 44 L16 36 Z" stroke="#fff" stroke-width="2" fill="none" stroke-linejoin="round"/><path d="M16 36 L14 44 L22 42" stroke="#fff" stroke-width="2.5" stroke-linejoin="round" fill="none"/><circle cx="15" cy="43" r="2.5" fill="#fff"/><path d="M19 40 C23 36 29 40 34 33" stroke="#fff" stroke-width="2" stroke-linecap="round" fill="none" opacity=".7"/><path d="M36 8 L48 20" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg><span class="hero-sig-txt">signature<b>cna</b></span></span>
     </div>
 
     <div class="header-actions">
