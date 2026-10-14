@@ -5119,6 +5119,9 @@ async function eseguiRicercaImprese(){
           tipo: d.tipo||'',
           servizio: d.servizio||''
         });
+      } else {
+        // accumula tutti i servizi attivi (non disdettati) dell'impresa
+        const e=mappa.get(k); if(d.servizio) e.servizio=(e.servizio?e.servizio+'|':'')+d.servizio;
       }
     });
 
@@ -5192,8 +5195,9 @@ async function eseguiRicercaImprese(){
       const tuttiServizi=new Set([...svcSet,...svcSetCf]);
 
       const isIscrittoServ=tuttiServizi.has('ISCRITTO');
-      const isIscrittoDiretti=isAttiva&&(imp.servizio||'').toUpperCase().includes('ISCRITTO');
-      if(isIscrittoServ||isIscrittoDiretti||isAttiva){
+      // ISCRITTO solo se ha il servizio ISCRITTO SENZA data cessazione (le query filtrano datadisdetta IS NULL)
+      const isIscrittoDiretti=(imp.servizio||'').toUpperCase().split('|').some(x=>x.trim()==='ISCRITTO');
+      if(isIscrittoServ||isIscrittoDiretti){
         pills.push({label:'ISCRITTO CNA',bg:'#2563EB',ic:'✓ '});
       }
 
