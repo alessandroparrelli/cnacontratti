@@ -204,7 +204,7 @@ input[readonly],select[readonly],textarea[readonly]{background:var(--input-bg);o
 .status-badge{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600}
 .status-badge.filled{background:#d4edda;color:#155724}.status-badge.empty{background:#f8d7da;color:#721c24}
 .status-badge.sent{background:#cce5ff;color:#004085}.status-badge.signed{background:#d4edda;color:#155724}
-.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;align-items:center;justify-content:center}
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:1000;align-items:center;justify-content:center}
 .modal-overlay.show{display:flex}
 .modal{background:var(--bg2);border-radius:var(--rl);max-width:500px;width:90%;max-height:80vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.2)}
 .changelog-entry{border-left:3px solid var(--brand-primary);padding:12px 16px;margin-bottom:20px;background:#EFF6FF;border-radius:10px}
@@ -393,7 +393,7 @@ html,body{overflow-x:hidden;width:100%}
 @media(max-width:768px){.app-header .hero-sig svg{width:28px;height:28px}.app-header .hero-sig-txt{font-size:15px}}
 /* hero a tutta larghezza su desktop */
 @media(min-width:769px){
-  #cna-topbar{position:fixed!important;top:0;left:0;right:0;z-index:500!important;height:124px}
+  #cna-topbar{position:fixed!important;top:0;left:0;right:0;z-index:300!important;height:124px}
   .hero-row1{height:68px;box-sizing:border-box}
   .hero-row2{height:56px;box-sizing:border-box;align-items:center!important}
   #app-container{padding-top:124px!important;box-sizing:border-box}
@@ -819,6 +819,17 @@ body.dark-mode #contracts-table tbody tr:hover td{background:#3A3A3C!important}
 body.dark-mode .ct-cli-nome{color:#F3F4F6}body.dark-mode .ct-cli-rs{color:#CBD5E1}body.dark-mode .ctc-prom{color:#D1D5DB}
 body.dark-mode .ct-az-btn{background:#1C1C1E;border-color:#48484A;color:#93C5FD}
 body.dark-mode .cta-box{background:#2C2C2E}
+/* v9.64 */
+.hero-av{overflow:hidden}.hero-av img{width:100%;height:100%;object-fit:cover;display:block}
+.form-card:has(#contracts-list){background:transparent!important;box-shadow:none!important}
+.form-card:has(#contracts-list)>.form-card-body{background:transparent!important;padding-left:0!important;padding-right:0!important}
+#search-contracts{background:#fff!important;border-radius:10px!important;padding:10px 14px!important}
+#ct-bulk-bar:empty,#ct-bulk-bar:not(:has(button[style*="inline"])){margin:0}
+#contracts-table thead tr{background:linear-gradient(90deg,#005ac9 0%,#2f7fe6 100%)}
+#contracts-table thead th{background:transparent!important;color:#fff!important;border-bottom:none!important;letter-spacing:.09em}
+#contracts-table thead th input{accent-color:#fff}
+#ctr-table-scroll{border:none!important;box-shadow:0 2px 10px rgba(0,60,140,.08)!important}
+body.dark-mode #contracts-table thead tr{background:linear-gradient(90deg,#00418f,#1d5fb8)}
 /* v9.59 tabella */
 #contracts-table tbody tr.contract-item{cursor:pointer}
 #contracts-table tbody td{padding:10px 14px!important}
@@ -4028,8 +4039,7 @@ table.quill-better-table {
           </div>
         </div>
         <!-- Selezione e azioni bulk -->
-        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;min-height:32px">
-          <label style="display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer"><input type="checkbox" id="select-all-contracts" onchange="toggleSelectAll(this)" style="width:16px;height:16px;accent-color:var(--cna)"> Seleziona tutti</label>
+        <div id="ct-bulk-bar" style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
           <button class="btn btn-sm btn-outline" onclick="exportExcel()" id="btn-export" style="display:none">&#x1F4CA; Esporta Excel</button>
           <button class="btn btn-sm btn-danger" onclick="deleteSelected()" id="btn-delete" style="display:none">&#x1F5D1; Elimina</button>
         </div>
@@ -6765,6 +6775,9 @@ function resizeImage(file,maxW,maxH){
 }
 
 function updateHeaderAvatar(){
+  const ha=document.getElementById('hero-av');
+  if(ha&&loggedUser){const ini=((loggedUser.nome||'')[0]||'')+((loggedUser.cognome||'')[0]||'');
+    ha.innerHTML=loggedUser.foto_profilo_base64?`<img src="${loggedUser.foto_profilo_base64}" alt="Profilo">`:ini.toUpperCase();}
   const userEl=document.getElementById('logged-user');
   const isMobile=window.innerWidth<768;
   const displayName=isMobile?(loggedUser?.nome||''):((loggedUser?.nome||'')+' '+(loggedUser?.cognome||''));
@@ -7002,7 +7015,7 @@ function cnaUpdateSidebar(){
   const av=document.getElementById('cna-sb-av');if(av)av.textContent=initials;
   const nm=document.getElementById('cna-sb-name');if(nm)nm.textContent=name||loggedUser.email||'';
   const hn=document.getElementById('hero-name');if(hn)hn.textContent=name||loggedUser.email||'';
-  const ha=document.getElementById('hero-av');if(ha)ha.textContent=initials;
+  try{updateHeaderAvatar();}catch(e){}
   const rl=document.getElementById('cna-sb-role');if(rl)rl.textContent=loggedUser.ruolo==='admin'?'Amministratore':'Operatore';
   // Admin-only sidebar buttons
   ['sbnav-admin-email','sbnav-admin-utenti','sbnav-admin-log'].forEach(id=>{
