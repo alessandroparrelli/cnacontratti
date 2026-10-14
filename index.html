@@ -4708,7 +4708,7 @@ Cordiali saluti, CNA Roma</div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:18px">
         <button onclick="etBlock('greeting')" class="et-blk">👋 Saluto</button>
         <button onclick="etBlock('closing')" class="et-blk">🙏 Chiusura</button>
-        <button onclick="etBlock('button')" class="et-blk">🔘 Pulsante</button>
+        <button onclick="etBlock('firma')" class="et-blk" title="Pulsante che apre la pagina di firma del contratto del cliente">✍️ Pulsante firma</button><button onclick="etBlock('button')" class="et-blk">🔘 Pulsante</button>
         <button onclick="etBlock('image')" class="et-blk">🖼️ Immagine</button>
         <button onclick="etBlock('table')" class="et-blk">📋 Dati cliente</button>
         <button onclick="etBlock('callout')" class="et-blk">⚠️ Riquadro</button>
@@ -6261,6 +6261,7 @@ function etRenderVars(){
 }
 function etBlock(kind){
   if(!etQuill)return;
+  if(kind==='firma')return etInsertFirmaButton();
   if(kind==='button')return etInsertButton();
   if(kind==='divider')return etInsertDivider();
   if(kind==='signature')return etInsertSignature();
@@ -6797,6 +6798,15 @@ function etInsertHtmlAtCursor(html){
   const [line,off]=etQuill.getLine(idx);if(line&&line.length()>1){const end=idx-off+line.length()-1;etQuill.insertText(end,'\n','user');idx=end+1;}
   etQuill.removeFormat(idx,1,'user');
   etQuill.clipboard.dangerouslyPasteHTML(idx,html,'user');updateEmailPreview();
+}
+function etInsertFirmaButton(){
+  const txt='Visualizza e firma il contratto';
+  const range=etQuill.getSelection(true);const idx=range?range.index:etQuill.getLength()-1;
+  etQuill.insertText(idx,'\n','user');
+  etQuill.insertText(idx+1,txt,{link:'{{link_firma}}',bold:true,color:'#ffffff',background:'#005ac9'},'user');
+  etQuill.insertText(idx+1+txt.length,'\n','user');
+  etQuill.formatLine(idx+1,1,'align','center','user');
+  updateEmailPreview();showToast('Pulsante firma inserito: apre il link di firma del contratto','success');
 }
 function etInsertButton(){
   const txt=prompt('Testo del pulsante:','Firma il contratto');if(!txt)return;
