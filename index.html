@@ -739,6 +739,44 @@ body.dark-mode .contract-item{background:#2C2C2E!important;border-bottom-color:r
 #contracts-table tbody tr:nth-child(odd) td{background:#ffffff}
 #contracts-table tbody tr:nth-child(even) td{background:#F8FAFC}
 #contracts-table tbody tr:hover td{background:#EFF6FF!important;transition:background .1s}
+/* v9.58 tabella compatta */
+#ctr-table-scroll{border-radius:14px!important;box-shadow:0 1px 3px rgba(15,23,42,.06)}
+#contracts-table thead th{background:#F8FAFC!important;border-bottom:1px solid #E2E8F0!important;color:#64748B!important;padding:12px 14px!important}
+#contracts-table tbody td{padding:12px 14px!important;border-bottom:1px solid #F1F5F9!important}
+#contracts-table tbody tr:nth-child(even) td{background:#fff!important}
+#contracts-table tbody tr:hover td{background:#F5F9FF!important}
+#contracts-table .ctc-cb{width:36px}
+#contracts-table .ctc-cli{min-width:260px;width:40%}
+.ctc-cli-wrap{display:flex;align-items:center;gap:12px}
+.ctc-cli-wrap .ct-avatar{width:38px;height:38px;border-radius:10px;font-size:12px}
+.ct-cli-nome{font-weight:700;font-size:14px;color:#0F172A;line-height:1.3;word-break:break-word}
+.ct-cli-rs{font-size:12.5px;color:#475569;line-height:1.35;margin-top:1px}
+.ct-cli-piva{font-size:11px;color:#94A3B8;font-family:ui-monospace,monospace;margin-top:2px}
+.ctc-data{white-space:nowrap;color:#64748B;font-size:12.5px;font-variant-numeric:tabular-nums}
+.ctc-prom{white-space:nowrap;max-width:130px;overflow:hidden;text-overflow:ellipsis;font-size:12.5px;color:#334155}
+.ctc-stato{display:flex;flex-direction:column;align-items:flex-start;gap:4px}
+.ctc-az{text-align:right;width:1%;white-space:nowrap}
+.ct-az-btn{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:9px;border:1px solid #CBD5E1;background:#fff;color:#1E3A8A;font-weight:700;font-size:12px;cursor:pointer;font-family:inherit;transition:all .15s}
+.ct-az-btn:hover{background:#005CA9;border-color:#005CA9;color:#fff}
+#modal-ct-azioni{display:none;position:fixed;inset:0;background:rgba(15,23,42,.5);z-index:3000;align-items:center;justify-content:center;padding:16px}
+#modal-ct-azioni.show{display:flex}
+.cta-box{background:#fff;border-radius:18px;width:100%;max-width:440px;max-height:90vh;overflow:auto;box-shadow:0 24px 60px rgba(0,0,0,.25)}
+.cta-head{background:linear-gradient(135deg,#005CA9,#1a78cc);padding:18px 20px;display:flex;align-items:flex-start;gap:12px;color:#fff}
+.cta-tit{font-weight:800;font-size:16px;line-height:1.3}
+.cta-sub{font-size:12px;opacity:.9;margin-top:4px;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.cta-x{background:rgba(255,255,255,.18);border:none;color:#fff;width:30px;height:30px;border-radius:50%;font-size:18px;cursor:pointer;flex-shrink:0}
+.cta-body{padding:16px 20px 20px;display:flex;flex-direction:column;gap:14px}
+.cta-grp-t{font-size:10.5px;font-weight:800;text-transform:uppercase;letter-spacing:.07em;color:#94A3B8;margin-bottom:8px}
+.cta-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:8px}
+.cta-grid .ct-btn{justify-content:center;padding:10px 12px;font-size:12.5px;border-radius:10px}
+.cta-grid .ct-btn svg{width:14px;height:14px}
+body.dark-mode #ctr-table-scroll{background:#2C2C2E!important;border-color:#3A3A3C!important}
+body.dark-mode #contracts-table thead th{background:#1C1C1E!important;border-color:#3A3A3C!important;color:#9CA3AF!important}
+body.dark-mode #contracts-table tbody td{background:#2C2C2E!important;border-color:#3A3A3C!important}
+body.dark-mode #contracts-table tbody tr:hover td{background:#3A3A3C!important}
+body.dark-mode .ct-cli-nome{color:#F3F4F6}body.dark-mode .ct-cli-rs{color:#CBD5E1}body.dark-mode .ctc-prom{color:#D1D5DB}
+body.dark-mode .ct-az-btn{background:#1C1C1E;border-color:#48484A;color:#93C5FD}
+body.dark-mode .cta-box{background:#2C2C2E}
 /* Modal invio canale */
 #modal-send-channel{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:3000;align-items:center;justify-content:center;padding:16px}
 #modal-send-channel.show{display:flex}
@@ -8480,6 +8518,8 @@ function renderPage(page){
     const btnGPS=st==='firmato'?`<button class="ct-btn ${hasGps?'ct-btn-gps-ok':'ct-btn-gps-no'}" onclick="openGpsModal('${x.id}','${x.gps_firma||''}')" title="GPS firma">${svgGPS} GPS</button>`:'<span style="color:#D1D5DB;font-size:11px">—</span>';
     const btnLink=`<button class="ct-btn ct-btn-link" onclick="cpLink('${url}')" title="Copia link firma">${svgLink} Link</button>`;
 
+    (window._ctAz=window._ctAz||{})[x.id]={titolo:x.ragione_sociale||[x.cognome,x.nome].filter(Boolean).join(' ')||'Contratto',sub:[[x.cognome,x.nome].filter(Boolean).join(' '),stBadge].filter(Boolean).join(' '),
+      gruppi:[['Documento',[btnPDF,btnEdit,btnLink]],['Invio',[btnReinvia,btnEmailFirma]],['Firma e allegati',[hasDoc?btnFronte:'',hasDoc?btnRetro:'',st==='firmato'?btnGPS:'']],['Avanzate',[btnReset]]]};
     if(window.innerWidth<=768){
       const _acc=st==='firmato'?'#16A34A':st==='inviato'?'#F59E0B':'#94A3B8';
       const _acts=[btnPDF,btnEmailFirma,btnReinvia,btnEdit,btnReset,hasDoc?btnFronte:'',hasDoc?btnRetro:'',st==='firmato'?btnGPS:'',btnLink].filter(Boolean).join('');
@@ -8496,31 +8536,23 @@ function renderPage(page){
       </div>`;
     }
     return `<tr class="contract-item" data-id="${x.id}" data-nome="${(x.cognome||'')+' '+(x.nome||'')+' '+(x.ragione_sociale||'')}" data-email="${x.email||''}" data-tipo="${x.tipo_contratto||'tesseramento'}" data-anno="${anno}" data-stato="${st}" data-proprietario="${createdByName}" data-gestionale="${gestValue}">
-      <td style="width:36px"><input type="checkbox" class="contract-cb" value="${x.id}" onchange="updateExportBtn()" style="width:15px;height:15px;accent-color:#2563EB"></td>
-      <td style="min-width:260px;max-width:360px">
-        <div style="display:flex;align-items:center;gap:10px" title="${ragSoc}">
-          <div class="ct-avatar" style="background:${avBg};flex-shrink:0">${initials}</div>
-          <div style="min-width:0;line-height:1.3">
-            <div class="ct-cli-nome" style="font-weight:700;font-size:13px;color:#111827;white-space:normal;word-break:break-word">${[x.cognome||'',x.nome||''].filter(Boolean).join(' ')||x.ragione_sociale||'—'}</div>
-            ${(x.cognome||x.nome)&&x.ragione_sociale?`<div class="ct-cli-rs" style="font-size:12px;color:#6B7280;white-space:normal;word-break:break-word">${x.ragione_sociale}</div>`:''}
-            ${x.partita_iva?`<div style="font-size:11px;color:#9CA3AF;font-family:monospace">P.IVA ${x.partita_iva}</div>`:''}
+      <td class="ctc-cb"><input type="checkbox" class="contract-cb" value="${x.id}" onchange="updateExportBtn()" style="width:15px;height:15px;accent-color:#2563EB"></td>
+      <td class="ctc-cli">
+        <div class="ctc-cli-wrap" title="${ragSoc}">
+          <div class="ct-avatar" style="background:${avBg}">${initials}</div>
+          <div style="min-width:0">
+            <div class="ct-cli-nome">${x.ragione_sociale||[x.cognome||'',x.nome||''].filter(Boolean).join(' ')||'—'}</div>
+            ${x.ragione_sociale&&(x.cognome||x.nome)?`<div class="ct-cli-rs">${[x.cognome||'',x.nome||''].filter(Boolean).join(' ')}</div>`:''}
+            ${x.partita_iva?`<div class="ct-cli-piva">P.IVA ${x.partita_iva}</div>`:''}
           </div>
         </div>
       </td>
-      <td style="white-space:nowrap;color:#6B7280;font-size:12px">${d}</td>
-      <td style="white-space:nowrap;max-width:90px;overflow:hidden;text-overflow:ellipsis;font-size:12px;color:#374151" title="${createdByName}">${createdByName}</td>
+      <td class="ctc-data">${d}</td>
+      <td class="ctc-prom" title="${createdByName}">${createdByName}</td>
       <td><span class="ct-tipo">${tipoLabel}</span></td>
-      <td>${stBadge}</td>
-      <td>${otpBadge}</td>
+      <td><div class="ctc-stato">${stBadge}${st==='firmato'?otpBadge:''}</div></td>
       <td>${gestCol}</td>
-      <td>${btnPDF}</td>
-      <td style="white-space:nowrap">${btnEmailFirma}</td>
-      <td style="white-space:nowrap">${btnReinvia} ${btnEdit}</td>
-      <td style="white-space:nowrap">${btnReset}</td>
-      <td style="white-space:nowrap">${btnFronte}</td>
-      <td style="white-space:nowrap">${btnRetro}</td>
-      <td style="white-space:nowrap">${btnGPS}</td>
-      <td style="white-space:nowrap">${btnLink}</td>
+      <td class="ctc-az"><button class="ct-az-btn" onclick="openCtAzioni('${x.id}')"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="19" cy="12" r="2"/></svg> Azioni</button></td>
     </tr>`;
   }).join('');
 
@@ -8528,25 +8560,30 @@ function renderPage(page){
   list.innerHTML=`<div id="ctr-table-scroll"><table id="contracts-table">
     <thead><tr>
       <th><input type="checkbox" id="select-all-contracts" onchange="toggleSelectAll(this)" style="width:15px;height:15px;accent-color:#2563EB"></th>
-      <th>Ragione Sociale</th>
+      <th>Cliente</th>
       <th>Data</th>
       <th>Promotore</th>
       <th>Tipo</th>
       <th>Stato</th>
-      <th>OTP</th>
       <th>Caricato</th>
-      <th>PDF</th>
-      <th>Invia</th>
-      <th>Reset</th>
-      <th>Fronte</th>
-      <th>Retro</th>
-      <th>GPS</th>
-      <th>Link</th>
+      <th style="text-align:right">Azioni</th>
     </tr></thead>
     <tbody>${rows}</tbody>
   </table></div>`;
   renderPagination(total,page,totalPages);
 }
+
+function openCtAzioni(id){
+  const a=(window._ctAz||{})[id];if(!a)return;
+  let m=document.getElementById('modal-ct-azioni');
+  if(!m){m=document.createElement('div');m.id='modal-ct-azioni';m.onclick=e=>{if(e.target===m)closeCtAzioni();};document.body.appendChild(m);}
+  const g=a.gruppi.map(([t,bs])=>{bs=bs.filter(b=>b&&b.indexOf('<button')===0);return bs.length?`<div class="cta-grp"><div class="cta-grp-t">${t}</div><div class="cta-grid">${bs.join('')}</div></div>`:'';}).join('');
+  m.innerHTML=`<div class="cta-box"><div class="cta-head"><div style="min-width:0;flex:1"><div class="cta-tit">${a.titolo}</div><div class="cta-sub">${a.sub}</div></div><button class="cta-x" onclick="closeCtAzioni()">×</button></div><div class="cta-body">${g}</div></div>`;
+  m.querySelectorAll('.cta-grid .ct-btn').forEach(b=>b.addEventListener('click',()=>setTimeout(closeCtAzioni,0)));
+  m.classList.add('show');
+}
+function closeCtAzioni(){const m=document.getElementById('modal-ct-azioni');if(m)m.classList.remove('show');}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeCtAzioni();});
 
 function renderPagination(total,page,totalPages){
   const bar=document.getElementById('pagination-bar');
