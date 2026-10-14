@@ -483,6 +483,62 @@ body.dark-mode .lg-detail td{background:#232325}body.dark-mode .lg-tbl td,body.d
 @media(max-width:1100px){.lg-kpis{grid-template-columns:repeat(2,1fr)}.lg-grid2{grid-template-columns:1fr}}
 @media(max-width:768px){.lg-root{padding:16px}.lg-tbl .lg-hm{display:none}}
 
+/* ===== SCHEDA IMPRESA CRM ===== */
+#imp-page{display:none;position:fixed;inset:0;z-index:2600;background:#F2F4F8;overflow-y:auto;-webkit-overflow-scrolling:touch}
+#imp-page.show{display:block}
+.imp-hero{background:linear-gradient(135deg,#005ac9,#2a6fc4);padding:20px 28px 64px;color:#fff;padding-top:calc(20px + env(safe-area-inset-top,0px))}
+.imp-top{display:flex;justify-content:space-between;gap:10px}
+.imp-pill{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.35);color:#fff;font-weight:700;font-size:14px;padding:8px 18px;border-radius:999px;cursor:pointer;font-family:inherit}
+.imp-pill:hover{background:rgba(255,255,255,.22)}
+.imp-idrow{display:flex;justify-content:space-between;align-items:center;gap:20px;margin-top:22px;flex-wrap:wrap}
+.imp-logo{height:46px;width:auto}
+.imp-id{text-align:right;margin-left:auto}
+.imp-id small{font-size:12px;letter-spacing:.15em;opacity:.85;font-weight:600}
+.imp-id h1{margin:2px 0;font-size:30px;font-weight:800;letter-spacing:-.03em;line-height:1.1}
+.imp-id div{font-size:15px;opacity:.9}
+.imp-badges{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+.imp-badge{padding:7px 18px;border-radius:999px;text-align:center;color:#fff;line-height:1.2}
+.imp-badge small{display:block;font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;opacity:.9}
+.imp-badge b{font-size:14.5px}
+.imp-badge.light{background:#DCFCE7;color:#166534;border:2px solid #86EFAC}
+.imp-body{padding:0 20px 40px;max-width:1500px;margin:-36px auto 0}
+.imp-kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:18px}
+.imp-kpis div{background:#fff;border-radius:16px;padding:14px;text-align:center;box-shadow:0 4px 16px rgba(15,23,42,.06)}
+.imp-kpis small{display:block;font-size:11px;font-weight:700;letter-spacing:.1em;color:#64748B;text-transform:uppercase}
+.imp-kpis b{font-size:30px;font-weight:800;color:#1E40AF}
+.imp-tabs{display:flex;gap:6px;background:#E8ECF4;padding:6px;border-radius:16px;margin-bottom:16px}
+.imp-tab{flex:1;display:flex;align-items:center;justify-content:center;gap:8px;padding:11px;border:none;border-radius:12px;background:transparent;font-weight:700;font-size:14.5px;color:#334155;cursor:pointer;font-family:inherit}
+.imp-tab.on{background:linear-gradient(135deg,#1E40AF,#3B5FD0);color:#fff;box-shadow:0 4px 12px rgba(30,64,175,.3)}
+.imp-sec{background:#fff;border-radius:18px;overflow:hidden;margin-bottom:16px;box-shadow:0 1px 3px rgba(15,23,42,.05)}
+.imp-sec-h{background:linear-gradient(90deg,#1E40AF,#3B5FD0);color:#fff;font-weight:800;font-size:13.5px;letter-spacing:.06em;text-transform:uppercase;padding:14px 22px;display:flex;align-items:center;gap:10px}
+.imp-sec-h span{margin-left:auto;background:rgba(255,255,255,.2);padding:2px 10px;border-radius:999px;font-size:12px}
+.imp-sec-b{padding:16px}
+.imp-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:10px}
+.imp-f{background:#F7F9FC;border:1px solid #EEF2F7;border-radius:12px;padding:12px 16px;min-width:0}
+.imp-f small{display:block;font-size:11px;font-weight:700;letter-spacing:.08em;color:#64748B;text-transform:uppercase;margin-bottom:3px}
+.imp-f b{font-size:15px;color:#0F172A;font-weight:600;word-break:break-word}
+.imp-f a{color:#1E40AF;text-decoration:none;display:inline-flex;align-items:center;gap:6px}
+.imp-add{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.imp-add div{background:#F7F9FC;border:1px solid #EEF2F7;border-radius:14px;padding:14px;text-align:center}
+.imp-add small{display:block;font-size:11px;font-weight:700;letter-spacing:.08em;color:#64748B;text-transform:uppercase}
+.imp-add b{font-size:32px;font-weight:800;color:#1E40AF}
+.imp-add .tot{background:linear-gradient(135deg,#1E40AF,#3B5FD0);border:none}.imp-add .tot small,.imp-add .tot b{color:#fff}
+.imp-chips{display:flex;gap:8px;flex-wrap:wrap}
+.imp-chips span{display:inline-flex;align-items:center;gap:8px;background:#EEF2FF;color:#1E40AF;font-weight:600;font-size:14px;padding:8px 16px;border-radius:999px}
+.imp-chips i{width:8px;height:8px;border-radius:50%;background:#22C55E}
+.imp-row{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 6px;border-bottom:1px solid #F1F5F9}
+.imp-row:last-child{border-bottom:none}
+.imp-row b{display:block;font-size:14.5px;color:#0F172A}.imp-row small{font-size:12.5px;color:#64748B}
+.imp-row-r{display:flex;align-items:center;gap:10px;flex-shrink:0}
+.imp-eur{color:#16A34A;font-size:14px}
+.imp-st{background:#F1F5F9;color:#64748B;font-size:11.5px;font-weight:700;padding:4px 11px;border-radius:999px}.imp-st.ok{background:#DCFCE7;color:#166534}.imp-st.wa{background:#FEF3C7;color:#92400E}
+.imp-empty{padding:14px;text-align:center;color:#94A3B8;font-size:13.5px}
+.imp-inc-tot{font-size:14px;color:#334155;margin:0 4px 12px}.imp-inc-tot b{color:#16A34A}
+body.dark-mode #imp-page{background:#1C1C1E}body.dark-mode .imp-sec,body.dark-mode .imp-kpis div{background:#2C2C2E}
+body.dark-mode .imp-f,body.dark-mode .imp-add div:not(.tot){background:#1C1C1E;border-color:#3A3A3C}body.dark-mode .imp-f b,body.dark-mode .imp-row b{color:#F3F4F6}
+body.dark-mode .imp-tabs{background:#2C2C2E}body.dark-mode .imp-tab{color:#D1D5DB}
+@media(max-width:768px){.imp-hero{padding:14px 16px 56px}.imp-id{text-align:left;margin-left:0}.imp-id h1{font-size:22px}.imp-body{padding:0 12px 30px}.imp-kpis b{font-size:24px}.imp-tab{font-size:13px;padding:10px 4px}.imp-add b{font-size:24px}}
+
 /* ===== BOTTOM NAV MOBILE ===== */
 #cna-bottom-nav{
   display:none;
@@ -4109,7 +4165,6 @@ table.quill-better-table {
       <div id="pagination-bar" style="display:none;margin-top:16px;align-items:center;justify-content:center;gap:6px;flex-wrap:wrap"></div>
     </div>
   </div>
-</div>
 <!-- TAB 7: LOG ATTIVITA -->
 <div class="tab-page" id="tab-7"><div class="lg-root">
   <div class="lg-head"><div><h1>Log Attività</h1><p>Chi ha fatto cosa, quando e da quale dispositivo</p></div>
@@ -5466,7 +5521,7 @@ async function eseguiRicercaImprese(){
       card.style.cssText='padding:14px 18px;background:var(--bg2);border:1.5px solid var(--brd);border-radius:12px;cursor:pointer;transition:all 0.15s ease';
       card.onmouseenter=()=>{card.style.borderColor='#005CA9';card.style.background='var(--cna-50)';card.style.transform='translateY(-1px)';card.style.boxShadow='0 4px 12px rgba(0,92,169,0.12)';};
       card.onmouseleave=()=>{card.style.borderColor='var(--brd)';card.style.background='var(--bg2)';card.style.transform='';card.style.boxShadow='';};
-      card.onclick=()=>apriDettaglioImpresa(imp.piva, imp.cf);
+      card.onclick=()=>apriDettaglioImpresa(imp.piva, imp.cf, {ic:stIc, tipo:pills.find(p=>p.bg==='#C0392B')?.label||'', iscritto:(isIscrittoServ||isIscrittoDiretti), pagante:!!paganti.get(imp.codice)});
       card.innerHTML=
         '<div style="display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:'+(pillsHtml?'10':'0')+'px">'+
           '<div style="display:flex;align-items:center;gap:12px;min-width:0;flex:1">'+
@@ -5494,9 +5549,10 @@ async function eseguiRicercaImprese(){
   }
 }
 
-async function apriDettaglioImpresa(piva, cf){
+async function apriDettaglioImpresa(piva, cf, badges){
   const modal=document.getElementById('modal-dettaglio-impresa');
-  modal.style.display='flex';
+  modal.style.display='none';
+  impShowLoading();
   document.getElementById('modal-contratti-lista').innerHTML='<div style="text-align:center;padding:20px;color:var(--txt2)">Caricamento...</div>';
   document.getElementById('modal-diretti-lista').innerHTML='';
   document.getElementById('modal-servizi-lista').innerHTML='';
@@ -5513,7 +5569,7 @@ async function apriDettaglioImpresa(piva, cf){
     if(piva) aOrs.push('partitaiva.eq.'+piva);
     if(cf)   aOrs.push('codicefiscale.eq.'+cf);
     const aParam=aOrs.length===1?aOrs[0]:'or=('+aOrs.join(',')+')';
-    const urlA=SB_URL+'/rest/v1/Anagrafiche?'+aParam+'&select=ragionesociale,cognometitolare,nometitolare,telefono,cellulare,email,indirizzo,comune,provincia,codicefiscale,partitaiva,codiceanagrafica&limit=1';
+    const urlA=SB_URL+'/rest/v1/Anagrafiche?'+aParam+'&select=ragionesociale,cognometitolare,nometitolare,telefono,cellulare,email,indirizzo,comune,provincia,cap,datanascita,luogonascita,provnascita,mestiere,naturagiuridica,codiceateco,codicefiscale,partitaiva,codiceanagrafica&limit=1';
 
     // 2. DIRETTI: tesseramento / stato associativo
     const dOrs=[];
@@ -5558,7 +5614,7 @@ async function apriDettaglioImpresa(piva, cf){
     }
 
     if(!anag.length&&!diretti.length&&!servizi.length&&!contratti.length){
-      closeDettaglioImpresa(); showToast('Nessun dato trovato'); return;
+      closeDettaglioImpresa(); impClose(); showToast('Nessun dato trovato'); return;
     }
 
     // Anagrafica
@@ -5801,8 +5857,52 @@ async function apriDettaglioImpresa(piva, cf){
 
       listaEl.innerHTML=html;
     })();
+    let cc=null;try{const pv=(anag[0]&&anag[0].partitaiva)||piva;if(pv){const r=await fetch(SB_URL+'/rest/v1/cciaa?partita_iva=eq.'+encodeURIComponent(pv)+'&select=stato_attivita,num_addetti_sub,num_addetti_fam_ul,anno_addetti_ul,ateco2007,natura_giuridica,data_iscrizione_rea,num_iscrizione_rea,prov_rea&limit=1',{headers:hdrs});if(r.ok)cc=(await r.json())[0]||null;}}catch(e){}
+    impRender({a:anag[0]||{},piva:pivaDisp,cf:cfDisp,ragSoc,titolare,badges:badges||{},cc,stato:statoAssociativoItems,serv:serviziAltri,contratti,incassi,incHtml:(incassi&&incassi.length)?document.getElementById('modal-incassi-lista').innerHTML:''});
 
-  }catch(e){console.error('Dettaglio impresa:',e);showToast('Errore caricamento','error');}
+  }catch(e){console.error('Dettaglio impresa:',e);impClose();showToast('Errore caricamento','error');}
+}
+
+
+// ===== SCHEDA IMPRESA stile CRM (v9.66) =====
+function impEl(){let p=document.getElementById('imp-page');if(!p){p=document.createElement('div');p.id='imp-page';document.body.appendChild(p);}return p;}
+function impShowLoading(){const p=impEl();p.innerHTML='<div class="imp-hero"><div class="imp-top"><button class="imp-pill" onclick="impClose()">‹ Indietro</button></div><div style="padding:30px 0;color:#fff;opacity:.8">Caricamento scheda...</div></div>';p.classList.add('show');document.body.style.overflow='hidden';}
+function impClose(){const p=document.getElementById('imp-page');if(p){p.classList.remove('show');p.innerHTML='';}document.body.style.overflow='';}
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&document.getElementById('imp-page')?.classList.contains('show'))impClose();});
+function impTab(i){document.querySelectorAll('#imp-page .imp-tab').forEach((t,j)=>t.classList.toggle('on',i===j));document.querySelectorAll('#imp-page .imp-pane').forEach((t,j)=>t.style.display=i===j?'':'none');}
+function impRender(D){
+  const p=impEl(),a=D.a,b=D.badges,cc=D.cc,e=_escH;
+  const fd=v=>{if(!v)return'';const d=new Date(v);return isNaN(d)?v:d.toLocaleDateString('it-IT');};
+  const ICS={'0':['ATTIVA','#22C55E'],'1':['IN LIQUIDAZIONE','#F59E0B'],'2':['FALLITA','#EF4444'],'3':['SOSPESA','#F59E0B'],'4':['INATTIVA','#94A3B8'],'5':['CESSATA','#EF4444']};
+  const ic=b.ic?[b.ic.t,b.ic.bg]:(cc&&ICS[String(cc.stato_attivita)])||['N.D.','#94A3B8'];
+  const badge=(l,v,bg,light)=>`<div class="imp-badge${light?' light':''}" style="${light?'':'background:'+bg}"><small>${l}</small><b>${v}</b></div>`;
+  const sub=cc?(+cc.num_addetti_sub||0):null,fam=cc?(+cc.num_addetti_fam_ul||0):null,tot=cc?sub+fam:null;
+  const nServ=D.stato.length+D.serv.length;
+  const icon={user:'<path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>',doc:'<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/>',card:'<rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/>',users:'<path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>',heart:'<path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>',clip:'<path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1"/>',brief:'<rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>',phone:'<path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/>',mail:'<rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 6L2 7"/>'};
+  const I=(k,s)=>`<svg width="${s||16}" height="${s||16}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${icon[k]}</svg>`;
+  const F=(l,v,link)=>v?`<div class="imp-f"><small>${l}</small><b>${link==='tel'?`<a href="tel:${e(v)}">${I('phone',15)} ${e(v)}</a>`:link==='mail'?`<a href="mailto:${e(v)}">${I('mail',15)} ${e(v)}</a>`:e(v)}</b></div>`:'';
+  const sec=(ic,t,body,cnt)=>`<div class="imp-sec"><div class="imp-sec-h">${I(ic)} ${t}${cnt!=null?`<span>${cnt}</span>`:''}</div><div class="imp-sec-b">${body}</div></div>`;
+  const anagHtml=sec('clip','Dati anagrafici',`<div class="imp-grid">${F('Codice',a.codiceanagrafica)}${F('Partita IVA',D.piva)}${F('Codice fiscale',D.cf)}${F('Indirizzo',a.indirizzo)}${F('CAP',a.cap)}${F('Comune',a.comune)}${F('Provincia',a.provincia)}${F('Data nascita',fd(a.datanascita))}${F('Luogo nascita',[a.luogonascita,a.provnascita&&'('+a.provnascita+')'].filter(Boolean).join(' '))}${F('Email',a.email,'mail')}${F('Telefono',a.telefono,'tel')}${F('Cellulare',a.cellulare,'tel')}</div>`)
+   +((a.mestiere||a.naturagiuridica||cc)?sec('brief','Attività',`<div class="imp-grid">${F('Mestiere',a.mestiere)}${F('Natura giuridica',a.naturagiuridica||(cc&&cc.natura_giuridica))}${F('Codice ATECO',a.codiceateco||(cc&&cc.ateco2007))}${cc?F('REA',[cc.prov_rea,cc.num_iscrizione_rea].filter(Boolean).join('-')):''}${cc?F('Iscrizione REA',fd(cc.data_iscrizione_rea)):''}</div>`):'')
+   +(cc?sec('users','Addetti e dipendenti'+(cc.anno_addetti_ul?' ('+cc.anno_addetti_ul+')':''),`<div class="imp-add"><div><small>Subordinati</small><b>${sub}</b></div><div><small>Familiari</small><b>${fam}</b></div><div class="tot"><small>Totale</small><b>${tot}</b></div></div>`):'')
+   +sec('heart','Stato associativo',D.stato.length?`<div class="imp-chips">${D.stato.map(x=>`<span><i></i>${e(x.tipo)}</span>`).join('')}</div>`:'<div class="imp-empty">Nessun servizio associativo attivo</div>');
+  const row=(t,s,r,st)=>`<div class="imp-row"><div><b>${t}</b><small>${s}</small></div><div class="imp-row-r">${r||''}${st||''}</div></div>`;
+  const stB=x=>x==='firmato'?'<span class="imp-st ok">✓ Firmato</span>':x==='inviato'?'<span class="imp-st wa">⏳ Inviato</span>':'<span class="imp-st">Bozza</span>';
+  const eur=n=>{n=parseFloat(n);return !isNaN(n)&&n>0?'€ '+n.toLocaleString('it-IT',{minimumFractionDigits:2}):'';};
+  const contrHtml=sec('doc','Contratti digitali Signature',D.contratti.length?D.contratti.map(c=>row(e((c.tipo_contratto||'tesseramento').replace(/_/g,' ').replace(/\b\w/g,l=>l.toUpperCase())),fd(c.quota_primo_anno_data||c.created_at)+((c.raccolta_da||c.raccolto_da)?' · Raccolto da '+e(c.raccolta_da||c.raccolto_da):''),eur(c.quota_primo_anno_importo)&&`<b class="imp-eur">${eur(c.quota_primo_anno_importo)}</b>`,stB(c.stato))).join(''):'<div class="imp-empty">Nessun contratto digitale</div>',D.contratti.length)
+   +sec('heart','Stato associativo',D.stato.length?D.stato.map(x=>row(e(x.tipo),e(x.raggruppamento)+' · stipula '+x.dataStr+(x.extra?' · '+e(x.extra):''),x.importoStr!=='—'?`<b class="imp-eur">${x.importoStr}</b>`:'')).join(''):'<div class="imp-empty">Nessuno</div>',D.stato.length)
+   +sec('brief','Contratti di servizio',D.serv.length?D.serv.map(x=>row(e(x.tipocontratto||'—'),[(x.raggruppamento||'').replace(/,\s*$/,''),(x.sedeerogazione||'').replace(/^\d+\s*-\s*/,''),x.nomeconsulente].filter(Boolean).map(e).join(' · ')+' · stipula '+fd(x.datastipulacontratto))).join(''):'<div class="imp-empty">Nessun contratto di servizio attivo</div>',D.serv.length);
+  const totInc=(D.incassi||[]).reduce((s,x)=>s+(parseFloat(x.avere)||0),0);
+  const pagHtml=sec('card','Pagamenti',D.incHtml?`<div class="imp-inc-tot">Totale incassato <b>€ ${totInc.toLocaleString('it-IT',{minimumFractionDigits:2})}</b> · ${D.incassi.length} pagamenti</div><div class="imp-inc">${D.incHtml}</div>`:'<div class="imp-empty">Nessun pagamento registrato</div>',D.incassi.length);
+  p.innerHTML=`<div class="imp-hero"><div class="imp-top"><button class="imp-pill" onclick="impClose()">‹ Indietro</button><button class="imp-pill" onclick="impClose();openNuovoContrattoModal()">＋ Nuovo contratto</button></div>
+    <div class="imp-idrow"><img src="/logo-cna-hero.png" alt="CNA Roma" class="imp-logo"><div class="imp-id">${D.piva?`<small>P.IVA ${e(D.piva)}</small>`:''}<h1>${e(D.ragSoc)}</h1>${D.titolare&&D.titolare!=='—'?`<div>Titolare: ${e(D.titolare)}</div>`:''}</div></div>
+    <div class="imp-badges">${badge('Stato Infocamere',ic[0],ic[1])}${b.tipo?badge('Tipo',b.tipo.charAt(0)+b.tipo.slice(1).toLowerCase(),'#DC4B3E'):''}${badge('Tesseramento',b.iscritto?'✓ Iscritto CNA':'✗ Non iscritto','#16A34A'.replace('#16A34A',b.iscritto?'#16A34A':'#DC2626'))}${badge('Tessera',b.pagante?'✓ Pagante':'✗ Non pagante','',b.pagante)}</div></div>
+   <div class="imp-body">
+    <div class="imp-kpis"><div><small>Addetti</small><b>${tot!=null?tot:'—'}</b></div><div><small>Contratti</small><b>${D.contratti.length}</b></div><div><small>Servizi</small><b>${nServ}</b></div></div>
+    <div class="imp-tabs"><button class="imp-tab on" onclick="impTab(0)">${I('user')} Anagrafica</button><button class="imp-tab" onclick="impTab(1)">${I('doc')} Contratti</button><button class="imp-tab" onclick="impTab(2)">${I('card')} Pagamenti</button></div>
+    <div class="imp-pane">${anagHtml}</div><div class="imp-pane" style="display:none">${contrHtml}</div><div class="imp-pane" style="display:none">${pagHtml}</div>
+   </div>`;
+  p.classList.add('show');document.body.style.overflow='hidden';p.scrollTop=0;
 }
 
 function closeDettaglioImpresa(){
