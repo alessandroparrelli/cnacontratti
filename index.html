@@ -382,6 +382,33 @@ html,body{overflow-x:hidden;width:100%}
 #header-logo-text{font-size:15px;font-weight:800;letter-spacing:-.03em;color:#1D1D1F}
 #header-logo-text span{color:#2563EB}
 
+/* ===== HERO UNICO v9.59 ===== */
+:root{--cna-hero:#005ac9}
+.hero-logo{height:38px;width:auto;filter:brightness(0) invert(1);display:block}
+.hero-sep{width:1px;height:34px;background:rgba(255,255,255,.35);display:inline-block}
+.hero-app{color:#fff;font-weight:800;font-size:16px;letter-spacing:-.01em}
+.app-header{background:var(--cna-hero)!important;border-bottom:none!important}
+body.dark-mode .app-header{background:#00418f!important}
+.app-header .header-logo{gap:12px!important}
+.app-header .header-user{background:rgba(255,255,255,.14)!important;border-color:rgba(255,255,255,.3)!important;color:#fff!important}
+.app-header #hamburger-btn{background:rgba(255,255,255,.14)!important;border-color:rgba(255,255,255,.3)!important}
+.app-header #hamburger-btn span{background:#fff!important}
+@media(max-width:768px){.app-header .hero-logo{height:30px}.app-header .hero-sep{height:26px}.app-header .hero-app{font-size:14px}}
+#cna-topbar{flex-direction:column!important;align-items:stretch!important;justify-content:flex-start!important;padding:0!important;background:var(--cna-hero)!important;border-bottom:none!important;box-shadow:0 2px 12px rgba(0,60,140,.18)}
+body.dark-mode #cna-topbar{background:#00418f!important}
+.hero-row1{display:flex;align-items:center;justify-content:space-between;padding:14px 28px 12px}
+.hero-row2{display:flex;align-items:flex-end;justify-content:space-between;padding:6px 28px 14px;border-top:1px solid rgba(255,255,255,.14)}
+.hero-brand{display:flex;align-items:center;gap:14px;cursor:pointer}
+.hero-right{display:flex;align-items:center;gap:10px}
+.hero-user{display:flex;align-items:center;gap:9px;padding:5px 14px 5px 5px;border-radius:999px;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.28);color:#fff;font-weight:700;font-size:13px;cursor:pointer;transition:.15s}
+.hero-user:hover{background:rgba(255,255,255,.24)}
+.hero-av{width:28px;height:28px;border-radius:50%;background:#fff;color:#005ac9;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800}
+.hero-esci{padding:7px 16px;border-radius:999px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.3);color:#fff;font-weight:700;font-size:13px;cursor:pointer;font-family:inherit}
+.hero-esci:hover{background:rgba(255,255,255,.22)}
+#cna-topbar #cna-topbar-title,body.dark-mode #cna-topbar #cna-topbar-title{color:#fff!important;font-size:19px}
+#cna-topbar #cna-topbar-greeting,body.dark-mode #cna-topbar #cna-topbar-greeting{color:#fff!important}
+#cna-topbar #cna-topbar-date{color:rgba(255,255,255,.7)!important}
+
 /* ===== BOTTOM NAV MOBILE ===== */
 #cna-bottom-nav{
   display:none;
@@ -777,6 +804,53 @@ body.dark-mode #contracts-table tbody tr:hover td{background:#3A3A3C!important}
 body.dark-mode .ct-cli-nome{color:#F3F4F6}body.dark-mode .ct-cli-rs{color:#CBD5E1}body.dark-mode .ctc-prom{color:#D1D5DB}
 body.dark-mode .ct-az-btn{background:#1C1C1E;border-color:#48484A;color:#93C5FD}
 body.dark-mode .cta-box{background:#2C2C2E}
+/* v9.59 tabella */
+#contracts-table tbody tr.contract-item{cursor:pointer}
+#contracts-table tbody td{padding:10px 14px!important}
+#contracts-table thead th{font-size:10px!important;padding:10px 14px!important}
+#contracts-table .ctc-cb input{width:16px;height:16px;accent-color:#005ac9;cursor:pointer}
+#contracts-table .ctc-cli{width:auto;min-width:240px}
+.ctc-cli-wrap .ct-avatar{width:36px!important;height:36px!important}
+.ct-cli-nome{font-size:13.5px!important;text-transform:none}
+.ct-cli-rs{font-size:12px;color:#64748B;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:360px}
+.ct-cli-rs .ct-cli-piva{display:inline;margin:0;font-family:ui-monospace,monospace;color:#94A3B8;font-size:11px}
+.ctc-stato{flex-direction:row!important;align-items:center!important;gap:5px!important;flex-wrap:wrap}
+.ctc-meta{white-space:nowrap}
+.ctc-meta .ctc-data{font-size:12.5px;color:#334155;font-weight:600}
+.ctc-meta .ctc-prom{font-size:11.5px;color:#94A3B8;max-width:150px}
+.ctc-go{width:28px;color:#CBD5E1;text-align:right}
+#contracts-table tbody tr:hover .ctc-go{color:#005ac9}
+#contracts-table tbody tr:hover td{background:#F0F6FF!important}
+#contracts-table tbody tr:hover td:first-child{box-shadow:inset 3px 0 0 #005ac9}
+.ct-gest-sel{border-radius:999px!important;padding:5px 10px!important}
+.cta-box{max-width:560px!important}
+.cta-head{background:linear-gradient(135deg,#005ac9,#2a7be0)!important;align-items:center!important}
+.cta-badges{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.ctd-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.ctd-f{background:#F8FAFC;border:1px solid #EEF2F7;border-radius:10px;padding:8px 11px;min-width:0}
+.ctd-f span{display:block;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#94A3B8}
+.ctd-f b{display:block;font-size:12.5px;color:#0F172A;margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ctd-prev{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.ctd-thumb{position:relative;height:110px;border-radius:12px;background:#F1F5F9;border:1px solid #E2E8F0;overflow:hidden;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.15s}
+.ctd-thumb:hover{border-color:#005ac9;box-shadow:0 4px 14px rgba(0,90,201,.18)}
+.ctd-thumb img{width:100%;height:100%;object-fit:cover}
+.ctd-thumb span{font-size:11px;color:#94A3B8;text-align:center;padding:0 6px}
+.ctd-thumb label{position:absolute;left:0;right:0;bottom:0;background:linear-gradient(transparent,rgba(15,23,42,.75));color:#fff;font-size:11px;font-weight:700;padding:14px 8px 6px;cursor:pointer}
+.ctd-gps span{font-size:22px;line-height:1.3}.ctd-gps small{font-size:10px;color:#64748B;word-break:break-all}
+.ctd-empty{cursor:default;opacity:.6}
+.ct-ask{position:fixed;inset:0;background:rgba(15,23,42,.55);z-index:4000;display:flex;align-items:center;justify-content:center;padding:16px}
+.ct-ask-box{background:#fff;border-radius:18px;padding:24px;max-width:400px;width:100%;box-shadow:0 24px 60px rgba(0,0,0,.3);text-align:center}
+.ct-ask-ic{width:54px;height:54px;border-radius:50%;margin:0 auto 12px;display:flex;align-items:center;justify-content:center;font-size:24px}
+.ct-ask-box h3{margin:0 0 8px;font-size:17px;font-weight:800;color:#0F172A}
+.ct-ask-box p{margin:0 0 8px;font-size:13.5px;color:#475569;line-height:1.5}
+.ct-ask-q{font-weight:700;color:#0F172A!important;margin-top:10px!important}
+.ct-ask-btns{display:flex;gap:10px;margin-top:16px}
+.ct-ask-btns button{flex:1;padding:11px;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit}
+.ct-ask-no{border:1.5px solid #E2E8F0;background:#fff;color:#334155}
+.ct-ask-ok{border:none;color:#fff}
+body.dark-mode .ct-ask-box{background:#2C2C2E}body.dark-mode .ct-ask-box h3,body.dark-mode .ct-ask-q{color:#fff!important}
+body.dark-mode .ctd-f,body.dark-mode .ctd-thumb{background:#1C1C1E;border-color:#3A3A3C}body.dark-mode .ctd-f b{color:#F3F4F6}
+@media(max-width:560px){.ctd-grid{grid-template-columns:1fr}.ctd-prev{grid-template-columns:1fr 1fr}}
 /* Modal invio canale */
 #modal-send-channel{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:3000;align-items:center;justify-content:center;padding:16px}
 #modal-send-channel.show{display:flex}
@@ -3444,10 +3518,23 @@ table.quill-better-table {
 
 <!-- DESKTOP TOPBAR -->
 <div id="cna-topbar">
-  <div id="cna-topbar-title">Dashboard</div>
-  <div id="cna-topbar-right">
-    <div id="cna-topbar-greeting"></div>
-    <div id="cna-topbar-date"></div>
+  <div class="hero-row1">
+    <div class="hero-brand" onclick="switchTab(5)">
+      <img src="https://alessandroparrelli.github.io/fileappoggio/NUOVO-LOGO-CNA-ROMA-SOLO-ROMA.png" alt="CNA Roma" class="hero-logo">
+      <span class="hero-sep"></span>
+      <span class="hero-app">Signature</span>
+    </div>
+    <div class="hero-right">
+      <div class="hero-user" onclick="openProfile()"><span class="hero-av" id="hero-av">AP</span><span id="hero-name"></span></div>
+      <button class="hero-esci" onclick="doLogout()">Esci</button>
+    </div>
+  </div>
+  <div class="hero-row2">
+    <div id="cna-topbar-title">Dashboard</div>
+    <div id="cna-topbar-right">
+      <div id="cna-topbar-greeting"></div>
+      <div id="cna-topbar-date"></div>
+    </div>
   </div>
 </div>
 
@@ -3484,7 +3571,7 @@ table.quill-better-table {
         <circle cx="9" cy="49" r="2" fill="#2563EB"/>
         <path d="M14 44 C20 38 30 46 38 36" stroke="#2563EB" stroke-width="2" stroke-linecap="round" fill="none" opacity=".5"/>
       </svg>
-      <div style="display:flex;align-items:baseline;line-height:1"><span style="font-family:Outfit,sans-serif;font-weight:800;font-size:32px;letter-spacing:-0.04em;color:#1E3A8A">signature</span><span style="font-family:Outfit,sans-serif;font-weight:800;font-size:32px;color:#2563EB">cna</span></div>
+      <img src="https://alessandroparrelli.github.io/fileappoggio/NUOVO-LOGO-CNA-ROMA-SOLO-ROMA.png" alt="CNA Roma" class="hero-logo"><span class="hero-sep"></span><span class="hero-app">Signature</span>
     </div>
 
     <div class="header-actions">
@@ -6899,6 +6986,8 @@ function cnaUpdateSidebar(){
   const initials=name.split(' ').filter(Boolean).map(w=>w[0]).join('').slice(0,2).toUpperCase()||'??';
   const av=document.getElementById('cna-sb-av');if(av)av.textContent=initials;
   const nm=document.getElementById('cna-sb-name');if(nm)nm.textContent=name||loggedUser.email||'';
+  const hn=document.getElementById('hero-name');if(hn)hn.textContent=name||loggedUser.email||'';
+  const ha=document.getElementById('hero-av');if(ha)ha.textContent=initials;
   const rl=document.getElementById('cna-sb-role');if(rl)rl.textContent=loggedUser.ruolo==='admin'?'Amministratore':'Operatore';
   // Admin-only sidebar buttons
   ['sbnav-admin-email','sbnav-admin-utenti','sbnav-admin-log'].forEach(id=>{
@@ -8186,7 +8275,7 @@ async function resetFirma(id){
     d.innerHTML=`<div style="background:#fff;border-radius:16px;padding:24px;max-width:360px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,.3)">
       <div style="font-size:28px;text-align:center;margin-bottom:12px">⚠️</div>
       <h3 style="font-size:16px;font-weight:800;color:#111827;margin:0 0 8px;text-align:center">Reset firma</h3>
-      <p style="font-size:13px;color:#6B7280;text-align:center;margin:0 0 20px">Vuoi annullare la firma?<br>Il contratto tornerà in stato <strong>inviato</strong>.</p>
+      <p style="font-size:13px;color:#6B7280;text-align:center;margin:0 0 20px;line-height:1.5">Stai per <strong>annullare la firma</strong> di questo contratto.<br>Il contratto tornerà in stato <strong>inviato</strong> e il cliente dovrà <strong>firmarlo di nuovo</strong>.<br><br><strong style="color:#111827">Vuoi procedere?</strong></p>
       <div style="display:flex;gap:10px">
         <button id="_rc_no" style="flex:1;padding:10px;border:1.5px solid #E5E7EB;border-radius:10px;background:#fff;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit">Annulla</button>
         <button id="_rc_si" style="flex:1;padding:10px;border:none;border-radius:10px;background:#EF4444;color:#fff;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit">Sì, reset</button>
@@ -8507,18 +8596,18 @@ function renderPage(page){
 
     // Colonna Azioni
     const btnPDF=st==='firmato'?`<button class="ct-btn ct-btn-pdf" onclick="dlSigned('${x.id}')" title="Scarica PDF">${svgPDF} PDF</button>`:'';
-    const btnEmailFirma=st==='firmato'?`<button class="ct-btn ct-btn-email-firma" onclick="reinviaEmailPostFirma('${x.token}','${x.id}',this)" title="Reinvia email post-firma (cliente + notifiche interne)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg> Email</button>`:'';
+    const btnEmailFirma=st==='firmato'?`<button class="ct-btn ct-btn-email-firma" onclick="ctAsk('email',()=>reinviaEmailPostFirma('${x.token}','${x.id}',this))" title="Reinvia email post-firma (cliente + notifiche interne)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg> Email</button>`:'';
     const _mscNomeContr=((x.cognome||x.nome||x.ragione_sociale||'Cliente')).trim();
-    const btnReinvia=`<button class="ct-btn ct-btn-reinvia" data-cid="${x.id}" data-tok="${x.token}" data-email="${(x.email||'').replace(/"/g,'&quot;')}" data-nome="${_mscNomeContr.replace(/"/g,'&quot;')}" onclick="openSendChannelBtn(this)" title="Invia">${svgSend} ${st==='firmato'?'Reinvia':'Invia'}</button>`;
+    const btnReinvia=`<button class="ct-btn ct-btn-reinvia" data-cid="${x.id}" data-tok="${x.token}" data-email="${(x.email||'').replace(/"/g,'&quot;')}" data-nome="${_mscNomeContr.replace(/"/g,'&quot;')}" onclick="ctAsk('${st==='firmato'?'reinvia':'invia'}',()=>openSendChannelBtn(this))" title="Invia">${svgSend} ${st==='firmato'?'Reinvia':'Invia'}</button>`;
     const btnInvia=''; const btnSMS=''; const btnWA='';
-    const btnReset=st==='firmato'?`<button class="ct-btn ct-btn-reset" onclick="resetFirma('${x.id}')" title="Reset firma">${svgReset} Reset</button>`:'';
+    const btnReset=st==='firmato'?`<button class="ct-btn ct-btn-reset" onclick="closeCtAzioni();resetFirma('${x.id}')" title="Reset firma">${svgReset} Reset</button>`:'';
     const btnEdit=canEdit?`<button class="ct-btn ct-btn-edit" onclick="editContract('${x.id}')">${svgEdit} Modifica</button>`:'';
     const btnFronte=hasDoc?`<button class="ct-btn ct-btn-doc" onclick="viewDocSide('${x.id}','fronte')" title="Documento fronte">${svgDoc} Fronte</button>`:'<span style="color:#D1D5DB;font-size:11px">—</span>';
     const btnRetro=hasDoc?`<button class="ct-btn ct-btn-doc" onclick="viewDocSide('${x.id}','retro')" title="Documento retro">${svgDoc} Retro</button>`:'<span style="color:#D1D5DB;font-size:11px">—</span>';
     const btnGPS=st==='firmato'?`<button class="ct-btn ${hasGps?'ct-btn-gps-ok':'ct-btn-gps-no'}" onclick="openGpsModal('${x.id}','${x.gps_firma||''}')" title="GPS firma">${svgGPS} GPS</button>`:'<span style="color:#D1D5DB;font-size:11px">—</span>';
     const btnLink=`<button class="ct-btn ct-btn-link" onclick="cpLink('${url}')" title="Copia link firma">${svgLink} Link</button>`;
 
-    (window._ctAz=window._ctAz||{})[x.id]={titolo:x.ragione_sociale||[x.cognome,x.nome].filter(Boolean).join(' ')||'Contratto',sub:[[x.cognome,x.nome].filter(Boolean).join(' '),stBadge].filter(Boolean).join(' '),
+    (window._ctAz=window._ctAz||{})[x.id]={x,createdByName,d,tipoLabel,stBadge,otpBadge,avBg,initials,titolo:x.ragione_sociale||[x.cognome,x.nome].filter(Boolean).join(' ')||'Contratto',sub:[[x.cognome,x.nome].filter(Boolean).join(' '),stBadge].filter(Boolean).join(' '),
       gruppi:[['Documento',[btnPDF,btnEdit,btnLink]],['Invio',[btnReinvia,btnEmailFirma]],['Firma e allegati',[hasDoc?btnFronte:'',hasDoc?btnRetro:'',st==='firmato'?btnGPS:'']],['Avanzate',[btnReset]]]};
     if(window.innerWidth<=768){
       const _acc=st==='firmato'?'#16A34A':st==='inviato'?'#F59E0B':'#94A3B8';
@@ -8535,24 +8624,22 @@ function renderPage(page){
         <div class="m-ct-acts">${_acts}</div>
       </div>`;
     }
-    return `<tr class="contract-item" data-id="${x.id}" data-nome="${(x.cognome||'')+' '+(x.nome||'')+' '+(x.ragione_sociale||'')}" data-email="${x.email||''}" data-tipo="${x.tipo_contratto||'tesseramento'}" data-anno="${anno}" data-stato="${st}" data-proprietario="${createdByName}" data-gestionale="${gestValue}">
-      <td class="ctc-cb"><input type="checkbox" class="contract-cb" value="${x.id}" onchange="updateExportBtn()" style="width:15px;height:15px;accent-color:#2563EB"></td>
+    return `<tr class="contract-item" onclick="openCtDettaglio('${x.id}')" data-id="${x.id}" data-nome="${(x.cognome||'')+' '+(x.nome||'')+' '+(x.ragione_sociale||'')}" data-email="${x.email||''}" data-tipo="${x.tipo_contratto||'tesseramento'}" data-anno="${anno}" data-stato="${st}" data-proprietario="${createdByName}" data-gestionale="${gestValue}">
+      <td class="ctc-cb" onclick="event.stopPropagation()"><input type="checkbox" class="contract-cb" value="${x.id}" onchange="updateExportBtn()"></td>
       <td class="ctc-cli">
-        <div class="ctc-cli-wrap" title="${ragSoc}">
+        <div class="ctc-cli-wrap">
           <div class="ct-avatar" style="background:${avBg}">${initials}</div>
           <div style="min-width:0">
             <div class="ct-cli-nome">${x.ragione_sociale||[x.cognome||'',x.nome||''].filter(Boolean).join(' ')||'—'}</div>
-            ${x.ragione_sociale&&(x.cognome||x.nome)?`<div class="ct-cli-rs">${[x.cognome||'',x.nome||''].filter(Boolean).join(' ')}</div>`:''}
-            ${x.partita_iva?`<div class="ct-cli-piva">P.IVA ${x.partita_iva}</div>`:''}
+            <div class="ct-cli-rs">${x.ragione_sociale&&(x.cognome||x.nome)?[x.cognome||'',x.nome||''].filter(Boolean).join(' '):''}${x.partita_iva?`<span class="ct-cli-piva">${x.ragione_sociale&&(x.cognome||x.nome)?' · ':''}${x.partita_iva}</span>`:''}</div>
           </div>
         </div>
       </td>
-      <td class="ctc-data">${d}</td>
-      <td class="ctc-prom" title="${createdByName}">${createdByName}</td>
       <td><span class="ct-tipo">${tipoLabel}</span></td>
       <td><div class="ctc-stato">${stBadge}${st==='firmato'?otpBadge:''}</div></td>
-      <td>${gestCol}</td>
-      <td class="ctc-az"><button class="ct-az-btn" onclick="openCtAzioni('${x.id}')"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="19" cy="12" r="2"/></svg> Azioni</button></td>
+      <td onclick="event.stopPropagation()">${gestCol}</td>
+      <td class="ctc-meta"><div class="ctc-data">${d}</div><div class="ctc-prom" title="${createdByName}">${createdByName}</div></td>
+      <td class="ctc-go"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></td>
     </tr>`;
   }).join('');
 
@@ -8561,27 +8648,62 @@ function renderPage(page){
     <thead><tr>
       <th><input type="checkbox" id="select-all-contracts" onchange="toggleSelectAll(this)" style="width:15px;height:15px;accent-color:#2563EB"></th>
       <th>Cliente</th>
-      <th>Data</th>
-      <th>Promotore</th>
       <th>Tipo</th>
       <th>Stato</th>
       <th>Caricato</th>
-      <th style="text-align:right">Azioni</th>
+      <th>Data · Promotore</th>
+      <th></th>
     </tr></thead>
     <tbody>${rows}</tbody>
   </table></div>`;
   renderPagination(total,page,totalPages);
 }
 
-function openCtAzioni(id){
-  const a=(window._ctAz||{})[id];if(!a)return;
+const CT_ASK={
+  email:{t:'Reinvio email post-firma',m:'Verranno inviate <b>di nuovo</b> le email di conferma firma: al <b>cliente</b> (con il PDF del contratto firmato) e le <b>notifiche interne</b> CNA.',ok:'Sì, reinvia email',c:'#0284C7',i:'✉️'},
+  reinvia:{t:'Reinvio contratto',m:'Stai per <b>reinviare al cliente</b> il link del contratto già firmato. Nel passo successivo sceglierai il canale (Email, SMS, WhatsApp o copia link).',ok:'Continua',c:'#4F46E5',i:'📨'},
+  invia:{t:'Invio contratto al cliente',m:'Stai per <b>inviare al cliente</b> il link per firmare il contratto. Nel passo successivo sceglierai il canale (Email, SMS, WhatsApp o copia link).',ok:'Continua',c:'#4F46E5',i:'📨'}
+};
+function ctAsk(k,fn){
+  const a=CT_ASK[k];const d=document.createElement('div');d.className='ct-ask';
+  d.innerHTML=`<div class="ct-ask-box"><div class="ct-ask-ic" style="background:${a.c}1a">${a.i}</div><h3>${a.t}</h3><p>${a.m}</p><p class="ct-ask-q">Vuoi procedere?</p><div class="ct-ask-btns"><button class="ct-ask-no">Annulla</button><button class="ct-ask-ok" style="background:${a.c}">${a.ok}</button></div></div>`;
+  document.body.appendChild(d);
+  const close=()=>d.remove();
+  d.onclick=e=>{if(e.target===d)close();};
+  d.querySelector('.ct-ask-no').onclick=close;
+  d.querySelector('.ct-ask-ok').onclick=()=>{close();closeCtAzioni();fn();};
+}
+function openCtDettaglio(id){
+  const a=(window._ctAz||{})[id];if(!a)return;const x=a.x;
   let m=document.getElementById('modal-ct-azioni');
   if(!m){m=document.createElement('div');m.id='modal-ct-azioni';m.onclick=e=>{if(e.target===m)closeCtAzioni();};document.body.appendChild(m);}
+  const tit=[x.cognome,x.nome].filter(Boolean).join(' ');
+  const f=(l,v)=>v?`<div class="ctd-f"><span>${l}</span><b>${v}</b></div>`:'';
   const g=a.gruppi.map(([t,bs])=>{bs=bs.filter(b=>b&&b.indexOf('<button')===0);return bs.length?`<div class="cta-grp"><div class="cta-grp-t">${t}</div><div class="cta-grid">${bs.join('')}</div></div>`:'';}).join('');
-  m.innerHTML=`<div class="cta-box"><div class="cta-head"><div style="min-width:0;flex:1"><div class="cta-tit">${a.titolo}</div><div class="cta-sub">${a.sub}</div></div><button class="cta-x" onclick="closeCtAzioni()">×</button></div><div class="cta-body">${g}</div></div>`;
-  m.querySelectorAll('.cta-grid .ct-btn').forEach(b=>b.addEventListener('click',()=>setTimeout(closeCtAzioni,0)));
+  const firmato=x.stato==='firmato';
+  m.innerHTML=`<div class="cta-box">
+   <div class="cta-head"><div class="ct-avatar" style="background:${a.avBg};width:44px;height:44px;border-radius:12px;font-size:14px;border:2px solid rgba(255,255,255,.5)">${a.initials}</div>
+    <div style="min-width:0;flex:1"><div class="cta-tit">${x.ragione_sociale||tit||'Contratto'}</div><div class="cta-sub">${x.ragione_sociale&&tit?tit:''}</div><div class="cta-badges">${a.stBadge}${firmato?a.otpBadge:''}<span class="ct-tipo">${a.tipoLabel}</span></div></div>
+    <button class="cta-x" onclick="closeCtAzioni()">×</button></div>
+   <div class="cta-body">
+    <div class="ctd-grid">${f('P.IVA',x.partita_iva)}${f('Codice fiscale',x.codice_fiscale)}${f('Email',x.email)}${f('Promotore',a.createdByName)}${f('Creato il',a.d)}${f('Firmato il',x.firmato_at?new Date(x.firmato_at).toLocaleString('it-IT'):'')}${f('OTP verificato',x.otp_verificato_at?new Date(x.otp_verificato_at).toLocaleString('it-IT')+(x.otp_cellulare_usato?' · '+x.otp_cellulare_usato:''):'')}</div>
+    ${firmato?`<div class="cta-grp"><div class="cta-grp-t">Anteprime documento</div><div class="ctd-prev">
+      <div class="ctd-thumb" id="ctd-fronte" onclick="viewDocSide('${x.id}','fronte')"><span>Caricamento…</span><label>Fronte</label></div>
+      <div class="ctd-thumb" id="ctd-retro" onclick="viewDocSide('${x.id}','retro')"><span>Caricamento…</span><label>Retro</label></div>
+      <div class="ctd-thumb ctd-gps" onclick="openGpsModal('${x.id}','${x.gps_firma||''}')"><span>📍<br><small>${x.gps_firma?x.gps_firma:'GPS non disponibile'}</small></span><label>Posizione firma</label></div>
+    </div></div>`:''}
+    ${g}
+   </div></div>`;
+  m.querySelectorAll('.cta-grid .ct-btn').forEach(b=>{if(!/ctAsk|resetFirma/.test(b.getAttribute('onclick')||''))b.addEventListener('click',()=>setTimeout(closeCtAzioni,0));});
   m.classList.add('show');
+  if(firmato){sb('contratti?id=eq.'+x.id+'&select=documento_foto_base64,documento_retro_base64').then(r=>{
+    const c=(r&&r[0])||{};
+    [['ctd-fronte',c.documento_foto_base64],['ctd-retro',c.documento_retro_base64]].forEach(([el,src])=>{const e=document.getElementById(el);if(!e)return;
+      const sp=e.querySelector('span');
+      if(src){sp.outerHTML=`<img src="${src.startsWith('data:')?src:'data:image/jpeg;base64,'+src}" alt="">`;}else{sp.textContent='Non presente';e.classList.add('ctd-empty');}});
+  }).catch(()=>{});}
 }
+function openCtAzioni(id){openCtDettaglio(id);}
 function closeCtAzioni(){const m=document.getElementById('modal-ct-azioni');if(m)m.classList.remove('show');}
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closeCtAzioni();});
 
