@@ -627,9 +627,13 @@ body.dark-mode #cna-viewer .cv-box{background:#1C1C1E}
 body.dark-mode #cna-viewer .cv-title{color:#F3F4F6}
 /* ===== v9.54 STATUS BAR PWA: fascia superiore col colore pagina ===== */
 @media(max-width:768px){
-  .app-header{padding-top:env(safe-area-inset-top,0px)!important}
-  body::before{content:"";position:fixed;top:0;left:0;right:0;height:env(safe-area-inset-top,0px);background:#F2F2F7;z-index:2000;pointer-events:none}
-  body.dark-mode::before{background:#1C1C1E}
+  /* v9.73: fascia status bar blu come l'hero (stessa soluzione del CRM) */
+  html{background:#005ac9}
+  .app-header{position:sticky!important;top:0!important;z-index:300!important;padding-top:env(safe-area-inset-top,0px)!important;background:#005ac9!important}
+  .app-header .header-inner{padding:8px 14px!important;min-height:52px}
+  body::before{content:"";position:fixed;top:0;left:0;right:0;height:env(safe-area-inset-top,0px);background:#005ac9;z-index:2000;pointer-events:none}
+  body.dark-mode::before{background:#00418f}
+  body.dark-mode .app-header{background:#00418f!important}
 }
 /* ===== v9.53 RICERCA IMPRESA MOBILE ===== */
 @media(max-width:768px){
