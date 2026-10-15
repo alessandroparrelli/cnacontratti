@@ -396,7 +396,16 @@ html,body{overflow-x:hidden;width:100%}
 .hero-sig svg{width:40px;height:40px}
 .hero-sig-txt{font-size:24px}
 @media(min-width:769px){html #cna-topbar{height:176px!important}html .hero-row1{height:100px!important;padding-top:18px!important}html .hero-row2{height:76px!important;padding-bottom:20px!important}html #app-container{padding-top:176px!important}html #cna-sidebar{top:176px!important;height:calc(100vh - 176px)!important}}
-@media(max-width:768px){html .app-header .header-inner{padding:18px 14px 20px!important;min-height:78px}}
+@media(max-width:768px){html .app-header .header-inner{padding:0 14px!important;height:78px;min-height:78px;box-sizing:border-box}}
+/* v9.77 PWA: hero fisso in primo piano (niente sfocatura iOS sul contenuto), drawer sopra l'hero */
+@media(max-width:768px){
+  html.app-on .app-header{position:fixed!important;top:0!important;left:0!important;right:0!important;z-index:950!important;transform:translateZ(0)}
+  html.app-on #app-container{padding-top:calc(env(safe-area-inset-top,0px) + 78px)!important}
+  html #drawer-overlay{z-index:1050!important}
+  html #hamburger-menu{z-index:1100!important}
+  html #hamburger-menu>div:first-child{padding-top:calc(env(safe-area-inset-top,0px) + 20px)!important;background:#005ac9!important}
+  html #hamburger-menu{padding-bottom:env(safe-area-inset-bottom,0px)}
+}
 #cna-topbar #cna-topbar-title,body.dark-mode #cna-topbar #cna-topbar-title{font-size:24px!important}
 @media(max-width:768px){.app-header .hero-logo{height:40px!important}.app-header .hero-logo-wrap,.app-header .header-logo{gap:10px!important}}
 /* hero a tutta larghezza su desktop */
