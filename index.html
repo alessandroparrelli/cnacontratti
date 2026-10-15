@@ -390,7 +390,14 @@ html,body{overflow-x:hidden;width:100%}
 .hero-sig{display:inline-flex;align-items:center;gap:10px}
 .hero-sig-txt{color:#fff;font-weight:800;font-size:19px;letter-spacing:-.03em}
 .hero-sig-txt b{font-weight:800;color:#BFDBFE}
-@media(max-width:768px){.app-header .hero-sig svg{width:28px;height:28px}.app-header .hero-sig-txt{font-size:15px}}
+@media(max-width:768px){.app-header .hero-sig svg{width:32px;height:32px}.app-header .hero-sig-txt{font-size:19px}}
+/* v9.75 hero più grande */
+.hero-logo{height:60px!important}
+.hero-sig svg{width:40px;height:40px}
+.hero-sig-txt{font-size:24px}
+@media(min-width:769px){html #cna-topbar{height:140px!important}html .hero-row1{height:80px!important}html .hero-row2{height:60px!important}html #app-container{padding-top:140px!important}html #cna-sidebar{top:140px!important;height:calc(100vh - 140px)!important}}
+#cna-topbar #cna-topbar-title,body.dark-mode #cna-topbar #cna-topbar-title{font-size:24px!important}
+@media(max-width:768px){.app-header .hero-logo{height:40px!important}.app-header .hero-logo-wrap,.app-header .header-logo{gap:10px!important}}
 /* hero a tutta larghezza su desktop */
 @media(min-width:769px){
   #cna-topbar{position:fixed!important;top:0;left:0;right:0;z-index:300!important;height:124px}
