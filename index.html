@@ -627,8 +627,11 @@ body.dark-mode #cna-viewer .cv-box{background:#1C1C1E}
 body.dark-mode #cna-viewer .cv-title{color:#F3F4F6}
 /* ===== v9.54 STATUS BAR PWA: fascia superiore col colore pagina ===== */
 @media(max-width:768px){
-  /* v9.73: fascia status bar blu come l'hero (stessa soluzione del CRM) */
-  html{background:#005ac9}
+  /* v9.74: come nel CRM lo sfondo di pagina è blu, il contenuto ha il suo sfondo chiaro */
+  html.app-on,html.app-on body{background:#005ac9!important;overscroll-behavior-y:none}
+  html.app-on #app-container{background:#F2F2F7;min-height:100vh;min-height:100dvh}
+  html.app-on body.dark-mode #app-container{background:#1C1C1E}
+  html.app-on body.dark-mode,html.app-on:has(body.dark-mode){background:#00418f!important}
   .app-header{position:sticky!important;top:0!important;z-index:300!important;padding-top:env(safe-area-inset-top,0px)!important;background:#005ac9!important}
   .app-header .header-inner{padding:8px 14px!important;min-height:52px}
   body::before{content:"";position:fixed;top:0;left:0;right:0;height:env(safe-area-inset-top,0px);background:#005ac9;z-index:2000;pointer-events:none}
@@ -6082,6 +6085,7 @@ async function doLogin(){
 function showApp(){
   document.getElementById('login-page').style.display='none';
   document.getElementById('app-container').style.display='flex';
+  document.documentElement.classList.add('app-on');
   updateHeaderAvatar();
   initApp();
   updateStats();
