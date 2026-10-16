@@ -590,6 +590,44 @@ body.dark-mode .stat-mini-box .stat-mini-icon{background:#1f2630!important}
 .eth-acts button{padding:7px 14px;border-radius:8px;border:1px solid #d1d5db;background:#fff;font-size:12.5px;font-weight:600;cursor:pointer;font-family:inherit}
 .eth-acts button:last-child{background:#005ac9;border-color:#005ac9;color:#fff}
 
+/* ===== TOP NAV stile Intranet (v9.80, desktop) ===== */
+#cna-topbar .tn-bar{display:flex;align-items:center;gap:18px;background:#fff;border-radius:22px;padding:12px 14px 12px 22px;box-shadow:0 2px 14px rgba(15,23,42,.07);margin:14px 20px 0}
+.tn-brand{display:flex;align-items:center;gap:16px;cursor:pointer;flex-shrink:0}
+.tn-logo{height:44px;width:auto;display:block}
+.tn-title{font-size:24px;font-weight:800;color:#0F172A;letter-spacing:-.02em;padding-left:2px}
+.tn-nav{display:flex;align-items:center;gap:4px;margin-left:auto;flex-wrap:wrap}
+.tn-pill{position:relative;border:none;background:transparent;color:#0F172A;font-weight:600;font-size:15px;padding:10px 20px;border-radius:999px;cursor:pointer;font-family:inherit;white-space:nowrap;display:inline-flex;align-items:center;gap:7px;transition:background .15s}
+.tn-pill:hover{background:#F1F5F9}
+.tn-pill.on{background:#0F172A;color:#fff}
+.tn-out{border:1.5px solid #CBD5E1;margin-left:6px}
+.tn-badge{background:#2563EB;color:#fff;font-size:11px;font-weight:800;min-width:20px;height:20px;border-radius:10px;display:inline-flex;align-items:center;justify-content:center;padding:0 6px}
+.tn-badge-or{background:#EA580C}
+.tn-dd{position:relative}
+.tn-menu{display:none;position:absolute;top:calc(100% + 8px);left:0;min-width:230px;background:#fff;border-radius:14px;box-shadow:0 12px 34px rgba(15,23,42,.16);padding:6px;z-index:600}
+.tn-menu-r{left:auto;right:0}
+.tn-dd.open .tn-menu{display:block}
+.tn-menu button{display:block;width:100%;text-align:left;border:none;background:none;padding:10px 12px;border-radius:9px;font-size:14px;font-weight:600;color:#0F172A;cursor:pointer;font-family:inherit}
+.tn-menu button:hover{background:#F1F5F9}
+.tn-menu .tn-danger{color:#DC2626}
+.tn-mhead{padding:10px 12px 8px;font-weight:800;font-size:14px;color:#0F172A;border-bottom:1px solid #EEF2F7;margin-bottom:4px}
+.tn-av{width:46px;height:46px;border-radius:50%;border:none;background:#005ac9;color:#fff;font-weight:800;font-size:14px;cursor:pointer;overflow:hidden;padding:0;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.tn-av img{width:100%;height:100%;object-fit:cover}
+.tn-row2{display:flex;align-items:flex-end;justify-content:space-between;padding:18px 34px 6px}
+#cna-topbar .tn-row2 #cna-topbar-title{color:#0F172A!important;font-size:26px!important;font-weight:800}
+#cna-topbar .tn-row2 #cna-topbar-greeting{color:#0F172A!important}
+#cna-topbar .tn-row2 #cna-topbar-date{color:#64748B!important}
+@media(min-width:769px){
+  html #cna-topbar{background:#F2F2F7!important;box-shadow:none!important;height:150px!important;padding:0!important;display:block!important}
+  html #app-container{padding-top:150px!important}
+  html #cna-sidebar{display:none!important}
+  html #cna-content-col{margin-left:0!important}
+}
+body.dark-mode #cna-topbar .tn-bar,body.dark-mode .tn-menu{background:#2C2C2E}
+body.dark-mode html #cna-topbar,body.dark-mode #cna-topbar{background:#1C1C1E!important}
+body.dark-mode .tn-title,body.dark-mode .tn-pill,body.dark-mode .tn-menu button,body.dark-mode .tn-mhead,body.dark-mode #cna-topbar .tn-row2 #cna-topbar-title,body.dark-mode #cna-topbar .tn-row2 #cna-topbar-greeting{color:#F3F4F6!important}
+body.dark-mode .tn-pill.on{background:#F3F4F6;color:#0F172A!important}
+body.dark-mode .tn-pill:hover,body.dark-mode .tn-menu button:hover{background:#3A3A3C}
+
 /* ===== BOTTOM NAV MOBILE ===== */
 #cna-bottom-nav{
   display:none;
@@ -3717,22 +3755,29 @@ table.quill-better-table {
 
 <!-- DESKTOP TOPBAR -->
 <div id="cna-topbar">
-  <div class="hero-row1">
-    <div class="hero-brand" onclick="switchTab(5)">
-      <span class="hero-logo-wrap"><img src="/logo-cna-hero.png" alt="CNA Roma" class="hero-logo"></span>
-      <span class="hero-sig"><svg viewBox="0 0 56 56" width="34" height="34" fill="none"><rect width="56" height="56" rx="12" fill="rgba(255,255,255,.16)"/><path d="M38 10 L46 18 L22 42 L14 44 L16 36 Z" fill="#fff" opacity=".2"/><path d="M38 10 L46 18 L22 42 L14 44 L16 36 Z" stroke="#fff" stroke-width="2" fill="none" stroke-linejoin="round"/><path d="M16 36 L14 44 L22 42" stroke="#fff" stroke-width="2.5" stroke-linejoin="round" fill="none"/><circle cx="15" cy="43" r="2.5" fill="#fff"/><path d="M19 40 C23 36 29 40 34 33" stroke="#fff" stroke-width="2" stroke-linecap="round" fill="none" opacity=".7"/><path d="M36 8 L48 20" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg><span class="hero-sig-txt">signature<b>cna</b></span></span>
+  <div class="tn-bar">
+    <div class="tn-brand" onclick="switchTab(5)">
+      <img src="https://alessandroparrelli.github.io/fileappoggio/NUOVO-LOGO-CNA-ROMA-SOLO-ROMA.png" alt="CNA Roma" class="tn-logo">
+      <span class="tn-title">Signature</span>
     </div>
-    <div class="hero-right">
-      <div class="hero-user" onclick="openProfile()"><span class="hero-av" id="hero-av">AP</span><span id="hero-name"></span></div>
-      <button class="hero-esci" onclick="doLogout()">Esci</button>
+    <nav class="tn-nav">
+      <button class="tn-pill on" data-sb="sbnav-home" onclick="switchTab(5);cnaSetSb('sbnav-home','Dashboard')">Dashboard</button>
+      <button class="tn-pill" data-sb="sbnav-contratti" onclick="switchTab(4);cnaSetSb('sbnav-contratti','Contratti')">Contratti <span class="tn-badge" id="tn-badge-ct"></span></button>
+      <button class="tn-pill" data-sb="sbnav-upload" onclick="switchTab(4);cnaSetSb('sbnav-upload','Caricamenti')">Caricamenti <span class="tn-badge tn-badge-or" id="tn-badge-up"></span></button>
+      <button class="tn-pill" data-sb="sbnav-admin-log" id="tn-log" onclick="switchTab(7)" style="display:none">Log attività</button>
+      <div class="tn-dd" id="tn-admin" style="display:none">
+        <button class="tn-pill tn-out" onclick="tnToggle('tn-admin',event)">Amministrazione ▾</button>
+        <div class="tn-menu"><button onclick="tnClose();openEmailTemplates()">✉️ Template Email &amp; SMS</button><button onclick="tnClose();openGestioneUtenti()">👥 Gestione Utenti</button><button onclick="tnClose();switchTab(7)">📊 Log attività</button></div>
+      </div>
+    </nav>
+    <div class="tn-dd" id="tn-user">
+      <button class="tn-av" id="hero-av" onclick="tnToggle('tn-user',event)" title="Profilo">AP</button>
+      <div class="tn-menu tn-menu-r"><div class="tn-mhead" id="hero-name"></div><button onclick="tnClose();openProfile()">👤 Profilo</button><button onclick="tnClose();toggleDarkMode()">🌙 Dark mode</button><button onclick="tnClose();openChangelog()">📋 Versioni</button><button class="tn-danger" onclick="doLogout()">⎋ Esci</button></div>
     </div>
   </div>
-  <div class="hero-row2">
+  <div class="tn-row2">
     <div id="cna-topbar-title">Dashboard</div>
-    <div id="cna-topbar-right">
-      <div id="cna-topbar-greeting"></div>
-      <div id="cna-topbar-date"></div>
-    </div>
+    <div id="cna-topbar-right"><div id="cna-topbar-greeting"></div><div id="cna-topbar-date"></div></div>
   </div>
 </div>
 
@@ -7182,6 +7227,7 @@ async function updateStats(){
 }
 
 function cnaSetSb(id,title){
+  document.querySelectorAll('.tn-pill[data-sb]').forEach(b=>b.classList.toggle('on',b.dataset.sb===id));
   document.querySelectorAll('.cna-sb-btn').forEach(b=>b.classList.remove('active'));
   const el=document.getElementById(id);if(el)el.classList.add('active');
   const t=document.getElementById('cna-topbar-title');if(t&&title)t.textContent=title;
@@ -9078,6 +9124,13 @@ function openCtDettaglio(id){
   }).catch(()=>{});}
 }
 function openCtAzioni(id){openCtDettaglio(id);}
+function tnToggle(id,e){e.stopPropagation();const d=document.getElementById(id);const o=d.classList.contains('open');tnClose();if(!o)d.classList.add('open');}
+function tnClose(){document.querySelectorAll('.tn-dd.open').forEach(d=>d.classList.remove('open'));}
+document.addEventListener('click',tnClose);
+setInterval(()=>{try{const a=loggedUser&&loggedUser.ruolo==='admin';const ad=document.getElementById('tn-admin');if(ad)ad.style.display=a?'':'none';
+  const c=document.querySelector('#sbnav-contratti .cna-sb-pill'),u=document.querySelector('#sbnav-upload .cna-sb-pill');
+  const sb=(el,src)=>{if(!el)return;const t=src&&src.style.display!=='none'?src.textContent.trim():'';el.textContent=t;el.style.display=t&&t!=='0'?'':'none';};
+  sb(document.getElementById('tn-badge-ct'),c);sb(document.getElementById('tn-badge-up'),u);}catch(e){}},1500);
 function closeCtAzioni(){const m=document.getElementById('modal-ct-azioni');if(m)m.classList.remove('show');}
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closeCtAzioni();});
 
